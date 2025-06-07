@@ -1,0 +1,28 @@
+# Documentation (kept in repo but not applied to home)
+README.md
+LICENSE
+
+# Git/GitHub files (kept in repo but not applied to home)
+.git
+.github
+.gitignore
+.gitleaks.toml
+.pre-commit-config.yaml
+
+# OS-specific exclusions
+{{- if ne .chezmoi.os "darwin" }}
+# macOS only files
+.config/karabiner
+.config/skhd
+.config/yabai
+{{- end }}
+
+{{- if ne .chezmoi.os "windows" }}
+# Windows only files
+.config/windows-terminal
+{{- end }}
+
+{{- if ne .chezmoi.os "linux" }}
+# Linux only files
+.config/systemd
+{{- end }}

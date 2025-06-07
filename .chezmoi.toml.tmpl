@@ -1,0 +1,47 @@
+{{- $email := promptStringOnce . "email" "Email address" -}}
+{{- $name := promptStringOnce . "name" "Full name" -}}
+
+[data]
+    email = {{ $email | quote }}
+    name = {{ $name | quote }}
+
+    # OS detection (automatically set by chezmoi)
+    # Available: darwin, linux, windows
+    os = {{ .chezmoi.os | quote }}
+
+    # Architecture detection
+    # Available: amd64, arm64, 386, arm
+    arch = {{ .chezmoi.arch | quote }}
+
+    # Hostname
+    hostname = {{ .chezmoi.hostname | quote }}
+
+    # Environment type
+    {{- $environment := promptChoiceOnce . "environment" "Environment type" (list "personal" "work") }}
+    environment = {{ $environment | quote }}
+
+    # Package managers
+    {{- if eq .chezmoi.os "darwin" }}
+    packageManager = "brew"
+    {{- else if eq .chezmoi.os "windows" }}
+    packageManager = "scoop"
+    {{- else if eq .chezmoi.os "linux" }}
+        {{- if lookPath "apt-get" }}
+        packageManager = "apt"
+        {{- else if lookPath "dnf" }}
+        packageManager = "dnf"
+        {{- else if lookPath "pacman" }}
+        packageManager = "pacman"
+        {{- else }}
+        packageManager = "unknown"
+        {{- end }}
+    {{- end }}
+
+# Editor configuration
+[edit]
+    command = "nvim"
+
+# Git configuration
+[git]
+    autoCommit = false
+    autoPush = false

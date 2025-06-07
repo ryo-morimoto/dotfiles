@@ -1,0 +1,104 @@
+#!/bin/bash
+set -euo pipefail
+
+echo "🚀 Installing packages for {{ .chezmoi.os }}/{{ .chezmoi.arch }}..."
+
+{{- if eq .chezmoi.os "darwin" }}
+# macOS - Install Homebrew if not present
+if ! command -v brew &> /dev/null; then
+    echo "📦 Installing Homebrew..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+
+# Install packages via Homebrew
+echo "📦 Installing Homebrew packages..."
+brew bundle --no-lock --file=/dev/stdin <<EOF
+# Terminal essentials
+brew "tmux"
+brew "alacritty"
+
+# Development tools
+brew "neovim"
+brew "git"
+brew "gh"
+brew "ripgrep"
+brew "fd"
+brew "fzf"
+brew "bat"
+brew "eza"
+brew "zoxide"
+brew "starship"
+
+# Language tools
+brew "node"
+brew "python"
+brew "go"
+brew "rust"
+
+# Utilities
+brew "jq"
+brew "yq"
+brew "tree"
+brew "wget"
+brew "htop"
+brew "ncdu"
+
+{{- if eq .environment "personal" }}
+# Personal tools
+cask "1password"
+cask "raycast"
+{{- end }}
+EOF
+
+{{- else if eq .chezmoi.os "windows" }}
+# Windows - Install Scoop if not present
+if ! command -v scoop &> /dev/null; then
+    echo "📦 Installing Scoop..."
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh'))"
+fi
+
+# Install packages via Scoop
+echo "📦 Installing Scoop packages..."
+scoop install git
+scoop bucket add extras
+scoop bucket add nerd-fonts
+
+# Core packages
+scoop install neovim tmux alacritty
+scoop install ripgrep fd fzf bat eza zoxide starship
+scoop install nodejs python go rustup
+scoop install jq yq tree wget htop ncdu
+
+{{- else if eq .chezmoi.os "linux" }}
+# Linux - Package manager detection done in .chezmoi.toml.tmpl
+echo "📦 Installing packages via {{ .packageManager }}..."
+
+{{- if eq .packageManager "apt" }}
+sudo apt update
+sudo apt install -y \
+    tmux neovim git \
+    ripgrep fd-find fzf bat \
+    nodejs npm python3 python3-pip golang rustc \
+    jq tree wget htop ncdu curl
+
+# Install additional tools not in apt
+curl -sS https://starship.rs/install.sh | sh -s -- -y
+
+{{- else if eq .packageManager "dnf" }}
+sudo dnf install -y \
+    tmux neovim git \
+    ripgrep fd-find fzf bat \
+    nodejs npm python3 python3-pip golang rust \
+    jq tree wget htop ncdu
+
+{{- else if eq .packageManager "pacman" }}
+sudo pacman -Syu --noconfirm \
+    tmux neovim git \
+    ripgrep fd fzf bat \
+    nodejs npm python python-pip go rust \
+    jq tree wget htop ncdu
+{{- end }}
+
+{{- end }}
+
+echo "✅ Package installation complete!"
