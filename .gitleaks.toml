@@ -10,11 +10,11 @@ paths = [
     # Example configs and templates
     '''example\..*''',
     '''\.example''',
-    
+
     # Encrypted files
     '''\.age$''',
     '''\.gpg$''',
-    
+
     # Chezmoi templates that use password managers
     '''\.tmpl$''',
 ]
