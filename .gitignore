@@ -1,0 +1,38 @@
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor directories and files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Secrets and sensitive data
+*.pem
+*.key
+*.p12
+*.pfx
+.env
+.env.*
+!.env.example
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Local configuration
+*.local
+!*.local.example

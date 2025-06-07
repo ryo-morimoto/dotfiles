@@ -1,0 +1,39 @@
+# GitLeaks configuration for dotfiles repository
+title = "dotfiles gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Allowlisted files"
+paths = [
+    # Example configs and templates
+    '''example\..*''',
+    '''\.example''',
+    
+    # Encrypted files
+    '''\.age$''',
+    '''\.gpg$''',
+    
+    # Chezmoi templates that use password managers
+    '''\.tmpl$''',
+]
+
+# Custom rules for dotfiles-specific patterns
+[[rules]]
+id = "dotenv-file"
+description = "Dotenv files"
+path = '''\.env'''
+secretGroup = 1
+
+[[rules]]
+id = "ssh-private-key"
+description = "SSH private key"
+path = '''id_rsa|id_dsa|id_ecdsa|id_ed25519'''
+secretGroup = 1
+
+[[rules]]
+id = "shell-history"
+description = "Shell history files that might contain secrets"
+path = '''\.bash_history|\.zsh_history|\.fish_history'''
+secretGroup = 1
