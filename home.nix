@@ -39,6 +39,7 @@
 		fastfetch
 		wallust
 		waypaper
+		jq
 	];
 
 	programs.git = {
