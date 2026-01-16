@@ -14,19 +14,19 @@
 		jq
 		bc
 
-		# Hyprland & Wayland (Phase 1)
+		# Hyprland & Wayland
 		hyprland
 		xdg-desktop-portal-hyprland
 
-		# UI (Phase 2)
+		# UI
 		waybar
 		ghostty
 
-		# Launcher & Notifications (Phase 3)
+		# Launcher & Notifications
 		rofi-wayland
 		dunst
 
-		# Utilities (Phase 4)
+		# Utilities
 		swww
 		hyprlock
 		hyprshot
@@ -39,7 +39,6 @@
 		fastfetch
 		wallust
 		waypaper
-		jq
 	];
 
 	programs.git = {
@@ -79,36 +78,22 @@
 			executable = true;
 		};
 
-		# Hyprland
 		".config/hypr/hyprland.conf".source = ./hyprland/hyprland.conf;
 		".config/hypr/keybinds.conf".source = ./hyprland/keybinds.conf;
 		".config/hypr/windowrules.conf".source = ./hyprland/windowrules.conf;
 		".config/hypr/autostart.conf".source = ./hyprland/autostart.conf;
 
-		# Waybar
 		".config/waybar/config.jsonc".source = ./waybar/config.jsonc;
 		".config/waybar/style.css".source = ./waybar/style.css;
 
-		# Ghostty
 		".config/ghostty/config".source = ./ghostty/config;
-
-		# Rofi
 		".config/rofi/config.rasi".source = ./rofi/config.rasi;
-
-		# Dunst
 		".config/dunst/dunstrc".source = ./dunst/dunstrc;
-
-		# Btop
 		".config/btop/btop.conf".source = ./btop/btop.conf;
-
-		# Fastfetch
 		".config/fastfetch/config.jsonc".source = ./fastfetch/config.jsonc;
 
-		# Wallust
 		".config/wallust/wallust.toml".source = ./wallust/wallust.toml;
 		".config/wallust/templates".source = ./wallust/templates;
-
-		# Waypaper
 		".config/waypaper/config.ini".source = ./waypaper/config.ini;
 	};
 }

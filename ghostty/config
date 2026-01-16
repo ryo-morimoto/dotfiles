@@ -26,4 +26,4 @@ scrollback-limit = 10000
 shell-integration = zsh
 
 # Import wallust-generated colors
-config-file = ?$XDG_CACHE_HOME/wallust/ghostty-colors
+config-file = $XDG_CACHE_HOME/wallust/ghostty-colors
