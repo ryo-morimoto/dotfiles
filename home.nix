@@ -13,6 +13,7 @@
 		bat
 		zsh
 		neovim
+		claude-code
 	];
 
 	home.file = {
