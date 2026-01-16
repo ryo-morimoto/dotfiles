@@ -37,6 +37,14 @@
 		};
 	};
 
+	home.activation.createWritableGitConfig = ''
+		mkdir -p ~/.local/share/git
+		if [ ! -f ~/.local/share/git/config ]; then
+			echo '[include]' > ~/.local/share/git/config
+			echo '    path = ~/.config/git/config' >> ~/.local/share/git/config
+		fi
+	'';
+
 	home.file = {
 		".config/zsh/.zshrc".source = ./zsh/.zshrc;
 		".zshenv".text = ''
