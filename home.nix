@@ -9,7 +9,6 @@
 
 	home.packages = with pkgs; [
 		git
-		gh
 		bat
 		zsh
 		neovim
@@ -22,9 +21,15 @@
 		package = pkgs.claude-code;
 	};
 
+	programs.gh = {
+		enable = true;
+		settings = {
+			git_protocol = "https";
+		};
+	};
+
 	home.file = {
 		".config/git/config".source = ./git/.gitconfig;
-		".config/gh/config.yml".source = ./gh/config.yml;
 		".config/zsh/.zshrc".source = ./zsh/.zshrc;
 		".zshenv".text = ''
 			export ZDOTDIR="''${XDG_CONFIG_HOME:-$HOME/.config}/zsh"
