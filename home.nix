@@ -33,12 +33,9 @@
 
 	programs.zsh.enable = true;
 
-	programs.neovim = {
-		enable = true;
-		defaultEditor = true;
-		vimAlias = true;
-		viAlias = true;
-	};
+	home.packages = with pkgs; [
+		neovim
+	];
 
 	home.file = {
 		".zshrc".source = ./zsh/.zshrc;
