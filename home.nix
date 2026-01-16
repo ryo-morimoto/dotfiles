@@ -8,7 +8,6 @@
 	programs.home-manager.enable = true;
 
 	home.packages = with pkgs; [
-		git
 		bat
 		zsh
 		neovim
@@ -16,20 +15,31 @@
 		bc
 	];
 
-	programs.claude-code = {
+	programs.git = {
 		enable = true;
-		package = pkgs.claude-code;
+		settings = {
+			user.name = "ryo-morimoto";
+			user.email = "ryo.morimoto.dev@gmail.com";
+			init.defaultBranch = "main";
+			core.pager = "bat --plain";
+			credential."https://github.com".helper = "!gh auth git-credential";
+		};
 	};
 
 	programs.gh = {
 		enable = true;
+		gitCredentialHelper.enable = false;
 		settings = {
 			git_protocol = "https";
 		};
 	};
 
+	programs.claude-code = {
+		enable = true;
+		package = pkgs.claude-code;
+	};
+
 	home.file = {
-		".config/git/config".source = ./git/.gitconfig;
 		".config/zsh/.zshrc".source = ./zsh/.zshrc;
 		".zshenv".text = ''
 			export ZDOTDIR="''${XDG_CONFIG_HOME:-$HOME/.config}/zsh"

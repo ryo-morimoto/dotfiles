@@ -1,9 +1,0 @@
-[init]
-	defaultBranch = main
-
-[core]
-	pager = bat --plain
-
-[user]
-	name = ryo-morimoto
-	email = ryo.morimoto.dev@gmail.com
