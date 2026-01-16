@@ -1,3 +1,8 @@
+# Editor
+export EDITOR="nvim"
+alias vim="nvim"
+alias vi="nvim"
+
 # History
 HISTSIZE=10000
 SAVEHIST=10000
