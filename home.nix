@@ -38,6 +38,7 @@
 		btop
 		fastfetch
 		wallust
+		waypaper
 	];
 
 	programs.git = {
