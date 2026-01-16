@@ -7,7 +7,9 @@
 			url = "github:nix-community/home-manager";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
-		claude-code.url = "github:ryoppippi/claude-code-overlay";
+		claude-code = {
+			url = "github:ryoppippi/claude-code-overlay";
+		};
 	};
 
 	outputs = { nixpkgs, home-manager, claude-code, ... }:
