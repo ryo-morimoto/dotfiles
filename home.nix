@@ -7,37 +7,17 @@
 
 	programs.home-manager.enable = true;
 
-	programs.git = {
-		enable = true;
-		settings = {
-			init.defaultBranch = "main";
-			core.pager = "bat --plain";
-
-			user = {
-				name = "ryo-morimoto";
-				email = "ryo.morimoto.dev@gmail.com";
-			};
-		};
-	};
-
-	programs.gh = {
-		enable = true;
-		settings = {
-			git_protocol = "https";
-		};
-	};
-
-	programs.bat = {
-		enable = true;
-	};
-
-	programs.zsh.enable = true;
-
 	home.packages = with pkgs; [
+		git
+		gh
+		bat
+		zsh
 		neovim
 	];
 
 	home.file = {
+		".gitconfig".source = ./git/.gitconfig;
+		".config/gh/config.yml".source = ./gh/config.yml;
 		".zshrc".source = ./zsh/.zshrc;
 		".config/nvim".source = ./nvim;
 		".claude/settings.json".source = ./claude/settings.json;
