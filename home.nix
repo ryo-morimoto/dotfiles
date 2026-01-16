@@ -27,7 +27,8 @@
 		".config/gh/config.yml".source = ./gh/config.yml;
 		".config/zsh/.zshrc".source = ./zsh/.zshrc;
 		".zshenv".text = ''
-			export ZDOTDIR="$HOME/.config/zsh"
+			export ZDOTDIR="''${XDG_CONFIG_HOME:-$HOME/.config}/zsh"
+			export CLAUDE_CONFIG_DIR="''${XDG_CONFIG_HOME:-$HOME/.config}/claude"
 		'';
 		".config/nvim".source = ./nvim;
 		".config/claude/settings.json".source = ./claude/settings.json;
