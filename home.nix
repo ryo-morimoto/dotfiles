@@ -4,6 +4,7 @@
 	imports = [
 		./modules/git.nix
 		./modules/shell/zsh.nix
+		./modules/editor/neovim.nix
 	];
 
 	home.username = "ryo-o";
