@@ -27,23 +27,17 @@
 		extraConfig = {
 			init.defaultBranch = "main";
 			core.pager = "bat --plain";
+			credential."https://github.com".helper = "!gh auth git-credential";
 		};
 	};
 
 	programs.gh = {
 		enable = true;
+		gitCredentialHelper.enable = false;  # programs.gitで設定済み
 		settings = {
 			git_protocol = "https";
 		};
 	};
-
-	home.activation.createWritableGitConfig = ''
-		mkdir -p ~/.local/share/git
-		if [ ! -f ~/.local/share/git/config ]; then
-			echo '[include]' > ~/.local/share/git/config
-			echo '    path = ~/.config/git/config' >> ~/.local/share/git/config
-		fi
-	'';
 
 	home.file = {
 		".config/zsh/.zshrc".source = ./zsh/.zshrc;
@@ -51,7 +45,6 @@
 			export ZDOTDIR="''${XDG_CONFIG_HOME:-$HOME/.config}/zsh"
 			export CLAUDE_CONFIG_DIR="''${XDG_CONFIG_HOME:-$HOME/.config}/claude"
 			export GH_CONFIG_DIR="''${XDG_DATA_HOME:-$HOME/.local/share}/gh"
-			export GIT_CONFIG_GLOBAL="''${XDG_DATA_HOME:-$HOME/.local/share}/git/config"
 		'';
 		".config/nvim".source = ./nvim;
 		".config/claude/settings.json".source = ./claude/settings.json;
