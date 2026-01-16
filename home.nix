@@ -23,9 +23,12 @@
 	};
 
 	home.file = {
-		".gitconfig".source = ./git/.gitconfig;
+		".config/git/config".source = ./git/.gitconfig;
 		".config/gh/config.yml".source = ./gh/config.yml;
-		".zshrc".source = ./zsh/.zshrc;
+		".config/zsh/.zshrc".source = ./zsh/.zshrc;
+		".zshenv".text = ''
+			export ZDOTDIR="$HOME/.config/zsh"
+		'';
 		".config/nvim".source = ./nvim;
 		".config/claude/settings.json".source = ./claude/settings.json;
 		".config/claude/statusline.sh" = {
