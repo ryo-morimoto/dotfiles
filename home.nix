@@ -55,16 +55,5 @@
 		viAlias = true;
 	};
 
-	home.file.".claude/settings.json".text = builtins.toJSON {
-		permissions = {
-			allow = [
-				"Bash(git status:*)"
-				"Bash(git diff:*)"
-				"Bash(git log:*)"
-				"Bash(git branch:*)"
-				"Bash(git show:*)"
-			];
-			deny = [ ];
-		};
-	};
+	home.file.".claude/settings.json".source = ./claude/settings.json;
 }
