@@ -10,6 +10,7 @@
 	programs.git = {
 		enable = true;
 		settings = {
+			init.defaultBranch = "main";
 			core.pager = "bat --plain";
 
 			user = {
@@ -22,7 +23,7 @@
 	programs.gh = {
 		enable = true;
 		settings = {
-			git_protocol = "ssh";
+			git_protocol = "https";
 		};
 	};
 
@@ -30,23 +31,7 @@
 		enable = true;
 	};
 
-	programs.zsh = {
-		enable = true;
-
-		history = {
-			size = 10000;
-			save = 10000;
-			ignoreDups = true;
-		};
-
-		shellAliases = {
-			ll = "ls -la";
-			g = "git";
-			hms = "home-manager switch --flake .#ryo-morimoto";
-			c = "claude";
-			cy = "claude --dangerously-skip-permissions";
-		};
-	};
+	programs.zsh.enable = true;
 
 	programs.neovim = {
 		enable = true;
@@ -55,5 +40,9 @@
 		viAlias = true;
 	};
 
-	home.file.".claude/settings.json".source = ./claude/settings.json;
+	home.file = {
+		".zshrc".source = ./zsh/.zshrc;
+		".config/nvim".source = ./nvim;
+		".claude/settings.json".source = ./claude/settings.json;
+	};
 }
