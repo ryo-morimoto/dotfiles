@@ -16,4 +16,4 @@
 			hms = "home-manager switch --flake .#ryo-morimoto";
 		};
 	};
-};
+}
