@@ -13,8 +13,12 @@
 		bat
 		zsh
 		neovim
-		claude-code
 	];
+
+	programs.claude-code = {
+		enable = true;
+		package = pkgs.claude-code;
+	};
 
 	home.file = {
 		".gitconfig".source = ./git/.gitconfig;
