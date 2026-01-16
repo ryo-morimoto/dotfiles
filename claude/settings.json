@@ -9,5 +9,10 @@
 			"Bash(git show:*)"
 		],
 		"deny": []
+	},
+	"statusLine": {
+		"type": "command",
+		"command": "~/.claude/statusline.sh",
+		"padding": 0
 	}
 }

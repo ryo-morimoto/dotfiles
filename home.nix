@@ -13,6 +13,8 @@
 		bat
 		zsh
 		neovim
+		jq
+		bc
 	];
 
 	programs.claude-code = {
@@ -26,5 +28,9 @@
 		".zshrc".source = ./zsh/.zshrc;
 		".config/nvim".source = ./nvim;
 		".claude/settings.json".source = ./claude/settings.json;
+		".claude/statusline.sh" = {
+			source = ./claude/statusline.sh;
+			executable = true;
+		};
 	};
 }
