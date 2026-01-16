@@ -1,3 +1,6 @@
+# Bun global packages
+export PATH="$HOME/.bun/bin:$PATH"
+
 # Editor
 export EDITOR="nvim"
 alias vim="nvim"

@@ -15,7 +15,14 @@
 		neovim
 		jq
 		bc
+		bun
 	];
+
+	# Install ralph-tui via bun on activation
+	home.activation.installRalphTui = pkgs.lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+		export PATH="${pkgs.bun}/bin:$PATH"
+		${pkgs.bun}/bin/bun install -g ralph-tui
+	'';
 
 	programs.claude-code = {
 		enable = true;
