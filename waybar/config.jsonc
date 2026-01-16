@@ -57,11 +57,11 @@
             "mode": "month",
             "weeks-pos": "right",
             "format": {
-                "months": "<span color='#f5e0dc'><b>{}</b></span>",
-                "days": "<span color='#cdd6f4'>{}</span>",
-                "weeks": "<span color='#94e2d5'>W{}</span>",
-                "weekdays": "<span color='#f9e2af'>{}</span>",
-                "today": "<span color='#f38ba8'><b><u>{}</u></b></span>"
+                "months": "<b>{}</b>",
+                "days": "{}",
+                "weeks": "W{}",
+                "weekdays": "{}",
+                "today": "<b><u>{}</u></b>"
             }
         }
     },

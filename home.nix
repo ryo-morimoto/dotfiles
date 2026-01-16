@@ -39,6 +39,8 @@
 		fastfetch
 		wallust
 		waypaper
+		papirus-icon-theme
+		adwaita-icon-theme
 	];
 
 	programs.git = {

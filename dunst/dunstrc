@@ -61,9 +61,9 @@
     sticky_history = yes
     history_length = 20
 
-    # Misc
-    dmenu = /usr/bin/rofi -dmenu -p dunst
-    browser = /usr/bin/xdg-open
+    # Misc (use PATH-resolved commands for Nix compatibility)
+    dmenu = rofi -dmenu -p dunst
+    browser = xdg-open
     always_run_script = true
     title = Dunst
     class = Dunst
