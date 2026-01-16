@@ -21,12 +21,7 @@
 		package = pkgs.claude-code;
 	};
 
-	programs.gh = {
-		enable = true;
-		settings = {
-			git_protocol = "https";
-		};
-	};
+	programs.gh.enable = true;
 
 	home.file = {
 		".config/git/config".source = ./git/.gitconfig;
