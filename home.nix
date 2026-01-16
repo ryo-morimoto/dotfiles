@@ -42,7 +42,6 @@
 		".zshenv".text = ''
 			export ZDOTDIR="''${XDG_CONFIG_HOME:-$HOME/.config}/zsh"
 			export CLAUDE_CONFIG_DIR="''${XDG_CONFIG_HOME:-$HOME/.config}/claude"
-			export GH_CONFIG_DIR="''${XDG_DATA_HOME:-$HOME/.local/share}/gh"
 		'';
 		".config/nvim".source = ./nvim;
 		".config/claude/settings.json".source = ./claude/settings.json;
