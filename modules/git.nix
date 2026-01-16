@@ -3,9 +3,13 @@
 {
 	programs.git = {
 		enable = true;
-		settings.user = {
-			name = "ryo-morimoto";
-			email = "ryo.morimoto.dev@gmail.com";
+		settings = {
+			core.pager = "bat --plain";
+
+			user = {
+				name = "ryo-morimoto";
+				email = "ryo.morimoto.dev@gmail.com";
+			};
 		};
 	};
 
@@ -14,5 +18,9 @@
 		settings = {
 			git_protocol = "ssh";
 		};
+	};
+
+	programs.bat = {
+		enable = true;
 	};
 }
