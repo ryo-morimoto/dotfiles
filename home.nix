@@ -15,6 +15,11 @@
 		neovim
 	];
 
+	programs.claude-code = {
+		enable = true;
+		package = pkgs.claude-code;
+	};
+
 	home.file = {
 		".gitconfig".source = ./git/.gitconfig;
 		".config/gh/config.yml".source = ./gh/config.yml;
