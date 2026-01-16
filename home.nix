@@ -1,5 +1,8 @@
 { pkgs, ... }:
 
+let
+	ralph-tui = pkgs.callPackage ./packages/ralph-tui { };
+in
 {
 	home.username = "ryo-o";
 	home.homeDirectory = "/home/ryo-o";
@@ -16,13 +19,8 @@
 		jq
 		bc
 		bun
+		ralph-tui
 	];
-
-	# Install ralph-tui via bun on activation
-	home.activation.installRalphTui = pkgs.lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-		export PATH="${pkgs.bun}/bin:$PATH"
-		${pkgs.bun}/bin/bun install -g ralph-tui
-	'';
 
 	programs.claude-code = {
 		enable = true;
