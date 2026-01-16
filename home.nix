@@ -96,6 +96,7 @@
 
 		".config/wallust/wallust.toml".source = ./wallust/wallust.toml;
 		".config/wallust/templates".source = ./wallust/templates;
+		".config/wallust/defaults".source = ./wallust/defaults;
 		".config/waypaper/config.ini".source = ./waypaper/config.ini;
 	};
 }
