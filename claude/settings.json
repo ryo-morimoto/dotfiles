@@ -12,7 +12,7 @@
 	},
 	"statusLine": {
 		"type": "command",
-		"command": "~/.claude/statusline.sh",
+		"command": "${XDG_CONFIG_HOME:-$HOME/.config}/claude/statusline.sh",
 		"padding": 0
 	}
 }

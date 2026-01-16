@@ -27,8 +27,8 @@
 		".config/gh/config.yml".source = ./gh/config.yml;
 		".zshrc".source = ./zsh/.zshrc;
 		".config/nvim".source = ./nvim;
-		".claude/settings.json".source = ./claude/settings.json;
-		".claude/statusline.sh" = {
+		".config/claude/settings.json".source = ./claude/settings.json;
+		".config/claude/statusline.sh" = {
 			source = ./claude/statusline.sh;
 			executable = true;
 		};
