@@ -9,5 +9,10 @@
 			"Bash(git show:*)"
 		],
 		"deny": []
+	},
+	"statusLine": {
+		"type": "command",
+		"command": "${XDG_CONFIG_HOME:-$HOME/.config}/claude/statusline.sh",
+		"padding": 0
 	}
 }

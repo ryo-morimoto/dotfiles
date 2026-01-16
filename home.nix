@@ -13,6 +13,8 @@
 		bat
 		zsh
 		neovim
+		jq
+		bc
 	];
 
 	programs.claude-code = {
@@ -21,10 +23,18 @@
 	};
 
 	home.file = {
-		".gitconfig".source = ./git/.gitconfig;
+		".config/git/config".source = ./git/.gitconfig;
 		".config/gh/config.yml".source = ./gh/config.yml;
-		".zshrc".source = ./zsh/.zshrc;
+		".config/zsh/.zshrc".source = ./zsh/.zshrc;
+		".zshenv".text = ''
+			export ZDOTDIR="''${XDG_CONFIG_HOME:-$HOME/.config}/zsh"
+			export CLAUDE_CONFIG_DIR="''${XDG_CONFIG_HOME:-$HOME/.config}/claude"
+		'';
 		".config/nvim".source = ./nvim;
-		".claude/settings.json".source = ./claude/settings.json;
+		".config/claude/settings.json".source = ./claude/settings.json;
+		".config/claude/statusline.sh" = {
+			source = ./claude/statusline.sh;
+			executable = true;
+		};
 	};
 }
