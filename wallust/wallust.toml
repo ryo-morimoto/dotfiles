@@ -20,18 +20,19 @@ check_contrast = true
 alpha = 100
 
 # Templates to generate
+# wallust expands $XDG_CACHE_HOME and $XDG_CONFIG_HOME automatically
 [templates]
 # Hyprland colors
-hyprland = { src = "~/.config/wallust/templates/hyprland.conf", dst = "~/.cache/wallust/hyprland-colors.conf" }
+hyprland = { src = "$XDG_CONFIG_HOME/wallust/templates/hyprland.conf", dst = "$XDG_CACHE_HOME/wallust/hyprland-colors.conf" }
 
 # Waybar colors
-waybar = { src = "~/.config/wallust/templates/waybar.css", dst = "~/.cache/wallust/waybar-colors.css" }
+waybar = { src = "$XDG_CONFIG_HOME/wallust/templates/waybar.css", dst = "$XDG_CACHE_HOME/wallust/waybar-colors.css" }
 
 # Rofi colors
-rofi = { src = "~/.config/wallust/templates/rofi.rasi", dst = "~/.cache/wallust/rofi-colors.rasi" }
+rofi = { src = "$XDG_CONFIG_HOME/wallust/templates/rofi.rasi", dst = "$XDG_CACHE_HOME/wallust/rofi-colors.rasi" }
 
 # Dunst colors
-dunst = { src = "~/.config/wallust/templates/dunst", dst = "~/.cache/wallust/dunst-colors" }
+dunst = { src = "$XDG_CONFIG_HOME/wallust/templates/dunst", dst = "$XDG_CACHE_HOME/wallust/dunst-colors" }
 
 # Ghostty colors
-ghostty = { src = "~/.config/wallust/templates/ghostty", dst = "~/.cache/wallust/ghostty-colors" }
+ghostty = { src = "$XDG_CONFIG_HOME/wallust/templates/ghostty", dst = "$XDG_CACHE_HOME/wallust/ghostty-colors" }

@@ -1,4 +1,4 @@
-/* Rofi Configuration - Catppuccin Mocha */
+/* Rofi Configuration - Dynamic colors via wallust */
 
 configuration {
     modi: "drun,run,window,filebrowser";
@@ -14,14 +14,17 @@ configuration {
     terminal: "ghostty";
 }
 
-/* Theme */
+/* Import wallust-generated colors */
+@import "$XDG_CACHE_HOME/wallust/rofi-colors.rasi"
+
+/* Theme using wallust colors */
 * {
-    bg: #1e1e2e;
-    bg-alt: #313244;
-    fg: #cdd6f4;
-    fg-alt: #a6adc8;
-    accent: #89b4fa;
-    urgent: #f38ba8;
+    bg: var(wallust-background, #1e1e2e);
+    bg-alt: var(wallust-color8, #313244);
+    fg: var(wallust-foreground, #cdd6f4);
+    fg-alt: var(wallust-color7, #a6adc8);
+    accent: var(wallust-color4, #89b4fa);
+    urgent: var(wallust-color1, #f38ba8);
 
     background-color: transparent;
     text-color: @fg;

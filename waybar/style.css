@@ -1,4 +1,8 @@
-/* Waybar Style - Catppuccin Mocha inspired */
+/* Waybar Style - Dynamic colors via wallust */
+
+/* Import wallust-generated colors */
+/* Note: GTK CSS doesn't support env vars, using ~ which waybar expands */
+@import "~/.cache/wallust/waybar-colors.css";
 
 * {
     font-family: "JetBrainsMono Nerd Font", "Noto Sans", sans-serif;
@@ -7,9 +11,9 @@
 }
 
 window#waybar {
-    background: rgba(30, 30, 46, 0.9);
+    background: alpha(@background, 0.9);
     border-radius: 10px;
-    color: #cdd6f4;
+    color: @foreground;
 }
 
 window#waybar.hidden {
@@ -18,14 +22,14 @@ window#waybar.hidden {
 
 /* Workspaces */
 #workspaces {
-    background: rgba(49, 50, 68, 0.6);
+    background: alpha(@color8, 0.6);
     border-radius: 8px;
     margin: 4px;
     padding: 0 4px;
 }
 
 #workspaces button {
-    color: #6c7086;
+    color: @color8;
     padding: 4px 8px;
     margin: 2px;
     border-radius: 6px;
@@ -34,30 +38,30 @@ window#waybar.hidden {
 }
 
 #workspaces button:hover {
-    background: rgba(137, 180, 250, 0.2);
-    color: #89b4fa;
+    background: alpha(@color4, 0.2);
+    color: @color4;
 }
 
 #workspaces button.active {
-    background: #89b4fa;
-    color: #1e1e2e;
+    background: @color4;
+    color: @background;
 }
 
 #workspaces button.urgent {
-    background: #f38ba8;
-    color: #1e1e2e;
+    background: @color1;
+    color: @background;
 }
 
 /* Window title */
 #window {
-    color: #a6adc8;
+    color: @color7;
     padding: 0 12px;
 }
 
 /* Clock */
 #clock {
-    background: rgba(137, 180, 250, 0.2);
-    color: #89b4fa;
+    background: alpha(@color4, 0.2);
+    color: @color4;
     border-radius: 8px;
     padding: 4px 12px;
     margin: 4px;
@@ -70,7 +74,7 @@ window#waybar.hidden {
 #cpu,
 #memory,
 #battery {
-    background: rgba(49, 50, 68, 0.6);
+    background: alpha(@color8, 0.6);
     border-radius: 8px;
     padding: 4px 10px;
     margin: 4px 2px;
@@ -81,61 +85,61 @@ window#waybar.hidden {
 }
 
 #pulseaudio {
-    color: #f9e2af;
+    color: @color3;
 }
 
 #pulseaudio.muted {
-    color: #6c7086;
+    color: @color8;
 }
 
 #network {
-    color: #94e2d5;
+    color: @color6;
 }
 
 #network.disconnected {
-    color: #f38ba8;
+    color: @color1;
 }
 
 #cpu {
-    color: #fab387;
+    color: @color11;
 }
 
 #memory {
-    color: #cba6f7;
+    color: @color5;
 }
 
 #battery {
-    color: #a6e3a1;
+    color: @color2;
 }
 
 #battery.charging {
-    color: #a6e3a1;
+    color: @color2;
 }
 
 #battery.warning:not(.charging) {
-    color: #f9e2af;
+    color: @color3;
 }
 
 #battery.critical:not(.charging) {
-    color: #f38ba8;
+    color: @color1;
     animation: blink 0.5s linear infinite alternate;
 }
 
 @keyframes blink {
     to {
-        color: #1e1e2e;
-        background: #f38ba8;
+        color: @background;
+        background: @color1;
     }
 }
 
 /* Tooltip */
 tooltip {
-    background: rgba(30, 30, 46, 0.95);
-    border: 1px solid #45475a;
+    background: alpha(@background, 0.95);
+    border: 1px solid @color8;
     border-radius: 8px;
 }
 
 tooltip label {
-    color: #cdd6f4;
+    color: @foreground;
     padding: 4px;
 }
