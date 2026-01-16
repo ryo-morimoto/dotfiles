@@ -3,6 +3,7 @@
 {
 	imports = [
 		./modules/git.nix
+		./modules/shell/zsh.nix
 	];
 
 	home.username = "ryo-o";
