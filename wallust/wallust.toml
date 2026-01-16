@@ -1,0 +1,37 @@
+# Wallust Configuration
+# https://codeberg.org/explosion-mental/wallust
+
+# Backend for color extraction
+backend = "kmeans"
+
+# Color space for palette generation
+colorspace = "labmixed"
+
+# Palette preset (full16, dark16, harddark16, softdark16, etc.)
+palette = "dark16"
+
+# Saturation threshold (0.0 - 1.0)
+threshold = 20
+
+# Check for contrast and adjust if needed
+check_contrast = true
+
+# Alpha value for colors (0 - 100)
+alpha = 100
+
+# Templates to generate
+[templates]
+# Hyprland colors
+hyprland = { src = "~/.config/wallust/templates/hyprland.conf", dst = "~/.cache/wallust/hyprland-colors.conf" }
+
+# Waybar colors
+waybar = { src = "~/.config/wallust/templates/waybar.css", dst = "~/.cache/wallust/waybar-colors.css" }
+
+# Rofi colors
+rofi = { src = "~/.config/wallust/templates/rofi.rasi", dst = "~/.cache/wallust/rofi-colors.rasi" }
+
+# Dunst colors
+dunst = { src = "~/.config/wallust/templates/dunst", dst = "~/.cache/wallust/dunst-colors" }
+
+# Ghostty colors
+ghostty = { src = "~/.config/wallust/templates/ghostty", dst = "~/.cache/wallust/ghostty-colors" }

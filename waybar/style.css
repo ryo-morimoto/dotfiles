@@ -1,0 +1,141 @@
+/* Waybar Style - Catppuccin Mocha inspired */
+
+* {
+    font-family: "JetBrainsMono Nerd Font", "Noto Sans", sans-serif;
+    font-size: 13px;
+    min-height: 0;
+}
+
+window#waybar {
+    background: rgba(30, 30, 46, 0.9);
+    border-radius: 10px;
+    color: #cdd6f4;
+}
+
+window#waybar.hidden {
+    opacity: 0.2;
+}
+
+/* Workspaces */
+#workspaces {
+    background: rgba(49, 50, 68, 0.6);
+    border-radius: 8px;
+    margin: 4px;
+    padding: 0 4px;
+}
+
+#workspaces button {
+    color: #6c7086;
+    padding: 4px 8px;
+    margin: 2px;
+    border-radius: 6px;
+    background: transparent;
+    transition: all 0.2s ease;
+}
+
+#workspaces button:hover {
+    background: rgba(137, 180, 250, 0.2);
+    color: #89b4fa;
+}
+
+#workspaces button.active {
+    background: #89b4fa;
+    color: #1e1e2e;
+}
+
+#workspaces button.urgent {
+    background: #f38ba8;
+    color: #1e1e2e;
+}
+
+/* Window title */
+#window {
+    color: #a6adc8;
+    padding: 0 12px;
+}
+
+/* Clock */
+#clock {
+    background: rgba(137, 180, 250, 0.2);
+    color: #89b4fa;
+    border-radius: 8px;
+    padding: 4px 12px;
+    margin: 4px;
+}
+
+/* Right modules */
+#tray,
+#pulseaudio,
+#network,
+#cpu,
+#memory,
+#battery {
+    background: rgba(49, 50, 68, 0.6);
+    border-radius: 8px;
+    padding: 4px 10px;
+    margin: 4px 2px;
+}
+
+#tray {
+    padding: 4px 8px;
+}
+
+#pulseaudio {
+    color: #f9e2af;
+}
+
+#pulseaudio.muted {
+    color: #6c7086;
+}
+
+#network {
+    color: #94e2d5;
+}
+
+#network.disconnected {
+    color: #f38ba8;
+}
+
+#cpu {
+    color: #fab387;
+}
+
+#memory {
+    color: #cba6f7;
+}
+
+#battery {
+    color: #a6e3a1;
+}
+
+#battery.charging {
+    color: #a6e3a1;
+}
+
+#battery.warning:not(.charging) {
+    color: #f9e2af;
+}
+
+#battery.critical:not(.charging) {
+    color: #f38ba8;
+    animation: blink 0.5s linear infinite alternate;
+}
+
+@keyframes blink {
+    to {
+        color: #1e1e2e;
+        background: #f38ba8;
+    }
+}
+
+/* Tooltip */
+tooltip {
+    background: rgba(30, 30, 46, 0.95);
+    border: 1px solid #45475a;
+    border-radius: 8px;
+}
+
+tooltip label {
+    color: #cdd6f4;
+    padding: 4px;
+}

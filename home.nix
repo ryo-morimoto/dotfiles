@@ -13,6 +13,31 @@
 		neovim
 		jq
 		bc
+
+		# Hyprland & Wayland (Phase 1)
+		hyprland
+		xdg-desktop-portal-hyprland
+
+		# UI (Phase 2)
+		waybar
+		ghostty
+
+		# Launcher & Notifications (Phase 3)
+		rofi-wayland
+		dunst
+
+		# Utilities (Phase 4)
+		swww
+		hyprlock
+		hyprshot
+		grim
+		slurp
+		wl-clipboard
+		cliphist
+		swappy
+		btop
+		fastfetch
+		wallust
 	];
 
 	programs.git = {
@@ -51,5 +76,33 @@
 			source = ./claude/statusline.sh;
 			executable = true;
 		};
+
+		# Hyprland
+		".config/hypr/hyprland.conf".source = ./hyprland/hyprland.conf;
+		".config/hypr/keybinds.conf".source = ./hyprland/keybinds.conf;
+		".config/hypr/windowrules.conf".source = ./hyprland/windowrules.conf;
+		".config/hypr/autostart.conf".source = ./hyprland/autostart.conf;
+
+		# Waybar
+		".config/waybar/config.jsonc".source = ./waybar/config.jsonc;
+		".config/waybar/style.css".source = ./waybar/style.css;
+
+		# Ghostty
+		".config/ghostty/config".source = ./ghostty/config;
+
+		# Rofi
+		".config/rofi/config.rasi".source = ./rofi/config.rasi;
+
+		# Dunst
+		".config/dunst/dunstrc".source = ./dunst/dunstrc;
+
+		# Btop
+		".config/btop/btop.conf".source = ./btop/btop.conf;
+
+		# Fastfetch
+		".config/fastfetch/config.jsonc".source = ./fastfetch/config.jsonc;
+
+		# Wallust
+		".config/wallust/wallust.toml".source = ./wallust/wallust.toml;
 	};
 }
