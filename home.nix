@@ -10,6 +10,9 @@
 	# XDG Base Directory
 	xdg.enable = true;
 
+	# Fontconfig (required for Nix apps to find fonts on non-NixOS)
+	fonts.fontconfig.enable = true;
+
 	# nixGL for GPU apps on non-NixOS (Arch Linux)
 	targets.genericLinux.enable = true;
 	targets.genericLinux.nixGL = {
