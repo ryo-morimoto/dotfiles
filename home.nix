@@ -74,10 +74,7 @@
 
 	home.file = {
 		".config/zsh/.zshrc".source = ./zsh/.zshrc;
-		".zshenv".text = ''
-			export ZDOTDIR="''${XDG_CONFIG_HOME:-$HOME/.config}/zsh"
-			export CLAUDE_CONFIG_DIR="''${XDG_CONFIG_HOME:-$HOME/.config}/claude"
-		'';
+		".zshenv".source = ./zsh/.zshenv;
 		".config/nvim".source = ./nvim;
 		".config/claude/settings.json".source = ./claude/settings.json;
 		".config/claude/statusline.sh" = {
