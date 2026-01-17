@@ -99,4 +99,12 @@
 		".config/wallust/defaults".source = ./wallust/defaults;
 		".config/waypaper/config.ini".source = ./waypaper/config.ini;
 	};
+
+	# Ensure wallust cache exists before Hyprland starts (prevents source error)
+	home.activation.wallustCache = ''
+		mkdir -p $HOME/.cache/wallust
+		if [ ! -f "$HOME/.cache/wallust/hyprland-colors.conf" ]; then
+			cp "$HOME/.config/wallust/defaults/hyprland-colors.conf" "$HOME/.cache/wallust/"
+		fi
+	'';
 }
