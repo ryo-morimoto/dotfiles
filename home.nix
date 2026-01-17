@@ -24,15 +24,11 @@
 		jq
 		bc
 
-		# Launcher
-		rofi
-
 		# Utilities (non-GPU)
 		grim
 		slurp
 		wl-clipboard
 		cliphist
-		swappy
 		btop
 		fastfetch
 		wallust
@@ -49,6 +45,8 @@
 		(config.lib.nixGL.wrap pkgs.hyprshot)
 		(config.lib.nixGL.wrap pkgs.dunst)
 		(config.lib.nixGL.wrap pkgs.waypaper)
+		(config.lib.nixGL.wrap pkgs.swappy)
+		(config.lib.nixGL.wrap pkgs.rofi)
 	];
 
 	programs.git = {
