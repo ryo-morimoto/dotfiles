@@ -10,9 +10,13 @@
 		claude-code = {
 			url = "github:ryoppippi/claude-code-overlay";
 		};
+		nixgl = {
+			url = "github:nix-community/nixGL";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 	};
 
-	outputs = { nixpkgs, home-manager, claude-code, ... }:
+	outputs = { nixpkgs, home-manager, claude-code, nixgl, ... }:
 		let
 			system = "x86_64-linux";
 			pkgs = import nixpkgs {
@@ -26,6 +30,9 @@
 		{
 			homeConfigurations."ryo-morimoto" = home-manager.lib.homeManagerConfiguration {
 				inherit pkgs;
+				extraSpecialArgs = {
+					inherit nixgl;
+				};
 				modules = [ ./home.nix ];
 			};
 		};

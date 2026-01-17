@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, nixgl, ... }:
 
 {
 	home.username = "ryo-o";
@@ -7,29 +7,25 @@
 
 	programs.home-manager.enable = true;
 
-	home.packages = with pkgs; [
+	# nixGL for GPU apps on non-NixOS (Arch Linux)
+	targets.genericLinux.enable = true;
+	targets.genericLinux.nixGL = {
+		packages = nixgl.packages;
+		defaultWrapper = "mesa";  # AMD GPU
+	};
+
+	home.packages = (with pkgs; [
 		bat
 		zsh
 		neovim
 		jq
 		bc
 
-		# Hyprland & Wayland
-		hyprland
-		xdg-desktop-portal-hyprland
-
-		# UI
-		waybar
-		ghostty
-
 		# Launcher & Notifications
 		rofi
 		dunst
 
-		# Utilities
-		swww
-		hyprlock
-		hyprshot
+		# Utilities (non-GPU)
 		grim
 		slurp
 		wl-clipboard
@@ -41,6 +37,15 @@
 		waypaper
 		papirus-icon-theme
 		adwaita-icon-theme
+	]) ++ [
+		# GPU-dependent packages (wrapped with nixGL)
+		(config.lib.nixGL.wrap pkgs.hyprland)
+		(config.lib.nixGL.wrap pkgs.xdg-desktop-portal-hyprland)
+		(config.lib.nixGL.wrap pkgs.waybar)
+		(config.lib.nixGL.wrap pkgs.ghostty)
+		(config.lib.nixGL.wrap pkgs.swww)
+		(config.lib.nixGL.wrap pkgs.hyprlock)
+		(config.lib.nixGL.wrap pkgs.hyprshot)
 	];
 
 	programs.git = {
