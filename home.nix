@@ -7,6 +7,9 @@
 
 	programs.home-manager.enable = true;
 
+	# XDG Base Directory
+	xdg.enable = true;
+
 	# nixGL for GPU apps on non-NixOS (Arch Linux)
 	targets.genericLinux.enable = true;
 	targets.genericLinux.nixGL = {
