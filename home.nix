@@ -24,14 +24,20 @@
 		jq
 		bc
 
+		# Launcher & Notifications
+		rofi
+		dunst
+
 		# Utilities (non-GPU)
 		grim
 		slurp
 		wl-clipboard
 		cliphist
+		swappy
 		btop
 		fastfetch
 		wallust
+		waypaper
 		papirus-icon-theme
 		adwaita-icon-theme
 	]) ++ [
@@ -43,10 +49,6 @@
 		(config.lib.nixGL.wrap pkgs.swww)
 		(config.lib.nixGL.wrap pkgs.hyprlock)
 		(config.lib.nixGL.wrap pkgs.hyprshot)
-		(config.lib.nixGL.wrap pkgs.dunst)
-		(config.lib.nixGL.wrap pkgs.waypaper)
-		(config.lib.nixGL.wrap pkgs.swappy)
-		(config.lib.nixGL.wrap pkgs.rofi)
 	];
 
 	programs.git = {
