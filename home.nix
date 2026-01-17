@@ -23,7 +23,7 @@
 		ghostty
 
 		# Launcher & Notifications
-		rofi-wayland
+		rofi
 		dunst
 
 		# Utilities
