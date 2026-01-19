@@ -45,6 +45,7 @@ in {
       user.email = "ryo.morimoto.dev@gmail.com";
       init.defaultBranch = "main";
       push.autoSetupRemote = true;
+      credential."https://github.com".helper = "!gh auth git-credential";
     };
   };
 
