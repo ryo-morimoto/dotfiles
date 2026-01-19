@@ -13,6 +13,26 @@ in
       # Editor
       neovim
 
+      # LSP servers (for Neovim)
+      nodePackages.typescript-language-server
+      vscode-langservers-extracted
+      pyright
+      rust-analyzer
+      gopls
+      lua-language-server
+      nixd
+      tailwindcss-language-server
+
+      # Formatters (for Neovim)
+      prettierd
+      black
+      gofumpt
+      stylua
+
+      # Linters (for Neovim)
+      nodePackages.eslint
+      ruff
+
       # Terminal
       ghostty
 
@@ -450,6 +470,7 @@ in
 
   # Dotfiles (mkOutOfStoreSymlink for instant updates)
   xdg.configFile = {
+    "nvim".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/nvim";
     "ghostty".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/ghostty";
     "niri".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/niri";
     "hypr".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/hypr";
