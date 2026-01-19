@@ -404,11 +404,35 @@ in
     };
   };
 
+  # GTK theme (Catppuccin Mocha)
+  gtk = {
+    enable = true;
+    theme = {
+      name = "catppuccin-mocha-lavender-standard+default";
+      package = pkgs.catppuccin-gtk.override {
+        accents = [ "lavender" ];
+        variant = "mocha";
+      };
+    };
+    iconTheme = {
+      name = "Papirus-Dark";
+      package = pkgs.papirus-icon-theme;
+    };
+    cursorTheme = {
+      name = "catppuccin-mocha-lavender-cursors";
+      package = pkgs.catppuccin-cursors.mochaLavender;
+      size = 24;
+    };
+  };
+
   # Dotfiles (mkOutOfStoreSymlink for instant updates)
   xdg.configFile = {
     "ghostty".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/ghostty";
     "niri".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/niri";
     "hypr".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/hypr";
     "zsh".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/zsh";
+    "waybar".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/waybar";
+    "fuzzel".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/fuzzel";
+    "mako".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/mako";
   };
 }

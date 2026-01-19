@@ -67,6 +67,9 @@
     fuzzel
     mako
     wl-clipboard
+    swaybg
+    waybar
+    pavucontrol
   ];
 
   # XDG Portal

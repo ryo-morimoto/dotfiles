@@ -1,0 +1,41 @@
+* {
+    font-family: "HackGen Console NF";
+    font-size: 13px;
+    min-height: 0;
+}
+
+window#waybar {
+    background: #1e1e2e;
+    color: #cdd6f4;
+}
+
+#workspaces button {
+    padding: 0 8px;
+    color: #6c7086;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+}
+
+#workspaces button.active {
+    color: #b4befe;
+}
+
+#clock,
+#pulseaudio,
+#network,
+#tray {
+    padding: 0 12px;
+}
+
+#clock {
+    color: #cdd6f4;
+}
+
+#pulseaudio {
+    color: #a6e3a1;
+}
+
+#network {
+    color: #89b4fa;
+}

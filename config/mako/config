@@ -1,0 +1,9 @@
+font=HackGen Console NF 12
+background-color=#1e1e2e
+text-color=#cdd6f4
+border-color=#45475a
+border-size=2
+border-radius=4
+padding=16
+margin=16
+default-timeout=5000
