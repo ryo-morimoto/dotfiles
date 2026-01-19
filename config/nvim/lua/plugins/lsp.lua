@@ -1,11 +1,7 @@
 return {
-  "neovim/nvim-lspconfig",
+  "hrsh7th/cmp-nvim-lsp",
   event = { "BufReadPre", "BufNewFile" },
-  dependencies = {
-    "hrsh7th/cmp-nvim-lsp",
-  },
   config = function()
-    local lspconfig = require("lspconfig")
     local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
     -- Diagnostic config
@@ -31,109 +27,119 @@ return {
       vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
     end
 
-    -- LSP keymaps (set on attach)
-    local on_attach = function(client, bufnr)
-      local map = function(keys, func, desc)
-        vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
-      end
+    -- LSP keymaps (set on LspAttach)
+    vim.api.nvim_create_autocmd("LspAttach", {
+      group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true }),
+      callback = function(ev)
+        local client = vim.lsp.get_client_by_id(ev.data.client_id)
+        local bufnr = ev.buf
 
-      map("gd", vim.lsp.buf.definition, "Go to definition")
-      map("gD", vim.lsp.buf.declaration, "Go to declaration")
-      map("gr", vim.lsp.buf.references, "Go to references")
-      map("gi", vim.lsp.buf.implementation, "Go to implementation")
-      map("K", vim.lsp.buf.hover, "Hover documentation")
-      map("<leader>lr", vim.lsp.buf.rename, "Rename symbol")
-      map("<leader>la", vim.lsp.buf.code_action, "Code action")
-      map("<leader>ld", "<cmd>FzfLua diagnostics_document<cr>", "Document diagnostics")
-      map("<leader>lD", "<cmd>FzfLua diagnostics_workspace<cr>", "Workspace diagnostics")
-      map("<leader>ls", "<cmd>FzfLua lsp_document_symbols<cr>", "Document symbols")
-      map("<leader>lS", "<cmd>FzfLua lsp_workspace_symbols<cr>", "Workspace symbols")
+        local map = function(keys, func, desc)
+          vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
+        end
 
-      -- Inlay hints (Neovim 0.10+)
-      if client.supports_method("textDocument/inlayHint") then
-        vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
-      end
-    end
+        map("gd", vim.lsp.buf.definition, "Go to definition")
+        map("gD", vim.lsp.buf.declaration, "Go to declaration")
+        map("gr", vim.lsp.buf.references, "Go to references")
+        map("gi", vim.lsp.buf.implementation, "Go to implementation")
+        map("K", vim.lsp.buf.hover, "Hover documentation")
+        map("<leader>lr", vim.lsp.buf.rename, "Rename symbol")
+        map("<leader>la", vim.lsp.buf.code_action, "Code action")
+        map("<leader>ld", "<cmd>FzfLua diagnostics_document<cr>", "Document diagnostics")
+        map("<leader>lD", "<cmd>FzfLua diagnostics_workspace<cr>", "Workspace diagnostics")
+        map("<leader>ls", "<cmd>FzfLua lsp_document_symbols<cr>", "Document symbols")
+        map("<leader>lS", "<cmd>FzfLua lsp_workspace_symbols<cr>", "Workspace symbols")
+
+        -- Inlay hints (Neovim 0.10+)
+        if client and client.supports_method("textDocument/inlayHint") then
+          vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+        end
+      end,
+    })
 
     -- Capabilities (for completion)
     local capabilities = cmp_nvim_lsp.default_capabilities()
 
+    -- Default config for all LSP servers
+    vim.lsp.config("*", {
+      capabilities = capabilities,
+    })
+
     -- LSP servers configuration (installed via Nix)
-    local servers = {
-      -- TypeScript/JavaScript
-      ts_ls = {},
+    vim.lsp.config("ts_ls", {})
 
-      -- HTML/CSS/JSON (from vscode-langservers-extracted)
-      html = {},
-      cssls = {},
-      jsonls = {},
+    vim.lsp.config("html", {})
 
-      -- Python
-      pyright = {},
+    vim.lsp.config("cssls", {})
 
-      -- Rust
-      rust_analyzer = {
-        settings = {
-          ["rust-analyzer"] = {
-            checkOnSave = {
-              command = "clippy",
-            },
+    vim.lsp.config("jsonls", {})
+
+    vim.lsp.config("pyright", {})
+
+    vim.lsp.config("rust_analyzer", {
+      settings = {
+        ["rust-analyzer"] = {
+          checkOnSave = {
+            command = "clippy",
           },
         },
       },
+    })
 
-      -- Go
-      gopls = {
-        settings = {
-          gopls = {
-            analyses = {
-              unusedparams = true,
-            },
-            staticcheck = true,
+    vim.lsp.config("gopls", {
+      settings = {
+        gopls = {
+          analyses = {
+            unusedparams = true,
+          },
+          staticcheck = true,
+        },
+      },
+    })
+
+    vim.lsp.config("lua_ls", {
+      settings = {
+        Lua = {
+          runtime = { version = "LuaJIT" },
+          workspace = {
+            checkThirdParty = false,
+            library = vim.api.nvim_get_runtime_file("", true),
+          },
+          diagnostics = {
+            globals = { "vim" },
+          },
+          telemetry = { enable = false },
+        },
+      },
+    })
+
+    vim.lsp.config("nixd", {
+      settings = {
+        nixd = {
+          nixpkgs = {
+            expr = "import <nixpkgs> { }",
+          },
+          formatting = {
+            command = { "nixfmt" },
           },
         },
       },
+    })
 
-      -- Lua
-      lua_ls = {
-        settings = {
-          Lua = {
-            runtime = { version = "LuaJIT" },
-            workspace = {
-              checkThirdParty = false,
-              library = vim.api.nvim_get_runtime_file("", true),
-            },
-            diagnostics = {
-              globals = { "vim" },
-            },
-            telemetry = { enable = false },
-          },
-        },
-      },
+    vim.lsp.config("tailwindcss", {})
 
-      -- Nix
-      nixd = {
-        settings = {
-          nixd = {
-            nixpkgs = {
-              expr = "import <nixpkgs> { }",
-            },
-            formatting = {
-              command = { "nixfmt" },
-            },
-          },
-        },
-      },
-
-      -- Tailwind CSS
-      tailwindcss = {},
-    }
-
-    -- Setup all servers
-    for server, config in pairs(servers) do
-      config.on_attach = on_attach
-      config.capabilities = capabilities
-      lspconfig[server].setup(config)
-    end
+    -- Enable all configured servers
+    vim.lsp.enable({
+      "ts_ls",
+      "html",
+      "cssls",
+      "jsonls",
+      "pyright",
+      "rust_analyzer",
+      "gopls",
+      "lua_ls",
+      "nixd",
+      "tailwindcss",
+    })
   end,
 }

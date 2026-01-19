@@ -64,10 +64,18 @@ return {
       }
 
       -- Auto lint on save and insert leave
-      vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+      vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
         group = vim.api.nvim_create_augroup("nvim-lint", { clear = true }),
         callback = function()
-          lint.try_lint()
+          -- Only lint if the linter is available
+          local ft = vim.bo.filetype
+          local linters = lint.linters_by_ft[ft] or {}
+          for _, linter in ipairs(linters) do
+            if vim.fn.executable(linter) == 1 then
+              lint.try_lint()
+              return
+            end
+          end
         end,
       })
     end,
