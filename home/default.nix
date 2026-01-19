@@ -49,6 +49,7 @@ in
       gh
       claude-code
       codex
+      ralph-tui
       socat
       bubblewrap
       lazygit
@@ -363,6 +364,18 @@ in
         # Terminal overrides
         set -ag terminal-overrides ",xterm-256color:RGB"
         set -ag terminal-overrides ",ghostty:RGB"
+
+        # Clipboard integration (Wayland)
+        set -s set-clipboard on
+        set -ag terminal-overrides ",ghostty:clipboard"
+
+        # Mouse drag auto-copy
+        bind -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "wl-copy"
+        bind -T copy-mode MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "wl-copy"
+
+        # Easy paste: Ctrl+q v or right-click
+        bind v run "wl-paste -n | tmux load-buffer - ; tmux paste-buffer"
+        bind -n MouseDown3Pane run "wl-paste -n | tmux load-buffer - ; tmux paste-buffer"
 
         # Pane base index
         setw -g pane-base-index 1
