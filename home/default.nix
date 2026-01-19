@@ -21,6 +21,23 @@ in
       tree
       ripgrep
       fd
+      jq
+      yq-go
+      httpie
+      tokei
+
+      # Modern CLI replacements
+      btop
+      procs
+      duf
+      dust
+      sd
+      difftastic
+      hyperfine
+      glow
+      ouch
+      bandwhich
+      navi
 
       # Nix tools
       nixfmt
@@ -34,6 +51,18 @@ in
       codex
       socat
       bubblewrap
+      lazygit
+      just
+
+      # Web development
+      nodejs
+      bun
+      pnpm
+
+      # System/CLI development
+      go
+      rustc
+      cargo
     ];
 
     file = {
@@ -55,6 +84,17 @@ in
         init.defaultBranch = "main";
         push.autoSetupRemote = true;
         credential."https://github.com".helper = "!gh auth git-credential";
+        merge.conflictstyle = "diff3";
+        diff.colorMoved = "default";
+      };
+    };
+
+    delta = {
+      enable = true;
+      options = {
+        navigate = true;
+        side-by-side = true;
+        line-numbers = true;
       };
     };
 
@@ -85,6 +125,7 @@ in
             gc = "git commit";
             gp = "git push";
             gl = "git pull";
+            lg = "lazygit";
           };
           modern = {
             ls = "eza --icons";
@@ -94,6 +135,12 @@ in
             cat = "bat";
             grep = "rg";
             find = "fd";
+            ps = "procs";
+            du = "dust";
+            df = "duf";
+            top = "btop";
+            sed = "sd";
+            diff = "difftastic";
           };
         in
         navigation // git // modern;
@@ -139,6 +186,31 @@ in
       enable = true;
       enableZshIntegration = true;
       nix-direnv.enable = true;
+    };
+
+    atuin = {
+      enable = true;
+      enableZshIntegration = true;
+      settings = {
+        auto_sync = false;
+        update_check = false;
+        style = "compact";
+        inline_height = 20;
+      };
+    };
+
+    tealdeer = {
+      enable = true;
+      settings = {
+        updates = {
+          auto_update = true;
+        };
+      };
+    };
+
+    yazi = {
+      enable = true;
+      enableZshIntegration = true;
     };
 
     tmux = {
