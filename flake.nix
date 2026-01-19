@@ -30,6 +30,11 @@
       ralph-tui-overlay,
       ...
     }:
+    let
+      localOverlay = final: prev: {
+        vibe-kanban = final.callPackage ./packages/vibe-kanban.nix { };
+      };
+    in
     {
       nixosConfigurations.ryobox = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -38,6 +43,7 @@
           home-manager.nixosModules.home-manager
           {
             nixpkgs.overlays = [
+              localOverlay
               claude-code-overlay.overlays.default
               codex-cli-nix.overlays.default
               ralph-tui-overlay.overlays.default

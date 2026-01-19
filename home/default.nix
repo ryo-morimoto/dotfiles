@@ -91,6 +91,9 @@ in
       watchexec
       fastfetch
       age
+
+      # AI tools
+      vibe-kanban
     ];
 
     file = {
