@@ -111,11 +111,36 @@ in
         ignoreSpace = true;
         share = true;
       };
+      historySubstringSearch = {
+        enable = true;
+        searchUpKey = [
+          "^[[A"
+          "$terminfo[kcuu1]"
+        ];
+        searchDownKey = [
+          "^[[B"
+          "$terminfo[kcud1]"
+        ];
+      };
+      plugins = [
+        {
+          name = "fzf-tab";
+          src = pkgs.zsh-fzf-tab;
+          file = "share/fzf-tab/fzf-tab.plugin.zsh";
+        }
+        {
+          name = "zsh-autopair";
+          src = pkgs.zsh-autopair;
+          file = "share/zsh/zsh-autopair/autopair.zsh";
+        }
+      ];
       shellAliases =
         let
           navigation = {
             ".." = "cd ..";
             "..." = "cd ../..";
+            "...." = "cd ../../..";
+            take = "mkdir -p $1 && cd $1";
           };
           git = {
             g = "git";
@@ -125,6 +150,8 @@ in
             gc = "git commit";
             gp = "git push";
             gl = "git pull";
+            gco = "git checkout";
+            gcb = "git checkout -b";
             lg = "lazygit";
           };
           modern = {
@@ -142,9 +169,82 @@ in
             sed = "sd";
             diff = "difftastic";
           };
+          utils = {
+            path = "echo $PATH | tr ':' '\\n'";
+            ports = "ss -tulanp";
+            myip = "curl -s ifconfig.me";
+          };
         in
-        navigation // git // modern;
+        navigation // git // modern // utils;
       initContent = ''
+        # Shell options
+        setopt AUTO_CD              # cd by typing directory name
+        setopt AUTO_PUSHD           # Push to directory stack on cd
+        setopt PUSHD_IGNORE_DUPS    # No duplicates in dir stack
+        setopt PUSHD_SILENT         # Silent pushd
+        setopt CORRECT              # Command correction
+        setopt CDABLE_VARS          # cd to named directories
+        setopt EXTENDED_GLOB        # Extended globbing
+        setopt GLOB_DOTS            # Match dotfiles with *
+
+        # fzf-tab configuration
+        zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
+        zstyle ':fzf-tab:complete:*:*' fzf-preview 'bat --color=always --style=numbers --line-range=:500 $realpath 2>/dev/null || eza -1 --color=always $realpath 2>/dev/null || echo $realpath'
+        zstyle ':fzf-tab:*' fzf-flags --height=50%
+
+        # Double ESC to add sudo
+        sudo-command-line() {
+          [[ -z $BUFFER ]] && zle up-history
+          if [[ $BUFFER == sudo\ * ]]; then
+            LBUFFER="''${LBUFFER#sudo }"
+          else
+            LBUFFER="sudo $LBUFFER"
+          fi
+        }
+        zle -N sudo-command-line
+        bindkey '\e\e' sudo-command-line
+
+        # ghq + fzf integration (Ctrl+g)
+        ghq-fzf() {
+          local repo=$(ghq list | fzf --preview "eza --tree --level=1 --color=always $(ghq root)/{}" --height=50%)
+          if [[ -n "$repo" ]]; then
+            cd "$(ghq root)/$repo"
+            zle reset-prompt
+          fi
+        }
+        zle -N ghq-fzf
+        bindkey '^g' ghq-fzf
+
+        # Extract function - universal archive extractor
+        extract() {
+          if [[ -f $1 ]]; then
+            case $1 in
+              *.tar.bz2)   tar xjf $1    ;;
+              *.tar.gz)    tar xzf $1    ;;
+              *.tar.xz)    tar xJf $1    ;;
+              *.bz2)       bunzip2 $1    ;;
+              *.rar)       unrar x $1    ;;
+              *.gz)        gunzip $1     ;;
+              *.tar)       tar xf $1     ;;
+              *.tbz2)      tar xjf $1    ;;
+              *.tgz)       tar xzf $1    ;;
+              *.zip)       unzip $1      ;;
+              *.Z)         uncompress $1 ;;
+              *.7z)        7z x $1       ;;
+              *.zst)       unzstd $1     ;;
+              *)           echo "'$1' cannot be extracted" ;;
+            esac
+          else
+            echo "'$1' is not a valid file"
+          fi
+        }
+
+        # mkcd - make directory and cd into it
+        mkcd() {
+          mkdir -p "$1" && cd "$1"
+        }
+
+        # Custom config
         [[ -f ~/.config/zsh/custom.zsh ]] && source ~/.config/zsh/custom.zsh
       '';
     };
