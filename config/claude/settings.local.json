@@ -1,0 +1,5 @@
+{
+  "preferences": {
+    "statusline": "~/.claude/statusline.sh"
+  }
+}

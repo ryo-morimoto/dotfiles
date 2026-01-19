@@ -146,4 +146,13 @@ in {
     "tmux".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/tmux";
     "zsh".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/zsh";
   };
+
+  # Claude Code config (~/.claude is not XDG, so use home.file)
+  home.file = {
+    ".claude/statusline.sh" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/claude/statusline.sh";
+      executable = true;
+    };
+    ".claude/settings.local.json".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/claude/settings.local.json";
+  };
 }
