@@ -63,6 +63,33 @@ in
       go
       rustc
       cargo
+      mold
+
+      # Shell development
+      shellcheck
+      shfmt
+
+      # Container/Infra
+      docker
+      dive
+      kubectl
+      k9s
+
+      # Database
+      sqlite
+      usql
+
+      # File operations
+      trash-cli
+      wl-clipboard
+      ffmpeg
+      imagemagick
+      pandoc
+
+      # Utilities
+      watchexec
+      fastfetch
+      age
     ];
 
     file = {
@@ -173,9 +200,19 @@ in
             path = "echo $PATH | tr ':' '\\n'";
             ports = "ss -tulanp";
             myip = "curl -s ifconfig.me";
+            rm = "trash";
+            cp = "cp -iv";
+            mv = "mv -iv";
+            clip = "wl-copy";
+            paste = "wl-paste";
+          };
+          k8s = {
+            k = "kubectl";
+            kx = "kubectx";
+            kn = "kubens";
           };
         in
-        navigation // git // modern // utils;
+        navigation // git // modern // utils // k8s;
       initContent = ''
         # Shell options
         setopt AUTO_CD              # cd by typing directory name
