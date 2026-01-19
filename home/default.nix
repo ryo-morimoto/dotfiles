@@ -35,6 +35,7 @@ in {
     claude-code
     socat
     bubblewrap
+
   ];
 
   # Git
@@ -136,14 +137,64 @@ in {
   };
 
   # Tmux
-  programs.tmux.enable = true;
+  programs.tmux = {
+    enable = true;
+    terminal = "tmux-256color";
+    escapeTime = 0;
+    historyLimit = 50000;
+    mouse = true;
+    baseIndex = 1;
+    keyMode = "vi";
+    prefix = "C-s";
+    extraConfig = ''
+      # Terminal overrides
+      set -ag terminal-overrides ",xterm-256color:RGB"
+      set -ag terminal-overrides ",ghostty:RGB"
+
+      # Pane base index
+      setw -g pane-base-index 1
+
+      # Split panes
+      bind | split-window -h -c "#{pane_current_path}"
+      bind - split-window -v -c "#{pane_current_path}"
+
+      # Vim-like pane navigation
+      bind h select-pane -L
+      bind j select-pane -D
+      bind k select-pane -U
+      bind l select-pane -R
+
+      # Reload config
+      bind r source-file ~/.config/tmux/tmux.conf \; display "Config reloaded!"
+
+      # Status bar
+      set -g status on
+      set -g status-interval 5
+      set -g status-position bottom
+      set -g status-justify left
+      set -g status-style 'bg=#1e1e2e fg=#cdd6f4'
+
+      # Left status - Session name
+      set -g status-left-length 50
+      set -g status-left '#[fg=#1e1e2e,bg=#89b4fa,bold] #S #[fg=#89b4fa,bg=#1e1e2e] '
+
+      # Right status - Claude Code statusline + time
+      set -g status-right-length 120
+      set -g status-right '#(cat /tmp/claude-status 2>/dev/null || echo "") #[fg=#cdd6f4]| #[fg=#a6e3a1]#{b:pane_current_path} #[fg=#cdd6f4]| %H:%M '
+
+      # Window status
+      setw -g window-status-current-style 'fg=#1e1e2e bg=#f5c2e7 bold'
+      setw -g window-status-current-format ' #I:#W#F '
+      setw -g window-status-style 'fg=#cdd6f4 bg=#313244'
+      setw -g window-status-format ' #I:#W#F '
+    '';
+  };
 
   # Dotfiles (mkOutOfStoreSymlink for instant updates)
   xdg.configFile = {
     "ghostty".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/ghostty";
     "niri".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/niri";
     "hypr".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/hypr";
-    "tmux".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/tmux";
     "zsh".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/zsh";
   };
 
