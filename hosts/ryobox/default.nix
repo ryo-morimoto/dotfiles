@@ -70,6 +70,8 @@
     swaybg
     waybar
     pavucontrol
+    wlogout
+    swaylock
   ];
 
   # XDG Portal

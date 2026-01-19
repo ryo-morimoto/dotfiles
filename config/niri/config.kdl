@@ -247,6 +247,16 @@ binds {
     Mod+D hotkey-overlay-title="Launcher" { spawn "fuzzel"; }
     Super+Alt+L hotkey-overlay-title="Lock" { spawn "swaylock"; }
 
+    // System controls (keyboard alternatives to waybar clicks)
+    Mod+A hotkey-overlay-title="Audio Mixer" { spawn "pavucontrol"; }
+    Mod+N hotkey-overlay-title="Network" { spawn "ghostty" "-e" "nmtui"; }
+    Mod+X hotkey-overlay-title="Power Menu" { spawn "wlogout"; }
+
+    // Volume controls (for keyboards without media keys)
+    Mod+F1 hotkey-overlay-title="Mute" { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"; }
+    Mod+F2 hotkey-overlay-title="Vol-" { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05-"; }
+    Mod+F3 hotkey-overlay-title="Vol+" { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05+ -l 1.0"; }
+
     // Use spawn-sh to run a shell command. Do this if you need pipes, multiple commands, etc.
     // Note: the entire command goes as a single argument. It's passed verbatim to `sh -c`.
     // For example, this is a standard bind to toggle the screen reader (orca).

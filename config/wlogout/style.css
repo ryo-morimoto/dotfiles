@@ -1,0 +1,47 @@
+/* Catppuccin Mocha */
+* {
+    background-image: none;
+    font-family: "HackGen Console NF", monospace;
+    font-size: 14px;
+}
+
+window {
+    background-color: rgba(30, 30, 46, 0.9);
+}
+
+button {
+    color: #cdd6f4;
+    background-color: #313244;
+    border: 2px solid #45475a;
+    border-radius: 8px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 25%;
+    margin: 8px;
+}
+
+button:focus, button:active, button:hover {
+    background-color: #45475a;
+    border-color: #b4befe;
+    outline: none;
+}
+
+#lock {
+    background-image: image(url("/usr/share/wlogout/icons/lock.png"));
+}
+
+#logout {
+    background-image: image(url("/usr/share/wlogout/icons/logout.png"));
+}
+
+#suspend {
+    background-image: image(url("/usr/share/wlogout/icons/suspend.png"));
+}
+
+#reboot {
+    background-image: image(url("/usr/share/wlogout/icons/reboot.png"));
+}
+
+#shutdown {
+    background-image: image(url("/usr/share/wlogout/icons/shutdown.png"));
+}

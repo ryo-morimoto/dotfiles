@@ -425,6 +425,13 @@ in
     };
   };
 
+  # System color scheme (for apps that detect light/dark mode)
+  dconf.settings = {
+    "org/gnome/desktop/interface" = {
+      color-scheme = "prefer-dark";
+    };
+  };
+
   # Dotfiles (mkOutOfStoreSymlink for instant updates)
   xdg.configFile = {
     "ghostty".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/ghostty";
@@ -434,5 +441,6 @@ in
     "waybar".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/waybar";
     "fuzzel".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/fuzzel";
     "mako".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/mako";
+    "wlogout".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/wlogout";
   };
 }
