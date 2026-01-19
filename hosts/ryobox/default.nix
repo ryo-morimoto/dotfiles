@@ -64,14 +64,26 @@
 
   # Desktop (Niri)
   environment.systemPackages = with pkgs; [
-    fuzzel
-    mako
-    wl-clipboard
-    swaybg
+    # Bar & Launcher
     waybar
-    pavucontrol
-    wlogout
+    fuzzel
+
+    # Notifications & OSD
+    mako
+    swayosd
+
+    # Wallpaper
+    swww
+
+    # Lock & Power
     swaylock
+    wlogout
+
+    # Utilities
+    wl-clipboard
+    pavucontrol
+    playerctl
+    brightnessctl
   ];
 
   # XDG Portal

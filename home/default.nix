@@ -442,5 +442,7 @@ in
     "fuzzel".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/fuzzel";
     "mako".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/mako";
     "wlogout".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/wlogout";
+    "swaylock".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/swaylock";
+    "wallpaper".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/wallpaper";
   };
 }

@@ -1,41 +1,215 @@
+/* Catppuccin Mocha - Floating Pill Style */
+
+@define-color base #1e1e2e;
+@define-color mantle #181825;
+@define-color crust #11111b;
+@define-color text #cdd6f4;
+@define-color subtext0 #a6adc8;
+@define-color subtext1 #bac2de;
+@define-color surface0 #313244;
+@define-color surface1 #45475a;
+@define-color surface2 #585b70;
+@define-color overlay0 #6c7086;
+@define-color lavender #b4befe;
+@define-color blue #89b4fa;
+@define-color sapphire #74c7ec;
+@define-color sky #89dceb;
+@define-color teal #94e2d5;
+@define-color green #a6e3a1;
+@define-color yellow #f9e2af;
+@define-color peach #fab387;
+@define-color maroon #eba0ac;
+@define-color red #f38ba8;
+@define-color mauve #cba6f7;
+@define-color pink #f5c2e7;
+@define-color flamingo #f2cdcd;
+@define-color rosewater #f5e0dc;
+
 * {
     font-family: "HackGen Console NF";
     font-size: 13px;
     min-height: 0;
+    padding: 0;
+    margin: 0;
 }
 
 window#waybar {
-    background: #1e1e2e;
-    color: #cdd6f4;
+    background: transparent;
+    color: @text;
+}
+
+window#waybar > box {
+    margin: 8px 12px 0 12px;
+}
+
+/* Module group styling - pill shape */
+.modules-left,
+.modules-center,
+.modules-right {
+    background: alpha(@base, 0.95);
+    border-radius: 16px;
+    padding: 4px 8px;
+    margin: 0 4px;
+    border: 1px solid @surface0;
+}
+
+/* Workspace buttons */
+#workspaces {
+    padding: 0 4px;
 }
 
 #workspaces button {
-    padding: 0 8px;
-    color: #6c7086;
+    padding: 4px 10px;
+    margin: 2px 2px;
+    color: @overlay0;
     background: transparent;
     border: none;
-    border-radius: 0;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+#workspaces button:hover {
+    background: @surface0;
+    color: @text;
 }
 
 #workspaces button.active {
-    color: #b4befe;
+    background: linear-gradient(135deg, @lavender, @blue);
+    color: @base;
+    font-weight: bold;
 }
 
-#clock,
-#pulseaudio,
-#network,
-#tray {
+#workspaces button.urgent {
+    background: @red;
+    color: @base;
+}
+
+/* Window title */
+#window {
     padding: 0 12px;
+    color: @subtext1;
+    font-style: italic;
 }
 
+/* Clock - center piece */
 #clock {
-    color: #cdd6f4;
+    padding: 4px 16px;
+    color: @text;
+    font-weight: bold;
 }
 
+/* System info modules */
+#cpu,
+#memory,
+#temperature {
+    padding: 4px 12px;
+    margin: 2px;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+#cpu {
+    color: @sky;
+}
+
+#cpu:hover {
+    background: alpha(@sky, 0.2);
+}
+
+#memory {
+    color: @mauve;
+}
+
+#memory:hover {
+    background: alpha(@mauve, 0.2);
+}
+
+/* Audio */
 #pulseaudio {
-    color: #a6e3a1;
+    padding: 4px 12px;
+    margin: 2px;
+    border-radius: 10px;
+    color: @green;
+    transition: all 0.2s ease;
 }
 
+#pulseaudio:hover {
+    background: alpha(@green, 0.2);
+}
+
+#pulseaudio.muted {
+    color: @overlay0;
+}
+
+/* Network */
 #network {
-    color: #89b4fa;
+    padding: 4px 12px;
+    margin: 2px;
+    border-radius: 10px;
+    color: @blue;
+    transition: all 0.2s ease;
+}
+
+#network:hover {
+    background: alpha(@blue, 0.2);
+}
+
+#network.disconnected {
+    color: @red;
+}
+
+/* Battery (if available) */
+#battery {
+    padding: 4px 12px;
+    margin: 2px;
+    border-radius: 10px;
+    color: @green;
+    transition: all 0.2s ease;
+}
+
+#battery:hover {
+    background: alpha(@green, 0.2);
+}
+
+#battery.charging {
+    color: @yellow;
+}
+
+#battery.warning:not(.charging) {
+    color: @peach;
+}
+
+#battery.critical:not(.charging) {
+    color: @red;
+    animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0.5; }
+}
+
+/* Tray */
+#tray {
+    padding: 4px 8px;
+    margin: 2px;
+}
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+}
+
+/* Tooltip styling */
+tooltip {
+    background: @base;
+    border: 1px solid @surface1;
+    border-radius: 8px;
+}
+
+tooltip label {
+    color: @text;
+    padding: 8px;
 }

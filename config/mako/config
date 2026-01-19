@@ -1,9 +1,47 @@
+# Mako Notification Daemon - Catppuccin Mocha
+
+# General
 font=HackGen Console NF 12
+width=380
+height=120
+margin=12
+padding=16
+border-size=2
+border-radius=8
+icons=1
+icon-path=/usr/share/icons/Papirus-Dark
+max-icon-size=48
+default-timeout=5000
+ignore-timeout=0
+max-visible=5
+layer=overlay
+anchor=top-right
+
+# Colors (Catppuccin Mocha)
 background-color=#1e1e2e
 text-color=#cdd6f4
+border-color=#313244
+progress-color=over #89b4fa
+
+# Urgency levels
+[urgency=low]
 border-color=#45475a
-border-size=2
-border-radius=4
-padding=16
-margin=16
-default-timeout=5000
+default-timeout=3000
+
+[urgency=normal]
+border-color=#89b4fa
+
+[urgency=critical]
+border-color=#f38ba8
+text-color=#f38ba8
+default-timeout=0
+
+# App-specific styling
+[app-name=Spotify]
+border-color=#a6e3a1
+
+[app-name=discord]
+border-color=#89b4fa
+
+[app-name=Firefox]
+border-color=#fab387
