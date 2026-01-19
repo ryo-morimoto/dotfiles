@@ -25,7 +25,7 @@ in {
     fd
 
     # Nix tools
-    nixfmt-rfc-style
+    nixfmt
     statix
     deadnix
 
@@ -38,9 +38,9 @@ in {
   # Git
   programs.git = {
     enable = true;
-    userName = "ryo-morimoto";
-    userEmail = "ryo.morimoto.dev@gmail.com";
-    extraConfig = {
+    settings = {
+      user.name = "ryo-morimoto";
+      user.email = "ryo.morimoto.dev@gmail.com";
       init.defaultBranch = "main";
       push.autoSetupRemote = true;
     };
@@ -86,7 +86,7 @@ in {
         };
       in
       navigation // git // modern;
-    initExtra = ''
+    initContent = ''
       # キーバインド (Emacs style)
       bindkey -e
       bindkey '^[[A' history-search-backward
