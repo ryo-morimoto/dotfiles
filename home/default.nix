@@ -33,6 +33,8 @@ in {
     ghq
     gh
     claude-code
+    socat
+    bubblewrap
   ];
 
   # Git
