@@ -54,6 +54,22 @@
       };
     };
     gnome.gnome-keyring.enable = true;
+
+    # Tailscale VPN
+    tailscale = {
+      enable = true;
+      useRoutingFeatures = "client";
+    };
+
+    # SSH Server (Tailscale経由のみ許可)
+    openssh = {
+      enable = true;
+      openFirewall = false; # Tailscale経由のみ
+      settings = {
+        PermitRootLogin = "no";
+        PasswordAuthentication = false;
+      };
+    };
   };
 
   # Graphics
@@ -64,6 +80,9 @@
 
   # Desktop (Niri)
   environment.systemPackages = with pkgs; [
+    # Network
+    tailscale
+
     # Bar & Launcher
     waybar
     fuzzel
