@@ -13,19 +13,28 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, claude-code-overlay, ... }: {
-    nixosConfigurations.ryobox = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      modules = [
-        ./hosts/ryobox
-        home-manager.nixosModules.home-manager
-        {
-          nixpkgs.overlays = [ claude-code-overlay.overlays.default ];
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.users.ryo-morimoto = import ./home;
-        }
-      ];
+  outputs =
+    {
+      nixpkgs,
+      home-manager,
+      claude-code-overlay,
+      ...
+    }:
+    {
+      nixosConfigurations.ryobox = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          ./hosts/ryobox
+          home-manager.nixosModules.home-manager
+          {
+            nixpkgs.overlays = [ claude-code-overlay.overlays.default ];
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.ryo-morimoto = import ./home;
+            };
+          }
+        ];
+      };
     };
-  };
 }

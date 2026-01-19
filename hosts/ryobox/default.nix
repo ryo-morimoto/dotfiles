@@ -1,21 +1,30 @@
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 
 {
-  imports = [
-    ./hardware-configuration.nix
-  ];
+  imports = [ ./hardware-configuration.nix ];
 
   # Bootloader
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader = {
+    systemd-boot.enable = true;
+    efi.canTouchEfiVariables = true;
+  };
 
   # Network
-  networking.hostName = "ryobox";
-  networking.networkmanager.enable = true;
+  networking = {
+    hostName = "ryobox";
+    networkmanager.enable = true;
+  };
 
   # Locale
   time.timeZone = "Asia/Tokyo";
-  i18n.defaultLocale = "ja_JP.UTF-8";
+  i18n = {
+    defaultLocale = "ja_JP.UTF-8";
+    inputMethod = {
+      enable = true;
+      type = "fcitx5";
+      fcitx5.addons = with pkgs; [ fcitx5-mozc ];
+    };
+  };
   console = {
     font = "Lat2-Terminus16";
     keyMap = "jp106";
@@ -28,20 +37,23 @@
     hackgen-nf-font
   ];
 
-  # Input method
-  i18n.inputMethod = {
-    enable = true;
-    type = "fcitx5";
-    fcitx5.addons = with pkgs; [
-      fcitx5-mozc
-    ];
-  };
-
   # Audio
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    pulse.enable = true;
+  services = {
+    pipewire = {
+      enable = true;
+      alsa.enable = true;
+      pulse.enable = true;
+    };
+    greetd = {
+      enable = true;
+      settings = {
+        default_session = {
+          command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd niri-session";
+          user = "greeter";
+        };
+      };
+    };
+    gnome.gnome-keyring.enable = true;
   };
 
   # Graphics
@@ -51,21 +63,11 @@
   };
 
   # Desktop (Niri)
-  programs.niri.enable = true;
   environment.systemPackages = with pkgs; [
     fuzzel
     mako
     wl-clipboard
   ];
-  services.greetd = {
-    enable = true;
-    settings = {
-      default_session = {
-        command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd niri-session";
-        user = "greeter";
-      };
-    };
-  };
 
   # XDG Portal
   xdg.portal = {
@@ -74,27 +76,37 @@
   };
 
   # Security
-  security.polkit.enable = true;
-  security.pam.services.swaylock = {};
-  services.gnome.gnome-keyring.enable = true;
+  security = {
+    polkit.enable = true;
+    pam.services.swaylock = { };
+  };
 
-  # Zsh (system-wide for login shell)
-  programs.zsh.enable = true;
+  # Programs
+  programs = {
+    niri.enable = true;
+    zsh.enable = true;
+    firefox.enable = true;
+  };
 
   # User
   users.users.ryo-morimoto = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" "video" "audio" ];
+    extraGroups = [
+      "wheel"
+      "networkmanager"
+      "video"
+      "audio"
+    ];
     initialPassword = "changeme";
     shell = pkgs.zsh;
   };
 
   # Nix
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
   nixpkgs.config.allowUnfree = true;
-
-  # Browser (system-wide for integration)
-  programs.firefox.enable = true;
 
   system.stateVersion = "25.11";
 }
