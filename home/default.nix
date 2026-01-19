@@ -30,11 +30,21 @@ in {
     deadnix
 
     # Development
-    git
     ghq
     gh
     claude-code
   ];
+
+  # Git
+  programs.git = {
+    enable = true;
+    userName = "ryo-morimoto";
+    userEmail = "ryo.morimoto.dev@gmail.com";
+    extraConfig = {
+      init.defaultBranch = "main";
+      push.autoSetupRemote = true;
+    };
+  };
 
   # Zsh
   programs.zsh = {
