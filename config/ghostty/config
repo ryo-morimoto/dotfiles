@@ -47,4 +47,9 @@
 # # which is explained in the docs for that config option.
 # # Just for example:
 # resize-overlay-duration = 4s 200ms
+# Font
+font-family = HackGen Console NF
+font-size = 14
+font-thicken = true
+
 keybind = shift+enter=text:\x1b\r
