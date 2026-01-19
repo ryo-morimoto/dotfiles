@@ -90,10 +90,7 @@ in {
       in
       navigation // git // modern;
     initContent = ''
-      # キーバインド (Emacs style)
-      bindkey -e
-      bindkey '^[[A' history-search-backward
-      bindkey '^[[B' history-search-forward
+      [[ -f ~/.config/zsh/custom.zsh ]] && source ~/.config/zsh/custom.zsh
     '';
   };
 
@@ -138,10 +135,15 @@ in {
     nix-direnv.enable = true;
   };
 
+  # Tmux
+  programs.tmux.enable = true;
+
   # Dotfiles (mkOutOfStoreSymlink for instant updates)
   xdg.configFile = {
     "ghostty".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/ghostty";
     "niri".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/niri";
     "hypr".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/hypr";
+    "tmux".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/tmux";
+    "zsh".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/zsh";
   };
 }
