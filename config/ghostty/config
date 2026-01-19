@@ -53,3 +53,6 @@ font-size = 14
 font-thicken = true
 
 keybind = shift+enter=text:\x1b\r
+
+# Auto-start tmux (attach to existing session or create new one)
+command = tmux attach || tmux new-session

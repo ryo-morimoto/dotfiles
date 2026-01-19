@@ -145,7 +145,7 @@ in {
     mouse = true;
     baseIndex = 1;
     keyMode = "vi";
-    prefix = "C-s";
+    prefix = "C-q";
     extraConfig = ''
       # Terminal overrides
       set -ag terminal-overrides ",xterm-256color:RGB"
