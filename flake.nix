@@ -11,6 +11,10 @@
       url = "github:ryoppippi/claude-code-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    codex-cli-nix = {
+      url = "github:sadjow/codex-cli-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -18,6 +22,7 @@
       nixpkgs,
       home-manager,
       claude-code-overlay,
+      codex-cli-nix,
       ...
     }:
     {
@@ -27,7 +32,10 @@
           ./hosts/ryobox
           home-manager.nixosModules.home-manager
           {
-            nixpkgs.overlays = [ claude-code-overlay.overlays.default ];
+            nixpkgs.overlays = [
+              claude-code-overlay.overlays.default
+              codex-cli-nix.overlays.default
+            ];
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;

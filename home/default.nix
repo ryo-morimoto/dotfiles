@@ -31,6 +31,7 @@ in
       ghq
       gh
       claude-code
+      codex
       socat
       bubblewrap
     ];
