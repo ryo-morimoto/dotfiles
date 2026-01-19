@@ -101,6 +101,11 @@
     shell = pkgs.zsh;
   };
 
+  # /bin/bash symlink (for scripts with #!/bin/bash shebang)
+  system.activationScripts.binbash = ''
+    ln -sfn ${pkgs.bash}/bin/bash /bin/bash
+  '';
+
   # Nix
   nix.settings.experimental-features = [
     "nix-command"
