@@ -1,13 +1,19 @@
-# Nix
-result
-result-*
+# Home directory files (symlinked by Home Manager)
+.bash_profile
+.bashrc
+.profile
+.zprofile
+.zshrc
+.gitconfig
+.ripgreprc
 
-# Editor
-*.swp
-*.swo
-*~
-.idea/
-.vscode/
+# Editor/IDE
+.idea
+.vscode
 
-# OS
-.DS_Store
+# Git submodules (if any)
+.gitmodules
+
+# Claude Code
+.claude/
+.mcp.json
