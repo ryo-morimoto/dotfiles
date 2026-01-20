@@ -22,6 +22,9 @@ nix flake check
 nixfmt-tree       # Format Nix files
 statix check .    # Lint for anti-patterns
 deadnix .         # Find unused code
+
+# Git hooks setup (run once after clone)
+git config core.hooksPath hooks
 ```
 
 ## Architecture
