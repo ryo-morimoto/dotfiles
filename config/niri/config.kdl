@@ -117,11 +117,11 @@ layout {
     // Alternatively, you can override it with a window rule called
     // `draw-border-with-background`.
 
-    // Focus ring with Catppuccin Mocha gradient
+    // Focus ring with Kanagawa Wave gradient
     focus-ring {
         width 2
-        active-gradient from="#b4befe" to="#89b4fa" angle=45
-        inactive-color "#313244"
+        active-gradient from="#957fb8" to="#7e9cd8" angle=45
+        inactive-color "#363646"
     }
 
     // Border disabled for minimal style
@@ -159,7 +159,7 @@ spawn-at-startup "swayosd-server"
 spawn-at-startup "mako"
 
 // Set wallpaper (run after swww-daemon starts)
-spawn-sh-at-startup "sleep 0.5 && swww img ~/.config/wallpaper/wallpaper.png --transition-type grow --transition-pos center"
+spawn-sh-at-startup "sleep 0.5 && swww img ~/.config/wallpaper/kanagawa.jpg --transition-type grow --transition-pos center"
 
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 // spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"

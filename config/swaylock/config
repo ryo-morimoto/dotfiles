@@ -1,11 +1,11 @@
-# Swaylock - Catppuccin Mocha
+# Swaylock - Kanagawa Wave
 
 # Behavior
 ignore-empty-password
 show-failed-attempts
 
 # Appearance
-color=1e1e2e
+color=1f1f28
 font=HackGen Console NF
 font-size=24
 
@@ -14,18 +14,18 @@ indicator-radius=120
 indicator-thickness=12
 indicator-caps-lock
 
-# Colors (Catppuccin Mocha)
-inside-color=1e1e2e
-inside-clear-color=1e1e2e
-inside-caps-lock-color=1e1e2e
-inside-ver-color=1e1e2e
-inside-wrong-color=1e1e2e
+# Colors (Kanagawa Wave)
+inside-color=1f1f28
+inside-clear-color=1f1f28
+inside-caps-lock-color=1f1f28
+inside-ver-color=1f1f28
+inside-wrong-color=1f1f28
 
-ring-color=313244
-ring-clear-color=a6e3a1
-ring-caps-lock-color=f9e2af
-ring-ver-color=89b4fa
-ring-wrong-color=f38ba8
+ring-color=363646
+ring-clear-color=98bb6c
+ring-caps-lock-color=ff9e3b
+ring-ver-color=7e9cd8
+ring-wrong-color=c34043
 
 line-color=00000000
 line-clear-color=00000000
@@ -35,18 +35,18 @@ line-wrong-color=00000000
 
 separator-color=00000000
 
-key-hl-color=b4befe
-bs-hl-color=f38ba8
-caps-lock-key-hl-color=f9e2af
-caps-lock-bs-hl-color=f38ba8
+key-hl-color=957fb8
+bs-hl-color=c34043
+caps-lock-key-hl-color=ff9e3b
+caps-lock-bs-hl-color=c34043
 
-text-color=cdd6f4
-text-clear-color=a6e3a1
-text-caps-lock-color=f9e2af
-text-ver-color=89b4fa
-text-wrong-color=f38ba8
+text-color=dcd7ba
+text-clear-color=98bb6c
+text-caps-lock-color=ff9e3b
+text-ver-color=7e9cd8
+text-wrong-color=c34043
 
 # Layout
 layout-bg-color=00000000
 layout-border-color=00000000
-layout-text-color=cdd6f4
+layout-text-color=dcd7ba

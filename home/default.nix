@@ -36,6 +36,9 @@ in
       # Terminal
       ghostty
 
+      # Communication
+      vesktop
+
       # CLI tools
       wget
       tree

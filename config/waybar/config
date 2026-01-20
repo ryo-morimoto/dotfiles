@@ -1,16 +1,16 @@
 {
     "layer": "top",
     "position": "top",
-    "height": 28,
-    "spacing": 0,
-    "margin-top": 0,
-    "margin-left": 0,
-    "margin-right": 0,
+    "height": 34,
+    "spacing": 4,
+    "margin-top": 6,
+    "margin-left": 8,
+    "margin-right": 8,
     "exclusive": true,
 
     "modules-left": ["niri/workspaces", "niri/window"],
     "modules-center": ["clock"],
-    "modules-right": ["cpu", "memory", "pulseaudio", "network", "tray"],
+    "modules-right": ["mpris", "custom/weather", "cpu", "memory", "pulseaudio", "network", "tray"],
 
     "niri/workspaces": {
         "format": "{icon}",
@@ -22,7 +22,7 @@
 
     "niri/window": {
         "format": "{}",
-        "max-length": 50,
+        "max-length": 40,
         "separate-outputs": true,
         "rewrite": {
             "(.*) — Mozilla Firefox": " $1",
@@ -31,20 +31,41 @@
     },
 
     "clock": {
-        "format": " {:%H:%M}",
-        "format-alt": " {:%m/%d (%a)}   {:%H:%M}",
+        "format": "{:%H:%M}",
+        "format-alt": "{:%m/%d %a}  {:%H:%M}",
         "tooltip-format": "<tt><small>{calendar}</small></tt>",
         "calendar": {
             "mode": "month",
             "weeks-pos": "left",
             "format": {
-                "months": "<span color='#cdd6f4'><b>{}</b></span>",
-                "days": "<span color='#cdd6f4'>{}</span>",
-                "weeks": "<span color='#6c7086'>W{}</span>",
-                "weekdays": "<span color='#f9e2af'><b>{}</b></span>",
-                "today": "<span color='#f38ba8'><b><u>{}</u></b></span>"
+                "months": "<span color='#dcd7ba'><b>{}</b></span>",
+                "days": "<span color='#dcd7ba'>{}</span>",
+                "weeks": "<span color='#54546d'>W{}</span>",
+                "weekdays": "<span color='#ff9e3b'><b>{}</b></span>",
+                "today": "<span color='#c34043'><b><u>{}</u></b></span>"
             }
         }
+    },
+
+    "mpris": {
+        "format": "{player_icon} {dynamic}",
+        "format-paused": "{player_icon} <i>{dynamic}</i>",
+        "player-icons": {
+            "default": "",
+            "spotify": "",
+            "firefox": ""
+        },
+        "dynamic-order": ["title", "artist"],
+        "dynamic-len": 30,
+        "ignored-players": ["firefox"]
+    },
+
+    "custom/weather": {
+        "format": "{}",
+        "tooltip": true,
+        "interval": 1800,
+        "exec": "curl -s 'wttr.in/?format=%c+%t' 2>/dev/null | tr -d '+' || echo ''",
+        "return-type": ""
     },
 
     "cpu": {
@@ -71,8 +92,8 @@
 
     "network": {
         "format-wifi": " {signalStrength}%",
-        "format-ethernet": " {ipaddr}",
-        "format-disconnected": " ",
+        "format-ethernet": "",
+        "format-disconnected": "",
         "tooltip-format-wifi": "{essid}\n {bandwidthDownBytes}  {bandwidthUpBytes}\n󰩟 {ipaddr}/{cidr}",
         "tooltip-format-ethernet": "{ifname}\n󰩟 {ipaddr}/{cidr}",
         "tooltip-format-disconnected": "Disconnected",
@@ -82,6 +103,6 @@
 
     "tray": {
         "icon-size": 16,
-        "spacing": 8
+        "spacing": 6
     }
 }

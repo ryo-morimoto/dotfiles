@@ -1,4 +1,4 @@
-# Mako Notification Daemon - Catppuccin Mocha
+# Mako Notification Daemon - Kanagawa Wave
 
 # General
 font=HackGen Console NF 12
@@ -17,31 +17,31 @@ max-visible=5
 layer=overlay
 anchor=top-right
 
-# Colors (Catppuccin Mocha)
-background-color=#1e1e2e
-text-color=#cdd6f4
-border-color=#313244
-progress-color=over #89b4fa
+# Colors (Kanagawa Wave)
+background-color=#1f1f28cc
+text-color=#dcd7ba
+border-color=#363646
+progress-color=over #7e9cd8
 
 # Urgency levels
 [urgency=low]
-border-color=#45475a
+border-color=#54546d
 default-timeout=3000
 
 [urgency=normal]
-border-color=#89b4fa
+border-color=#7e9cd8
 
 [urgency=critical]
-border-color=#f38ba8
-text-color=#f38ba8
+border-color=#c34043
+text-color=#ff5d62
 default-timeout=0
 
 # App-specific styling
 [app-name=Spotify]
-border-color=#a6e3a1
+border-color=#98bb6c
 
 [app-name=discord]
-border-color=#89b4fa
+border-color=#957fb8
 
 [app-name=Firefox]
-border-color=#fab387
+border-color=#ff9e3b

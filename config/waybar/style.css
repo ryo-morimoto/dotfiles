@@ -1,33 +1,29 @@
-/* Catppuccin Mocha - Floating Pill Style */
+/* Kanagawa Wave - Minimal Separated Style */
 
-@define-color base #1e1e2e;
-@define-color mantle #181825;
-@define-color crust #11111b;
-@define-color text #cdd6f4;
-@define-color subtext0 #a6adc8;
-@define-color subtext1 #bac2de;
-@define-color surface0 #313244;
-@define-color surface1 #45475a;
-@define-color surface2 #585b70;
-@define-color overlay0 #6c7086;
-@define-color lavender #b4befe;
-@define-color blue #89b4fa;
-@define-color sapphire #74c7ec;
-@define-color sky #89dceb;
-@define-color teal #94e2d5;
-@define-color green #a6e3a1;
-@define-color yellow #f9e2af;
-@define-color peach #fab387;
-@define-color maroon #eba0ac;
-@define-color red #f38ba8;
-@define-color mauve #cba6f7;
-@define-color pink #f5c2e7;
-@define-color flamingo #f2cdcd;
-@define-color rosewater #f5e0dc;
+@define-color sumiInk0 #16161d;
+@define-color sumiInk1 #1f1f28;
+@define-color sumiInk2 #2a2a37;
+@define-color sumiInk3 #363646;
+@define-color sumiInk4 #54546d;
+
+@define-color fujiWhite #dcd7ba;
+@define-color oldWhite #c8c093;
+@define-color fujiGray #727169;
+
+@define-color waveBlue #7e9cd8;
+@define-color springGreen #98bb6c;
+@define-color autumnRed #c34043;
+@define-color roninYellow #ff9e3b;
+@define-color oniViolet #957fb8;
+@define-color sakuraPink #d27e99;
+@define-color waveAqua #7aa89f;
+@define-color dragonBlue #658594;
+@define-color crystalBlue #7fb4ca;
+@define-color peachRed #ff5d62;
 
 * {
     font-family: "HackGen Console NF";
-    font-size: 11px;
+    font-size: 12px;
     min-height: 0;
     padding: 0;
     margin: 0;
@@ -35,163 +31,124 @@
 
 window#waybar {
     background: transparent;
-    color: @text;
+    color: @fujiWhite;
 }
 
-window#waybar > box {
-    margin: 4px 6px 0 6px;
-}
-
-/* Module group styling - pill shape */
+/* Each module group as separate floating pill */
 .modules-left,
 .modules-center,
 .modules-right {
-    background: alpha(@base, 0.95);
-    border-radius: 12px;
-    padding: 2px 6px;
-    margin: 0 2px;
-    border: 1px solid @surface0;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+}
+
+/* Individual module styling - each is its own pill */
+#workspaces,
+#window,
+#clock,
+#mpris,
+#custom-weather,
+#cpu,
+#memory,
+#pulseaudio,
+#network,
+#tray {
+    background: alpha(@sumiInk1, 0.8);
+    border-radius: 10px;
+    padding: 4px 12px;
+    margin: 2px 3px;
+    border: 1px solid @sumiInk3;
 }
 
 /* Workspace buttons */
 #workspaces {
-    padding: 0 2px;
+    padding: 4px 8px;
 }
 
 #workspaces button {
-    padding: 2px 6px;
-    margin: 1px 1px;
-    color: @overlay0;
+    padding: 0 6px;
+    margin: 0 2px;
+    color: @sumiInk4;
     background: transparent;
     border: none;
-    border-radius: 8px;
+    border-radius: 6px;
     transition: all 0.2s ease;
 }
 
 #workspaces button:hover {
-    background: @surface0;
-    color: @text;
+    background: @sumiInk2;
+    color: @fujiWhite;
 }
 
 #workspaces button.active {
-    background: linear-gradient(135deg, @lavender, @blue);
-    color: @base;
+    background: @waveBlue;
+    color: @sumiInk0;
     font-weight: bold;
 }
 
 #workspaces button.urgent {
-    background: @red;
-    color: @base;
+    background: @autumnRed;
+    color: @sumiInk0;
 }
 
 /* Window title */
 #window {
-    padding: 0 8px;
-    color: @subtext1;
+    color: @oldWhite;
     font-style: italic;
 }
 
 /* Clock - center piece */
 #clock {
-    padding: 2px 10px;
-    color: @text;
+    color: @fujiWhite;
     font-weight: bold;
+    background: alpha(@sumiInk1, 0.85);
 }
 
-/* System info modules */
-#cpu,
-#memory,
-#temperature {
-    padding: 2px 8px;
-    margin: 1px;
-    border-radius: 6px;
-    transition: all 0.2s ease;
+/* Media player */
+#mpris {
+    color: @sakuraPink;
 }
 
+#mpris.paused {
+    color: @fujiGray;
+}
+
+/* Weather */
+#custom-weather {
+    color: @crystalBlue;
+}
+
+/* System monitors */
 #cpu {
-    color: @sky;
-}
-
-#cpu:hover {
-    background: alpha(@sky, 0.2);
+    color: @waveAqua;
 }
 
 #memory {
-    color: @mauve;
-}
-
-#memory:hover {
-    background: alpha(@mauve, 0.2);
+    color: @oniViolet;
 }
 
 /* Audio */
 #pulseaudio {
-    padding: 2px 8px;
-    margin: 1px;
-    border-radius: 6px;
-    color: @green;
-    transition: all 0.2s ease;
-}
-
-#pulseaudio:hover {
-    background: alpha(@green, 0.2);
+    color: @springGreen;
 }
 
 #pulseaudio.muted {
-    color: @overlay0;
+    color: @sumiInk4;
 }
 
 /* Network */
 #network {
-    padding: 2px 8px;
-    margin: 1px;
-    border-radius: 6px;
-    color: @blue;
-    transition: all 0.2s ease;
-}
-
-#network:hover {
-    background: alpha(@blue, 0.2);
+    color: @waveBlue;
 }
 
 #network.disconnected {
-    color: @red;
-}
-
-/* Battery (if available) */
-#battery {
-    padding: 2px 8px;
-    margin: 1px;
-    border-radius: 6px;
-    color: @green;
-    transition: all 0.2s ease;
-}
-
-#battery:hover {
-    background: alpha(@green, 0.2);
-}
-
-#battery.charging {
-    color: @yellow;
-}
-
-#battery.warning:not(.charging) {
-    color: @peach;
-}
-
-#battery.critical:not(.charging) {
-    color: @red;
-    animation: blink 1s steps(1) infinite;
-}
-
-@keyframes blink {
-    50% { opacity: 0.5; }
+    color: @autumnRed;
 }
 
 /* Tray */
 #tray {
-    padding: 2px 4px;
-    margin: 1px;
+    padding: 4px 8px;
 }
 
 #tray > .passive {
@@ -200,16 +157,17 @@ window#waybar > box {
 
 #tray > .needs-attention {
     -gtk-icon-effect: highlight;
+    background: @roninYellow;
 }
 
 /* Tooltip styling */
 tooltip {
-    background: @base;
-    border: 1px solid @surface1;
-    border-radius: 6px;
+    background: @sumiInk1;
+    border: 1px solid @sumiInk3;
+    border-radius: 8px;
 }
 
 tooltip label {
-    color: @text;
-    padding: 4px;
+    color: @fujiWhite;
+    padding: 6px;
 }
