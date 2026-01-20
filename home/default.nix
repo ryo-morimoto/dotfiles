@@ -60,7 +60,7 @@ in
       navi
 
       # Nix tools
-      nixfmt
+      nixfmt-tree
       statix
       deadnix
 
@@ -99,6 +99,7 @@ in
       # Database
       sqlite
       usql
+      turso-cli
 
       # File operations
       trash-cli
