@@ -424,18 +424,18 @@ in
         set -g status-style 'bg=#1e1e2e fg=#cdd6f4'
 
         # Left status - Session name
-        set -g status-left-length 50
-        set -g status-left '#[fg=#1e1e2e,bg=#89b4fa,bold] #S #[fg=#89b4fa,bg=#1e1e2e] '
+        set -g status-left-length 30
+        set -g status-left '#[fg=#1e1e2e,bg=#89b4fa,bold] #S #[fg=#89b4fa,bg=#1e1e2e]'
 
         # Right status - Claude Code statusline + time
-        set -g status-right-length 120
-        set -g status-right '#(cat /tmp/claude-status 2>/dev/null || echo "") #[fg=#cdd6f4]| #[fg=#a6e3a1]#{b:pane_current_path} #[fg=#cdd6f4]| %H:%M '
+        set -g status-right-length 100
+        set -g status-right '#(cat /tmp/claude-status 2>/dev/null || echo "")#[fg=#a6e3a1]#{b:pane_current_path} #[fg=#cdd6f4]%H:%M'
 
         # Window status
         setw -g window-status-current-style 'fg=#1e1e2e bg=#f5c2e7 bold'
-        setw -g window-status-current-format ' #I:#W#F '
+        setw -g window-status-current-format ' #I:#W '
         setw -g window-status-style 'fg=#cdd6f4 bg=#313244'
-        setw -g window-status-format ' #I:#W#F '
+        setw -g window-status-format ' #I:#W '
       '';
     };
   };

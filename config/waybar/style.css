@@ -27,7 +27,7 @@
 
 * {
     font-family: "HackGen Console NF";
-    font-size: 13px;
+    font-size: 11px;
     min-height: 0;
     padding: 0;
     margin: 0;
@@ -39,7 +39,7 @@ window#waybar {
 }
 
 window#waybar > box {
-    margin: 8px 12px 0 12px;
+    margin: 4px 6px 0 6px;
 }
 
 /* Module group styling - pill shape */
@@ -47,24 +47,24 @@ window#waybar > box {
 .modules-center,
 .modules-right {
     background: alpha(@base, 0.95);
-    border-radius: 16px;
-    padding: 4px 8px;
-    margin: 0 4px;
+    border-radius: 12px;
+    padding: 2px 6px;
+    margin: 0 2px;
     border: 1px solid @surface0;
 }
 
 /* Workspace buttons */
 #workspaces {
-    padding: 0 4px;
+    padding: 0 2px;
 }
 
 #workspaces button {
-    padding: 4px 10px;
-    margin: 2px 2px;
+    padding: 2px 6px;
+    margin: 1px 1px;
     color: @overlay0;
     background: transparent;
     border: none;
-    border-radius: 12px;
+    border-radius: 8px;
     transition: all 0.2s ease;
 }
 
@@ -86,14 +86,14 @@ window#waybar > box {
 
 /* Window title */
 #window {
-    padding: 0 12px;
+    padding: 0 8px;
     color: @subtext1;
     font-style: italic;
 }
 
 /* Clock - center piece */
 #clock {
-    padding: 4px 16px;
+    padding: 2px 10px;
     color: @text;
     font-weight: bold;
 }
@@ -102,9 +102,9 @@ window#waybar > box {
 #cpu,
 #memory,
 #temperature {
-    padding: 4px 12px;
-    margin: 2px;
-    border-radius: 10px;
+    padding: 2px 8px;
+    margin: 1px;
+    border-radius: 6px;
     transition: all 0.2s ease;
 }
 
@@ -126,9 +126,9 @@ window#waybar > box {
 
 /* Audio */
 #pulseaudio {
-    padding: 4px 12px;
-    margin: 2px;
-    border-radius: 10px;
+    padding: 2px 8px;
+    margin: 1px;
+    border-radius: 6px;
     color: @green;
     transition: all 0.2s ease;
 }
@@ -143,9 +143,9 @@ window#waybar > box {
 
 /* Network */
 #network {
-    padding: 4px 12px;
-    margin: 2px;
-    border-radius: 10px;
+    padding: 2px 8px;
+    margin: 1px;
+    border-radius: 6px;
     color: @blue;
     transition: all 0.2s ease;
 }
@@ -160,9 +160,9 @@ window#waybar > box {
 
 /* Battery (if available) */
 #battery {
-    padding: 4px 12px;
-    margin: 2px;
-    border-radius: 10px;
+    padding: 2px 8px;
+    margin: 1px;
+    border-radius: 6px;
     color: @green;
     transition: all 0.2s ease;
 }
@@ -190,8 +190,8 @@ window#waybar > box {
 
 /* Tray */
 #tray {
-    padding: 4px 8px;
-    margin: 2px;
+    padding: 2px 4px;
+    margin: 1px;
 }
 
 #tray > .passive {
@@ -206,10 +206,10 @@ window#waybar > box {
 tooltip {
     background: @base;
     border: 1px solid @surface1;
-    border-radius: 8px;
+    border-radius: 6px;
 }
 
 tooltip label {
     color: @text;
-    padding: 8px;
+    padding: 4px;
 }
