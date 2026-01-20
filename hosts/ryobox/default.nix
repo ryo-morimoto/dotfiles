@@ -55,21 +55,22 @@
     };
     gnome.gnome-keyring.enable = true;
 
-    # Tailscale VPN
+    # Tailscale VPN with SSH
     tailscale = {
       enable = true;
       useRoutingFeatures = "client";
+      extraUpFlags = [ "--ssh" ];
     };
 
-    # SSH Server (Tailscale経由のみ許可)
-    openssh = {
-      enable = true;
-      openFirewall = false; # Tailscale経由のみ
-      settings = {
-        PermitRootLogin = "no";
-        PasswordAuthentication = false;
-      };
-    };
+    # OpenSSH disabled - using Tailscale SSH instead
+    # openssh = {
+    #   enable = true;
+    #   openFirewall = false;
+    #   settings = {
+    #     PermitRootLogin = "no";
+    #     PasswordAuthentication = false;
+    #   };
+    # };
   };
 
   # Graphics

@@ -374,6 +374,16 @@ in
       enableZshIntegration = true;
     };
 
+    ssh = {
+      enable = true;
+      matchBlocks = {
+        "moon-peak" = {
+          hostname = "moon-peak.exe.xyz";
+          user = "user";
+        };
+      };
+    };
+
     tmux = {
       enable = true;
       terminal = "tmux-256color";
