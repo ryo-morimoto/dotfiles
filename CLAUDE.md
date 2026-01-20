@@ -19,7 +19,7 @@ nix flake update
 nix flake check
 
 # Nix code quality (installed tools)
-nixfmt-tree       # Format Nix files
+nixfmt            # Format Nix files
 statix check .    # Lint for anti-patterns
 deadnix .         # Find unused code
 

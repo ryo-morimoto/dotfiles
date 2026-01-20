@@ -63,7 +63,7 @@ in
       navi
 
       # Nix tools
-      nixfmt-tree
+      nixfmt
       statix
       deadnix
 

@@ -10,17 +10,17 @@ fi
 
 echo "Checking Nix formatting..."
 
-# Check if nixfmt-tree is available
-if ! command -v nixfmt-tree &> /dev/null; then
-  echo "nixfmt-tree not found, skipping format check"
+# Check if nixfmt is available
+if ! command -v nixfmt &> /dev/null; then
+  echo "nixfmt not found, skipping format check"
   exit 0
 fi
 
-# Run nixfmt-tree in check mode
-if ! nixfmt-tree --check 2>/dev/null; then
+# Run nixfmt in check mode on staged files
+if ! echo "$staged_nix_files" | xargs nixfmt --check 2>/dev/null; then
   echo ""
   echo "Nix files need formatting. Run:"
-  echo "  nixfmt-tree"
+  echo "  nixfmt \$files"
   echo ""
   exit 1
 fi
