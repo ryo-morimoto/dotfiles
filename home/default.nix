@@ -317,45 +317,6 @@ in
     starship = {
       enable = true;
       enableZshIntegration = true;
-      settings = {
-        format = ''
-          $directory$git_branch$git_status$git_state$cmd_duration
-          $character
-        '';
-        character = {
-          success_symbol = "[](bold green)";
-          error_symbol = "[](bold red)";
-          vimcmd_symbol = "[](bold blue)";
-        };
-        directory = {
-          style = "bold cyan";
-          truncation_length = 5;
-          truncate_to_repo = true;
-          read_only = " 󰌾";
-        };
-        git_branch = {
-          symbol = " ";
-          style = "bold purple";
-        };
-        git_status = {
-          style = "bold yellow";
-          ahead = "⇡\${count}";
-          behind = "⇣\${count}";
-          diverged = "⇕⇡\${ahead_count}⇣\${behind_count}";
-          staged = "[+\${count}](green)";
-          modified = "[~\${count}](yellow)";
-          untracked = "[?\${count}](blue)";
-          deleted = "[-\${count}](red)";
-        };
-        cmd_duration = {
-          min_time = 2000;
-          format = "[$duration](bold yellow)";
-        };
-        nix_shell = {
-          symbol = " ";
-          format = "[$symbol$state]($style) ";
-        };
-      };
     };
 
     fzf = {
