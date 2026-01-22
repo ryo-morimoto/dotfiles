@@ -1,25 +1,21 @@
-/* Kanagawa Wave - Minimal Separated Style */
+/* Import wallust-generated colors */
+@import "colors.css";
 
-@define-color sumiInk0 #16161d;
-@define-color sumiInk1 #1f1f28;
-@define-color sumiInk2 #2a2a37;
-@define-color sumiInk3 #363646;
-@define-color sumiInk4 #54546d;
-
-@define-color fujiWhite #dcd7ba;
-@define-color oldWhite #c8c093;
-@define-color fujiGray #727169;
-
-@define-color waveBlue #7e9cd8;
-@define-color springGreen #98bb6c;
-@define-color autumnRed #c34043;
-@define-color roninYellow #ff9e3b;
-@define-color oniViolet #957fb8;
-@define-color sakuraPink #d27e99;
-@define-color waveAqua #7aa89f;
-@define-color dragonBlue #658594;
-@define-color crystalBlue #7fb4ca;
-@define-color peachRed #ff5d62;
+/* Fallback colors if colors.css doesn't exist */
+@define-color background #1f1f28;
+@define-color foreground #dcd7ba;
+@define-color color0 #16161d;
+@define-color color1 #c34043;
+@define-color color2 #98bb6c;
+@define-color color3 #ff9e3b;
+@define-color color4 #7e9cd8;
+@define-color color5 #957fb8;
+@define-color color6 #7aa89f;
+@define-color color7 #c8c093;
+@define-color color8 #54546d;
+@define-color color9 #ff5d62;
+@define-color color12 #7fb4ca;
+@define-color color13 #d27e99;
 
 * {
     font-family: "HackGen Console NF";
@@ -31,7 +27,7 @@
 
 window#waybar {
     background: transparent;
-    color: @fujiWhite;
+    color: @foreground;
 }
 
 /* Each module group as separate floating pill */
@@ -54,11 +50,11 @@ window#waybar {
 #pulseaudio,
 #network,
 #tray {
-    background: alpha(@sumiInk1, 0.8);
+    background: alpha(@background, 0.8);
     border-radius: 10px;
     padding: 4px 12px;
     margin: 2px 3px;
-    border: 1px solid @sumiInk3;
+    border: 1px solid @color8;
 }
 
 /* Workspace buttons */
@@ -69,7 +65,7 @@ window#waybar {
 #workspaces button {
     padding: 0 6px;
     margin: 0 2px;
-    color: @sumiInk4;
+    color: @color8;
     background: transparent;
     border: none;
     border-radius: 6px;
@@ -77,73 +73,73 @@ window#waybar {
 }
 
 #workspaces button:hover {
-    background: @sumiInk2;
-    color: @fujiWhite;
+    background: @color8;
+    color: @foreground;
 }
 
 #workspaces button.active {
-    background: @waveBlue;
-    color: @sumiInk0;
+    background: @color4;
+    color: @color0;
     font-weight: bold;
 }
 
 #workspaces button.urgent {
-    background: @autumnRed;
-    color: @sumiInk0;
+    background: @color1;
+    color: @color0;
 }
 
 /* Window title */
 #window {
-    color: @oldWhite;
+    color: @color7;
     font-style: italic;
 }
 
 /* Clock - center piece */
 #clock {
-    color: @fujiWhite;
+    color: @foreground;
     font-weight: bold;
-    background: alpha(@sumiInk1, 0.85);
+    background: alpha(@background, 0.85);
 }
 
 /* Media player */
 #mpris {
-    color: @sakuraPink;
+    color: @color13;
 }
 
 #mpris.paused {
-    color: @fujiGray;
+    color: @color8;
 }
 
 /* Weather */
 #custom-weather {
-    color: @crystalBlue;
+    color: @color12;
 }
 
 /* System monitors */
 #cpu {
-    color: @waveAqua;
+    color: @color6;
 }
 
 #memory {
-    color: @oniViolet;
+    color: @color5;
 }
 
 /* Audio */
 #pulseaudio {
-    color: @springGreen;
+    color: @color2;
 }
 
 #pulseaudio.muted {
-    color: @sumiInk4;
+    color: @color8;
 }
 
 /* Network */
 #network {
-    color: @waveBlue;
+    color: @color4;
 }
 
 #network.disconnected {
-    color: @autumnRed;
+    color: @color1;
 }
 
 /* Tray */
@@ -157,17 +153,17 @@ window#waybar {
 
 #tray > .needs-attention {
     -gtk-icon-effect: highlight;
-    background: @roninYellow;
+    background: @color3;
 }
 
 /* Tooltip styling */
 tooltip {
-    background: @sumiInk1;
-    border: 1px solid @sumiInk3;
+    background: @background;
+    border: 1px solid @color8;
     border-radius: 8px;
 }
 
 tooltip label {
-    color: @fujiWhite;
+    color: @foreground;
     padding: 6px;
 }
