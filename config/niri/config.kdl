@@ -158,8 +158,8 @@ spawn-at-startup "swww-daemon"
 spawn-at-startup "swayosd-server"
 spawn-at-startup "mako"
 
-// Set wallpaper (run after swww-daemon starts)
-spawn-sh-at-startup "sleep 0.5 && swww img ~/.config/wallpaper/kanagawa.jpg --transition-type grow --transition-pos center"
+// Restore wallpaper and theme (waypaper handles swww + wallust)
+spawn-sh-at-startup "sleep 0.5 && waypaper --restore"
 
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 // spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
