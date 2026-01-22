@@ -16,3 +16,8 @@
 
 # Claude Code
 .claude/settings.local.json
+
+# Generated config files (wallust + reload script)
+config/mako/config
+config/fuzzel/fuzzel.ini
+config/swaylock/config
