@@ -1,0 +1,14 @@
+# Swaylock - Base Config
+
+# Behavior
+ignore-empty-password
+show-failed-attempts
+
+# Appearance
+font=HackGen Console NF
+font-size=24
+
+# Indicator
+indicator-radius=120
+indicator-thickness=12
+indicator-caps-lock
