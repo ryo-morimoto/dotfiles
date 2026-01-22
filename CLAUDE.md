@@ -23,8 +23,10 @@ nixfmt            # Format Nix files
 statix check .    # Lint for anti-patterns
 deadnix .         # Find unused code
 
-# Git hooks setup (run once after clone)
+# Git setup (run once after clone)
 git config core.hooksPath hooks
+git config filter.waypaper.clean './scripts/git-filters/waypaper-clean.sh'
+git config filter.waypaper.smudge 'cat'
 ```
 
 ## Architecture
