@@ -19,9 +19,12 @@ check_contrast = true
 alpha = 100
 
 [templates]
+# Apps with import support - output directly to config
 ghostty = { template = "ghostty.conf", target = "~/.config/ghostty/colors" }
-mako = { template = "mako.conf", target = "~/.config/mako/config" }
-fuzzel = { template = "fuzzel.ini", target = "~/.config/fuzzel/fuzzel.ini" }
 waybar = { template = "waybar.css", target = "~/.config/waybar/colors.css" }
-swaylock = { template = "swaylock.conf", target = "~/.config/swaylock/config" }
+
+# Apps without import support - output to cache, reload script concatenates with base
+mako = { template = "mako-colors.conf", target = "~/.cache/wallust/mako-colors.conf" }
+fuzzel = { template = "fuzzel-colors.ini", target = "~/.cache/wallust/fuzzel-colors.ini" }
+swaylock = { template = "swaylock-colors.conf", target = "~/.cache/wallust/swaylock-colors.conf" }
 niri = { template = "niri-colors.txt", target = "~/.cache/wallust/niri-colors.txt" }
