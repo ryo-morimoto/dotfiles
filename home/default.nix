@@ -67,6 +67,10 @@ in
       statix
       deadnix
 
+      # Wallpaper theming
+      waypaper
+      wallust
+
       # Development
       ghq
       gh
