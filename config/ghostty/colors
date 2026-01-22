@@ -1,0 +1,21 @@
+# Initial colors (will be overwritten by wallust)
+background = #1f1f28
+foreground = #dcd7ba
+cursor-color = #c8c093
+
+palette = 0=#16161d
+palette = 1=#c34043
+palette = 2=#98bb6c
+palette = 3=#ff9e3b
+palette = 4=#7e9cd8
+palette = 5=#957fb8
+palette = 6=#7aa89f
+palette = 7=#c8c093
+palette = 8=#54546d
+palette = 9=#ff5d62
+palette = 10=#98bb6c
+palette = 11=#e6c384
+palette = 12=#7fb4ca
+palette = 13=#d27e99
+palette = 14=#7aa89f
+palette = 15=#dcd7ba
