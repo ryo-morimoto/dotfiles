@@ -505,5 +505,7 @@ in
     "wlogout".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/wlogout";
     "swaylock".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/swaylock";
     "wallpaper".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/wallpaper";
+    "wallust".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/wallust";
+    "waypaper".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/waypaper";
   };
 }
