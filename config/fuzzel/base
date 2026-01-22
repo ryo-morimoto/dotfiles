@@ -1,0 +1,11 @@
+[main]
+font=HackGen Console NF:size=14
+dpi-aware=no
+width=40
+horizontal-pad=16
+vertical-pad=12
+inner-pad=8
+
+[border]
+width=2
+radius=8
