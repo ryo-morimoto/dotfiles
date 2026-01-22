@@ -6,8 +6,8 @@
 backend = "resized"
 # Color space for interpolation
 color_space = "lab"
-# Palette type
-palette = "dark16"
+# Palette type (dark = more vibrant, dark16 = darker)
+palette = "dark"
 
 # Threshold for when to use a different color
 threshold = 20
