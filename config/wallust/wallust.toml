@@ -1,0 +1,27 @@
+# Wallust configuration
+# https://codeberg.org/explosion-mental/wallust/wiki
+
+[wallust]
+# Color backend
+backend = "resized"
+# Color space for interpolation
+color_space = "lab"
+# Palette type
+palette = "dark16"
+
+# Threshold for when to use a different color
+threshold = 20
+
+# Check if wallpaper already has cached colors
+check_contrast = true
+
+# Alpha value for terminal colors (0-100)
+alpha = 100
+
+[templates]
+ghostty = { template = "ghostty.conf", target = "~/.config/ghostty/colors" }
+mako = { template = "mako.conf", target = "~/.config/mako/config" }
+fuzzel = { template = "fuzzel.ini", target = "~/.config/fuzzel/fuzzel.ini" }
+waybar = { template = "waybar.css", target = "~/.config/waybar/colors.css" }
+swaylock = { template = "swaylock.conf", target = "~/.config/swaylock/config" }
+niri = { template = "niri-colors.txt", target = "~/.cache/wallust/niri-colors.txt" }
