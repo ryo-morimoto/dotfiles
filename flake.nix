@@ -19,6 +19,10 @@
       url = "github:ryo-morimoto/ralph-tui-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    quickshell = {
+      url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -28,6 +32,7 @@
       claude-code-overlay,
       codex-cli-nix,
       ralph-tui-overlay,
+      quickshell,
       ...
     }:
     let
@@ -52,6 +57,9 @@
               useGlobalPkgs = true;
               useUserPackages = true;
               users.ryo-morimoto = import ./home;
+              extraSpecialArgs = {
+                inherit quickshell;
+              };
             };
           }
         ];

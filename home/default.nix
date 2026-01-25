@@ -1,4 +1,9 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  quickshell,
+  ...
+}:
 
 let
   dotfilesPath = "${config.home.homeDirectory}/ghq/github.com/ryo-morimoto/dotfiles";
@@ -70,6 +75,7 @@ in
       # Wallpaper theming
       waypaper
       wallust
+      quickshell.packages.x86_64-linux.default
 
       # Development
       ghq
@@ -507,5 +513,6 @@ in
     "wallpaper".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/wallpaper";
     "wallust".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/wallust";
     "waypaper".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/waypaper";
+    "quickshell".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/quickshell";
   };
 }

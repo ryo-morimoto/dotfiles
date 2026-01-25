@@ -144,11 +144,38 @@
   '';
 
   # Nix
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
+  nix = {
+    settings = {
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+      auto-optimise-store = true;
+    };
+
+    # Automatic garbage collection (weekly, keep last 7 days)
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 7d";
+    };
+
+    # Automatic store optimization (weekly)
+    optimise = {
+      automatic = true;
+      dates = [ "weekly" ];
+    };
+  };
   nixpkgs.config.allowUnfree = true;
+
+  # Automatic system upgrade (GitOps: pulls from GitHub)
+  system.autoUpgrade = {
+    enable = true;
+    flake = "github:ryo-morimoto/dotfiles#ryobox";
+    dates = "05:00";
+    randomizedDelaySec = "45min";
+    allowReboot = false;
+  };
 
   system.stateVersion = "25.11";
 }

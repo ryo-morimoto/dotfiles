@@ -157,12 +157,27 @@ spawn-at-startup "waybar"
 spawn-at-startup "swww-daemon"
 spawn-at-startup "swayosd-server"
 spawn-at-startup "mako"
+spawn-at-startup "quickshell"
 
 // Restore wallpaper and theme (waypaper handles swww + wallust)
 spawn-sh-at-startup "sleep 0.5 && waypaper --restore"
 
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 // spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
+
+// Layer rules for layer-shell surfaces (panels, overlays, etc.)
+// https://yalter.github.io/niri/Configuration:-Layer-Rules
+layer-rule {
+    match namespace="^quickshell$"
+    shadow {
+        on
+        softness 40
+        spread 4
+        offset y=-8
+        color "#00000066"
+    }
+    geometry-corner-radius 16
+}
 
 hotkey-overlay {
     // Uncomment this line to disable the "Important Hotkeys" pop-up at startup.
@@ -250,6 +265,7 @@ binds {
     // Applications
     Mod+T hotkey-overlay-title="Terminal" { spawn "ghostty"; }
     Mod+D hotkey-overlay-title="Launcher" { spawn "fuzzel"; }
+    Mod+P hotkey-overlay-title="Wallpaper" { spawn "qs" "ipc" "call" "wallpaper" "toggle"; }
     Super+Alt+L hotkey-overlay-title="Lock" { spawn "swaylock"; }
 
     // System controls (keyboard alternatives to waybar clicks)
