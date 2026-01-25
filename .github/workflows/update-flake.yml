@@ -1,0 +1,27 @@
+name: Update flake.lock
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 19 * * *" # 04:00 JST daily
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: DeterminateSystems/nix-installer-action@21a544727d0c62386e78b4befe52d19ad12692e3 # v17
+      - id: update
+        uses: DeterminateSystems/update-flake-lock@a2bbe0274e3a0c4194390a1e445f734c597ebc37 # v24
+        with:
+          pr-title: "chore: update flake.lock"
+          pr-labels: dependencies
+          commit-msg: "chore: update flake.lock"
+      - name: Enable auto-merge
+        if: steps.update.outputs.pull-request-number != ''
+        run: gh pr merge --auto --rebase "${{ steps.update.outputs.pull-request-number }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
