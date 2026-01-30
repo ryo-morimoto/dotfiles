@@ -38,15 +38,16 @@
     let
       localOverlay = final: prev: {
         vibe-kanban = final.callPackage ./packages/vibe-kanban.nix { };
+        claude-squad = final.callPackage ./packages/claude-squad.nix { };
       };
     in
     {
       nixosConfigurations.ryobox = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
         modules = [
           ./hosts/ryobox
           home-manager.nixosModules.home-manager
           {
+            nixpkgs.hostPlatform = "x86_64-linux";
             nixpkgs.overlays = [
               localOverlay
               claude-code-overlay.overlays.default

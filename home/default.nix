@@ -75,7 +75,7 @@ in
       # Wallpaper theming
       waypaper
       wallust
-      quickshell.packages.x86_64-linux.default
+      quickshell.packages.${pkgs.system}.default
 
       # Development
       ghq
@@ -92,6 +92,7 @@ in
       nodejs
       bun
       pnpm
+      chromium
 
       # System/CLI development
       go
@@ -102,6 +103,12 @@ in
       # Shell development
       shellcheck
       shfmt
+
+      # Python
+      uv
+
+      # Dev environments
+      devbox
 
       # Container/Infra
       docker
@@ -128,9 +135,12 @@ in
 
       # AI tools
       vibe-kanban
+      claude-squad
     ];
 
     file = {
+      ".claude/CLAUDE.md".source =
+        config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/claude/CLAUDE.md";
       ".claude/statusline.sh".source =
         config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/claude/statusline.sh";
       ".claude/settings.local.json".source =
@@ -318,6 +328,10 @@ in
         mkcd() {
           mkdir -p "$1" && cd "$1"
         }
+
+        # Playwright configuration (use system Chromium)
+        export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+        export CHROME_PATH="$(which chromium 2>/dev/null)"
 
         # Custom config
         [[ -f ~/.config/zsh/custom.zsh ]] && source ~/.config/zsh/custom.zsh

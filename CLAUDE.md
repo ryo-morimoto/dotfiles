@@ -56,3 +56,25 @@ Application configs in `config/` are symlinked via `mkOutOfStoreSymlink` for ins
 
 Git: `g`, `gs`, `gd`, `ga`, `gc`, `gp`, `gl`
 Modern CLI: `ls`→eza, `cat`→bat, `grep`→rg, `find`→fd
+
+### Playwright Setup
+
+This system uses **Option A: External Chromium** for Playwright. Environment variables are set in zsh:
+
+- `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1` - Prevents npm from downloading browsers
+- `CHROME_PATH` - Points to system Chromium
+
+**Usage in projects:**
+
+```bash
+# Use playwright-core instead of playwright
+npm install playwright-core
+```
+
+```typescript
+import { chromium } from 'playwright-core';
+
+const browser = await chromium.launch({
+  executablePath: process.env.CHROME_PATH || '/run/current-system/sw/bin/chromium',
+});
+```

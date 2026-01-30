@@ -168,6 +168,9 @@
   };
   nixpkgs.config.allowUnfree = true;
 
+  # Allow running dynamically linked binaries (for uv, etc.)
+  programs.nix-ld.enable = true;
+
   # Automatic system upgrade (GitOps: pulls from GitHub)
   system.autoUpgrade = {
     enable = true;
