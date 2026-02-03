@@ -136,6 +136,7 @@ in
       # AI tools
       vibe-kanban
       claude-squad
+      tmuxcc
     ];
 
     file = {
@@ -460,6 +461,9 @@ in
         # Reload config
         bind r source-file ~/.config/tmux/tmux.conf \; display "Config reloaded!"
 
+        # tmuxcc dashboard popup
+        bind d display-popup -E -w 80% -h 80% tmuxcc
+
         # Status bar
         set -g status on
         set -g status-interval 5
@@ -528,5 +532,6 @@ in
     "wallust".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/wallust";
     "waypaper".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/waypaper";
     "quickshell".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/quickshell";
+    "tmuxcc".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/tmuxcc";
   };
 }

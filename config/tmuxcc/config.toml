@@ -1,0 +1,2 @@
+poll_interval_ms = 500
+capture_lines = 100
