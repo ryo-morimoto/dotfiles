@@ -23,6 +23,10 @@
       url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    tmuxcc-src = {
+      url = "github:nyanko3141592/tmuxcc";
+      flake = false;
+    };
   };
 
   outputs =
@@ -33,12 +37,14 @@
       codex-cli-nix,
       ralph-tui-overlay,
       quickshell,
+      tmuxcc-src,
       ...
     }:
     let
       localOverlay = final: prev: {
         vibe-kanban = final.callPackage ./packages/vibe-kanban.nix { };
         claude-squad = final.callPackage ./packages/claude-squad.nix { };
+        tmuxcc = final.callPackage ./packages/tmuxcc.nix { inherit tmuxcc-src; };
       };
     in
     {
