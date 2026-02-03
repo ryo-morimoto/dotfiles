@@ -461,8 +461,8 @@ in
         # Reload config
         bind r source-file ~/.config/tmux/tmux.conf \; display "Config reloaded!"
 
-        # tmuxcc dashboard popup
-        bind d display-popup -E -w 80% -h 80% tmuxcc
+        # tmuxcc agent dashboard popup
+        bind a display-popup -E -w 80% -h 80% tmuxcc
 
         # Status bar
         set -g status on
