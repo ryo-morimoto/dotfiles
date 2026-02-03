@@ -1,6 +1,8 @@
 {
   lib,
   rustPlatform,
+  makeWrapper,
+  tmux,
   tmuxcc-src,
 }:
 
@@ -11,6 +13,13 @@ rustPlatform.buildRustPackage {
   src = tmuxcc-src;
 
   cargoHash = "sha256-84zvJDvhFdVbvBw+5JhM5TPdENYPyjt/n+wkw6jfyz4=";
+
+  nativeBuildInputs = [ makeWrapper ];
+
+  postInstall = ''
+    wrapProgram $out/bin/tmuxcc \
+      --prefix PATH : ${lib.makeBinPath [ tmux ]}
+  '';
 
   meta = with lib; {
     description = "AI Agent Dashboard for tmux - Monitor Claude Code, OpenCode, Codex CLI, and Gemini CLI";

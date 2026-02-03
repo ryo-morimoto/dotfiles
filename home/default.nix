@@ -462,7 +462,7 @@ in
         bind r source-file ~/.config/tmux/tmux.conf \; display "Config reloaded!"
 
         # tmuxcc agent dashboard popup
-        bind a display-popup -E -w 80% -h 80% tmuxcc
+        bind a display-popup -E -w 80% -h 80% "tmuxcc || (echo 'tmuxcc failed. Press Enter to close.' && read)"
 
         # Status bar
         set -g status on
