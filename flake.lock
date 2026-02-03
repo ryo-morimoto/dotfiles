@@ -32,11 +32,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1769205690,
-        "narHash": "sha256-uR8YBrEFL/NbzUgomoALmnKdMPAEvraC8vm5coO8G/4=",
+        "lastModified": 1769898648,
+        "narHash": "sha256-OoiLudkOVsNKaCqVzVwkNe91zlWegZrVVYrUw+EXUWs=",
         "owner": "ryoppippi",
         "repo": "claude-code-overlay",
-        "rev": "30eb46e88126ed937fbb2bcb702c46d61f493b0a",
+        "rev": "a485681ab5459a7efd5d1c7e64cb044e82e534f8",
         "type": "github"
       },
       "original": {
@@ -53,11 +53,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1769120812,
-        "narHash": "sha256-U4G0VY1D3zyMo+W291Yu2/D8Ins1iOGXNuM+r11W1oY=",
+        "lastModified": 1770073863,
+        "narHash": "sha256-EqFFcCpELJYsS95EJ67hu0aqb8D8bKl3i1kI3DKssyY=",
         "owner": "sadjow",
         "repo": "codex-cli-nix",
-        "rev": "e8854421ecb1fb7eab47c8741f731e118bdec367",
+        "rev": "ec5466cc1cace35ea5d7942ca65c4c5d0726060a",
         "type": "github"
       },
       "original": {
@@ -109,11 +109,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1769289524,
-        "narHash": "sha256-6Cwtvzrw79cOk1lCzN2aKSVrpgSOSQoYhyMmhXXZjTA=",
+        "lastModified": 1769978395,
+        "narHash": "sha256-gj1yP3spUb1vGtaF5qPhshd2j0cg4xf51pklDsIm19Q=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "2539eba97a6df237d75617c25cd2dbef92df3d5b",
+        "rev": "984708c34d3495a518e6ab6b8633469bbca2f77a",
         "type": "github"
       },
       "original": {
@@ -139,11 +139,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1769018530,
-        "narHash": "sha256-MJ27Cy2NtBEV5tsK+YraYr2g851f3Fl1LpNHDzDX15c=",
+        "lastModified": 1770019141,
+        "narHash": "sha256-VKS4ZLNx4PNrABoB0L8KUpc1fE7CLpQXQs985tGfaCU=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "88d3861acdd3d2f0e361767018218e51810df8a1",
+        "rev": "cb369ef2efd432b3cdf8622b0ffc0a97a02f3137",
         "type": "github"
       },
       "original": {
@@ -175,11 +175,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1768985439,
-        "narHash": "sha256-qkU4r+l+UPz4dutMMRZSin64HuVZkEv9iFpu9yMWVY0=",
+        "lastModified": 1769593411,
+        "narHash": "sha256-WW00FaBiUmQyxvSbefvgxIjwf/WmRrEGBbwMHvW/7uQ=",
         "ref": "refs/heads/master",
-        "rev": "191085a8821b35680bba16ce5411fc9dbe912237",
-        "revCount": 731,
+        "rev": "1e4d804e7f3fa7465811030e8da2bf10d544426a",
+        "revCount": 732,
         "type": "git",
         "url": "https://git.outfoxxed.me/outfoxxed/quickshell"
       },
@@ -196,11 +196,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1769191699,
-        "narHash": "sha256-JB4qCRQbzc5lH6Wx2c8fqXzxuEcq+Rlh/tPxEU0LqsY=",
+        "lastModified": 1769477701,
+        "narHash": "sha256-fo6c5He/28nEAwRl4dpX1Qo5DrOkrVEMhVf4MG/zx6E=",
         "owner": "ryo-morimoto",
         "repo": "ralph-tui-overlay",
-        "rev": "765203128bab15978ef30af3a950576e83ba67c2",
+        "rev": "546952405203fb431cbbd1ac7aca51fdb9ddcb87",
         "type": "github"
       },
       "original": {
