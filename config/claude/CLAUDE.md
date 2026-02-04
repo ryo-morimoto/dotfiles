@@ -1,0 +1,1 @@
+# Global Claude Code Rules

@@ -140,8 +140,8 @@ in
     ];
 
     file = {
-      ".claude/CLAUDE.md".source =
-        config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/claude/CLAUDE.md";
+      ".claude/CLAUDE.md".text =
+        builtins.readFile ../config/claude/CLAUDE.md + builtins.readFile ../config/claude/CLAUDE.md.tmpl;
       ".claude/statusline.sh".source =
         config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/claude/statusline.sh";
       ".claude/settings.local.json".source =
