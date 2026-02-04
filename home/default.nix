@@ -797,9 +797,9 @@ in
       "Mod+W".action.toggle-column-tabbed-display = { };
 
       # Screenshot
-      "Print".action.screenshot = { };
-      "Ctrl+Print".action.screenshot-screen = { };
-      "Alt+Print".action.screenshot-window = { };
+      "Mod+Shift+S".action.screenshot = { };
+      "Mod+Shift+Ctrl+S".action.screenshot-screen = { };
+      "Mod+Shift+Alt+S".action.screenshot-window = { };
 
       # Keyboard shortcuts inhibit
       "Mod+Escape" = {
