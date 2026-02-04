@@ -57,6 +57,10 @@ Application configs in `config/` are symlinked via `mkOutOfStoreSymlink` for ins
 Git: `g`, `gs`, `gd`, `ga`, `gc`, `gp`, `gl`
 Modern CLI: `ls`→eza, `cat`→bat, `grep`→rg, `find`→fd
 
+## Ongoing Interests
+
+- **Desktop environment improvement**: Always exploring a more usable desktop setup. Currently using Niri + waybar, but considering integrated desktop shells like [DankMaterialShell (DMS)](https://github.com/AvengeMedia/DankMaterialShell). DMS provides NixOS Flake / Home Manager modules with Niri integration options.
+
 ### Playwright Setup
 
 This system uses **Option A: External Chromium** for Playwright. Environment variables are set in zsh:

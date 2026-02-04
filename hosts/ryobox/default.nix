@@ -79,25 +79,16 @@
     enable32Bit = true;
   };
 
-  # Desktop (Niri)
+  # Desktop (Niri + DankMaterialShell)
   environment.systemPackages = with pkgs; [
     # Network
     tailscale
 
-    # Bar & Launcher
-    waybar
-    fuzzel
-
-    # Notifications & OSD
-    mako
+    # OSD
     swayosd
 
     # Wallpaper
     swww
-
-    # Lock & Power
-    swaylock
-    wlogout
 
     # Utilities
     wl-clipboard
@@ -115,7 +106,6 @@
   # Security
   security = {
     polkit.enable = true;
-    pam.services.swaylock = { };
   };
 
   # Programs

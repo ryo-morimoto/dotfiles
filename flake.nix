@@ -19,9 +19,12 @@
       url = "github:ryo-morimoto/ralph-tui-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    quickshell = {
-      url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
+    dms = {
+      url = "github:AvengeMedia/DankMaterialShell/stable";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+    niri-flake = {
+      url = "github:sodiboo/niri-flake";
     };
     tmuxcc-src = {
       url = "github:nyanko3141592/tmuxcc";
@@ -36,7 +39,8 @@
       claude-code-overlay,
       codex-cli-nix,
       ralph-tui-overlay,
-      quickshell,
+      dms,
+      niri-flake,
       tmuxcc-src,
       ...
     }:
@@ -63,9 +67,16 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
-              users.ryo-morimoto = import ./home;
+              users.ryo-morimoto = {
+                imports = [
+                  niri-flake.homeModules.config
+                  dms.homeModules.dank-material-shell
+                  dms.homeModules.niri
+                  ./home
+                ];
+              };
               extraSpecialArgs = {
-                inherit quickshell;
+                inherit dms;
               };
             };
           }
