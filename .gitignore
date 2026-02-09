@@ -17,6 +17,9 @@
 # Claude Code
 .claude/settings.local.json
 
+# oh-my-claudecode runtime data
+.omc/
+
 # Self-improvement runtime data
 .si/data/
 
