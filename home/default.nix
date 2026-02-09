@@ -141,6 +141,10 @@ in
         config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/claude/statusline.sh";
       ".claude/settings.local.json".source =
         config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/claude/settings.local.json";
+      ".claude/si/scripts".source =
+        config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/claude/si/scripts";
+      ".claude/si/skills".source =
+        config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/claude/si/skills";
     };
   };
 

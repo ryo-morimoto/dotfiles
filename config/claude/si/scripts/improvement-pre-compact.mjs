@@ -8,11 +8,10 @@
  */
 
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
-import { join, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
+import { join } from "node:path";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const DATA_DIR = join(__dirname, "..", "data");
+const HOME = process.env.HOME || process.env.USERPROFILE;
+const DATA_DIR = join(HOME, ".claude", "si", "data");
 const ENTRIES_DIR = join(DATA_DIR, "entries");
 const HISTORY_FILE = join(DATA_DIR, ".tool-history.json");
 
