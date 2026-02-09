@@ -131,6 +131,7 @@ in
       vibe-kanban
       claude-squad
       tmuxcc
+      opencode
     ];
 
     file = {
