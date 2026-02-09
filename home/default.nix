@@ -576,6 +576,7 @@ in
     spawn-at-startup = [
       { command = [ "swww-daemon" ]; }
       { command = [ "swayosd-server" ]; }
+      { command = [ "blueman-applet" ]; }
     ];
 
     prefer-no-csd = true;

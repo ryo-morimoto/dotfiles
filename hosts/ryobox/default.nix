@@ -73,6 +73,13 @@
     # };
   };
 
+  # Bluetooth
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+  };
+  services.blueman.enable = true;
+
   # Graphics
   hardware.graphics = {
     enable = true;
