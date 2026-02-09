@@ -30,6 +30,10 @@
       url = "github:nyanko3141592/tmuxcc";
       flake = false;
     };
+    banto = {
+      url = "github:ryo-morimoto/banto";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -42,6 +46,7 @@
       dms,
       niri-flake,
       tmuxcc-src,
+      banto,
       ...
     }:
     let
@@ -55,6 +60,7 @@
       nixosConfigurations.ryobox = nixpkgs.lib.nixosSystem {
         modules = [
           ./hosts/ryobox
+          banto.nixosModules.default
           home-manager.nixosModules.home-manager
           {
             nixpkgs.hostPlatform = "x86_64-linux";

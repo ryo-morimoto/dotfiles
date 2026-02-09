@@ -55,6 +55,9 @@
     };
     gnome.gnome-keyring.enable = true;
 
+    # banto task dashboard (via Tailscale Serve)
+    banto.enable = true;
+
     # Tailscale VPN with SSH
     tailscale = {
       enable = true;
