@@ -17,6 +17,9 @@
 # Claude Code
 .claude/settings.local.json
 
+# Self-improvement runtime data
+.si/data/
+
 # Nix build output
 result
 
