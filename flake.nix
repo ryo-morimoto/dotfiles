@@ -15,10 +15,6 @@
       url = "github:sadjow/codex-cli-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    ralph-tui-overlay = {
-      url = "github:ryo-morimoto/ralph-tui-overlay";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     dms = {
       url = "github:AvengeMedia/DankMaterialShell/stable";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -42,7 +38,6 @@
       home-manager,
       claude-code-overlay,
       codex-cli-nix,
-      ralph-tui-overlay,
       dms,
       niri-flake,
       tmuxcc-src,
@@ -68,7 +63,6 @@
               localOverlay
               claude-code-overlay.overlays.default
               codex-cli-nix.overlays.default
-              ralph-tui-overlay.overlays.default
             ];
             home-manager = {
               useGlobalPkgs = true;

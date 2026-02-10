@@ -76,7 +76,6 @@ in
       gh
       claude-code
       codex
-      ralph-tui
       socat
       bubblewrap
       lazygit
