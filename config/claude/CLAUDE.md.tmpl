@@ -3,14 +3,42 @@
 
 Before starting any implementation or codebase exploration, ask the user what they want to focus on first. Do not autonomously explore or begin work without confirming the starting point.
 
+## Flow Control
+
+After receiving an AskUserQuestion answer, immediately execute the next action. Do not summarize, confirm, or pause. The answer is input to continue work, not a stopping point.
+
 ## Language & Stack
 
 This project primarily uses TypeScript and Rust. When generating code, default to TypeScript for frontend/API work and Rust for backend/systems work unless otherwise specified.
 
 ## Git
 
-コミットメッセージは Conventional Commits に従う。例: `fix:`, `feat:`, `chore:`, `docs:`, `refactor:`, `test:`
+Follow Conventional Commits for commit messages. Examples: `fix:`, `feat:`, `chore:`, `docs:`, `refactor:`, `test:`
 
 ## Planning & Organization
 
 When the user asks for planning, organization, or 'next steps', deliver a structured written response (numbered list or table) BEFORE reading additional files. Prioritize answering with what you already know, then fill gaps.
+
+## Shell Environment (NixOS)
+
+Standard commands are aliased to modern replacements on this system:
+- `find` → `fd`, `grep` → `rg`, `cat` → `bat`, `sed` → `sd`
+- Use the replacement tools directly (e.g., `fd` not `find`). For `sed`-like operations, use the Edit tool instead of Bash.
+- If a build/run command fails twice with the same error, stop and analyze the error output before retrying.
+
+## Edit Tool Discipline
+
+- Always Read the target file before editing to confirm current content.
+- Include 3+ lines of unique surrounding context in `old_string` to ensure uniqueness.
+- For Nix files: include the full attribute path context (e.g., the enclosing block header).
+- For TSX/TS files: include the function or component name line as anchor context.
+- If an Edit fails, re-Read the file before retrying.
+- Plan multi-part changes as a single comprehensive edit when possible.
+
+## Retry Limits
+
+- If a tool call fails 3 times in a row on the same file or operation, STOP:
+  1. Re-read the file to get fresh state
+  2. Explain the failure to the user
+  3. Try a fundamentally different approach
+- Never retry the same Bash command more than 2 times without changing the approach.

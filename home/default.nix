@@ -144,6 +144,8 @@ in
         config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/claude/si/scripts";
       ".claude/si/skills".source =
         config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/claude/si/skills";
+      ".claude/plugins/lite-agents".source =
+        config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/claude/plugins/lite-agents";
     };
   };
 

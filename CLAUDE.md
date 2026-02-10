@@ -57,6 +57,13 @@ Application configs in `config/` are symlinked via `mkOutOfStoreSymlink` for ins
 Git: `g`, `gs`, `gd`, `ga`, `gc`, `gp`, `gl`
 Modern CLI: `ls`→eza, `cat`→bat, `grep`→rg, `find`→fd
 
+### Nix Editing Guidelines
+
+- Nix files have deeply nested, repetitive structure. Always use large context blocks for Edit `old_string`.
+- When adding packages to a list, include the list header AND at least 2 existing items as context for uniqueness.
+- After editing any `.nix` file, validate with `nix flake check` (flake files) or `nixfmt` (formatting).
+- Common Nix edit failures: missing semicolons, unbalanced braces, incorrect attribute path nesting.
+
 ## Ongoing Interests
 
 - **Desktop environment improvement**: Always exploring a more usable desktop setup. Currently using Niri + waybar, but considering integrated desktop shells like [DankMaterialShell (DMS)](https://github.com/AvengeMedia/DankMaterialShell). DMS provides NixOS Flake / Home Manager modules with Niri integration options.
