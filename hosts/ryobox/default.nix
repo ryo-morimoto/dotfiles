@@ -55,8 +55,25 @@
     };
     gnome.gnome-keyring.enable = true;
 
-    # banto task dashboard (via Tailscale Serve)
+    # banto task dashboard
     banto.enable = true;
+
+    # Caddy reverse proxy (TLS via Let's Encrypt DNS-01 + Cloudflare)
+    caddy = {
+      enable = true;
+      package = pkgs.caddy.withPlugins {
+        plugins = [ "github.com/caddy-dns/cloudflare@latest" ];
+        hash = "sha256-dnhEjopeA0UiI+XVYHYpsjcEI6Y1Hacbi28hVKYQURg=";
+      };
+      virtualHosts."banto.ryobox.xyz" = {
+        extraConfig = ''
+          reverse_proxy localhost:3000
+          tls {
+            dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+          }
+        '';
+      };
+    };
 
     # Tailscale VPN with SSH
     tailscale = {
@@ -75,6 +92,9 @@
     #   };
     # };
   };
+
+  # Caddy: load Cloudflare API token
+  systemd.services.caddy.serviceConfig.EnvironmentFile = "/etc/caddy/cloudflare.env";
 
   # Bluetooth
   hardware.bluetooth = {
