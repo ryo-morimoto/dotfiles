@@ -30,11 +30,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1770696266,
-        "narHash": "sha256-LLBBgm5hXGA6EBzVej3ygXbngqNB+f3YSGvXFXDKu8Y=",
+        "lastModified": 1770702396,
+        "narHash": "sha256-muV2JOEhjBqDsZHHrooO26LZmB7Oqi51JGeQ6ZRMjnw=",
         "owner": "ryo-morimoto",
         "repo": "banto",
-        "rev": "c75be146963e7935cf52207fd605b30778e0e652",
+        "rev": "0c52b0622539330903cbf660cbb53a59d3c59edc",
         "type": "github"
       },
       "original": {
