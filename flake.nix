@@ -30,6 +30,10 @@
       url = "github:ryo-morimoto/banto";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -42,6 +46,7 @@
       niri-flake,
       tmuxcc-src,
       banto,
+      agenix,
       ...
     }:
     let
@@ -55,6 +60,7 @@
       nixosConfigurations.ryobox = nixpkgs.lib.nixosSystem {
         modules = [
           ./hosts/ryobox
+          agenix.nixosModules.default
           banto.nixosModules.default
           home-manager.nixosModules.home-manager
           {

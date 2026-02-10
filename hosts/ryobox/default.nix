@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 {
   imports = [ ./hardware-configuration.nix ];
@@ -62,8 +62,8 @@
     caddy = {
       enable = true;
       package = pkgs.caddy.withPlugins {
-        plugins = [ "github.com/caddy-dns/cloudflare@latest" ];
-        hash = "sha256-dnhEjopeA0UiI+XVYHYpsjcEI6Y1Hacbi28hVKYQURg=";
+        plugins = [ "github.com/caddy-dns/cloudflare@v0.2.2" ];
+        hash = "sha256-dnhEjopeA0UiI+XVYHYpsjcEI6Y1Hacbi28hVKYQURg="; # caddy 2.10.2 + cloudflare v0.2.2
       };
       virtualHosts."banto.ryobox.xyz" = {
         extraConfig = ''
@@ -93,8 +93,17 @@
     # };
   };
 
-  # Caddy: load Cloudflare API token
-  systemd.services.caddy.serviceConfig.EnvironmentFile = "/etc/caddy/cloudflare.env";
+  # agenix: use host SSH key for decryption (openssh is disabled; Tailscale SSH is used instead)
+  age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+
+  # Caddy: load Cloudflare API token (decrypted by agenix)
+  age.secrets.caddy-cloudflare = {
+    file = ../../secrets/caddy-cloudflare.age;
+    owner = "caddy";
+    group = "caddy";
+    mode = "0400";
+  };
+  systemd.services.caddy.serviceConfig.EnvironmentFile = config.age.secrets.caddy-cloudflare.path;
 
   # Bluetooth
   hardware.bluetooth = {
