@@ -70,6 +70,7 @@ in
       nixfmt
       statix
       deadnix
+      prek
 
       # Development
       ghq

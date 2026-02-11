@@ -1,0 +1,47 @@
+repos:
+  - repo: local
+    hooks:
+      # Lint (priority 0: run in parallel)
+      - id: nixfmt
+        name: nixfmt
+        entry: nixfmt
+        language: system
+        files: '\.nix$'
+        priority: 0
+
+      - id: statix
+        name: statix
+        entry: statix check
+        language: system
+        files: '\.nix$'
+        priority: 0
+
+      - id: deadnix
+        name: deadnix
+        entry: deadnix --fail
+        language: system
+        files: '\.nix$'
+        priority: 0
+
+      - id: shellcheck
+        name: shellcheck
+        entry: shellcheck
+        language: system
+        types: [shell]
+        priority: 0
+
+      - id: shfmt
+        name: shfmt
+        entry: shfmt -d
+        language: system
+        types: [shell]
+        priority: 0
+
+      # Build (priority 10: run after lint)
+      - id: nix-build
+        name: nix build
+        entry: nix build .#nixosConfigurations.ryobox.config.system.build.toplevel --no-link
+        language: system
+        files: '\.nix$'
+        pass_filenames: false
+        priority: 10
