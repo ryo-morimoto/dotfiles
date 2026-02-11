@@ -58,6 +58,7 @@
         vibe-kanban = final.callPackage ./packages/vibe-kanban.nix { };
         claude-squad = final.callPackage ./packages/claude-squad.nix { };
         tmuxcc = final.callPackage ./packages/tmuxcc.nix { inherit tmuxcc-src; };
+        entire = final.callPackage ./packages/entire.nix { };
       };
     in
     {

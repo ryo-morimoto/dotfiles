@@ -136,6 +136,7 @@ in
       claude-squad
       tmuxcc
       opencode
+      entire
     ];
 
     file = {
