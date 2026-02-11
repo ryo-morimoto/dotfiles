@@ -34,6 +34,9 @@
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    voxtype = {
+      url = "github:peteonrails/voxtype";
+    };
   };
 
   outputs =
@@ -47,10 +50,11 @@
       tmuxcc-src,
       banto,
       agenix,
+      voxtype,
       ...
     }:
     let
-      localOverlay = final: prev: {
+      localOverlay = final: _prev: {
         vibe-kanban = final.callPackage ./packages/vibe-kanban.nix { };
         claude-squad = final.callPackage ./packages/claude-squad.nix { };
         tmuxcc = final.callPackage ./packages/tmuxcc.nix { inherit tmuxcc-src; };
@@ -78,11 +82,12 @@
                   niri-flake.homeModules.config
                   dms.homeModules.dank-material-shell
                   dms.homeModules.niri
+                  voxtype.homeManagerModules.default
                   ./home
                 ];
               };
               extraSpecialArgs = {
-                inherit dms;
+                inherit dms voxtype;
               };
             };
           }

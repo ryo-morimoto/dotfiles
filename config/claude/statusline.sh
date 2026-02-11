@@ -9,9 +9,9 @@ project=$(basename "$cwd" 2>/dev/null || echo "")
 
 # Format: model | project
 if [ -n "$project" ]; then
-  status="#[fg=#f9e2af]$model#[fg=#cdd6f4] | #[fg=#94e2d5]$project"
+	status="#[fg=#f9e2af]$model#[fg=#cdd6f4] | #[fg=#94e2d5]$project"
 else
-  status="#[fg=#f9e2af]$model"
+	status="#[fg=#f9e2af]$model"
 fi
 
-echo "$status" > /tmp/claude-status
+echo "$status" >/tmp/claude-status

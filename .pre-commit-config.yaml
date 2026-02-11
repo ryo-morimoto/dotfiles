@@ -14,6 +14,7 @@ repos:
         entry: statix check
         language: system
         files: '\.nix$'
+        pass_filenames: false
         priority: 0
 
       - id: deadnix
@@ -27,14 +28,14 @@ repos:
         name: shellcheck
         entry: shellcheck
         language: system
-        types: [shell]
+        files: '\.sh$'
         priority: 0
 
       - id: shfmt
         name: shfmt
         entry: shfmt -d
         language: system
-        types: [shell]
+        files: '\.sh$'
         priority: 0
 
       # Build (priority 10: run after lint)

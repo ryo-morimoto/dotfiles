@@ -1,6 +1,8 @@
 {
   config,
+  lib,
   pkgs,
+  voxtype,
   ...
 }:
 
@@ -118,6 +120,7 @@ in
       # File operations
       trash-cli
       wl-clipboard
+      wtype
       ffmpeg
       imagemagick
       pandoc
@@ -126,6 +129,7 @@ in
       watchexec
       fastfetch
       age
+      libnotify
 
       # AI tools
       vibe-kanban
@@ -531,6 +535,50 @@ in
     };
   };
 
+  # Voxtype voice input (whisper.cpp, Vulkan GPU acceleration)
+  programs.voxtype = {
+    enable = true;
+    engine = "whisper";
+    package = voxtype.packages.${pkgs.system}.vulkan;
+    model.name = "large-v3-turbo";
+    service.enable = true;
+    settings = {
+      hotkey = {
+        enabled = false;
+        key = "SCROLLLOCK";
+        modifiers = [ ];
+        mode = "toggle";
+      };
+      audio = {
+        device = "default";
+        sample_rate = 16000;
+        max_duration_secs = 60;
+        feedback = {
+          enabled = true;
+          theme = "default";
+          volume = 0.7;
+        };
+      };
+      whisper = {
+        mode = "local";
+        model = "large-v3-turbo";
+        language = "ja";
+        translate = false;
+        on_demand_loading = false;
+        gpu_isolation = false;
+        context_window_optimization = false;
+      };
+      output = {
+        mode = "type";
+        fallback_to_clipboard = true;
+        type_delay_ms = 0;
+        pre_type_delay_ms = 0;
+        auto_submit = false;
+        paste_keys = "ctrl+v";
+      };
+    };
+  };
+
   # Niri compositor (managed by niri-flake, DMS merges keybinds/spawn into settings)
   programs.niri.package = pkgs.niri;
   programs.niri.settings = {
@@ -555,9 +603,9 @@ in
       gaps = 6;
       center-focused-column = "never";
       preset-column-widths = [
-        { proportion = 1. / 3.; }
-        { proportion = 1. / 2.; }
-        { proportion = 2. / 3.; }
+        { proportion = 1.0 / 3.0; }
+        { proportion = 1.0 / 2.0; }
+        { proportion = 2.0 / 3.0; }
       ];
       default-column-width = {
         proportion = 0.5;
@@ -620,6 +668,15 @@ in
 
       # Applications
       "Mod+T".action.spawn = "ghostty";
+
+      # Voice input toggle (voxtype, overrides DMS clipboard)
+      "Mod+V".action = lib.mkForce {
+        spawn = [
+          "voxtype"
+          "record"
+          "toggle"
+        ];
+      };
 
       # System controls (DMS handles launcher, notifications, lock, power menu)
       "Mod+A".action.spawn = "pavucontrol";
@@ -797,7 +854,7 @@ in
       "Mod+Shift+Minus".action.set-window-height = "-10%";
       "Mod+Shift+Equal".action.set-window-height = "+10%";
 
-      # Float/tile toggle (Mod+V is used by DMS clipboard)
+      # Float/tile toggle (Mod+V reassigned to voxtype)
       "Mod+G".action.toggle-window-floating = { };
       "Mod+Shift+G".action.switch-focus-between-floating-and-tiling = { };
 

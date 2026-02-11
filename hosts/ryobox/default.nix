@@ -173,11 +173,6 @@
     shell = pkgs.zsh;
   };
 
-  # /bin/bash symlink (for scripts with #!/bin/bash shebang)
-  system.activationScripts.binbash = ''
-    ln -sfn ${pkgs.bash}/bin/bash /bin/bash
-  '';
-
   # Nix
   nix = {
     settings = {
@@ -206,14 +201,21 @@
   # Allow running dynamically linked binaries (for uv, etc.)
   programs.nix-ld.enable = true;
 
-  # Automatic system upgrade (GitOps: pulls from GitHub)
-  system.autoUpgrade = {
-    enable = true;
-    flake = "github:ryo-morimoto/dotfiles#ryobox";
-    dates = "05:00";
-    randomizedDelaySec = "45min";
-    allowReboot = false;
-  };
+  system = {
+    # /bin/bash symlink (for scripts with #!/bin/bash shebang)
+    activationScripts.binbash = ''
+      ln -sfn ${pkgs.bash}/bin/bash /bin/bash
+    '';
 
-  system.stateVersion = "25.11";
+    # Automatic system upgrade (GitOps: pulls from GitHub)
+    autoUpgrade = {
+      enable = true;
+      flake = "github:ryo-morimoto/dotfiles#ryobox";
+      dates = "05:00";
+      randomizedDelaySec = "45min";
+      allowReboot = false;
+    };
+
+    stateVersion = "25.11";
+  };
 }
