@@ -543,6 +543,7 @@ in
     model.name = "large-v3-turbo";
     service.enable = true;
     settings = {
+      state_file = "auto";
       hotkey = {
         enabled = false;
         key = "SCROLLLOCK";
@@ -578,6 +579,13 @@ in
       };
     };
   };
+
+  # Voxtype ALSA workaround: voxtype links alsa-lib 1.2.14 (from its flake nixpkgs)
+  # but system PipeWire ALSA plugin requires alsa-lib 1.2.15. LD_PRELOAD forces
+  # the system alsa-lib so dlopen of the PipeWire plugin succeeds.
+  systemd.user.services.voxtype.Service.Environment = [
+    "LD_PRELOAD=${pkgs.alsa-lib}/lib/libasound.so.2"
+  ];
 
   # Niri compositor (managed by niri-flake, DMS merges keybinds/spawn into settings)
   programs.niri.package = pkgs.niri;
