@@ -15,6 +15,10 @@ in
     homeDirectory = "/home/ryo-morimoto";
     stateVersion = "25.11";
 
+    sessionVariables = {
+      BROWSER = "firefox";
+    };
+
     packages = with pkgs; [
       # Editor
       neovim
@@ -887,6 +891,17 @@ in
 
       # Power off monitors
       "Mod+Shift+P".action.power-off-monitors = { };
+    };
+  };
+
+  # Default browser associations
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = {
+      "text/html" = [ "firefox.desktop" ];
+      "application/xhtml+xml" = [ "firefox.desktop" ];
+      "x-scheme-handler/http" = [ "firefox.desktop" ];
+      "x-scheme-handler/https" = [ "firefox.desktop" ];
     };
   };
 
