@@ -7,12 +7,8 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    claude-code-overlay = {
-      url = "github:ryoppippi/claude-code-overlay";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    codex-cli-nix = {
-      url = "github:sadjow/codex-cli-nix";
+    llm-agents = {
+      url = "github:numtide/llm-agents.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     dms = {
@@ -43,8 +39,7 @@
     {
       nixpkgs,
       home-manager,
-      claude-code-overlay,
-      codex-cli-nix,
+      llm-agents,
       dms,
       niri-flake,
       tmuxcc-src,
@@ -72,8 +67,7 @@
             nixpkgs.hostPlatform = "x86_64-linux";
             nixpkgs.overlays = [
               localOverlay
-              claude-code-overlay.overlays.default
-              codex-cli-nix.overlays.default
+              llm-agents.overlays.default
             ];
             home-manager = {
               useGlobalPkgs = true;

@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  dms,
   voxtype,
   ...
 }:
@@ -81,8 +82,8 @@ in
       # Development
       ghq
       gh
-      claude-code
-      codex
+      llm-agents.claude-code
+      llm-agents.codex
       socat
       bubblewrap
       lazygit
@@ -139,7 +140,8 @@ in
       vibe-kanban
       claude-squad
       tmuxcc
-      opencode
+      llm-agents.opencode
+      llm-agents.openspec
       entire
     ];
 
@@ -411,6 +413,7 @@ in
     yazi = {
       enable = true;
       enableZshIntegration = true;
+      shellWrapperName = "yy";
     };
 
     ssh = {
@@ -532,6 +535,13 @@ in
     enableDynamicTheming = true;
     enableClipboardPaste = true;
     enableSystemMonitoring = true;
+    quickshell.package =
+      dms.inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default.override
+        {
+          xorg = pkgs.xorg // {
+            inherit (pkgs) libxcb;
+          };
+        };
     systemd.enable = false;
     niri = {
       enableKeybinds = true;
@@ -544,7 +554,7 @@ in
   programs.voxtype = {
     enable = true;
     engine = "whisper";
-    package = voxtype.packages.${pkgs.system}.vulkan;
+    package = voxtype.packages.${pkgs.stdenv.hostPlatform.system}.vulkan;
     model.name = "large-v3-turbo";
     service.enable = true;
     settings = {

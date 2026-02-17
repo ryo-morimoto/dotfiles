@@ -33,7 +33,7 @@ git config filter.waypaper.smudge 'cat'
 
 ### Nix Structure
 
-- **`flake.nix`** - Entry point. Defines inputs (nixpkgs, home-manager, claude-code-overlay) and integrates Home Manager as NixOS module
+- **`flake.nix`** - Entry point. Defines inputs (nixpkgs, home-manager, llm-agents, etc.) and integrates Home Manager as NixOS module
 - **`home/default.nix`** - User environment: packages, programs (git, zsh, starship, fzf, etc.), shell aliases, XDG config symlinks
 - **`hosts/ryobox/default.nix`** - System config: bootloader, networking, locale (ja_JP), Niri compositor, audio (PipeWire), fonts
 - **`hosts/ryobox/hardware-configuration.nix`** - Auto-generated hardware config (do not edit manually)

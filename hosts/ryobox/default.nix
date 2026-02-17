@@ -108,7 +108,7 @@
     group = "caddy";
     mode = "0400";
   };
-  systemd.services.banto.environment.CLAUDE_CODE_EXECUTABLE = lib.getExe pkgs.claude-code;
+  systemd.services.banto.environment.CLAUDE_CODE_EXECUTABLE = lib.getExe pkgs.llm-agents.claude-code;
   systemd.services.caddy.serviceConfig.EnvironmentFile = config.age.secrets.caddy-cloudflare.path;
 
   # Bluetooth
