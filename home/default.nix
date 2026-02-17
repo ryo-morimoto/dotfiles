@@ -907,6 +907,7 @@ in
 
   # Dotfiles (mkOutOfStoreSymlink for instant updates)
   xdg.configFile = {
+    "mimeapps.list".force = true;
     "nvim".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/nvim";
     "ghostty".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/ghostty";
     "hypr".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/hypr";
