@@ -59,6 +59,9 @@ in
       yq-go
       httpie
       tokei
+      kubo
+      iroh-relay
+      iroh-dns-server
 
       # Modern CLI replacements
       btop
