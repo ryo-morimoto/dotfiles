@@ -930,5 +930,7 @@ in
     "zsh".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/zsh";
     "wallpaper".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/wallpaper";
     "tmuxcc".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/tmuxcc";
+    "opencode/AGENTS.md".source =
+      config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/opencode/AGENTS.md";
   };
 }
