@@ -33,6 +33,10 @@
     voxtype = {
       url = "github:peteonrails/voxtype";
     };
+    moonbit-overlay = {
+      url = "github:moonbit-community/moonbit-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -46,6 +50,7 @@
       banto,
       agenix,
       voxtype,
+      moonbit-overlay,
       ...
     }:
     let
@@ -66,6 +71,7 @@
           {
             nixpkgs.hostPlatform = "x86_64-linux";
             nixpkgs.overlays = [
+              moonbit-overlay.overlays.default
               localOverlay
               llm-agents.overlays.default
             ];

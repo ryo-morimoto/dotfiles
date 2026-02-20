@@ -96,7 +96,10 @@ in
       chromium
 
       # System/CLI development
+      moonbit-bin.moonbit.latest
       go
+      llvmPackages.clang-unwrapped
+      gcc
       rustc
       cargo
       mold
