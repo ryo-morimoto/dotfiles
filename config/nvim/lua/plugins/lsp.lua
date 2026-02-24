@@ -126,6 +126,15 @@ return {
       },
     })
 
+    vim.lsp.config("moonbit-lsp", {
+      cmd = { "moonbit-lsp" },
+      filetypes = { "moonbit" },
+      root_markers = {
+        "moon.mod.json",
+        ".git",
+      },
+    })
+
     vim.lsp.config("tailwindcss", {})
 
     -- Enable all configured servers
@@ -139,6 +148,7 @@ return {
       "gopls",
       "lua_ls",
       "nixd",
+      "moonbit-lsp",
       "tailwindcss",
     })
   end,

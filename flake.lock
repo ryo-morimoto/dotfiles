@@ -363,8 +363,36 @@
         "moonbit-overlay": "moonbit-overlay",
         "niri-flake": "niri-flake",
         "nixpkgs": "nixpkgs_2",
+        "starlintDarwinArm64Bin": "starlintDarwinArm64Bin",
+        "starlintLinuxBin": "starlintLinuxBin",
         "tmuxcc-src": "tmuxcc-src",
         "voxtype": "voxtype"
+      }
+    },
+    "starlintDarwinArm64Bin": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1770616964,
+        "narHash": "sha256-l2mQlEF9q6UjULvGzb9fm5++SZNC5j48sD0+NtWHtOw=",
+        "type": "tarball",
+        "url": "https://github.com/mizchi/starlint/releases/latest/download/starlint-macos-arm64.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/mizchi/starlint/releases/latest/download/starlint-macos-arm64.tar.gz"
+      }
+    },
+    "starlintLinuxBin": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1770616813,
+        "narHash": "sha256-iHVuUGqk6ENU5VU6w/6Wl9RBAM6w4mak9MprrsMOag8=",
+        "type": "tarball",
+        "url": "https://github.com/mizchi/starlint/releases/latest/download/starlint-linux-x64.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/mizchi/starlint/releases/latest/download/starlint-linux-x64.tar.gz"
       }
     },
     "systems": {

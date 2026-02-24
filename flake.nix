@@ -37,6 +37,14 @@
       url = "github:moonbit-community/moonbit-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    starlintLinuxBin = {
+      url = "https://github.com/mizchi/starlint/releases/latest/download/starlint-linux-x64.tar.gz";
+      flake = false;
+    };
+    starlintDarwinArm64Bin = {
+      url = "https://github.com/mizchi/starlint/releases/latest/download/starlint-macos-arm64.tar.gz";
+      flake = false;
+    };
   };
 
   outputs =
@@ -51,6 +59,8 @@
       agenix,
       voxtype,
       moonbit-overlay,
+      starlintLinuxBin,
+      starlintDarwinArm64Bin,
       ...
     }:
     let
@@ -59,6 +69,9 @@
         claude-squad = final.callPackage ./packages/claude-squad.nix { };
         tmuxcc = final.callPackage ./packages/tmuxcc.nix { inherit tmuxcc-src; };
         entire = final.callPackage ./packages/entire.nix { };
+        starlint = final.callPackage ./packages/starlint.nix {
+          inherit starlintLinuxBin starlintDarwinArm64Bin;
+        };
       };
     in
     {

@@ -29,6 +29,7 @@ return {
         lua = { "stylua" },
         nix = { "nixfmt" },
         rust = { "rustfmt" },
+        moonbit = { "moonfmt" },
       },
       format_on_save = function(bufnr)
         -- Disable for certain filetypes

@@ -20,6 +20,10 @@ in
       BROWSER = "firefox";
     };
 
+    sessionPath = [
+      "$HOME/.moon/bin"
+    ];
+
     packages = with pkgs; [
       # Editor
       neovim
@@ -43,6 +47,7 @@ in
       # Linters (for Neovim)
       nodePackages.eslint
       ruff
+      starlint
 
       # Terminal
       ghostty

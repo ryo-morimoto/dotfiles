@@ -1,6 +1,15 @@
 local autocmd = vim.api.nvim_create_autocmd
 local augroup = vim.api.nvim_create_augroup
 
+vim.filetype.add({
+  extension = {
+    mbt = "moonbit",
+  },
+  filename = {
+    ["moon.pkg"] = "moonbit",
+  },
+})
+
 -- Highlight on yank
 autocmd("TextYankPost", {
   group = augroup("highlight_yank", { clear = true }),
