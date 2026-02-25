@@ -106,7 +106,7 @@ return {
             library = vim.api.nvim_get_runtime_file("", true),
           },
           diagnostics = {
-            globals = { "vim" },
+            globals = { "vim", "api", "fn", "cmd", "loop", "uv" },
           },
           telemetry = { enable = false },
         },
