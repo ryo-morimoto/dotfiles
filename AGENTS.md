@@ -100,6 +100,7 @@
 - [構成方針]: Nix Flakes + Home Manager の宣言的構成を維持する
 - [コミット運用]: Conventional Commits を基本に、小さめの差分を高頻度で積む
 - [依存更新運用]: `chore: update flake.lock` を定期実行し、依存更新を継続する
+- [Playwright運用]: Chromium-only は `PLAYWRIGHT_BROWSERS_PATH=${pkgs.playwright-driver.browsers.override { withFirefox = false; withWebkit = false; }}` を標準にし、`playwright install*` を使わない
 
 ## 未確定ドメイン（U）
 
@@ -149,3 +150,134 @@ NG:  「AとBのどちらが要件を満たしていますか？」
 2. `選好ログ（L）` の該当ドメインを更新する
 3. `未確定ドメイン（U）` から解決済みの項目を削除する
 4. 必要なら `未確定ドメイン（U）` に新しい論点を追加する
+
+## Build / Lint / Test Commands
+
+This is a Nix Flakes-based dotfiles repository. All commands use `nix` (prefer `nix --profile` or flakes).
+
+### Format and Lint
+
+```bash
+# Format all .nix files
+nixfmt .
+
+# Lint/validate flake (includes parsing and evaluation)
+nix flake check
+
+# Dry-run build NixOS configuration
+nix build .#nixosConfigurations.ryobox.config.system.build.toplevel --dry-run
+```
+
+### Build and Test
+
+```bash
+# Build full NixOS configuration
+sudo nixos-rebuild switch --flake .
+
+# Build a single package (defined in packages/*.nix)
+nix build .#beacon
+nix build .#claude-squad
+nix build .#tmuxcc
+nix build .#entire
+
+# Enter development shell if available
+nix develop
+
+# Evaluate a Nix expression
+nix eval .#nixosConfigurations.ryobox.config.home-manager.users.ryo-morimoto.programs.starship.enable
+```
+
+### Single Test / Evaluation
+
+```bash
+# Evaluate a specific attribute
+nix eval .#nixosConfigurations.ryobox.config.system.build.toplevel
+
+# Check a specific package
+nix build .#vibe-kanban
+
+# Test a single module (requires evaluation)
+nix eval .#nixosConfigurations.ryobox.config.home-manager.users.ryo-morimoto
+```
+
+## Code Style Guidelines
+
+This repository uses Nix (nixpkgs/lib, Home Manager modules) as the primary configuration language.
+
+### Formatting
+
+- Use `nixfmt` for all `.nix` files (non-negotiable)
+- 2-space indentation
+- Maximum line length: 120 characters (nixfmt default)
+- Sort imports alphabetically within attribute sets
+- Use `lib.mkIf`, `lib.mkEnableOption`, `lib.mkOption` from `lib` for conditionals
+
+### Imports and Dependencies
+
+```nix
+# Preferred: explicit function arguments
+{ lib, config, pkgs, ... }:
+
+# Group imports: stdlib first, then external, then local
+{
+  lib,
+  fetchFromGitHub,
+  buildGoModule,
+  myLocalPackage,
+}:
+```
+
+### Naming Conventions
+
+- **Variables**: `snake_case` (e.g., `enableTiling`, `my_package`)
+- **Functions**: `camelCase` (e.g., `mkIf`, `mkEnableOption`)
+- **Options**: `camelCase` (e.g., `programs.zsh.enable`)
+- **Packages**: `kebab-case` (e.g., `vibe-kanban`, `claude-squad`)
+- **Files**: `kebab-case.nix` for packages, `default.nix` for modules
+
+### Types and Assertions
+
+- Always define `meta` with `description`, `license`, `platforms` for packages
+- Use Home Manager's type system (`types.bool`, `types.str`, `types.path`)
+- Add assertions for invalid parameter combinations:
+  ```nix
+  lib.mkIf (cfg.enable && cfg.disable) (lib.warn "矛盾した設定" null)
+  ```
+
+### Error Handling
+
+- Use `lib.warn` for non-fatal issues
+- Use `lib.trivial.warn` for deprecation warnings
+- Avoid `throw` in pure configurations; use assertions instead
+- For runtime errors, prefer `lib.optional` or `lib.optionalString` over conditionals
+
+### Nixpkgs Lib Usage
+
+```nix
+# Common patterns
+lib.mkEnableOption "myfeature" // { default = true; }
+lib.mkIf cfg.enable (pkgs.writeShellScriptBin "myscript" '')
+  # script content
+'')
+
+# String interpolation with pkgs
+lib.mkOption {
+  default = "${pkgs.python3}/bin/python";
+  description = "Python interpreter path";
+}
+```
+
+### Code Organization
+
+- One package per file in `packages/<name>.nix`
+- Host-specific config in `hosts/<hostname>/`
+- Home Manager user config in `home/` with imports
+- Keep `flake.nix` minimal; delegate to modules
+- Secret management via `secrets/*.age` with agenix
+
+### Git Commit Style
+
+- Use Conventional Commits: `feat:`, `fix:`, `chore:`, `refactor:`, `docs:`, `style:`
+- Prefer small, focused commits (1 commit = 1 concern)
+- Update `flake.lock` with `chore: update flake.lock`
+- Example: `feat(niri): add workspace keybindings`
