@@ -73,6 +73,7 @@
         vibe-kanban = final.callPackage ./packages/vibe-kanban.nix { };
         claude-squad = final.callPackage ./packages/claude-squad.nix { };
         tmuxcc = final.callPackage ./packages/tmuxcc.nix { inherit tmuxcc-src; };
+        beacon = final.callPackage ./packages/beacon.nix { };
         entire = final.callPackage ./packages/entire.nix { };
         zen-browser = zen-browser.packages.${final.system}.default;
         starlint = final.callPackage ./packages/starlint.nix {

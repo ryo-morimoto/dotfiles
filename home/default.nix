@@ -156,6 +156,7 @@ in
       vibe-kanban
       claude-squad
       tmuxcc
+      beacon
       llm-agents.opencode
       llm-agents.openspec
       entire
