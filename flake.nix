@@ -18,6 +18,10 @@
     niri-flake = {
       url = "github:sodiboo/niri-flake";
     };
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     tmuxcc-src = {
       url = "github:nyanko3141592/tmuxcc";
       flake = false;
@@ -54,6 +58,7 @@
       llm-agents,
       dms,
       niri-flake,
+      zen-browser,
       tmuxcc-src,
       banto,
       agenix,
@@ -69,6 +74,7 @@
         claude-squad = final.callPackage ./packages/claude-squad.nix { };
         tmuxcc = final.callPackage ./packages/tmuxcc.nix { inherit tmuxcc-src; };
         entire = final.callPackage ./packages/entire.nix { };
+        zen-browser = zen-browser.packages.${final.system}.default;
         starlint = final.callPackage ./packages/starlint.nix {
           inherit starlintLinuxBin starlintDarwinArm64Bin;
         };

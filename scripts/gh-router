@@ -1,0 +1,647 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+STATE_ROOT="${XDG_STATE_HOME:-$HOME/.local/state}/gh-router"
+PROFILE_ROOT="${GH_ROUTER_PROFILE_ROOT:-$STATE_ROOT/profiles}"
+CACHE_ROOT="${GH_ROUTER_CACHE_ROOT:-$STATE_ROOT/cache}"
+CONFIG_ROOT="${GH_ROUTER_CONFIG_ROOT:-${XDG_CONFIG_HOME:-$HOME/.config}/gh-router}"
+OWNER_MAP_FILE="${GH_ROUTER_OWNER_MAP_FILE:-$CONFIG_ROOT/owner-map.tsv}"
+ORG_CACHE_FILE="${GH_ROUTER_ORG_CACHE_FILE:-$CACHE_ROOT/org-membership.tsv}"
+DEFAULT_ACCOUNT="${GH_ROUTER_DEFAULT_ACCOUNT:-}"
+ORG_CACHE_TTL_POSITIVE="${GH_ROUTER_ORG_CACHE_TTL_POSITIVE:-86400}"
+ORG_CACHE_TTL_NEGATIVE="${GH_ROUTER_ORG_CACHE_TTL_NEGATIVE:-600}"
+
+GHQ_ROOT_CACHE=""
+
+ensure_dirs() {
+  mkdir -p "$PROFILE_ROOT" "$CACHE_ROOT" "$CONFIG_ROOT"
+}
+
+profile_dir() {
+  printf "%s/%s\n" "$PROFILE_ROOT" "$1"
+}
+
+profile_exists() {
+  local account="$1"
+  local dir
+
+  dir="$(profile_dir "$account")"
+  [[ -f "$dir/hosts.yml" ]]
+}
+
+list_accounts() {
+  local dir
+
+  for dir in "$PROFILE_ROOT"/*; do
+    [[ -d "$dir" ]] || continue
+    [[ -f "$dir/hosts.yml" ]] || continue
+    basename "$dir"
+  done | LC_ALL=C sort
+}
+
+ghq_root() {
+  if [[ -n "$GHQ_ROOT_CACHE" ]]; then
+    printf "%s\n" "$GHQ_ROOT_CACHE"
+    return 0
+  fi
+
+  command -v ghq >/dev/null 2>&1 || return 1
+  GHQ_ROOT_CACHE="$(ghq root 2>/dev/null || true)"
+  [[ -n "$GHQ_ROOT_CACHE" ]] || return 1
+
+  printf "%s\n" "$GHQ_ROOT_CACHE"
+}
+
+owner_from_ghq_path() {
+  local dir="${1:-$PWD}"
+  local root prefix rel owner
+
+  root="$(ghq_root 2>/dev/null || true)"
+  [[ -n "$root" ]] || return 1
+
+  prefix="${root%/}/github.com/"
+  [[ "$dir" == "$prefix"* ]] || return 1
+
+  rel="${dir#$prefix}"
+  owner="${rel%%/*}"
+  [[ -n "$owner" ]] || return 1
+
+  printf "%s\n" "$owner"
+}
+
+owner_from_remote_url() {
+  local remote_url="$1"
+  local path owner
+
+  [[ -n "$remote_url" ]] || return 1
+
+  case "$remote_url" in
+    git@github.com:*)
+      path="${remote_url#git@github.com:}"
+      ;;
+    ssh://git@github.com/*)
+      path="${remote_url#ssh://git@github.com/}"
+      ;;
+    https://github.com/*)
+      path="${remote_url#https://github.com/}"
+      ;;
+    http://github.com/*)
+      path="${remote_url#http://github.com/}"
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+
+  path="${path%.git}"
+  owner="${path%%/*}"
+  [[ -n "$owner" ]] || return 1
+  [[ "$owner" != "$path" ]] || return 1
+
+  printf "%s\n" "$owner"
+}
+
+owner_from_git_origin() {
+  local dir="${1:-$PWD}"
+  local remote_url
+
+  command -v git >/dev/null 2>&1 || return 1
+  remote_url="$(git -C "$dir" remote get-url origin 2>/dev/null || true)"
+  [[ -n "$remote_url" ]] || return 1
+
+  owner_from_remote_url "$remote_url"
+}
+
+owner_from_credential_path() {
+  local path="$1"
+  local owner
+
+  [[ -n "$path" ]] || return 1
+
+  path="${path#/}"
+  path="${path%.git}"
+  owner="${path%%/*}"
+  [[ -n "$owner" ]] || return 1
+  [[ "$owner" != "$path" ]] || return 1
+
+  printf "%s\n" "$owner"
+}
+
+owner_map_get_env() {
+  local owner="$1"
+  local pair key value
+  local -a pairs
+
+  [[ -n "${GH_ROUTER_OWNER_MAP:-}" ]] || return 1
+
+  IFS=',' read -r -a pairs <<< "$GH_ROUTER_OWNER_MAP"
+  for pair in "${pairs[@]}"; do
+    key="${pair%%=*}"
+    value="${pair#*=}"
+    [[ "$key" == "$owner" ]] || continue
+    [[ -n "$value" ]] || return 1
+    printf "%s\n" "$value"
+    return 0
+  done
+
+  return 1
+}
+
+owner_map_get_file() {
+  local owner="$1"
+  local key value
+
+  [[ -f "$OWNER_MAP_FILE" ]] || return 1
+  while IFS=$'\t' read -r key value; do
+    [[ -n "$key" ]] || continue
+    [[ "$key" == "$owner" ]] || continue
+    [[ -n "$value" ]] || return 1
+    printf "%s\n" "$value"
+    return 0
+  done < "$OWNER_MAP_FILE"
+
+  return 1
+}
+
+owner_map_get() {
+  local owner="$1"
+  local account
+
+  account="$(owner_map_get_env "$owner" 2>/dev/null || true)"
+  if [[ -n "$account" ]]; then
+    printf "%s\n" "$account"
+    return 0
+  fi
+
+  owner_map_get_file "$owner"
+}
+
+now_epoch() {
+  date +%s
+}
+
+org_cache_get() {
+  local owner="$1"
+  local now key account expires
+
+  [[ -f "$ORG_CACHE_FILE" ]] || return 1
+  now="$(now_epoch)"
+
+  while IFS=$'\t' read -r key account expires; do
+    [[ -n "$key" ]] || continue
+    [[ "$key" == "$owner" ]] || continue
+    [[ "$expires" =~ ^[0-9]+$ ]] || continue
+    if (( expires > now )); then
+      printf "%s\n" "$account"
+      return 0
+    fi
+    return 1
+  done < "$ORG_CACHE_FILE"
+
+  return 1
+}
+
+org_cache_set() {
+  local owner="$1"
+  local account="$2"
+  local ttl="$3"
+  local now expires tmp key v e
+
+  ensure_dirs
+  now="$(now_epoch)"
+  expires=$(( now + ttl ))
+  tmp="$(mktemp)"
+
+  if [[ -f "$ORG_CACHE_FILE" ]]; then
+    while IFS=$'\t' read -r key v e; do
+      [[ -n "$key" ]] || continue
+      [[ "$key" == "$owner" ]] && continue
+      printf "%s\t%s\t%s\n" "$key" "$v" "$e" >> "$tmp"
+    done < "$ORG_CACHE_FILE"
+  fi
+
+  printf "%s\t%s\t%s\n" "$owner" "$account" "$expires" >> "$tmp"
+  mv "$tmp" "$ORG_CACHE_FILE"
+}
+
+org_membership_probe_account() {
+  local owner="$1"
+  local account="$2"
+  local profile state response status_line status_code
+
+  profile="$(profile_dir "$account")"
+  state="$(GH_CONFIG_DIR="$profile" gh api "/user/memberships/orgs/$owner" --jq '.state' 2>/dev/null || true)"
+
+  if [[ "$state" == "active" || "$state" == "pending" ]]; then
+    printf "%s\n" "member"
+    return 0
+  fi
+
+  if [[ -n "$state" ]]; then
+    printf "%s\n" "not-member"
+    return 0
+  fi
+
+  response="$(GH_CONFIG_DIR="$profile" gh api -i "/user/memberships/orgs/$owner" 2>/dev/null || true)"
+  status_line="${response%%$'\n'*}"
+  status_code="${status_line#* }"
+  status_code="${status_code%% *}"
+  status_code="${status_code//$'\r'/}"
+
+  case "$status_code" in
+    404)
+      printf "%s\n" "not-member"
+      return 0
+      ;;
+    401|403|429|5[0-9][0-9]|"")
+      printf "%s\n" "error"
+      return 1
+      ;;
+    *)
+      printf "%s\n" "error"
+      return 1
+      ;;
+  esac
+}
+
+fallback_account() {
+  if [[ -n "$DEFAULT_ACCOUNT" ]] && profile_exists "$DEFAULT_ACCOUNT"; then
+    printf "%s\n" "$DEFAULT_ACCOUNT"
+    return 0
+  fi
+
+  return 1
+}
+
+resolve_account_for_owner() {
+  local owner="$1"
+  local account cached probe
+  local had_accounts=0
+  local had_probe_error=0
+
+  account="$(owner_map_get "$owner" 2>/dev/null || true)"
+  if [[ -n "$account" ]] && profile_exists "$account"; then
+    printf "%s\t%s\n" "$account" "owner-map"
+    return 0
+  fi
+
+  if profile_exists "$owner"; then
+    printf "%s\t%s\n" "$owner" "owner-profile"
+    return 0
+  fi
+
+  cached="$(org_cache_get "$owner" 2>/dev/null || true)"
+  if [[ -n "$cached" ]]; then
+    if [[ "$cached" == "-" ]]; then
+      return 1
+    fi
+    if profile_exists "$cached"; then
+      printf "%s\t%s\n" "$cached" "org-cache"
+      return 0
+    fi
+  fi
+
+  while IFS= read -r account; do
+    [[ -n "$account" ]] || continue
+    had_accounts=1
+    probe="$(org_membership_probe_account "$owner" "$account" 2>/dev/null || true)"
+
+    if [[ "$probe" == "member" ]]; then
+      org_cache_set "$owner" "$account" "$ORG_CACHE_TTL_POSITIVE"
+      printf "%s\t%s\n" "$account" "org-membership"
+      return 0
+    fi
+
+    if [[ "$probe" == "error" || -z "$probe" ]]; then
+      had_probe_error=1
+    fi
+  done < <(list_accounts)
+
+  if (( had_accounts == 1 && had_probe_error == 0 )); then
+    org_cache_set "$owner" "-" "$ORG_CACHE_TTL_NEGATIVE"
+  fi
+
+  return 1
+}
+
+resolve_context_for_cwd() {
+  local cwd="$1"
+  local owner=""
+  local account reason fallback
+
+  owner="$(owner_from_ghq_path "$cwd" 2>/dev/null || true)"
+  if [[ -z "$owner" ]]; then
+    owner="$(owner_from_git_origin "$cwd" 2>/dev/null || true)"
+  fi
+
+  if [[ -n "$owner" ]]; then
+    if IFS=$'\t' read -r account reason <<< "$(resolve_account_for_owner "$owner" 2>/dev/null || true)"; then
+      if [[ -n "$account" ]]; then
+        printf "%s\t%s\t%s\n" "$owner" "$account" "$reason"
+        return 0
+      fi
+    fi
+
+    fallback="$(fallback_account 2>/dev/null || true)"
+    if [[ -n "$fallback" ]]; then
+      printf "%s\t%s\t%s\n" "$owner" "$fallback" "fallback-default"
+      return 0
+    fi
+
+    printf "%s\t%s\t%s\n" "$owner" "-" "owner-unresolved"
+    return 1
+  fi
+
+  fallback="$(fallback_account 2>/dev/null || true)"
+  if [[ -n "$fallback" ]]; then
+    printf "%s\t%s\t%s\n" "" "$fallback" "fallback-default"
+    return 0
+  fi
+
+  printf "%s\t%s\t%s\n" "" "-" "outside-repo"
+  return 1
+}
+
+resolve_context_for_credential() {
+  local path="$1"
+  local owner=""
+  local account reason fallback
+
+  owner="$(owner_from_credential_path "$path" 2>/dev/null || true)"
+  if [[ -n "$owner" ]]; then
+    if IFS=$'\t' read -r account reason <<< "$(resolve_account_for_owner "$owner" 2>/dev/null || true)"; then
+      if [[ -n "$account" ]]; then
+        printf "%s\t%s\t%s\n" "$owner" "$account" "$reason"
+        return 0
+      fi
+    fi
+
+    fallback="$(fallback_account 2>/dev/null || true)"
+    if [[ -n "$fallback" ]]; then
+      printf "%s\t%s\t%s\n" "$owner" "$fallback" "fallback-default"
+      return 0
+    fi
+
+    printf "%s\t%s\t%s\n" "$owner" "-" "credential-owner-unresolved"
+    return 1
+  fi
+
+  fallback="$(fallback_account 2>/dev/null || true)"
+  if [[ -n "$fallback" ]]; then
+    printf "%s\t%s\t%s\n" "" "$fallback" "fallback-default"
+    return 0
+  fi
+
+  printf "%s\t%s\t%s\n" "" "-" "credential-path-missing"
+  return 1
+}
+
+apply_zsh_exports() {
+  local account="$1"
+  local owner="$2"
+  local reason="$3"
+  local dir
+
+  if [[ "$account" != "-" ]] && [[ -n "$account" ]] && profile_exists "$account"; then
+    dir="$(profile_dir "$account")"
+    printf "export GH_CONFIG_DIR=%q\n" "$dir"
+    printf "export GH_ROUTER_ACTIVE_ACCOUNT=%q\n" "$account"
+    printf "export GH_ROUTER_LAST_REASON=%q\n" "$reason"
+    if [[ -n "$owner" ]]; then
+      printf "export GH_ROUTER_ACTIVE_OWNER=%q\n" "$owner"
+    else
+      printf "unset GH_ROUTER_ACTIVE_OWNER\n"
+    fi
+  else
+    printf "unset GH_CONFIG_DIR\n"
+    printf "unset GH_ROUTER_ACTIVE_ACCOUNT\n"
+    printf "unset GH_ROUTER_ACTIVE_OWNER\n"
+    printf "unset GH_ROUTER_LAST_REASON\n"
+  fi
+}
+
+command_apply() {
+  local shell="zsh"
+  local cwd="$PWD"
+  local owner="" account="-" reason="outside-repo"
+  local line
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --shell)
+        shell="$2"
+        shift 2
+        ;;
+      --cwd)
+        cwd="$2"
+        shift 2
+        ;;
+      *)
+        echo "unknown option: $1" >&2
+        return 1
+        ;;
+    esac
+  done
+
+  line="$(resolve_context_for_cwd "$cwd" 2>/dev/null || true)"
+  if [[ -n "$line" ]]; then
+    IFS=$'\t' read -r owner account reason <<< "$line"
+  fi
+
+  case "$shell" in
+    zsh)
+      apply_zsh_exports "$account" "$owner" "$reason"
+      ;;
+    *)
+      echo "unsupported shell: $shell" >&2
+      return 1
+      ;;
+  esac
+}
+
+command_status() {
+  local cwd="$PWD"
+  local owner="" account="-" reason="outside-repo"
+  local profile="N/A"
+  local line
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --cwd)
+        cwd="$2"
+        shift 2
+        ;;
+      *)
+        echo "unknown option: $1" >&2
+        return 1
+        ;;
+    esac
+  done
+
+  line="$(resolve_context_for_cwd "$cwd" 2>/dev/null || true)"
+  if [[ -n "$line" ]]; then
+    IFS=$'\t' read -r owner account reason <<< "$line"
+  fi
+
+  if [[ "$account" != "-" ]] && [[ -n "$account" ]]; then
+    profile="$(profile_dir "$account")"
+  fi
+
+  echo "cwd_owner=${owner:-N/A}"
+  echo "resolved_account=${account:--}"
+  echo "resolved_profile=${profile}"
+  echo "reason=${reason:-N/A}"
+  echo "default_account=${DEFAULT_ACCOUNT:-N/A}"
+  echo "org_cache_file=${ORG_CACHE_FILE}"
+  echo "org_cache_ttl_positive=${ORG_CACHE_TTL_POSITIVE}"
+  echo "org_cache_ttl_negative=${ORG_CACHE_TTL_NEGATIVE}"
+}
+
+command_login() {
+  local account="${1:-}"
+  local dir
+
+  [[ -n "$account" ]] || {
+    echo "usage: gh-router login <account> [gh auth login options...]" >&2
+    return 1
+  }
+
+  shift
+  ensure_dirs
+  dir="$(profile_dir "$account")"
+  mkdir -p "$dir"
+
+  GH_CONFIG_DIR="$dir" gh auth login "$@"
+  rm -f "$ORG_CACHE_FILE"
+}
+
+command_clear_cache() {
+  rm -f "$ORG_CACHE_FILE"
+}
+
+command_credential() {
+  local input_file
+  local host=""
+  local path=""
+  local owner="" account="-" reason=""
+  local line
+
+  input_file="$(mktemp)"
+  trap 'if [[ -n "${input_file:-}" ]]; then rm -f "$input_file"; fi' EXIT
+  cat > "$input_file"
+
+  while IFS='=' read -r key value; do
+    case "$key" in
+      host)
+        host="$value"
+        ;;
+      path)
+        path="$value"
+        ;;
+    esac
+  done < "$input_file"
+
+  if [[ -n "$host" ]] && [[ "$host" != "github.com" ]]; then
+    gh auth git-credential < "$input_file"
+    return $?
+  fi
+
+  line="$(resolve_context_for_credential "$path" 2>/dev/null || true)"
+  if [[ -n "$line" ]]; then
+    IFS=$'\t' read -r owner account reason <<< "$line"
+  fi
+
+  if [[ "$account" != "-" ]] && [[ -n "$account" ]] && profile_exists "$account"; then
+    GH_CONFIG_DIR="$(profile_dir "$account")" gh auth git-credential < "$input_file"
+  else
+    gh auth git-credential < "$input_file"
+  fi
+}
+
+command_resolve() {
+  local cwd="$PWD"
+  local owner="" account="-" reason="outside-repo"
+  local line
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --cwd)
+        cwd="$2"
+        shift 2
+        ;;
+      *)
+        echo "unknown option: $1" >&2
+        return 1
+        ;;
+    esac
+  done
+
+  line="$(resolve_context_for_cwd "$cwd" 2>/dev/null || true)"
+  if [[ -n "$line" ]]; then
+    IFS=$'\t' read -r owner account reason <<< "$line"
+  fi
+
+  echo "owner=${owner:-N/A}"
+  if [[ "$account" == "-" || -z "$account" ]]; then
+    echo "account=N/A"
+  else
+    echo "account=$account"
+  fi
+  echo "reason=${reason:-N/A}"
+
+  [[ "$account" != "-" ]] && [[ -n "$account" ]]
+}
+
+main() {
+  local cmd="${1:-}"
+
+  ensure_dirs
+  case "$cmd" in
+    apply)
+      shift
+      command_apply "$@"
+      ;;
+    status)
+      shift
+      command_status "$@"
+      ;;
+    resolve)
+      shift
+      command_resolve "$@"
+      ;;
+    login)
+      shift
+      command_login "$@"
+      ;;
+    clear-cache)
+      shift
+      command_clear_cache "$@"
+      ;;
+    credential)
+      shift
+      command_credential "$@"
+      ;;
+    *)
+      cat <<'EOF' >&2
+usage: gh-router <command> [args]
+
+commands:
+  apply --shell zsh [--cwd PATH]
+  status [--cwd PATH]
+  resolve [--cwd PATH]
+  login <account> [gh auth login options...]
+  clear-cache
+  credential
+
+notes:
+  - stateless resolver: no session/account state
+  - cache enabled: org membership cache with TTL
+  - negative cache is written only on definitive 404-style misses
+  - owner map source: GH_ROUTER_OWNER_MAP or $GH_ROUTER_OWNER_MAP_FILE
+EOF
+      return 1
+      ;;
+  esac
+}
+
+main "$@"

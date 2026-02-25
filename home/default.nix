@@ -9,6 +9,9 @@
 
 let
   dotfilesPath = "${config.home.homeDirectory}/ghq/github.com/ryo-morimoto/dotfiles";
+  zenBrowserLauncher = pkgs.writeShellScriptBin "zen-browser" ''
+    exec ${lib.getExe pkgs.zen-browser} "$@"
+  '';
 in
 {
   home = {
@@ -17,7 +20,7 @@ in
     stateVersion = "25.11";
 
     sessionVariables = {
-      BROWSER = "firefox";
+      BROWSER = "zen-browser";
     };
 
     sessionPath = [
@@ -102,6 +105,8 @@ in
       bun
       pnpm
       chromium
+      zen-browser
+      zenBrowserLauncher
 
       # System/CLI development
       moonbit-bin.moonbit.latest
@@ -182,7 +187,10 @@ in
         user.email = "ryo.morimoto.dev@gmail.com";
         init.defaultBranch = "main";
         push.autoSetupRemote = true;
-        credential."https://github.com".helper = "!gh auth git-credential";
+        credential."https://github.com" = {
+          helper = "!\"$HOME/ghq/github.com/ryo-morimoto/dotfiles/scripts/gh-router\" credential";
+          useHttpPath = true;
+        };
         merge.conflictstyle = "diff3";
         diff.colorMoved = "default";
       };
@@ -676,7 +684,7 @@ in
       {
         matches = [
           {
-            app-id = "firefox$";
+            app-id = "(firefox|zen-beta)$";
             title = "^Picture-in-Picture$";
           }
         ];
@@ -915,27 +923,49 @@ in
     };
   };
 
-  # Default browser associations
-  xdg.mimeApps = {
-    enable = true;
-    defaultApplications = {
-      "text/html" = [ "firefox.desktop" ];
-      "application/xhtml+xml" = [ "firefox.desktop" ];
-      "x-scheme-handler/http" = [ "firefox.desktop" ];
-      "x-scheme-handler/https" = [ "firefox.desktop" ];
+  xdg = {
+    desktopEntries = {
+      "zen-browser" = {
+        name = "Zen Browser";
+        genericName = "Web Browser";
+        exec = "zen-browser %U";
+        terminal = false;
+        icon = "zen-beta";
+        categories = [
+          "Network"
+          "WebBrowser"
+        ];
+        mimeType = [
+          "text/html"
+          "application/xhtml+xml"
+          "x-scheme-handler/http"
+          "x-scheme-handler/https"
+        ];
+      };
     };
-  };
 
-  # Dotfiles (mkOutOfStoreSymlink for instant updates)
-  xdg.configFile = {
-    "mimeapps.list".force = true;
-    "nvim".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/nvim";
-    "ghostty".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/ghostty";
-    "hypr".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/hypr";
-    "zsh".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/zsh";
-    "wallpaper".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/wallpaper";
-    "tmuxcc".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/tmuxcc";
-    "opencode/AGENTS.md".source =
-      config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/opencode/AGENTS.md";
+    # Default browser associations
+    mimeApps = {
+      enable = true;
+      defaultApplications = {
+        "text/html" = [ "zen-browser.desktop" ];
+        "application/xhtml+xml" = [ "zen-browser.desktop" ];
+        "x-scheme-handler/http" = [ "zen-browser.desktop" ];
+        "x-scheme-handler/https" = [ "zen-browser.desktop" ];
+      };
+    };
+
+    # Dotfiles (mkOutOfStoreSymlink for instant updates)
+    configFile = {
+      "mimeapps.list".force = true;
+      "nvim".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/nvim";
+      "ghostty".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/ghostty";
+      "hypr".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/hypr";
+      "zsh".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/zsh";
+      "wallpaper".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/wallpaper";
+      "tmuxcc".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/tmuxcc";
+      "opencode/AGENTS.md".source =
+        config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/opencode/AGENTS.md";
+    };
   };
 }
