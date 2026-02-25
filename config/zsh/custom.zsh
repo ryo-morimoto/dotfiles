@@ -16,13 +16,18 @@ typeset -g GH_ROUTER_SYNC_IDENTITY="${GH_ROUTER_SYNC_IDENTITY:-1}"
 gh_router_apply_context() {
   [[ -x "$GH_ROUTER_BIN" ]] || return 0
 
+  local sync_identity=1
+  if [[ "${1:-}" == "--no-sync" ]]; then
+    sync_identity=0
+  fi
+
   local exports
   exports="$($GH_ROUTER_BIN apply --shell zsh --cwd "$PWD" 2>/dev/null)" || return 0
   [[ -n "$exports" ]] || return 0
 
   eval "$exports"
 
-  if [[ "$GH_ROUTER_SYNC_IDENTITY" == "1" ]]; then
+  if [[ "$sync_identity" == "1" && "$GH_ROUTER_SYNC_IDENTITY" == "1" ]]; then
     "$GH_ROUTER_BIN" sync-identity --cwd "$PWD" >/dev/null 2>&1 || true
   fi
 }
@@ -72,6 +77,14 @@ gh-router-sync-identity() {
   fi
 
   "$GH_ROUTER_BIN" sync-identity --cwd "$PWD"
+}
+
+gh() {
+  if [[ -x "$GH_ROUTER_BIN" ]]; then
+    gh_router_apply_context --no-sync
+  fi
+
+  command gh "$@"
 }
 
 add-zsh-hook chpwd gh_router_apply_context
