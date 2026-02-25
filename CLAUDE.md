@@ -70,22 +70,28 @@ Modern CLI: `ls`→eza, `cat`→bat, `grep`→rg, `find`→fd
 
 ### Playwright Setup
 
-This system uses **Option A: External Chromium** for Playwright. Environment variables are set in zsh:
+This system uses **Chromium-only via Nix `playwright-driver`**. Environment variables are managed by Home Manager (`home.sessionVariables`):
 
 - `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1` - Prevents npm from downloading browsers
-- `CHROME_PATH` - Points to system Chromium
+- `PLAYWRIGHT_BROWSERS_PATH` - Points to `pkgs.playwright-driver.browsers.override { withFirefox = false; withWebkit = false; }`
+- `PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS=true` - Avoids distro validation noise on NixOS
+- `CHROME_PATH` - Compatibility fallback to system Chromium
 
-**Usage in projects:**
+**Usage in projects (recommended):**
 
 ```bash
-# Use playwright-core instead of playwright
-npm install playwright-core
+npm install -D @playwright/test
 ```
+
+Avoid `npx playwright install` and `npx playwright install-deps` on this system. Browsers are provided by Nix.
+
+Keep Playwright version in `package.json` aligned with nixpkgs `playwright-driver` when possible.
 
 ```typescript
 import { chromium } from 'playwright-core';
 
 const browser = await chromium.launch({
-  executablePath: process.env.CHROME_PATH || '/run/current-system/sw/bin/chromium',
+  // Usually no executablePath is needed when PLAYWRIGHT_BROWSERS_PATH is set.
+  executablePath: process.env.CHROME_PATH,
 });
 ```

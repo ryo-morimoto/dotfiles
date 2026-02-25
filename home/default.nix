@@ -21,6 +21,13 @@ in
 
     sessionVariables = {
       BROWSER = "zen-browser";
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1";
+      PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright-driver.browsers.override {
+        withFirefox = false;
+        withWebkit = false;
+      }}";
+      PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
+      CHROME_PATH = lib.getExe pkgs.chromium;
     };
 
     sessionPath = [
@@ -370,10 +377,6 @@ in
         mkcd() {
           mkdir -p "$1" && cd "$1"
         }
-
-        # Playwright configuration (use system Chromium)
-        export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
-        export CHROME_PATH="$(which chromium 2>/dev/null)"
 
         # Custom config
         [[ -f ~/.config/zsh/custom.zsh ]] && source ~/.config/zsh/custom.zsh
