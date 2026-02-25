@@ -1,0 +1,2954 @@
+了解、1（org未一致時は default へフォールバック）で確定します。  
+この方針で実装プランを固定しました（Plan Mode中なので未編集）。
+- config/gh-router/owner-map.tsv を新規追加して commercex-holdings    morimoto-novasto を明示
+- tools/gh-router/gh-router の解決順序を以下に変更  
+  - gh auth status --json hosts のアカウント一覧を基準に候補を作る  
+  - owner がアカウント名と完全一致ならそのアカウントを採用  
+  - owner が org の場合、各アカウントで gh api /user/orgs を見て所属確認  
+  - org で所属なしなら default ryo-morimoto を採用（あなたの 1）  
+  - owner が別ユーザー（非org）なら default ryo-morimoto を採用
+- tools/gh-router/gh-router の default 値を GH_ROUTER_DEFAULT_ACCOUNT 未指定時 ryo-morimoto にする
+- home/default.nix に gh-router owner-map の xdg.configFile 連携を追加（~/.config/gh-router/owner-map.tsv へ）
+- tools/gh-router/README.md に新しいルーティング戦略（優先順位）を追記
+検証基準（実装後）:
+- WHEN gh-router resolve --cwd ~/ghq/github.com/commercex-holdings/yuhaku-app THEN account=morimoto-novasto
+- WHEN gh-router resolve --cwd ~/ghq/github.com/ryo-morimoto/dotfiles THEN account=ryo-morimoto
+- WHEN gh-router resolve --cwd ~/ghq/github.com/smcllns/Claude-Code-TMUX-Status-Bar THEN account=ryo-morimoto
+- WHEN gh を直接実行 THEN 直前に repo 文脈で再解決された GH_CONFIG_DIR が使われる
+実装フェーズに切り替わったら、この計画どおり一気に反映して nixfmt まで実施します。
+▣  Plan · gpt-5.3-codex · 1m 43s
+ config/gh-router/owner-map.tsv を新規追加して commercex-holdings    morimoto-novasto を明示
+これアカウントべーすのorg解決で対応できないのか?
+Thinking: Answering owner-map necessity with options
+# Questions
+可能です。ですが現状のAPI結果では `commercex-holdings` がどのアカウントの `/user/orgs` にも出ていないため、owner-mapなしだと自動判定は `ryo-morimoto` に落ちます。どちらで進めますか？
+morimoto-novastoの所属orgなんだが、企業orgだから所属が非公開になってる? それぞれのアカウントの認証情報でapiを叩かないといけなさそう. その対応ができてないのが問題だと思う
+Thinking: Clarifying per-account API usage and org visibility
+# Show login and orgs for ryo profile
+$ GH_CONFIG_DIR="$HOME/.local/state/gh-router/profiles/ryo-morimoto" sh -c 'printf "login="; gh api /user --jq .login; printf "orgs="; gh api /user/orgs --jq "map(.login) | join(\",\")"'
+login=ryo-morimoto
+orgs=sushi-days,moritech-dev
+# Show login and orgs for novasto profile
+$ GH_CONFIG_DIR="$HOME/.local/state/gh-router/profiles/morimoto-novasto" sh -c 'printf "login="; gh api /user --jq .login; printf "orgs="; gh api /user/orgs --jq "map(.login) | join(\",\")"'
+login=ryo-morimoto
+orgs=sushi-days,moritech-dev
+Thinking: Discovering token override by environment
+# Inspect GH-related environment variables
+$ env | rg '^GH_'
+GH_ROUTER_ACTIVE_OWNER=ryo-morimoto
+GH_ROUTER_LAST_REASON=owner-profile
+GH_CONFIG_DIR=/home/ryo-morimoto/.local/state/gh-router/profiles/ryo-morimoto
+GH_ROUTER_ACTIVE_ACCOUNT=ryo-morimoto
+Thinking: Diagnosing token source confusion
+# Inspect GITHUB environment variables
+$ env | rg '^GITHUB'
+Thinking: Assessing token retrieval logic
+→ Read ../../../../.local/state/gh-router/profiles/ryo-morimoto/hosts.yml 
+→ Read ../../../../.local/state/gh-router/profiles/morimoto-novasto/hosts.yml 
+Thinking: Testing profile-specific authentication
+# Get API login for ryo profile
+$ GH_CONFIG_DIR="$HOME/.local/state/gh-router/profiles/ryo-morimoto" gh api /user --jq .login
+ryo-morimoto
+# Get API login for novasto profile
+$ GH_CONFIG_DIR="$HOME/.local/state/gh-router/profiles/morimoto-novasto" gh api /user --jq .login
+ryo-morimoto
+Thinking: Verifying token usage and presence
+# Inspect token field presence in global hosts users
+$ yq '.["github.com"] | {user: .user, users: (.users | to_entries | map({login: .key, has_oauth_token: (.value | has("oauth_token"))}))}' "$HOME/.config/gh/hosts.yml"
+Error: 1:20: lexer: invalid input text "user: .user, use..."
+Thinking: Adjusting yq query syntax
+# Show oauth token presence per global user
+$ yq '.["github.com"] | {"user": .user, "users": (.users | to_entries | map({"login": .key, "has_oauth_token": (.value | has("oauth_token"))}))}' "$HOME/.config/gh/hosts.yml"
+user: morimoto-novasto
+users:
+  - login: ryo-morimoto
+    has_oauth_token: false
+  - login: morimoto-novasto
+    has_oauth_token: false
+Thinking: Testing global GitHub config usage
+# Check API login with global gh config
+$ GH_CONFIG_DIR="$HOME/.config/gh" gh api /user --jq .login
+ryo-morimoto
+Thinking: Verifying active CLI user in config
+# Check active account in global gh config
+$ GH_CONFIG_DIR="$HOME/.config/gh" gh auth status
+github.com
+  ✓ Logged in to github.com account morimoto-novasto (keyring)
+  - Active account: true
+  - Git operations protocol: https
+  - Token: gho_************************************
+  - Token scopes: 'delete_repo', 'gist', 'read:org', 'repo', 'workflow'
+  ✓ Logged in to github.com account ryo-morimoto (keyring)
+  - Active account: false
+  - Git operations protocol: https
+…
+Click to expand
+Thinking: Investigating token-account mismatch
+# Hash token from global gh config
+$ GH_CONFIG_DIR="$HOME/.config/gh" sh -c 'gh auth token | sha256sum | cut -d" " -f1'
+acc09b156054e3beb2fad8cf03b42e05a19aeb08766cac3139247c223f243b98
+# Hash token from ryo profile
+$ GH_CONFIG_DIR="$HOME/.local/state/gh-router/profiles/ryo-morimoto" sh -c 'gh auth token | sha256sum | cut -d" " -f1'
+acc09b156054e3beb2fad8cf03b42e05a19aeb08766cac3139247c223f243b98
+# Hash token from novasto profile
+$ GH_CONFIG_DIR="$HOME/.local/state/gh-router/profiles/morimoto-novasto" sh -c 'gh auth token | sha256sum | cut -d" " -f1'
+acc09b156054e3beb2fad8cf03b42e05a19aeb08766cac3139247c223f243b98
+Thinking: Confirming credential isolation issue
+# Questions
+結論として、owner-map以前に「各profileが同じトークンを使っている」のが根因でした（`GH_CONFIG_DIR=.../profiles/morimoto-novasto gh api /user` でも `ryo-morimoto` が返る）。アカウントベースorg解決を成立させるため、どちらで進めますか？
+insecure-storageについて補足説明して
+Thinking: Verifying insecure-storage details
+# Read gh auth login help for insecure storage
+$ gh auth login --help
+Authenticate with a GitHub host.
+The default hostname is `github.com`. This can be overridden using the `--hostname`
+flag.
+The default authentication mode is a web-based browser flow. After completion, an
+authentication token will be stored securely in the system credential store.
+If a credential store is not found or there is an issue using it gh will fallback
+to writing the token to a plain text file. See `gh auth status` for its
+stored location.
+…
+Click to expand
+Thinking: Checking authentication status details
+# Read gh auth status help details
+$ gh auth status --help
+Display active account and authentication state on each known GitHub host.
+For each host, the authentication state of each known account is tested and any issues are included in the output.
+Each host section will indicate the active account, which will be used when targeting that host.
+If an account on any host (or only the one given via `--hostname`) has authentication issues,
+the command will exit with 1 and output to stderr. Note that when using the `--json` option, the command
+will always exit with zero regardless of any authentication issues, unless there is a fatal error.
+To change the active account for a host, see `gh auth switch`.
+…
+Click to expand
+Thinking: Evaluating token storage risks
+# Check current permissions for gh-router state
+$ ls -ld "$HOME/.local/state/gh-router" "$HOME/.local/state/gh-router/profiles" "$HOME/.local/state/gh-router/profiles/ryo-morimoto" "$HOME/.local/state/gh-router/profiles/ryo-morimoto/hosts.yml"
+drwxr-xr-x 1 ryo-morimoto users 42  2月 25 14:30 /home/ryo-morimoto/.local/state/gh-router
+drwxr-xr-x 1 ryo-morimoto users 56  2月 25 23:14 /home/ryo-morimoto/.local/state/gh-router/profiles
+drwxr-xr-x 1 ryo-morimoto users 38  2月 25 22:38 /home/ryo-morimoto/.local/state/gh-router/profiles/ryo-morimoto
+-rw-r--r-- 1 ryo-morimoto users 92  2月 25 22:38 /home/ryo-morimoto/.local/state/gh-router/profiles/ryo-morimoto/hosts.yml
+Thinking: Explaining insecure storage risks and safeguards
+いい指摘です。insecure-storage の要点はこれです。
+- gh auth login --insecure-storage は、トークンをOSキーリングではなく GH_CONFIG_DIR/hosts.yml に平文保存します
+- 今回これが効く理由は、現状キーリング運用だと profile を切っても実トークンが切り替わらず、GH_CONFIG_DIR=.../profiles/morimoto-novasto gh api /user でも ryo-morimoto が返っているためです（= account別判定が成立しない）
+- つまり GH_CONFIG_DIR でアカウントを切り替えたい gh-router には、tokenの実体もprofileごとに分離されている必要があります
+注意点（重要）:
+- 平文なので漏えいリスクは上がります
+- 今の権限だと ~/.local/state/gh-router/profiles/*/hosts.yml が 644 で読めてしまうため、そのままは危険です
+- 採用するなら最低でも  
+  - ~/.local/state/gh-router と ~/.local/state/gh-router/profiles を 700  
+  - ~/.local/state/gh-router/profiles/*/hosts.yml を 600  
+  に強制する運用が必要です
+この方式にすると:
+- 各アカウントで gh api /user/orgs を正しく引ける
+- あなたの希望どおり「アカウントベースのorg解決」が成立する
+- owner-map なしでも回せる（ただし org が本当に見えることが前提。見えなければ default に落ちる）
+
+---
+
+insecure-storageはまじで良くない
+
+---
+
+アカウントべーすの解決をしたい. つまりgh cliでauth switchしないとapi tokenはos keyringに連携されなくて権限の更新がされないってこと?
+
+---
+
+y
+
+---
+
+完了した
+
+---
+
+# /compound
+
+Coordinate multiple subagents working in parallel to document a recently solved problem.
+
+## Purpose
+
+Captures problem solutions while context is fresh, creating structured documentation in `docs/solutions/` with YAML frontmatter for searchability and future reference. Uses parallel subagents for maximum efficiency.
+
+**Why "compound"?** Each documented solution compounds your team's knowledge. The first time you solve a problem takes research. Document it, and the next occurrence takes minutes. Knowledge compounds.
+
+## Usage
+
+```bash
+/workflows:compound                    # Document the most recent fix
+/workflows:compound [brief context]    # Provide additional context hint
+```
+
+## Execution Strategy: Two-Phase Orchestration
+
+<critical_requirement>
+**Only ONE file gets written - the final documentation.**
+
+Phase 1 subagents return TEXT DATA to the orchestrator. They must NOT use Write, Edit, or create any files. Only the orchestrator (Phase 2) writes the final documentation file.
+</critical_requirement>
+
+### Phase 1: Parallel Research
+
+<parallel_tasks>
+
+Launch these subagents IN PARALLEL. Each returns text data to the orchestrator.
+
+#### 1. **Context Analyzer**
+   - Extracts conversation history
+   - Identifies problem type, component, symptoms
+   - Validates against schema
+   - Returns: YAML frontmatter skeleton
+
+#### 2. **Solution Extractor**
+   - Analyzes all investigation steps
+   - Identifies root cause
+   - Extracts working solution with code examples
+   - Returns: Solution content block
+
+#### 3. **Related Docs Finder**
+   - Searches `docs/solutions/` for related documentation
+   - Identifies cross-references and links
+   - Finds related GitHub issues
+   - Returns: Links and relationships
+
+#### 4. **Prevention Strategist**
+   - Develops prevention strategies
+   - Creates best practices guidance
+   - Generates test cases if applicable
+   - Returns: Prevention/testing content
+
+#### 5. **Category Classifier**
+   - Determines optimal `docs/solutions/` category
+   - Validates category against schema
+   - Suggests filename based on slug
+   - Returns: Final path and filename
+
+</parallel_tasks>
+
+### Phase 2: Assembly & Write
+
+<sequential_tasks>
+
+**WAIT for all Phase 1 subagents to complete before proceeding.**
+
+The orchestrating agent (main conversation) performs these steps:
+
+1. Collect all text results from Phase 1 subagents
+2. Assemble complete markdown file from the collected pieces
+3. Validate YAML frontmatter against schema
+4. Create directory if needed: `mkdir -p docs/solutions/[category]/`
+5. Write the SINGLE final file: `docs/solutions/[category]/[filename].md`
+
+</sequential_tasks>
+
+### Phase 3: Optional Enhancement
+
+**WAIT for Phase 2 to complete before proceeding.**
+
+<parallel_tasks>
+
+Based on problem type, optionally invoke specialized agents to review the documentation:
+
+- **performance_issue** → `performance-oracle`
+- **security_issue** → `security-sentinel`
+- **database_issue** → `data-integrity-guardian`
+- **test_failure** → `cora-test-reviewer`
+- Any code-heavy issue → `kieran-rails-reviewer` + `code-simplicity-reviewer`
+
+</parallel_tasks>
+
+## What It Captures
+
+- **Problem symptom**: Exact error messages, observable behavior
+- **Investigation steps tried**: What didn't work and why
+- **Root cause analysis**: Technical explanation
+- **Working solution**: Step-by-step fix with code examples
+- **Prevention strategies**: How to avoid in future
+- **Cross-references**: Links to related issues and docs
+
+## Preconditions
+
+<preconditions enforcement="advisory">
+  <check condition="problem_solved">
+    Problem has been solved (not in-progress)
+  </check>
+  <check condition="solution_verified">
+    Solution has been verified working
+  </check>
+  <check condition="non_trivial">
+    Non-trivial problem (not simple typo or obvious error)
+  </check>
+</preconditions>
+
+## What It Creates
+
+**Organized documentation:**
+
+- File: `docs/solutions/[category]/[filename].md`
+
+**Categories auto-detected from problem:**
+
+- build-errors/
+- test-failures/
+- runtime-errors/
+- performance-issues/
+- database-issues/
+- security-issues/
+- ui-bugs/
+- integration-issues/
+- logic-errors/
+
+## Common Mistakes to Avoid
+
+| ❌ Wrong | ✅ Correct |
+|----------|-----------|
+| Subagents write files like `context-analysis.md`, `solution-draft.md` | Subagents return text data; orchestrator writes one final file |
+| Research and assembly run in parallel | Research completes → then assembly runs |
+| Multiple files created during workflow | Single file: `docs/solutions/[category]/[filename].md` |
+
+## Success Output
+
+```
+✓ Documentation complete
+
+Subagent Results:
+  ✓ Context Analyzer: Identified performance_issue in brief_system
+  ✓ Solution Extractor: 3 code fixes
+  ✓ Related Docs Finder: 2 related issues
+  ✓ Prevention Strategist: Prevention strategies, test suggestions
+  ✓ Category Classifier: `performance-issues`
+
+Specialized Agent Reviews (Auto-Triggered):
+  ✓ performance-oracle: Validated query optimization approach
+  ✓ kieran-rails-reviewer: Code examples meet Rails standards
+  ✓ code-simplicity-reviewer: Solution is appropriately minimal
+  ✓ every-style-editor: Documentation style verified
+
+File created:
+- docs/solutions/performance-issues/n-plus-one-brief-generation.md
+
+This documentation will be searchable for future reference when similar
+issues occur in the Email Processing or Brief System modules.
+
+What's next?
+1. Continue workflow (recommended)
+2. Link related documentation
+3. Update other references
+4. View documentation
+5. Other
+```
+
+## The Compounding Philosophy
+
+This creates a compounding knowledge system:
+
+1. First time you solve "N+1 query in brief generation" → Research (30 min)
+2. Document the solution → docs/solutions/performance-issues/n-plus-one-briefs.md (5 min)
+3. Next time similar issue occurs → Quick lookup (2 min)
+4. Knowledge compounds → Team gets smarter
+
+The feedback loop:
+
+```
+Build → Test → Find Issue → Research → Improve → Document → Validate → Deploy
+    ↑                                                                      ↓
+    └──────────────────────────────────────────────────────────────────────┘
+```
+
+**Each unit of engineering work should make subsequent units of work easier—not harder.**
+
+## Auto-Invoke
+
+<auto_invoke> <trigger_phrases> - "that worked" - "it's fixed" - "working now" - "problem solved" </trigger_phrases>
+
+<manual_override> Use /workflows:compound [context] to document immediately without waiting for auto-detection. </manual_override> </auto_invoke>
+
+## Routes To
+
+`compound-docs` skill
+
+## Applicable Specialized Agents
+
+Based on problem type, these agents can enhance documentation:
+
+### Code Quality & Review
+- **kieran-rails-reviewer**: Reviews code examples for Rails best practices
+- **code-simplicity-reviewer**: Ensures solution code is minimal and clear
+- **pattern-recognition-specialist**: Identifies anti-patterns or repeating issues
+
+### Specific Domain Experts
+- **performance-oracle**: Analyzes performance_issue category solutions
+- **security-sentinel**: Reviews security_issue solutions for vulnerabilities
+- **cora-test-reviewer**: Creates test cases for prevention strategies
+- **data-integrity-guardian**: Reviews database_issue migrations and queries
+
+### Enhancement & Documentation
+- **best-practices-researcher**: Enriches solution with industry best practices
+- **every-style-editor**: Reviews documentation style and clarity
+- **framework-docs-researcher**: Links to Rails/gem documentation references
+
+### When to Invoke
+- **Auto-triggered** (optional): Agents can run post-documentation for enhancement
+- **Manual trigger**: User can invoke agents after /workflows:compound completes for deeper review
+
+## Related Commands
+
+- `/research [topic]` - Deep investigation (searches docs/solutions/ for patterns)
+- `/workflows:plan` - Planning workflow (references documented solutions)
+
+---
+
+[Request interrupted by user]
+
+---
+
+# /compound
+
+Coordinate multiple subagents working in parallel to document a recently solved problem.
+
+## Purpose
+
+Captures problem solutions while context is fresh, creating structured documentation in `docs/solutions/` with YAML frontmatter for searchability and future reference. Uses parallel subagents for maximum efficiency.
+
+**Why "compound"?** Each documented solution compounds your team's knowledge. The first time you solve a problem takes research. Document it, and the next occurrence takes minutes. Knowledge compounds.
+
+## Usage
+
+```bash
+/workflows:compound                    # Document the most recent fix
+/workflows:compound [brief context]    # Provide additional context hint
+```
+
+## Execution Strategy: Two-Phase Orchestration
+
+<critical_requirement>
+**Only ONE file gets written - the final documentation.**
+
+Phase 1 subagents return TEXT DATA to the orchestrator. They must NOT use Write, Edit, or create any files. Only the orchestrator (Phase 2) writes the final documentation file.
+</critical_requirement>
+
+### Phase 1: Parallel Research
+
+<parallel_tasks>
+
+Launch these subagents IN PARALLEL. Each returns text data to the orchestrator.
+
+#### 1. **Context Analyzer**
+   - Extracts conversation history
+   - Identifies problem type, component, symptoms
+   - Validates against schema
+   - Returns: YAML frontmatter skeleton
+
+#### 2. **Solution Extractor**
+   - Analyzes all investigation steps
+   - Identifies root cause
+   - Extracts working solution with code examples
+   - Returns: Solution content block
+
+#### 3. **Related Docs Finder**
+   - Searches `docs/solutions/` for related documentation
+   - Identifies cross-references and links
+   - Finds related GitHub issues
+   - Returns: Links and relationships
+
+#### 4. **Prevention Strategist**
+   - Develops prevention strategies
+   - Creates best practices guidance
+   - Generates test cases if applicable
+   - Returns: Prevention/testing content
+
+#### 5. **Category Classifier**
+   - Determines optimal `docs/solutions/` category
+   - Validates category against schema
+   - Suggests filename based on slug
+   - Returns: Final path and filename
+
+</parallel_tasks>
+
+### Phase 2: Assembly & Write
+
+<sequential_tasks>
+
+**WAIT for all Phase 1 subagents to complete before proceeding.**
+
+The orchestrating agent (main conversation) performs these steps:
+
+1. Collect all text results from Phase 1 subagents
+2. Assemble complete markdown file from the collected pieces
+3. Validate YAML frontmatter against schema
+4. Create directory if needed: `mkdir -p docs/solutions/[category]/`
+5. Write the SINGLE final file: `docs/solutions/[category]/[filename].md`
+
+</sequential_tasks>
+
+### Phase 3: Optional Enhancement
+
+**WAIT for Phase 2 to complete before proceeding.**
+
+<parallel_tasks>
+
+Based on problem type, optionally invoke specialized agents to review the documentation:
+
+- **performance_issue** → `performance-oracle`
+- **security_issue** → `security-sentinel`
+- **database_issue** → `data-integrity-guardian`
+- **test_failure** → `cora-test-reviewer`
+- Any code-heavy issue → `kieran-rails-reviewer` + `code-simplicity-reviewer`
+
+</parallel_tasks>
+
+## What It Captures
+
+- **Problem symptom**: Exact error messages, observable behavior
+- **Investigation steps tried**: What didn't work and why
+- **Root cause analysis**: Technical explanation
+- **Working solution**: Step-by-step fix with code examples
+- **Prevention strategies**: How to avoid in future
+- **Cross-references**: Links to related issues and docs
+
+## Preconditions
+
+<preconditions enforcement="advisory">
+  <check condition="problem_solved">
+    Problem has been solved (not in-progress)
+  </check>
+  <check condition="solution_verified">
+    Solution has been verified working
+  </check>
+  <check condition="non_trivial">
+    Non-trivial problem (not simple typo or obvious error)
+  </check>
+</preconditions>
+
+## What It Creates
+
+**Organized documentation:**
+
+- File: `docs/solutions/[category]/[filename].md`
+
+**Categories auto-detected from problem:**
+
+- build-errors/
+- test-failures/
+- runtime-errors/
+- performance-issues/
+- database-issues/
+- security-issues/
+- ui-bugs/
+- integration-issues/
+- logic-errors/
+
+## Common Mistakes to Avoid
+
+| ❌ Wrong | ✅ Correct |
+|----------|-----------|
+| Subagents write files like `context-analysis.md`, `solution-draft.md` | Subagents return text data; orchestrator writes one final file |
+| Research and assembly run in parallel | Research completes → then assembly runs |
+| Multiple files created during workflow | Single file: `docs/solutions/[category]/[filename].md` |
+
+## Success Output
+
+```
+✓ Documentation complete
+
+Subagent Results:
+  ✓ Context Analyzer: Identified performance_issue in brief_system
+  ✓ Solution Extractor: 3 code fixes
+  ✓ Related Docs Finder: 2 related issues
+  ✓ Prevention Strategist: Prevention strategies, test suggestions
+  ✓ Category Classifier: `performance-issues`
+
+Specialized Agent Reviews (Auto-Triggered):
+  ✓ performance-oracle: Validated query optimization approach
+  ✓ kieran-rails-reviewer: Code examples meet Rails standards
+  ✓ code-simplicity-reviewer: Solution is appropriately minimal
+  ✓ every-style-editor: Documentation style verified
+
+File created:
+- docs/solutions/performance-issues/n-plus-one-brief-generation.md
+
+This documentation will be searchable for future reference when similar
+issues occur in the Email Processing or Brief System modules.
+
+What's next?
+1. Continue workflow (recommended)
+2. Link related documentation
+3. Update other references
+4. View documentation
+5. Other
+```
+
+## The Compounding Philosophy
+
+This creates a compounding knowledge system:
+
+1. First time you solve "N+1 query in brief generation" → Research (30 min)
+2. Document the solution → docs/solutions/performance-issues/n-plus-one-briefs.md (5 min)
+3. Next time similar issue occurs → Quick lookup (2 min)
+4. Knowledge compounds → Team gets smarter
+
+The feedback loop:
+
+```
+Build → Test → Find Issue → Research → Improve → Document → Validate → Deploy
+    ↑                                                                      ↓
+    └──────────────────────────────────────────────────────────────────────┘
+```
+
+**Each unit of engineering work should make subsequent units of work easier—not harder.**
+
+## Auto-Invoke
+
+<auto_invoke> <trigger_phrases> - "that worked" - "it's fixed" - "working now" - "problem solved" </trigger_phrases>
+
+<manual_override> Use /workflows:compound [context] to document immediately without waiting for auto-detection. </manual_override> </auto_invoke>
+
+## Routes To
+
+`compound-docs` skill
+
+## Applicable Specialized Agents
+
+Based on problem type, these agents can enhance documentation:
+
+### Code Quality & Review
+- **kieran-rails-reviewer**: Reviews code examples for Rails best practices
+- **code-simplicity-reviewer**: Ensures solution code is minimal and clear
+- **pattern-recognition-specialist**: Identifies anti-patterns or repeating issues
+
+### Specific Domain Experts
+- **performance-oracle**: Analyzes performance_issue category solutions
+- **security-sentinel**: Reviews security_issue solutions for vulnerabilities
+- **cora-test-reviewer**: Creates test cases for prevention strategies
+- **data-integrity-guardian**: Reviews database_issue migrations and queries
+
+### Enhancement & Documentation
+- **best-practices-researcher**: Enriches solution with industry best practices
+- **every-style-editor**: Reviews documentation style and clarity
+- **framework-docs-researcher**: Links to Rails/gem documentation references
+
+### When to Invoke
+- **Auto-triggered** (optional): Agents can run post-documentation for enhancement
+- **Manual trigger**: User can invoke agents after /workflows:compound completes for deeper review
+
+## Related Commands
+
+- `/research [topic]` - Deep investigation (searches docs/solutions/ for patterns)
+- `/workflows:plan` - Planning workflow (references documented solutions)
+
+---
+
+[Request interrupted by user]
+
+---
+
+# Create a plan for a new feature or bug fix
+
+## Introduction
+
+**Note: The current year is 2026.** Use this when dating plans and searching for recent documentation.
+
+Transform feature descriptions, bug reports, or improvement ideas into well-structured markdown files issues that follow project conventions and best practices. This command provides flexible detail levels to match your needs.
+
+## Feature Description
+
+<feature_description> # </feature_description>
+
+**If the feature description above is empty, ask the user:** "What would you like to plan? Please describe the feature, bug fix, or improvement you have in mind."
+
+Do not proceed until you have a clear feature description from the user.
+
+### 0. Idea Refinement
+
+**Check for brainstorm output first:**
+
+Before asking questions, look for recent brainstorm documents in `docs/brainstorms/` that match this feature:
+
+```bash
+ls -la docs/brainstorms/*.md 2>/dev/null | head -10
+```
+
+**Relevance criteria:** A brainstorm is relevant if:
+- The topic (from filename or YAML frontmatter) semantically matches the feature description
+- Created within the last 14 days
+- If multiple candidates match, use the most recent one
+
+**If a relevant brainstorm exists:**
+1. Read the brainstorm document
+2. Announce: "Found brainstorm from [date]: [topic]. Using as context for planning."
+3. Extract key decisions, chosen approach, and open questions
+4. **Skip the idea refinement questions below** - the brainstorm already answered WHAT to build
+5. Use brainstorm decisions as input to the research phase
+
+**If multiple brainstorms could match:**
+Use **AskUserQuestion tool** to ask which brainstorm to use, or whether to proceed without one.
+
+**If no brainstorm found (or not relevant), run idea refinement:**
+
+Refine the idea through collaborative dialogue using the **AskUserQuestion tool**:
+
+- Ask questions one at a time to understand the idea fully
+- Prefer multiple choice questions when natural options exist
+- Focus on understanding: purpose, constraints and success criteria
+- Continue until the idea is clear OR user says "proceed"
+
+**Gather signals for research decision.** During refinement, note:
+
+- **User's familiarity**: Do they know the codebase patterns? Are they pointing to examples?
+- **User's intent**: Speed vs thoroughness? Exploration vs execution?
+- **Topic risk**: Security, payments, external APIs warrant more caution
+- **Uncertainty level**: Is the approach clear or open-ended?
+
+**Skip option:** If the feature description is already detailed, offer:
+"Your description is clear. Should I proceed with research, or would you like to refine it further?"
+
+## Main Tasks
+
+### 1. Local Research (Always Runs - Parallel)
+
+<thinking>
+First, I need to understand the project's conventions, existing patterns, and any documented learnings. This is fast and local - it informs whether external research is needed.
+</thinking>
+
+Run these agents **in parallel** to gather local context:
+
+- Task repo-research-analyst(feature_description)
+- Task learnings-researcher(feature_description)
+
+**What to look for:**
+- **Repo research:** existing patterns, CLAUDE.md guidance, technology familiarity, pattern consistency
+- **Learnings:** documented solutions in `docs/solutions/` that might apply (gotchas, patterns, lessons learned)
+
+These findings inform the next step.
+
+### 1.5. Research Decision
+
+Based on signals from Step 0 and findings from Step 1, decide on external research.
+
+**High-risk topics → always research.** Security, payments, external APIs, data privacy. The cost of missing something is too high. This takes precedence over speed signals.
+
+**Strong local context → skip external research.** Codebase has good patterns, CLAUDE.md has guidance, user knows what they want. External research adds little value.
+
+**Uncertainty or unfamiliar territory → research.** User is exploring, codebase has no examples, new technology. External perspective is valuable.
+
+**Announce the decision and proceed.** Brief explanation, then continue. User can redirect if needed.
+
+Examples:
+- "Your codebase has solid patterns for this. Proceeding without external research."
+- "This involves payment processing, so I'll research current best practices first."
+
+### 1.5b. External Research (Conditional)
+
+**Only run if Step 1.5 indicates external research is valuable.**
+
+Run these agents in parallel:
+
+- Task best-practices-researcher(feature_description)
+- Task framework-docs-researcher(feature_description)
+
+### 1.6. Consolidate Research
+
+After all research steps complete, consolidate findings:
+
+- Document relevant file paths from repo research (e.g., `app/services/example_service.rb:42`)
+- **Include relevant institutional learnings** from `docs/solutions/` (key insights, gotchas to avoid)
+- Note external documentation URLs and best practices (if external research was done)
+- List related issues or PRs discovered
+- Capture CLAUDE.md conventions
+
+**Optional validation:** Briefly summarize findings and ask if anything looks off or missing before proceeding to planning.
+
+### 2. Issue Planning & Structure
+
+<thinking>
+Think like a product manager - what would make this issue clear and actionable? Consider multiple perspectives
+</thinking>
+
+**Title & Categorization:**
+
+- [ ] Draft clear, searchable issue title using conventional format (e.g., `feat: Add user authentication`, `fix: Cart total calculation`)
+- [ ] Determine issue type: enhancement, bug, refactor
+- [ ] Convert title to filename: add today's date prefix, strip prefix colon, kebab-case, add `-plan` suffix
+  - Example: `feat: Add User Authentication` → `2026-01-21-feat-add-user-authentication-plan.md`
+  - Keep it descriptive (3-5 words after prefix) so plans are findable by context
+
+**Stakeholder Analysis:**
+
+- [ ] Identify who will be affected by this issue (end users, developers, operations)
+- [ ] Consider implementation complexity and required expertise
+
+**Content Planning:**
+
+- [ ] Choose appropriate detail level based on issue complexity and audience
+- [ ] List all necessary sections for the chosen template
+- [ ] Gather supporting materials (error logs, screenshots, design mockups)
+- [ ] Prepare code examples or reproduction steps if applicable, name the mock filenames in the lists
+
+### 3. SpecFlow Analysis
+
+After planning the issue structure, run SpecFlow Analyzer to validate and refine the feature specification:
+
+- Task spec-flow-analyzer(feature_description, research_findings)
+
+**SpecFlow Analyzer Output:**
+
+- [ ] Review SpecFlow analysis results
+- [ ] Incorporate any identified gaps or edge cases into the issue
+- [ ] Update acceptance criteria based on SpecFlow findings
+
+### 4. Choose Implementation Detail Level
+
+Select how comprehensive you want the issue to be, simpler is mostly better.
+
+#### 📄 MINIMAL (Quick Issue)
+
+**Best for:** Simple bugs, small improvements, clear features
+
+**Includes:**
+
+- Problem statement or feature description
+- Basic acceptance criteria
+- Essential context only
+
+**Structure:**
+
+````markdown
+---
+title: [Issue Title]
+type: [feat|fix|refactor]
+date: YYYY-MM-DD
+---
+
+# [Issue Title]
+
+[Brief problem/feature description]
+
+## Acceptance Criteria
+
+- [ ] Core requirement 1
+- [ ] Core requirement 2
+
+## Context
+
+[Any critical information]
+
+## MVP
+
+### test.rb
+
+```ruby
+class Test
+  def initialize
+    @name = "test"
+  end
+end
+```
+
+## References
+
+- Related issue: #[issue_number]
+- Documentation: [relevant_docs_url]
+````
+
+#### 📋 MORE (Standard Issue)
+
+**Best for:** Most features, complex bugs, team collaboration
+
+**Includes everything from MINIMAL plus:**
+
+- Detailed background and motivation
+- Technical considerations
+- Success metrics
+- Dependencies and risks
+- Basic implementation suggestions
+
+**Structure:**
+
+```markdown
+---
+title: [Issue Title]
+type: [feat|fix|refactor]
+date: YYYY-MM-DD
+---
+
+# [Issue Title]
+
+## Overview
+
+[Comprehensive description]
+
+## Problem Statement / Motivation
+
+[Why this matters]
+
+## Proposed Solution
+
+[High-level approach]
+
+## Technical Considerations
+
+- Architecture impacts
+- Performance implications
+- Security considerations
+
+## Acceptance Criteria
+
+- [ ] Detailed requirement 1
+- [ ] Detailed requirement 2
+- [ ] Testing requirements
+
+## Success Metrics
+
+[How we measure success]
+
+## Dependencies & Risks
+
+[What could block or complicate this]
+
+## References & Research
+
+- Similar implementations: [file_path:line_number]
+- Best practices: [documentation_url]
+- Related PRs: #[pr_number]
+```
+
+#### 📚 A LOT (Comprehensive Issue)
+
+**Best for:** Major features, architectural changes, complex integrations
+
+**Includes everything from MORE plus:**
+
+- Detailed implementation plan with phases
+- Alternative approaches considered
+- Extensive technical specifications
+- Resource requirements and timeline
+- Future considerations and extensibility
+- Risk mitigation strategies
+- Documentation requirements
+
+**Structure:**
+
+```markdown
+---
+title: [Issue Title]
+type: [feat|fix|refactor]
+date: YYYY-MM-DD
+---
+
+# [Issue Title]
+
+## Overview
+
+[Executive summary]
+
+## Problem Statement
+
+[Detailed problem analysis]
+
+## Proposed Solution
+
+[Comprehensive solution design]
+
+## Technical Approach
+
+### Architecture
+
+[Detailed technical design]
+
+### Implementation Phases
+
+#### Phase 1: [Foundation]
+
+- Tasks and deliverables
+- Success criteria
+- Estimated effort
+
+#### Phase 2: [Core Implementation]
+
+- Tasks and deliverables
+- Success criteria
+- Estimated effort
+
+#### Phase 3: [Polish & Optimization]
+
+- Tasks and deliverables
+- Success criteria
+- Estimated effort
+
+## Alternative Approaches Considered
+
+[Other solutions evaluated and why rejected]
+
+## Acceptance Criteria
+
+### Functional Requirements
+
+- [ ] Detailed functional criteria
+
+### Non-Functional Requirements
+
+- [ ] Performance targets
+- [ ] Security requirements
+- [ ] Accessibility standards
+
+### Quality Gates
+
+- [ ] Test coverage requirements
+- [ ] Documentation completeness
+- [ ] Code review approval
+
+## Success Metrics
+
+[Detailed KPIs and measurement methods]
+
+## Dependencies & Prerequisites
+
+[Detailed dependency analysis]
+
+## Risk Analysis & Mitigation
+
+[Comprehensive risk assessment]
+
+## Resource Requirements
+
+[Team, time, infrastructure needs]
+
+## Future Considerations
+
+[Extensibility and long-term vision]
+
+## Documentation Plan
+
+[What docs need updating]
+
+## References & Research
+
+### Internal References
+
+- Architecture decisions: [file_path:line_number]
+- Similar features: [file_path:line_number]
+- Configuration: [file_path:line_number]
+
+### External References
+
+- Framework documentation: [url]
+- Best practices guide: [url]
+- Industry standards: [url]
+
+### Related Work
+
+- Previous PRs: #[pr_numbers]
+- Related issues: #[issue_numbers]
+- Design documents: [links]
+```
+
+### 5. Issue Creation & Formatting
+
+<thinking>
+Apply best practices for clarity and actionability, making the issue easy to scan and understand
+</thinking>
+
+**Content Formatting:**
+
+- [ ] Use clear, descriptive headings with proper hierarchy (##, ###)
+- [ ] Include code examples in triple backticks with language syntax highlighting
+- [ ] Add screenshots/mockups if UI-related (drag & drop or use image hosting)
+- [ ] Use task lists (- [ ]) for trackable items that can be checked off
+- [ ] Add collapsible sections for lengthy logs or optional details using `<details>` tags
+- [ ] Apply appropriate emoji for visual scanning (🐛 bug, ✨ feature, 📚 docs, ♻️ refactor)
+
+**Cross-Referencing:**
+
+- [ ] Link to related issues/PRs using #number format
+- [ ] Reference specific commits with SHA hashes when relevant
+- [ ] Link to code using GitHub's permalink feature (press 'y' for permanent link)
+- [ ] Mention relevant team members with @username if needed
+- [ ] Add links to external resources with descriptive text
+
+**Code & Examples:**
+
+````markdown
+# Good example with syntax highlighting and line references
+
+
+```ruby
+# app/services/user_service.rb:42
+def process_user(user)
+
+# Implementation here
+
+end
+```
+
+# Collapsible error logs
+
+<details>
+<summary>Full error stacktrace</summary>
+
+`Error details here...`
+
+</details>
+````
+
+**AI-Era Considerations:**
+
+- [ ] Account for accelerated development with AI pair programming
+- [ ] Include prompts or instructions that worked well during research
+- [ ] Note which AI tools were used for initial exploration (Claude, Copilot, etc.)
+- [ ] Emphasize comprehensive testing given rapid implementation
+- [ ] Document any AI-generated code that needs human review
+
+### 6. Final Review & Submission
+
+**Pre-submission Checklist:**
+
+- [ ] Title is searchable and descriptive
+- [ ] Labels accurately categorize the issue
+- [ ] All template sections are complete
+- [ ] Links and references are working
+- [ ] Acceptance criteria are measurable
+- [ ] Add names of files in pseudo code examples and todo lists
+- [ ] Add an ERD mermaid diagram if applicable for new model changes
+
+## Output Format
+
+**Filename:** Use the date and kebab-case filename from Step 2 Title & Categorization.
+
+```
+docs/plans/YYYY-MM-DD-<type>-<descriptive-name>-plan.md
+```
+
+Examples:
+- ✅ `docs/plans/2026-01-15-feat-user-authentication-flow-plan.md`
+- ✅ `docs/plans/2026-02-03-fix-checkout-race-condition-plan.md`
+- ✅ `docs/plans/2026-03-10-refactor-api-client-extraction-plan.md`
+- ❌ `docs/plans/2026-01-15-feat-thing-plan.md` (not descriptive - what "thing"?)
+- ❌ `docs/plans/2026-01-15-feat-new-feature-plan.md` (too vague - what feature?)
+- ❌ `docs/plans/2026-01-15-feat: user auth-plan.md` (invalid characters - colon and space)
+- ❌ `docs/plans/feat-user-auth-plan.md` (missing date prefix)
+
+## Post-Generation Options
+
+After writing the plan file, use the **AskUserQuestion tool** to present these options:
+
+**Question:** "Plan ready at `docs/plans/YYYY-MM-DD-<type>-<name>-plan.md`. What would you like to do next?"
+
+**Options:**
+1. **Open plan in editor** - Open the plan file for review
+2. **Run `/deepen-plan`** - Enhance each section with parallel research agents (best practices, performance, UI)
+3. **Run `/technical_review`** - Technical feedback from code-focused reviewers (DHH, Kieran, Simplicity)
+4. **Review and refine** - Improve the document through structured self-review
+5. **Start `/workflows:work`** - Begin implementing this plan locally
+6. **Start `/workflows:work` on remote** - Begin implementing in Claude Code on the web (use `&` to run in background)
+7. **Create Issue** - Create issue in project tracker (GitHub/Linear)
+
+Based on selection:
+- **Open plan in editor** → Run `open docs/plans/<plan_filename>.md` to open the file in the user's default editor
+- **`/deepen-plan`** → Call the /deepen-plan command with the plan file path to enhance with research
+- **`/technical_review`** → Call the /technical_review command with the plan file path
+- **Review and refine** → Load `document-review` skill.
+- **`/workflows:work`** → Call the /workflows:work command with the plan file path
+- **`/workflows:work` on remote** → Run `/workflows:work docs/plans/<plan_filename>.md &` to start work in background for Claude Code web
+- **Create Issue** → See "Issue Creation" section below
+- **Other** (automatically provided) → Accept free text for rework or specific changes
+
+**Note:** If running `/workflows:plan` with ultrathink enabled, automatically run `/deepen-plan` after plan creation for maximum depth and grounding.
+
+Loop back to options after Simplify or Other changes until user selects `/workflows:work` or `/technical_review`.
+
+## Issue Creation
+
+When user selects "Create Issue", detect their project tracker from CLAUDE.md:
+
+1. **Check for tracker preference** in user's CLAUDE.md (global or project):
+   - Look for `project_tracker: github` or `project_tracker: linear`
+   - Or look for mentions of "GitHub Issues" or "Linear" in their workflow section
+
+2. **If GitHub:**
+
+   Use the title and type from Step 2 (already in context - no need to re-read the file):
+
+   ```bash
+   gh issue create --title "<type>: <title>" --body-file <plan_path>
+   ```
+
+3. **If Linear:**
+
+   ```bash
+   linear issue create --title "<title>" --description "$(cat <plan_path>)"
+   ```
+
+4. **If no tracker configured:**
+   Ask user: "Which project tracker do you use? (GitHub/Linear/Other)"
+   - Suggest adding `project_tracker: github` or `project_tracker: linear` to their CLAUDE.md
+
+5. **After creation:**
+   - Display the issue URL
+   - Ask if they want to proceed to `/workflows:work` or `/technical_review`
+
+NEVER CODE! Just research and write the plan.
+
+---
+
+# Create a plan for a new feature or bug fix
+
+## Introduction
+
+**Note: The current year is 2026.** Use this when dating plans and searching for recent documentation.
+
+Transform feature descriptions, bug reports, or improvement ideas into well-structured markdown files issues that follow project conventions and best practices. This command provides flexible detail levels to match your needs.
+
+## Feature Description
+
+<feature_description> # </feature_description>
+
+**If the feature description above is empty, ask the user:** "What would you like to plan? Please describe the feature, bug fix, or improvement you have in mind."
+
+Do not proceed until you have a clear feature description from the user.
+
+### 0. Idea Refinement
+
+**Check for brainstorm output first:**
+
+Before asking questions, look for recent brainstorm documents in `docs/brainstorms/` that match this feature:
+
+```bash
+ls -la docs/brainstorms/*.md 2>/dev/null | head -10
+```
+
+**Relevance criteria:** A brainstorm is relevant if:
+- The topic (from filename or YAML frontmatter) semantically matches the feature description
+- Created within the last 14 days
+- If multiple candidates match, use the most recent one
+
+**If a relevant brainstorm exists:**
+1. Read the brainstorm document
+2. Announce: "Found brainstorm from [date]: [topic]. Using as context for planning."
+3. Extract key decisions, chosen approach, and open questions
+4. **Skip the idea refinement questions below** - the brainstorm already answered WHAT to build
+5. Use brainstorm decisions as input to the research phase
+
+**If multiple brainstorms could match:**
+Use **AskUserQuestion tool** to ask which brainstorm to use, or whether to proceed without one.
+
+**If no brainstorm found (or not relevant), run idea refinement:**
+
+Refine the idea through collaborative dialogue using the **AskUserQuestion tool**:
+
+- Ask questions one at a time to understand the idea fully
+- Prefer multiple choice questions when natural options exist
+- Focus on understanding: purpose, constraints and success criteria
+- Continue until the idea is clear OR user says "proceed"
+
+**Gather signals for research decision.** During refinement, note:
+
+- **User's familiarity**: Do they know the codebase patterns? Are they pointing to examples?
+- **User's intent**: Speed vs thoroughness? Exploration vs execution?
+- **Topic risk**: Security, payments, external APIs warrant more caution
+- **Uncertainty level**: Is the approach clear or open-ended?
+
+**Skip option:** If the feature description is already detailed, offer:
+"Your description is clear. Should I proceed with research, or would you like to refine it further?"
+
+## Main Tasks
+
+### 1. Local Research (Always Runs - Parallel)
+
+<thinking>
+First, I need to understand the project's conventions, existing patterns, and any documented learnings. This is fast and local - it informs whether external research is needed.
+</thinking>
+
+Run these agents **in parallel** to gather local context:
+
+- Task repo-research-analyst(feature_description)
+- Task learnings-researcher(feature_description)
+
+**What to look for:**
+- **Repo research:** existing patterns, CLAUDE.md guidance, technology familiarity, pattern consistency
+- **Learnings:** documented solutions in `docs/solutions/` that might apply (gotchas, patterns, lessons learned)
+
+These findings inform the next step.
+
+### 1.5. Research Decision
+
+Based on signals from Step 0 and findings from Step 1, decide on external research.
+
+**High-risk topics → always research.** Security, payments, external APIs, data privacy. The cost of missing something is too high. This takes precedence over speed signals.
+
+**Strong local context → skip external research.** Codebase has good patterns, CLAUDE.md has guidance, user knows what they want. External research adds little value.
+
+**Uncertainty or unfamiliar territory → research.** User is exploring, codebase has no examples, new technology. External perspective is valuable.
+
+**Announce the decision and proceed.** Brief explanation, then continue. User can redirect if needed.
+
+Examples:
+- "Your codebase has solid patterns for this. Proceeding without external research."
+- "This involves payment processing, so I'll research current best practices first."
+
+### 1.5b. External Research (Conditional)
+
+**Only run if Step 1.5 indicates external research is valuable.**
+
+Run these agents in parallel:
+
+- Task best-practices-researcher(feature_description)
+- Task framework-docs-researcher(feature_description)
+
+### 1.6. Consolidate Research
+
+After all research steps complete, consolidate findings:
+
+- Document relevant file paths from repo research (e.g., `app/services/example_service.rb:42`)
+- **Include relevant institutional learnings** from `docs/solutions/` (key insights, gotchas to avoid)
+- Note external documentation URLs and best practices (if external research was done)
+- List related issues or PRs discovered
+- Capture CLAUDE.md conventions
+
+**Optional validation:** Briefly summarize findings and ask if anything looks off or missing before proceeding to planning.
+
+### 2. Issue Planning & Structure
+
+<thinking>
+Think like a product manager - what would make this issue clear and actionable? Consider multiple perspectives
+</thinking>
+
+**Title & Categorization:**
+
+- [ ] Draft clear, searchable issue title using conventional format (e.g., `feat: Add user authentication`, `fix: Cart total calculation`)
+- [ ] Determine issue type: enhancement, bug, refactor
+- [ ] Convert title to filename: add today's date prefix, strip prefix colon, kebab-case, add `-plan` suffix
+  - Example: `feat: Add User Authentication` → `2026-01-21-feat-add-user-authentication-plan.md`
+  - Keep it descriptive (3-5 words after prefix) so plans are findable by context
+
+**Stakeholder Analysis:**
+
+- [ ] Identify who will be affected by this issue (end users, developers, operations)
+- [ ] Consider implementation complexity and required expertise
+
+**Content Planning:**
+
+- [ ] Choose appropriate detail level based on issue complexity and audience
+- [ ] List all necessary sections for the chosen template
+- [ ] Gather supporting materials (error logs, screenshots, design mockups)
+- [ ] Prepare code examples or reproduction steps if applicable, name the mock filenames in the lists
+
+### 3. SpecFlow Analysis
+
+After planning the issue structure, run SpecFlow Analyzer to validate and refine the feature specification:
+
+- Task spec-flow-analyzer(feature_description, research_findings)
+
+**SpecFlow Analyzer Output:**
+
+- [ ] Review SpecFlow analysis results
+- [ ] Incorporate any identified gaps or edge cases into the issue
+- [ ] Update acceptance criteria based on SpecFlow findings
+
+### 4. Choose Implementation Detail Level
+
+Select how comprehensive you want the issue to be, simpler is mostly better.
+
+#### 📄 MINIMAL (Quick Issue)
+
+**Best for:** Simple bugs, small improvements, clear features
+
+**Includes:**
+
+- Problem statement or feature description
+- Basic acceptance criteria
+- Essential context only
+
+**Structure:**
+
+````markdown
+---
+title: [Issue Title]
+type: [feat|fix|refactor]
+date: YYYY-MM-DD
+---
+
+# [Issue Title]
+
+[Brief problem/feature description]
+
+## Acceptance Criteria
+
+- [ ] Core requirement 1
+- [ ] Core requirement 2
+
+## Context
+
+[Any critical information]
+
+## MVP
+
+### test.rb
+
+```ruby
+class Test
+  def initialize
+    @name = "test"
+  end
+end
+```
+
+## References
+
+- Related issue: #[issue_number]
+- Documentation: [relevant_docs_url]
+````
+
+#### 📋 MORE (Standard Issue)
+
+**Best for:** Most features, complex bugs, team collaboration
+
+**Includes everything from MINIMAL plus:**
+
+- Detailed background and motivation
+- Technical considerations
+- Success metrics
+- Dependencies and risks
+- Basic implementation suggestions
+
+**Structure:**
+
+```markdown
+---
+title: [Issue Title]
+type: [feat|fix|refactor]
+date: YYYY-MM-DD
+---
+
+# [Issue Title]
+
+## Overview
+
+[Comprehensive description]
+
+## Problem Statement / Motivation
+
+[Why this matters]
+
+## Proposed Solution
+
+[High-level approach]
+
+## Technical Considerations
+
+- Architecture impacts
+- Performance implications
+- Security considerations
+
+## Acceptance Criteria
+
+- [ ] Detailed requirement 1
+- [ ] Detailed requirement 2
+- [ ] Testing requirements
+
+## Success Metrics
+
+[How we measure success]
+
+## Dependencies & Risks
+
+[What could block or complicate this]
+
+## References & Research
+
+- Similar implementations: [file_path:line_number]
+- Best practices: [documentation_url]
+- Related PRs: #[pr_number]
+```
+
+#### 📚 A LOT (Comprehensive Issue)
+
+**Best for:** Major features, architectural changes, complex integrations
+
+**Includes everything from MORE plus:**
+
+- Detailed implementation plan with phases
+- Alternative approaches considered
+- Extensive technical specifications
+- Resource requirements and timeline
+- Future considerations and extensibility
+- Risk mitigation strategies
+- Documentation requirements
+
+**Structure:**
+
+```markdown
+---
+title: [Issue Title]
+type: [feat|fix|refactor]
+date: YYYY-MM-DD
+---
+
+# [Issue Title]
+
+## Overview
+
+[Executive summary]
+
+## Problem Statement
+
+[Detailed problem analysis]
+
+## Proposed Solution
+
+[Comprehensive solution design]
+
+## Technical Approach
+
+### Architecture
+
+[Detailed technical design]
+
+### Implementation Phases
+
+#### Phase 1: [Foundation]
+
+- Tasks and deliverables
+- Success criteria
+- Estimated effort
+
+#### Phase 2: [Core Implementation]
+
+- Tasks and deliverables
+- Success criteria
+- Estimated effort
+
+#### Phase 3: [Polish & Optimization]
+
+- Tasks and deliverables
+- Success criteria
+- Estimated effort
+
+## Alternative Approaches Considered
+
+[Other solutions evaluated and why rejected]
+
+## Acceptance Criteria
+
+### Functional Requirements
+
+- [ ] Detailed functional criteria
+
+### Non-Functional Requirements
+
+- [ ] Performance targets
+- [ ] Security requirements
+- [ ] Accessibility standards
+
+### Quality Gates
+
+- [ ] Test coverage requirements
+- [ ] Documentation completeness
+- [ ] Code review approval
+
+## Success Metrics
+
+[Detailed KPIs and measurement methods]
+
+## Dependencies & Prerequisites
+
+[Detailed dependency analysis]
+
+## Risk Analysis & Mitigation
+
+[Comprehensive risk assessment]
+
+## Resource Requirements
+
+[Team, time, infrastructure needs]
+
+## Future Considerations
+
+[Extensibility and long-term vision]
+
+## Documentation Plan
+
+[What docs need updating]
+
+## References & Research
+
+### Internal References
+
+- Architecture decisions: [file_path:line_number]
+- Similar features: [file_path:line_number]
+- Configuration: [file_path:line_number]
+
+### External References
+
+- Framework documentation: [url]
+- Best practices guide: [url]
+- Industry standards: [url]
+
+### Related Work
+
+- Previous PRs: #[pr_numbers]
+- Related issues: #[issue_numbers]
+- Design documents: [links]
+```
+
+### 5. Issue Creation & Formatting
+
+<thinking>
+Apply best practices for clarity and actionability, making the issue easy to scan and understand
+</thinking>
+
+**Content Formatting:**
+
+- [ ] Use clear, descriptive headings with proper hierarchy (##, ###)
+- [ ] Include code examples in triple backticks with language syntax highlighting
+- [ ] Add screenshots/mockups if UI-related (drag & drop or use image hosting)
+- [ ] Use task lists (- [ ]) for trackable items that can be checked off
+- [ ] Add collapsible sections for lengthy logs or optional details using `<details>` tags
+- [ ] Apply appropriate emoji for visual scanning (🐛 bug, ✨ feature, 📚 docs, ♻️ refactor)
+
+**Cross-Referencing:**
+
+- [ ] Link to related issues/PRs using #number format
+- [ ] Reference specific commits with SHA hashes when relevant
+- [ ] Link to code using GitHub's permalink feature (press 'y' for permanent link)
+- [ ] Mention relevant team members with @username if needed
+- [ ] Add links to external resources with descriptive text
+
+**Code & Examples:**
+
+````markdown
+# Good example with syntax highlighting and line references
+
+
+```ruby
+# app/services/user_service.rb:42
+def process_user(user)
+
+# Implementation here
+
+end
+```
+
+# Collapsible error logs
+
+<details>
+<summary>Full error stacktrace</summary>
+
+`Error details here...`
+
+</details>
+````
+
+**AI-Era Considerations:**
+
+- [ ] Account for accelerated development with AI pair programming
+- [ ] Include prompts or instructions that worked well during research
+- [ ] Note which AI tools were used for initial exploration (Claude, Copilot, etc.)
+- [ ] Emphasize comprehensive testing given rapid implementation
+- [ ] Document any AI-generated code that needs human review
+
+### 6. Final Review & Submission
+
+**Pre-submission Checklist:**
+
+- [ ] Title is searchable and descriptive
+- [ ] Labels accurately categorize the issue
+- [ ] All template sections are complete
+- [ ] Links and references are working
+- [ ] Acceptance criteria are measurable
+- [ ] Add names of files in pseudo code examples and todo lists
+- [ ] Add an ERD mermaid diagram if applicable for new model changes
+
+## Output Format
+
+**Filename:** Use the date and kebab-case filename from Step 2 Title & Categorization.
+
+```
+docs/plans/YYYY-MM-DD-<type>-<descriptive-name>-plan.md
+```
+
+Examples:
+- ✅ `docs/plans/2026-01-15-feat-user-authentication-flow-plan.md`
+- ✅ `docs/plans/2026-02-03-fix-checkout-race-condition-plan.md`
+- ✅ `docs/plans/2026-03-10-refactor-api-client-extraction-plan.md`
+- ❌ `docs/plans/2026-01-15-feat-thing-plan.md` (not descriptive - what "thing"?)
+- ❌ `docs/plans/2026-01-15-feat-new-feature-plan.md` (too vague - what feature?)
+- ❌ `docs/plans/2026-01-15-feat: user auth-plan.md` (invalid characters - colon and space)
+- ❌ `docs/plans/feat-user-auth-plan.md` (missing date prefix)
+
+## Post-Generation Options
+
+After writing the plan file, use the **AskUserQuestion tool** to present these options:
+
+**Question:** "Plan ready at `docs/plans/YYYY-MM-DD-<type>-<name>-plan.md`. What would you like to do next?"
+
+**Options:**
+1. **Open plan in editor** - Open the plan file for review
+2. **Run `/deepen-plan`** - Enhance each section with parallel research agents (best practices, performance, UI)
+3. **Run `/technical_review`** - Technical feedback from code-focused reviewers (DHH, Kieran, Simplicity)
+4. **Review and refine** - Improve the document through structured self-review
+5. **Start `/workflows:work`** - Begin implementing this plan locally
+6. **Start `/workflows:work` on remote** - Begin implementing in Claude Code on the web (use `&` to run in background)
+7. **Create Issue** - Create issue in project tracker (GitHub/Linear)
+
+Based on selection:
+- **Open plan in editor** → Run `open docs/plans/<plan_filename>.md` to open the file in the user's default editor
+- **`/deepen-plan`** → Call the /deepen-plan command with the plan file path to enhance with research
+- **`/technical_review`** → Call the /technical_review command with the plan file path
+- **Review and refine** → Load `document-review` skill.
+- **`/workflows:work`** → Call the /workflows:work command with the plan file path
+- **`/workflows:work` on remote** → Run `/workflows:work docs/plans/<plan_filename>.md &` to start work in background for Claude Code web
+- **Create Issue** → See "Issue Creation" section below
+- **Other** (automatically provided) → Accept free text for rework or specific changes
+
+**Note:** If running `/workflows:plan` with ultrathink enabled, automatically run `/deepen-plan` after plan creation for maximum depth and grounding.
+
+Loop back to options after Simplify or Other changes until user selects `/workflows:work` or `/technical_review`.
+
+## Issue Creation
+
+When user selects "Create Issue", detect their project tracker from CLAUDE.md:
+
+1. **Check for tracker preference** in user's CLAUDE.md (global or project):
+   - Look for `project_tracker: github` or `project_tracker: linear`
+   - Or look for mentions of "GitHub Issues" or "Linear" in their workflow section
+
+2. **If GitHub:**
+
+   Use the title and type from Step 2 (already in context - no need to re-read the file):
+
+   ```bash
+   gh issue create --title "<type>: <title>" --body-file <plan_path>
+   ```
+
+3. **If Linear:**
+
+   ```bash
+   linear issue create --title "<title>" --description "$(cat <plan_path>)"
+   ```
+
+4. **If no tracker configured:**
+   Ask user: "Which project tracker do you use? (GitHub/Linear/Other)"
+   - Suggest adding `project_tracker: github` or `project_tracker: linear` to their CLAUDE.md
+
+5. **After creation:**
+   - Display the issue URL
+   - Ask if they want to proceed to `/workflows:work` or `/technical_review`
+
+NEVER CODE! Just research and write the plan.
+
+---
+
+広いスコープ
+
+---
+
+続けて
+
+---
+
+なんでapi error出てる?
+
+---
+
+なんでエラー出てる?
+
+---
+
+# Create a plan for a new feature or bug fix
+
+## Introduction
+
+**Note: The current year is 2026.** Use this when dating plans and searching for recent documentation.
+
+Transform feature descriptions, bug reports, or improvement ideas into well-structured markdown files issues that follow project conventions and best practices. This command provides flexible detail levels to match your needs.
+
+## Feature Description
+
+<feature_description> # </feature_description>
+
+**If the feature description above is empty, ask the user:** "What would you like to plan? Please describe the feature, bug fix, or improvement you have in mind."
+
+Do not proceed until you have a clear feature description from the user.
+
+### 0. Idea Refinement
+
+**Check for brainstorm output first:**
+
+Before asking questions, look for recent brainstorm documents in `docs/brainstorms/` that match this feature:
+
+```bash
+ls -la docs/brainstorms/*.md 2>/dev/null | head -10
+```
+
+**Relevance criteria:** A brainstorm is relevant if:
+- The topic (from filename or YAML frontmatter) semantically matches the feature description
+- Created within the last 14 days
+- If multiple candidates match, use the most recent one
+
+**If a relevant brainstorm exists:**
+1. Read the brainstorm document
+2. Announce: "Found brainstorm from [date]: [topic]. Using as context for planning."
+3. Extract key decisions, chosen approach, and open questions
+4. **Skip the idea refinement questions below** - the brainstorm already answered WHAT to build
+5. Use brainstorm decisions as input to the research phase
+
+**If multiple brainstorms could match:**
+Use **AskUserQuestion tool** to ask which brainstorm to use, or whether to proceed without one.
+
+**If no brainstorm found (or not relevant), run idea refinement:**
+
+Refine the idea through collaborative dialogue using the **AskUserQuestion tool**:
+
+- Ask questions one at a time to understand the idea fully
+- Prefer multiple choice questions when natural options exist
+- Focus on understanding: purpose, constraints and success criteria
+- Continue until the idea is clear OR user says "proceed"
+
+**Gather signals for research decision.** During refinement, note:
+
+- **User's familiarity**: Do they know the codebase patterns? Are they pointing to examples?
+- **User's intent**: Speed vs thoroughness? Exploration vs execution?
+- **Topic risk**: Security, payments, external APIs warrant more caution
+- **Uncertainty level**: Is the approach clear or open-ended?
+
+**Skip option:** If the feature description is already detailed, offer:
+"Your description is clear. Should I proceed with research, or would you like to refine it further?"
+
+## Main Tasks
+
+### 1. Local Research (Always Runs - Parallel)
+
+<thinking>
+First, I need to understand the project's conventions, existing patterns, and any documented learnings. This is fast and local - it informs whether external research is needed.
+</thinking>
+
+Run these agents **in parallel** to gather local context:
+
+- Task repo-research-analyst(feature_description)
+- Task learnings-researcher(feature_description)
+
+**What to look for:**
+- **Repo research:** existing patterns, CLAUDE.md guidance, technology familiarity, pattern consistency
+- **Learnings:** documented solutions in `docs/solutions/` that might apply (gotchas, patterns, lessons learned)
+
+These findings inform the next step.
+
+### 1.5. Research Decision
+
+Based on signals from Step 0 and findings from Step 1, decide on external research.
+
+**High-risk topics → always research.** Security, payments, external APIs, data privacy. The cost of missing something is too high. This takes precedence over speed signals.
+
+**Strong local context → skip external research.** Codebase has good patterns, CLAUDE.md has guidance, user knows what they want. External research adds little value.
+
+**Uncertainty or unfamiliar territory → research.** User is exploring, codebase has no examples, new technology. External perspective is valuable.
+
+**Announce the decision and proceed.** Brief explanation, then continue. User can redirect if needed.
+
+Examples:
+- "Your codebase has solid patterns for this. Proceeding without external research."
+- "This involves payment processing, so I'll research current best practices first."
+
+### 1.5b. External Research (Conditional)
+
+**Only run if Step 1.5 indicates external research is valuable.**
+
+Run these agents in parallel:
+
+- Task best-practices-researcher(feature_description)
+- Task framework-docs-researcher(feature_description)
+
+### 1.6. Consolidate Research
+
+After all research steps complete, consolidate findings:
+
+- Document relevant file paths from repo research (e.g., `app/services/example_service.rb:42`)
+- **Include relevant institutional learnings** from `docs/solutions/` (key insights, gotchas to avoid)
+- Note external documentation URLs and best practices (if external research was done)
+- List related issues or PRs discovered
+- Capture CLAUDE.md conventions
+
+**Optional validation:** Briefly summarize findings and ask if anything looks off or missing before proceeding to planning.
+
+### 2. Issue Planning & Structure
+
+<thinking>
+Think like a product manager - what would make this issue clear and actionable? Consider multiple perspectives
+</thinking>
+
+**Title & Categorization:**
+
+- [ ] Draft clear, searchable issue title using conventional format (e.g., `feat: Add user authentication`, `fix: Cart total calculation`)
+- [ ] Determine issue type: enhancement, bug, refactor
+- [ ] Convert title to filename: add today's date prefix, strip prefix colon, kebab-case, add `-plan` suffix
+  - Example: `feat: Add User Authentication` → `2026-01-21-feat-add-user-authentication-plan.md`
+  - Keep it descriptive (3-5 words after prefix) so plans are findable by context
+
+**Stakeholder Analysis:**
+
+- [ ] Identify who will be affected by this issue (end users, developers, operations)
+- [ ] Consider implementation complexity and required expertise
+
+**Content Planning:**
+
+- [ ] Choose appropriate detail level based on issue complexity and audience
+- [ ] List all necessary sections for the chosen template
+- [ ] Gather supporting materials (error logs, screenshots, design mockups)
+- [ ] Prepare code examples or reproduction steps if applicable, name the mock filenames in the lists
+
+### 3. SpecFlow Analysis
+
+After planning the issue structure, run SpecFlow Analyzer to validate and refine the feature specification:
+
+- Task spec-flow-analyzer(feature_description, research_findings)
+
+**SpecFlow Analyzer Output:**
+
+- [ ] Review SpecFlow analysis results
+- [ ] Incorporate any identified gaps or edge cases into the issue
+- [ ] Update acceptance criteria based on SpecFlow findings
+
+### 4. Choose Implementation Detail Level
+
+Select how comprehensive you want the issue to be, simpler is mostly better.
+
+#### 📄 MINIMAL (Quick Issue)
+
+**Best for:** Simple bugs, small improvements, clear features
+
+**Includes:**
+
+- Problem statement or feature description
+- Basic acceptance criteria
+- Essential context only
+
+**Structure:**
+
+````markdown
+---
+title: [Issue Title]
+type: [feat|fix|refactor]
+date: YYYY-MM-DD
+---
+
+# [Issue Title]
+
+[Brief problem/feature description]
+
+## Acceptance Criteria
+
+- [ ] Core requirement 1
+- [ ] Core requirement 2
+
+## Context
+
+[Any critical information]
+
+## MVP
+
+### test.rb
+
+```ruby
+class Test
+  def initialize
+    @name = "test"
+  end
+end
+```
+
+## References
+
+- Related issue: #[issue_number]
+- Documentation: [relevant_docs_url]
+````
+
+#### 📋 MORE (Standard Issue)
+
+**Best for:** Most features, complex bugs, team collaboration
+
+**Includes everything from MINIMAL plus:**
+
+- Detailed background and motivation
+- Technical considerations
+- Success metrics
+- Dependencies and risks
+- Basic implementation suggestions
+
+**Structure:**
+
+```markdown
+---
+title: [Issue Title]
+type: [feat|fix|refactor]
+date: YYYY-MM-DD
+---
+
+# [Issue Title]
+
+## Overview
+
+[Comprehensive description]
+
+## Problem Statement / Motivation
+
+[Why this matters]
+
+## Proposed Solution
+
+[High-level approach]
+
+## Technical Considerations
+
+- Architecture impacts
+- Performance implications
+- Security considerations
+
+## Acceptance Criteria
+
+- [ ] Detailed requirement 1
+- [ ] Detailed requirement 2
+- [ ] Testing requirements
+
+## Success Metrics
+
+[How we measure success]
+
+## Dependencies & Risks
+
+[What could block or complicate this]
+
+## References & Research
+
+- Similar implementations: [file_path:line_number]
+- Best practices: [documentation_url]
+- Related PRs: #[pr_number]
+```
+
+#### 📚 A LOT (Comprehensive Issue)
+
+**Best for:** Major features, architectural changes, complex integrations
+
+**Includes everything from MORE plus:**
+
+- Detailed implementation plan with phases
+- Alternative approaches considered
+- Extensive technical specifications
+- Resource requirements and timeline
+- Future considerations and extensibility
+- Risk mitigation strategies
+- Documentation requirements
+
+**Structure:**
+
+```markdown
+---
+title: [Issue Title]
+type: [feat|fix|refactor]
+date: YYYY-MM-DD
+---
+
+# [Issue Title]
+
+## Overview
+
+[Executive summary]
+
+## Problem Statement
+
+[Detailed problem analysis]
+
+## Proposed Solution
+
+[Comprehensive solution design]
+
+## Technical Approach
+
+### Architecture
+
+[Detailed technical design]
+
+### Implementation Phases
+
+#### Phase 1: [Foundation]
+
+- Tasks and deliverables
+- Success criteria
+- Estimated effort
+
+#### Phase 2: [Core Implementation]
+
+- Tasks and deliverables
+- Success criteria
+- Estimated effort
+
+#### Phase 3: [Polish & Optimization]
+
+- Tasks and deliverables
+- Success criteria
+- Estimated effort
+
+## Alternative Approaches Considered
+
+[Other solutions evaluated and why rejected]
+
+## Acceptance Criteria
+
+### Functional Requirements
+
+- [ ] Detailed functional criteria
+
+### Non-Functional Requirements
+
+- [ ] Performance targets
+- [ ] Security requirements
+- [ ] Accessibility standards
+
+### Quality Gates
+
+- [ ] Test coverage requirements
+- [ ] Documentation completeness
+- [ ] Code review approval
+
+## Success Metrics
+
+[Detailed KPIs and measurement methods]
+
+## Dependencies & Prerequisites
+
+[Detailed dependency analysis]
+
+## Risk Analysis & Mitigation
+
+[Comprehensive risk assessment]
+
+## Resource Requirements
+
+[Team, time, infrastructure needs]
+
+## Future Considerations
+
+[Extensibility and long-term vision]
+
+## Documentation Plan
+
+[What docs need updating]
+
+## References & Research
+
+### Internal References
+
+- Architecture decisions: [file_path:line_number]
+- Similar features: [file_path:line_number]
+- Configuration: [file_path:line_number]
+
+### External References
+
+- Framework documentation: [url]
+- Best practices guide: [url]
+- Industry standards: [url]
+
+### Related Work
+
+- Previous PRs: #[pr_numbers]
+- Related issues: #[issue_numbers]
+- Design documents: [links]
+```
+
+### 5. Issue Creation & Formatting
+
+<thinking>
+Apply best practices for clarity and actionability, making the issue easy to scan and understand
+</thinking>
+
+**Content Formatting:**
+
+- [ ] Use clear, descriptive headings with proper hierarchy (##, ###)
+- [ ] Include code examples in triple backticks with language syntax highlighting
+- [ ] Add screenshots/mockups if UI-related (drag & drop or use image hosting)
+- [ ] Use task lists (- [ ]) for trackable items that can be checked off
+- [ ] Add collapsible sections for lengthy logs or optional details using `<details>` tags
+- [ ] Apply appropriate emoji for visual scanning (🐛 bug, ✨ feature, 📚 docs, ♻️ refactor)
+
+**Cross-Referencing:**
+
+- [ ] Link to related issues/PRs using #number format
+- [ ] Reference specific commits with SHA hashes when relevant
+- [ ] Link to code using GitHub's permalink feature (press 'y' for permanent link)
+- [ ] Mention relevant team members with @username if needed
+- [ ] Add links to external resources with descriptive text
+
+**Code & Examples:**
+
+````markdown
+# Good example with syntax highlighting and line references
+
+
+```ruby
+# app/services/user_service.rb:42
+def process_user(user)
+
+# Implementation here
+
+end
+```
+
+# Collapsible error logs
+
+<details>
+<summary>Full error stacktrace</summary>
+
+`Error details here...`
+
+</details>
+````
+
+**AI-Era Considerations:**
+
+- [ ] Account for accelerated development with AI pair programming
+- [ ] Include prompts or instructions that worked well during research
+- [ ] Note which AI tools were used for initial exploration (Claude, Copilot, etc.)
+- [ ] Emphasize comprehensive testing given rapid implementation
+- [ ] Document any AI-generated code that needs human review
+
+### 6. Final Review & Submission
+
+**Pre-submission Checklist:**
+
+- [ ] Title is searchable and descriptive
+- [ ] Labels accurately categorize the issue
+- [ ] All template sections are complete
+- [ ] Links and references are working
+- [ ] Acceptance criteria are measurable
+- [ ] Add names of files in pseudo code examples and todo lists
+- [ ] Add an ERD mermaid diagram if applicable for new model changes
+
+## Output Format
+
+**Filename:** Use the date and kebab-case filename from Step 2 Title & Categorization.
+
+```
+docs/plans/YYYY-MM-DD-<type>-<descriptive-name>-plan.md
+```
+
+Examples:
+- ✅ `docs/plans/2026-01-15-feat-user-authentication-flow-plan.md`
+- ✅ `docs/plans/2026-02-03-fix-checkout-race-condition-plan.md`
+- ✅ `docs/plans/2026-03-10-refactor-api-client-extraction-plan.md`
+- ❌ `docs/plans/2026-01-15-feat-thing-plan.md` (not descriptive - what "thing"?)
+- ❌ `docs/plans/2026-01-15-feat-new-feature-plan.md` (too vague - what feature?)
+- ❌ `docs/plans/2026-01-15-feat: user auth-plan.md` (invalid characters - colon and space)
+- ❌ `docs/plans/feat-user-auth-plan.md` (missing date prefix)
+
+## Post-Generation Options
+
+After writing the plan file, use the **AskUserQuestion tool** to present these options:
+
+**Question:** "Plan ready at `docs/plans/YYYY-MM-DD-<type>-<name>-plan.md`. What would you like to do next?"
+
+**Options:**
+1. **Open plan in editor** - Open the plan file for review
+2. **Run `/deepen-plan`** - Enhance each section with parallel research agents (best practices, performance, UI)
+3. **Run `/technical_review`** - Technical feedback from code-focused reviewers (DHH, Kieran, Simplicity)
+4. **Review and refine** - Improve the document through structured self-review
+5. **Start `/workflows:work`** - Begin implementing this plan locally
+6. **Start `/workflows:work` on remote** - Begin implementing in Claude Code on the web (use `&` to run in background)
+7. **Create Issue** - Create issue in project tracker (GitHub/Linear)
+
+Based on selection:
+- **Open plan in editor** → Run `open docs/plans/<plan_filename>.md` to open the file in the user's default editor
+- **`/deepen-plan`** → Call the /deepen-plan command with the plan file path to enhance with research
+- **`/technical_review`** → Call the /technical_review command with the plan file path
+- **Review and refine** → Load `document-review` skill.
+- **`/workflows:work`** → Call the /workflows:work command with the plan file path
+- **`/workflows:work` on remote** → Run `/workflows:work docs/plans/<plan_filename>.md &` to start work in background for Claude Code web
+- **Create Issue** → See "Issue Creation" section below
+- **Other** (automatically provided) → Accept free text for rework or specific changes
+
+**Note:** If running `/workflows:plan` with ultrathink enabled, automatically run `/deepen-plan` after plan creation for maximum depth and grounding.
+
+Loop back to options after Simplify or Other changes until user selects `/workflows:work` or `/technical_review`.
+
+## Issue Creation
+
+When user selects "Create Issue", detect their project tracker from CLAUDE.md:
+
+1. **Check for tracker preference** in user's CLAUDE.md (global or project):
+   - Look for `project_tracker: github` or `project_tracker: linear`
+   - Or look for mentions of "GitHub Issues" or "Linear" in their workflow section
+
+2. **If GitHub:**
+
+   Use the title and type from Step 2 (already in context - no need to re-read the file):
+
+   ```bash
+   gh issue create --title "<type>: <title>" --body-file <plan_path>
+   ```
+
+3. **If Linear:**
+
+   ```bash
+   linear issue create --title "<title>" --description "$(cat <plan_path>)"
+   ```
+
+4. **If no tracker configured:**
+   Ask user: "Which project tracker do you use? (GitHub/Linear/Other)"
+   - Suggest adding `project_tracker: github` or `project_tracker: linear` to their CLAUDE.md
+
+5. **After creation:**
+   - Display the issue URL
+   - Ask if they want to proceed to `/workflows:work` or `/technical_review`
+
+NEVER CODE! Just research and write the plan.
+
+---
+
+# Work Plan Execution Command
+
+Execute a work plan efficiently while maintaining quality and finishing features.
+
+## Introduction
+
+This command takes a work document (plan, specification, or todo file) and executes it systematically. The focus is on **shipping complete features** by understanding requirements quickly, following existing patterns, and maintaining quality throughout.
+
+## Input Document
+
+<input_document> #docs/plans/2026-02-26-refactor-gh-router-full-redesign-plan.md </input_document>
+
+## Execution Workflow
+
+### Phase 1: Quick Start
+
+1. **Read Plan and Clarify**
+
+   - Read the work document completely
+   - Review any references or links provided in the plan
+   - If anything is unclear or ambiguous, ask clarifying questions now
+   - Get user approval to proceed
+   - **Do not skip this** - better to ask questions now than build the wrong thing
+
+2. **Setup Environment**
+
+   First, check the current branch:
+
+   ```bash
+   current_branch=$(git branch --show-current)
+   default_branch=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@')
+
+   # Fallback if remote HEAD isn't set
+   if [ -z "$default_branch" ]; then
+     default_branch=$(git rev-parse --verify origin/main >/dev/null 2>&1 && echo "main" || echo "master")
+   fi
+   ```
+
+   **If already on a feature branch** (not the default branch):
+   - Ask: "Continue working on `[current_branch]`, or create a new branch?"
+   - If continuing, proceed to step 3
+   - If creating new, follow Option A or B below
+
+   **If on the default branch**, choose how to proceed:
+
+   **Option A: Create a new branch**
+   ```bash
+   git pull origin [default_branch]
+   git checkout -b feature-branch-name
+   ```
+   Use a meaningful name based on the work (e.g., `feat/user-authentication`, `fix/email-validation`).
+
+   **Option B: Use a worktree (recommended for parallel development)**
+   ```bash
+   skill: git-worktree
+   # The skill will create a new branch from the default branch in an isolated worktree
+   ```
+
+   **Option C: Continue on the default branch**
+   - Requires explicit user confirmation
+   - Only proceed after user explicitly says "yes, commit to [default_branch]"
+   - Never commit directly to the default branch without explicit permission
+
+   **Recommendation**: Use worktree if:
+   - You want to work on multiple features simultaneously
+   - You want to keep the default branch clean while experimenting
+   - You plan to switch between branches frequently
+
+3. **Create Todo List**
+   - Use TodoWrite to break plan into actionable tasks
+   - Include dependencies between tasks
+   - Prioritize based on what needs to be done first
+   - Include testing and quality check tasks
+   - Keep tasks specific and completable
+
+### Phase 2: Execute
+
+1. **Task Execution Loop**
+
+   For each task in priority order:
+
+   ```
+   while (tasks remain):
+     - Mark task as in_progress in TodoWrite
+     - Read any referenced files from the plan
+     - Look for similar patterns in codebase
+     - Implement following existing conventions
+     - Write tests for new functionality
+     - Run tests after changes
+     - Mark task as completed in TodoWrite
+     - Mark off the corresponding checkbox in the plan file ([ ] → [x])
+     - Evaluate for incremental commit (see below)
+   ```
+
+   **IMPORTANT**: Always update the original plan document by checking off completed items. Use the Edit tool to change `- [ ]` to `- [x]` for each task you finish. This keeps the plan as a living document showing progress and ensures no checkboxes are left unchecked.
+
+2. **Incremental Commits**
+
+   After completing each task, evaluate whether to create an incremental commit:
+
+   | Commit when... | Don't commit when... |
+   |----------------|---------------------|
+   | Logical unit complete (model, service, component) | Small part of a larger unit |
+   | Tests pass + meaningful progress | Tests failing |
+   | About to switch contexts (backend → frontend) | Purely scaffolding with no behavior |
+   | About to attempt risky/uncertain changes | Would need a "WIP" commit message |
+
+   **Heuristic:** "Can I write a commit message that describes a complete, valuable change? If yes, commit. If the message would be 'WIP' or 'partial X', wait."
+
+   **Commit workflow:**
+   ```bash
+   # 1. Verify tests pass (use project's test command)
+   # Examples: bin/rails test, npm test, pytest, go test, etc.
+
+   # 2. Stage only files related to this logical unit (not `git add .`)
+   git add <files related to this logical unit>
+
+   # 3. Commit with conventional message
+   git commit -m "feat(scope): description of this unit"
+   ```
+
+   **Handling merge conflicts:** If conflicts arise during rebasing or merging, resolve them immediately. Incremental commits make conflict resolution easier since each commit is small and focused.
+
+   **Note:** Incremental commits use clean conventional messages without attribution footers. The final Phase 4 commit/PR includes the full attribution.
+
+3. **Follow Existing Patterns**
+
+   - The plan should reference similar code - read those files first
+   - Match naming conventions exactly
+   - Reuse existing components where possible
+   - Follow project coding standards (see CLAUDE.md)
+   - When in doubt, grep for similar implementations
+
+4. **Test Continuously**
+
+   - Run relevant tests after each significant change
+   - Don't wait until the end to test
+   - Fix failures immediately
+   - Add new tests for new functionality
+
+5. **Figma Design Sync** (if applicable)
+
+   For UI work with Figma designs:
+
+   - Implement components following design specs
+   - Use figma-design-sync agent iteratively to compare
+   - Fix visual differences identified
+   - Repeat until implementation matches design
+
+6. **Track Progress**
+   - Keep TodoWrite updated as you complete tasks
+   - Note any blockers or unexpected discoveries
+   - Create new tasks if scope expands
+   - Keep user informed of major milestones
+
+### Phase 3: Quality Check
+
+1. **Run Core Quality Checks**
+
+   Always run before submitting:
+
+   ```bash
+   # Run full test suite (use project's test command)
+   # Examples: bin/rails test, npm test, pytest, go test, etc.
+
+   # Run linting (per CLAUDE.md)
+   # Use linting-agent before pushing to origin
+   ```
+
+2. **Consider Reviewer Agents** (Optional)
+
+   Use for complex, risky, or large changes:
+
+   - **code-simplicity-reviewer**: Check for unnecessary complexity
+   - **kieran-rails-reviewer**: Verify Rails conventions (Rails projects)
+   - **performance-oracle**: Check for performance issues
+   - **security-sentinel**: Scan for security vulnerabilities
+   - **cora-test-reviewer**: Review test quality (Rails projects with comprehensive test coverage)
+
+   Run reviewers in parallel with Task tool:
+
+   ```
+   Task(code-simplicity-reviewer): "Review changes for simplicity"
+   Task(kieran-rails-reviewer): "Check Rails conventions"
+   ```
+
+   Present findings to user and address critical issues.
+
+3. **Final Validation**
+   - All TodoWrite tasks marked completed
+   - All tests pass
+   - Linting passes
+   - Code follows existing patterns
+   - Figma designs match (if applicable)
+   - No console errors or warnings
+
+### Phase 4: Ship It
+
+1. **Create Commit**
+
+   ```bash
+   git add .
+   git status  # Review what's being committed
+   git diff --staged  # Check the changes
+
+   # Commit with conventional format
+   git commit -m "$(cat <<'EOF'
+   feat(scope): description of what and why
+
+   Brief explanation if needed.
+
+   🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+   Co-Authored-By: Claude <noreply@anthropic.com>
+   EOF
+   )"
+   ```
+
+2. **Capture and Upload Screenshots for UI Changes** (REQUIRED for any UI work)
+
+   For **any** design changes, new views, or UI modifications, you MUST capture and upload screenshots:
+
+   **Step 1: Start dev server** (if not running)
+   ```bash
+   bin/dev  # Run in background
+   ```
+
+   **Step 2: Capture screenshots with agent-browser CLI**
+   ```bash
+   agent-browser open http://localhost:3000/[route]
+   agent-browser snapshot -i
+   agent-browser screenshot output.png
+   ```
+   See the `agent-browser` skill for detailed usage.
+
+   **Step 3: Upload using imgup skill**
+   ```bash
+   skill: imgup
+   # Then upload each screenshot:
+   imgup -h pixhost screenshot.png  # pixhost works without API key
+   # Alternative hosts: catbox, imagebin, beeimg
+   ```
+
+   **What to capture:**
+   - **New screens**: Screenshot of the new UI
+   - **Modified screens**: Before AND after screenshots
+   - **Design implementation**: Screenshot showing Figma design match
+
+   **IMPORTANT**: Always include uploaded image URLs in PR description. This provides visual context for reviewers and documents the change.
+
+3. **Create Pull Request**
+
+   ```bash
+   git push -u origin feature-branch-name
+
+   gh pr create --title "Feature: [Description]" --body "$(cat <<'EOF'
+   ## Summary
+   - What was built
+   - Why it was needed
+   - Key decisions made
+
+   ## Testing
+   - Tests added/modified
+   - Manual testing performed
+
+   ## Before / After Screenshots
+   | Before | After |
+   |--------|-------|
+   | ![before](URL) | ![after](URL) |
+
+   ## Figma Design
+   [Link if applicable]
+
+   ---
+
+   [![Compound Engineered](https://img.shields.io/badge/Compound-Engineered-6366f1)](https://github.com/EveryInc/compound-engineering-plugin) 🤖 Generated with [Claude Code](https://claude.com/claude-code)
+   EOF
+   )"
+   ```
+
+4. **Notify User**
+   - Summarize what was completed
+   - Link to PR
+   - Note any follow-up work needed
+   - Suggest next steps if applicable
+
+---
+
+## Swarm Mode (Optional)
+
+For complex plans with multiple independent workstreams, enable swarm mode for parallel execution with coordinated agents.
+
+### When to Use Swarm Mode
+
+| Use Swarm Mode when... | Use Standard Mode when... |
+|------------------------|---------------------------|
+| Plan has 5+ independent tasks | Plan is linear/sequential |
+| Multiple specialists needed (review + test + implement) | Single-focus work |
+| Want maximum parallelism | Simpler mental model preferred |
+| Large feature with clear phases | Small feature or bug fix |
+
+### Enabling Swarm Mode
+
+To trigger swarm execution, say:
+
+> "Make a Task list and launch an army of agent swarm subagents to build the plan"
+
+Or explicitly request: "Use swarm mode for this work"
+
+### Swarm Workflow
+
+When swarm mode is enabled, the workflow changes:
+
+1. **Create Team**
+   ```
+   Teammate({ operation: "spawnTeam", team_name: "work-{timestamp}" })
+   ```
+
+2. **Create Task List with Dependencies**
+   - Parse plan into TaskCreate items
+   - Set up blockedBy relationships for sequential dependencies
+   - Independent tasks have no blockers (can run in parallel)
+
+3. **Spawn Specialized Teammates**
+   ```
+   Task({
+     team_name: "work-{timestamp}",
+     name: "implementer",
+     subagent_type: "general-purpose",
+     prompt: "Claim implementation tasks, execute, mark complete",
+     run_in_background: true
+   })
+
+   Task({
+     team_name: "work-{timestamp}",
+     name: "tester",
+     subagent_type: "general-purpose",
+     prompt: "Claim testing tasks, run tests, mark complete",
+     run_in_background: true
+   })
+   ```
+
+4. **Coordinate and Monitor**
+   - Team lead monitors task completion
+   - Spawn additional workers as phases unblock
+   - Handle plan approval if required
+
+5. **Cleanup**
+   ```
+   Teammate({ operation: "requestShutdown", target_agent_id: "implementer" })
+   Teammate({ operation: "requestShutdown", target_agent_id: "tester" })
+   Teammate({ operation: "cleanup" })
+   ```
+
+See the `orchestrating-swarms` skill for detailed swarm patterns and best practices.
+
+---
+
+## Key Principles
+
+### Start Fast, Execute Faster
+
+- Get clarification once at the start, then execute
+- Don't wait for perfect understanding - ask questions and move
+- The goal is to **finish the feature**, not create perfect process
+
+### The Plan is Your Guide
+
+- Work documents should reference similar code and patterns
+- Load those references and follow them
+- Don't reinvent - match what exists
+
+### Test As You Go
+
+- Run tests after each change, not at the end
+- Fix failures immediately
+- Continuous testing prevents big surprises
+
+### Quality is Built In
+
+- Follow existing patterns
+- Write tests for new code
+- Run linting before pushing
+- Use reviewer agents for complex/risky changes only
+
+### Ship Complete Features
+
+- Mark all tasks completed before moving on
+- Don't leave features 80% done
+- A finished feature that ships beats a perfect feature that doesn't
+
+## Quality Checklist
+
+Before creating PR, verify:
+
+- [ ] All clarifying questions asked and answered
+- [ ] All TodoWrite tasks marked completed
+- [ ] Tests pass (run project's test command)
+- [ ] Linting passes (use linting-agent)
+- [ ] Code follows existing patterns
+- [ ] Figma designs match implementation (if applicable)
+- [ ] Before/after screenshots captured and uploaded (for UI changes)
+- [ ] Commit messages follow conventional format
+- [ ] PR description includes summary, testing notes, and screenshots
+- [ ] PR description includes Compound Engineered badge
+
+## When to Use Reviewer Agents
+
+**Don't use by default.** Use reviewer agents only when:
+
+- Large refactor affecting many files (10+)
+- Security-sensitive changes (authentication, permissions, data access)
+- Performance-critical code paths
+- Complex algorithms or business logic
+- User explicitly requests thorough review
+
+For most features: tests + linting + following patterns is sufficient.
+
+## Common Pitfalls to Avoid
+
+- **Analysis paralysis** - Don't overthink, read the plan and execute
+- **Skipping clarifying questions** - Ask now, not after building wrong thing
+- **Ignoring plan references** - The plan has links for a reason
+- **Testing at the end** - Test continuously or suffer later
+- **Forgetting TodoWrite** - Track progress or lose track of what's done
+- **80% done syndrome** - Finish the feature, don't move on early
+- **Over-reviewing simple changes** - Save reviewer agents for complex work
+
+---
+
+e2eで動作確認して
+
+---
+
+実行速度は?
+
+---
+
+commit
+
+---
+
+This session is being continued from a previous conversation that ran out of context. The summary below covers the earlier portion of the conversation.
+
+Analysis:
+Let me chronologically analyze the conversation:
+
+1. **Initial Planning Phase**: User confirmed option 1 (fallback to default when org doesn't match) for gh-router routing logic. They presented a detailed implementation plan with owner-map.tsv, new resolution logic, and verification criteria.
+
+2. **User questioned owner-map necessity**: Asked if account-based org resolution could handle commercex-holdings without owner-map.tsv. I explained that API results showed commercex-holdings wasn't appearing in /user/orgs, suggesting it might be because tokens weren't properly isolated.
+
+3. **Token isolation discovery**: User identified that each account's credentials need to be used separately. Investigation revealed both profiles returned the same token (gho_hXBB...) and same login (ryo-morimoto). The root cause: OS keyring had the same token stored for both accounts.
+
+4. **insecure-storage discussion**: User asked about insecure-storage. I explained it stores tokens in plaintext in hosts.yml. User explicitly rejected it: "insecure-storageはまじで良くない"
+
+5. **Token re-login**: User ran `gh auth login --hostname github.com --web` for morimoto-novasto. After re-login, tokens were properly isolated:
+   - morimoto-novasto: orgs=novasto,commercex-holdings
+   - ryo-morimoto: orgs=sushi-days,moritech-dev
+
+6. **Planning workflow**: User ran /workflows:plan twice. First attempt had repo-research-analyst fail with 500 error. User asked about the error, exited, came back, and ran /workflows:plan again.
+
+7. **Plan decisions**: 
+   - owner-map: completely removed (not kept as override)
+   - Detail level: MORE (standard)
+   - Scope: Full redesign
+
+8. **Plan created**: docs/plans/2026-02-26-refactor-gh-router-full-redesign-plan.md
+
+9. **Implementation via /workflows:work**: 
+   - Created branch refactor/gh-router-redesign
+   - Task 1: Removed owner-map code (functions, variables, resolution step)
+   - Task 2: Replaced org probe with /user/orgs list-all approach
+   - Task 3: Added identity cache for sync-identity
+   - Task 4: Hardened file permissions (700/600)
+   - Task 5: Added --verbose flag
+   - Task 6: Added doctor command
+   - Task 7: Updated README and help text
+   - Task 8: Verified acceptance criteria
+
+10. **Verbose output bug**: Initial --verbose implementation didn't show output because `2>/dev/null` on the subshell suppressed stderr. Fixed by conditionally removing `2>/dev/null` when VERBOSE=1.
+
+11. **E2E testing**: User asked "e2eで動作確認して". Ran 13 E2E tests, all passed.
+
+12. **Performance issue**: User asked "実行速度は?". Benchmarks showed:
+    - owner-profile: 16ms (fast)
+    - org-membership cached: 1,175ms (slow!)
+    
+    Root cause 1: `list_accounts` called `hydrate_profiles_from_auth_status` every time, which calls `gh auth status --json hosts` (~500ms). Fix: Added `has_any_profile()` to skip hydration when profiles exist.
+    
+    After fix: 570ms. Still slow.
+    
+    Root cause 2: `resolve_account_for_owner` had `profile_exists "$owner" || ensure_profile_for_account "$owner"` - when owner is an org like "commercex-holdings", `ensure_profile_for_account` triggers `gh auth status --json hosts`. Fix: Changed to just `profile_exists "$owner"`.
+    
+    Final result: 27ms for all paths.
+
+13. **Commit**: User said "commit". Committed with message "refactor: redesign gh-router with account-based org resolution" on branch refactor/gh-router-redesign.
+
+Key files modified:
+- tools/gh-router/gh-router (main script, 832 -> ~907 lines)
+- tools/gh-router/README.md (updated documentation)
+- docs/plans/2026-02-26-refactor-gh-router-full-redesign-plan.md (new plan file)
+
+Remaining unstaged files (not part of this work):
+- AGENTS.md, CLAUDE.md, config/nvim/lua/plugins/lsp.lua, config/zsh/custom.zsh, home/default.nix, session-ses_36ad.md
+
+Summary:
+1. Primary Request and Intent:
+   The user wanted a **full redesign of gh-router**, their multi-account GitHub CLI routing tool (~832-line bash script in a NixOS dotfiles repo). The core goals were:
+   - Replace the `owner-map.tsv` workaround with **account-based org resolution** using `/user/orgs` API
+   - Fix the discovered **token isolation bug** (both accounts shared the same OS keyring token)
+   - Add **debuggability** (`--verbose` flag, `doctor` command)
+   - Add **identity caching** to eliminate API calls on every `cd`
+   - **Harden file permissions** (700 for dirs, 600 for files)
+   - Improve **performance** to under 50ms for cached resolution
+   - The user explicitly rejected `insecure-storage` ("insecure-storageはまじで良くない") and chose to **completely remove owner-map** rather than keeping it as an override.
+
+2. Key Technical Concepts:
+   - **gh-router**: Stateless bash tool that routes `gh` CLI commands to correct GitHub account based on repo context via `GH_CONFIG_DIR`
+   - **GH_CONFIG_DIR**: Per-account profile directories under `~/.local/state/gh-router/profiles/{account}/`
+   - **OS keyring token isolation**: `gh` stores tokens in the OS keyring keyed by account; both accounts had the same token due to a previous login issue
+   - **Resolution chain**: owner-profile match → org-membership (via `/user/orgs` cached per account) → fallback to default
+   - **Profile hydration**: Auto-creating profiles from `gh auth status --json hosts` (expensive ~500ms operation)
+   - **Git credential helper**: Intercepts `git credential` requests and routes to correct account's `GH_CONFIG_DIR`
+   - **Identity cache**: Caches `gh api /user` response per account to avoid API calls on every `chpwd`
+   - **NixOS/Home Manager**: Dotfiles managed via Nix; git config is read-only, so writable profiles are needed
+
+3. Files and Code Sections:
+   - **`tools/gh-router/gh-router`** (main script, the primary file modified)
+     - This is the core tool being redesigned. All resolution logic, caching, credential routing, and new features live here.
+     - **Removed**: `owner_map_get_env`, `owner_map_get_file`, `owner_map_get` functions (~50 lines), `CONFIG_ROOT`, `OWNER_MAP_FILE`, `ORG_CACHE_FILE`, `ORG_CACHE_TTL_NEGATIVE` variables, `org_cache_get`, `org_cache_set`, `org_membership_probe_account` functions
+     - **Added**: `verbose_log()`, `has_any_profile()`, `orgs_cache_file_for_account()`, `orgs_cache_get()`, `orgs_cache_set()`, `orgs_for_account()`, `identity_cache_file_for_account()`, `identity_cache_get()`, `identity_cache_set()`, `command_doctor()`
+     - **Modified**: `ensure_dirs()` (added `-m 700`), `ensure_profile_for_account()` (added `-m 700` and `chmod 600`), `list_accounts()` (skip hydration if profiles exist), `resolve_account_for_owner()` (new org-list approach, verbose logging, removed owner-map step), `resolve_context_for_cwd()` (verbose logging), `identity_for_account()` (cache layer), `command_status()` (`--verbose` flag), `command_resolve()` (`--verbose` flag), `command_login()` (new cache clearing), `command_clear_cache()` (new cache format), `is_strict_resolution_reason()` (removed `owner-map`), `main()` (added `doctor` subcommand)
+     - Key new resolution logic:
+       ```bash
+       resolve_account_for_owner() {
+         local owner="$1"
+         local account
+         verbose_log "resolve owner=$owner"
+         if profile_exists "$owner"; then
+           verbose_log "step 1: owner-profile match -> $owner"
+           printf "%s\t%s\n" "$owner" "owner-profile"
+           return 0
+         fi
+         verbose_log "step 1: owner-profile match? no"
+         local org_line orgs_list
+         while IFS= read -r account; do
+           [[ -n "$account" ]] || continue
+           orgs_list=""
+           while IFS= read -r org_line; do
+             [[ -n "$org_line" ]] || continue
+             orgs_list="${orgs_list:+$orgs_list,}$org_line"
+             if [[ "$org_line" == "$owner" ]]; then
+               verbose_log "step 2: probe $account orgs=[$orgs_list] -> MATCH"
+               printf "%s\t%s\n" "$account" "org-membership"
+               return 0
+             fi
+           done < <(orgs_for_account "$account" 2>/dev/null || true)
+           verbose_log "step 2: probe $account orgs=[$orgs_list] -> no match"
+         done < <(list_accounts)
+         verbose_log "step 3: no account resolved, falling back"
+         return 1
+       }
+       ```
+     - Key new org cache:
+       ```bash
+       orgs_for_account() {
+         local account="$1"
+         local profile orgs_raw
+         orgs_cache_get "$account" 2>/dev/null && return 0
+         profile="$(profile_dir "$account")"
+         [[ -f "$profile/hosts.yml" ]] || return 1
+         orgs_raw="$(GH_CONFIG_DIR="$profile" gh api /user/orgs --jq '.[].login' 2>/dev/null || true)"
+         [[ -n "$orgs_raw" ]] || { orgs_cache_set "$account"; return 1; }
+         local -a org_list
+         mapfile -t org_list <<< "$orgs_raw"
+         orgs_cache_set "$account" "${org_list[@]}"
+         printf "%s\n" "${org_list[@]}"
+       }
+       ```
+
+   - **`tools/gh-router/README.md`** (documentation)
+     - Updated to reflect new resolution algorithm, removed owner-map config references, added doctor command and --verbose flag docs, added permission notes.
+
+   - **`docs/plans/2026-02-26-refactor-gh-router-full-redesign-plan.md`** (new plan file)
+     - Comprehensive plan document created during /workflows:plan. All acceptance criteria checked off after implementation.
+
+   - **`config/zsh/custom.zsh`** (read only, not modified in this commit)
+     - Shell integration with gh-router: `gh()` wrapper, `chpwd` hook, helper functions. No changes needed for this redesign.
+
+   - **`home/default.nix`** (read only, not modified in this commit)
+     - Git credential helper config pointing to gh-router.
+
+4. Errors and fixes:
+   - **Token isolation was broken**: Both accounts returned same token from keyring. Fixed by re-logging morimoto-novasto via `gh auth login --hostname github.com --web`.
+   - **`--verbose` output not showing**: `resolve_context_for_cwd` was called inside `$()` with `2>/dev/null`, suppressing verbose stderr. Fixed by conditionally removing `2>/dev/null` when `VERBOSE=1`:
+     ```bash
+     if (( VERBOSE )); then
+       line="$(resolve_context_for_cwd "$cwd" || true)"
+     else
+       line="$(resolve_context_for_cwd "$cwd" 2>/dev/null || true)"
+     fi
+     ```
+   - **Performance: 1.2s for cached resolve**: Two root causes found and fixed:
+     1. `list_accounts()` called `hydrate_profiles_from_auth_status` on every invocation (~500ms for `gh auth status --json hosts`). Fixed by adding `has_any_profile()` check to skip hydration when profiles already exist.
+     2. `resolve_account_for_owner` had `profile_exists "$owner" || ensure_profile_for_account "$owner"` which triggered `gh auth status --json hosts` when owner was an org name. Fixed by changing to just `profile_exists "$owner"`.
+     Result: 1,175ms → 27ms.
+   - **repo-research-analyst agent 500 errors**: Failed twice during /workflows:plan. Worked around by using learnings-researcher results and reading files directly.
+
+5. Problem Solving:
+   - **Token contamination root cause**: Discovered both keyring entries had identical tokens by hashing them with sha256sum. After morimoto-novasto re-login, each profile correctly returns its own identity and org list.
+   - **Account-based org resolution enabled**: With proper token isolation, `GH_CONFIG_DIR=.../profiles/morimoto-novasto gh api /user/orgs` now correctly returns `novasto,commercex-holdings`, enabling org-based routing without owner-map.
+   - **Performance optimization**: Identified two expensive `gh auth status --json hosts` calls on the hot path via strace analysis (28 process forks). Eliminated both by (a) skipping hydration when profiles exist and (b) using only `profile_exists` instead of `ensure_profile_for_account` in the owner-profile check.
+
+6. All user messages:
+   - "了解、1（org未一致時は default へフォールバック）で確定します。" (with full implementation plan)
+   - "これアカウントべーすのorg解決で対応できないのか?"
+   - "morimoto-novastoの所属orgなんだが、企業orgだから所属が非公開になってる? それぞれのアカウントの認証情報でapiを叩かないといけなさそう. その対応ができてないのが問題だと思う"
+   - "insecure-storageについて補足説明して"
+   - "insecure-storageはまじで良くない"
+   - "y" (to proceed with re-login)
+   - "完了した" (re-login done)
+   - "広いスコープ" (for plan scope)
+   - "続けてなんでapi error出てる?"
+   - "なんでエラー出てる?"
+   - (Selected "フルリデザイン" for plan scope)
+   - (Selected "完全削除" for owner-map, "MORE（推奨）" for plan detail level)
+   - (Selected "Open plan in editor")
+   - (Triggered /workflows:work)
+   - "e2eで動作確認して"
+   - "実行速度は?"
+   - "commit"
+
+7. Pending Tasks:
+   - No explicitly pending tasks. The commit was successfully made. Remaining unstaged files (AGENTS.md, CLAUDE.md, config/nvim/lua/plugins/lsp.lua, config/zsh/custom.zsh, home/default.nix) are unrelated to this work.
+
+8. Current Work:
+   The commit was just completed successfully on branch `refactor/gh-router-redesign`:
+   ```
+   [refactor/gh-router-redesign 8ba36b8] refactor: redesign gh-router with account-based org resolution
+    3 files changed, 496 insertions(+), 185 deletions(-)
+   ```
+   Three files committed: `tools/gh-router/gh-router`, `tools/gh-router/README.md`, `docs/plans/2026-02-26-refactor-gh-router-full-redesign-plan.md`.
+
+9. Optional Next Step:
+   The user's last request was "commit" which has been completed. No further explicit requests were made. A natural next step might be pushing the branch and creating a PR, but the user hasn't asked for this.
+
+If you need specific details from before compaction (like exact code snippets, error messages, or content you generated), read the full transcript at: /home/ryo-morimoto/.REDACTED.jsonl
+Please continue the conversation from where we left off without asking the user any further questions. Continue with the last task that you were asked to work on.

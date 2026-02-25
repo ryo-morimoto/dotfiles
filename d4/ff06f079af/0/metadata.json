@@ -1,0 +1,32 @@
+{
+  "cli_version": "0.4.2",
+  "checkpoint_id": "d4ff06f079af",
+  "session_id": "043df216-1a2c-4172-8e8b-ad77e40dbc45",
+  "strategy": "manual-commit",
+  "created_at": "2026-02-25T18:57:21.219949755Z",
+  "branch": "refactor/gh-router-redesign",
+  "checkpoints_count": 3,
+  "files_touched": [
+    "docs/plans/2026-02-26-refactor-gh-router-full-redesign-plan.md",
+    "tools/gh-router/README.md",
+    "tools/gh-router/gh-router"
+  ],
+  "agent": "Claude Code",
+  "transcript_identifier_at_start": "65fc78ab-f2e0-42b8-b558-40b2074af838",
+  "token_usage": {
+    "input_tokens": 195,
+    "cache_creation_tokens": 299570,
+    "cache_read_tokens": 18196953,
+    "output_tokens": 8515,
+    "api_call_count": 172
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-02-25T18:57:21.081266984Z",
+    "agent_lines": 481,
+    "human_added": 934,
+    "human_modified": 15,
+    "human_removed": 0,
+    "total_committed": 1430,
+    "agent_percentage": 33.63636363636363
+  }
+}

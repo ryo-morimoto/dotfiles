@@ -1,0 +1,28 @@
+{
+  "cli_version": "0.4.2",
+  "checkpoint_id": "d4ff06f079af",
+  "strategy": "manual-commit",
+  "branch": "refactor/gh-router-redesign",
+  "checkpoints_count": 3,
+  "files_touched": [
+    "docs/plans/2026-02-26-refactor-gh-router-full-redesign-plan.md",
+    "tools/gh-router/README.md",
+    "tools/gh-router/gh-router"
+  ],
+  "sessions": [
+    {
+      "metadata": "/d4/ff06f079af/0/metadata.json",
+      "transcript": "/d4/ff06f079af/0/full.jsonl",
+      "context": "/d4/ff06f079af/0/context.md",
+      "content_hash": "/d4/ff06f079af/0/content_hash.txt",
+      "prompt": "/d4/ff06f079af/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 195,
+    "cache_creation_tokens": 299570,
+    "cache_read_tokens": 18196953,
+    "output_tokens": 8515,
+    "api_call_count": 172
+  }
+}
