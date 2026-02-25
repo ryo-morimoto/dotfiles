@@ -58,6 +58,9 @@ in
       # Communication
       vesktop
 
+      # AppImage
+      appimage-run
+
       # CLI tools
       wget
       tree
@@ -956,6 +959,16 @@ in
           "application/xhtml+xml"
           "x-scheme-handler/http"
           "x-scheme-handler/https"
+        ];
+      };
+      "pencil-desktop" = {
+        name = "Pencil";
+        genericName = "Design Tool";
+        exec = "appimage-run ${config.home.homeDirectory}/Applications/Pencil.AppImage";
+        terminal = false;
+        categories = [
+          "Graphics"
+          "Development"
         ];
       };
     };
