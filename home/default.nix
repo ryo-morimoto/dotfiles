@@ -188,7 +188,7 @@ in
         init.defaultBranch = "main";
         push.autoSetupRemote = true;
         credential."https://github.com" = {
-          helper = "!\"$HOME/ghq/github.com/ryo-morimoto/dotfiles/scripts/gh-router\" credential";
+          helper = "!\"$HOME/ghq/github.com/ryo-morimoto/dotfiles/tools/gh-router/gh-router\" credential";
           useHttpPath = true;
         };
         merge.conflictstyle = "diff3";

@@ -10,7 +10,8 @@ _osc7_precmd() {
 autoload -Uz add-zsh-hook
 add-zsh-hook precmd _osc7_precmd
 
-typeset -g GH_ROUTER_BIN="${HOME}/ghq/github.com/ryo-morimoto/dotfiles/scripts/gh-router"
+typeset -g GH_ROUTER_BIN="${HOME}/ghq/github.com/ryo-morimoto/dotfiles/tools/gh-router/gh-router"
+typeset -g GH_ROUTER_SYNC_IDENTITY="${GH_ROUTER_SYNC_IDENTITY:-1}"
 
 gh_router_apply_context() {
   [[ -x "$GH_ROUTER_BIN" ]] || return 0
@@ -20,6 +21,10 @@ gh_router_apply_context() {
   [[ -n "$exports" ]] || return 0
 
   eval "$exports"
+
+  if [[ "$GH_ROUTER_SYNC_IDENTITY" == "1" ]]; then
+    "$GH_ROUTER_BIN" sync-identity --cwd "$PWD" >/dev/null 2>&1 || true
+  fi
 }
 
 gh-router-status() {
@@ -58,6 +63,15 @@ gh-router-clear-cache() {
 
   "$GH_ROUTER_BIN" clear-cache "$@" || return $?
   gh_router_apply_context
+}
+
+gh-router-sync-identity() {
+  if [[ ! -x "$GH_ROUTER_BIN" ]]; then
+    echo "gh-router not found: $GH_ROUTER_BIN" >&2
+    return 1
+  fi
+
+  "$GH_ROUTER_BIN" sync-identity --cwd "$PWD"
 }
 
 add-zsh-hook chpwd gh_router_apply_context

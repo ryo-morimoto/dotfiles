@@ -7,11 +7,13 @@ CACHE_ROOT="${GH_ROUTER_CACHE_ROOT:-$STATE_ROOT/cache}"
 CONFIG_ROOT="${GH_ROUTER_CONFIG_ROOT:-${XDG_CONFIG_HOME:-$HOME/.config}/gh-router}"
 OWNER_MAP_FILE="${GH_ROUTER_OWNER_MAP_FILE:-$CONFIG_ROOT/owner-map.tsv}"
 ORG_CACHE_FILE="${GH_ROUTER_ORG_CACHE_FILE:-$CACHE_ROOT/org-membership.tsv}"
+GLOBAL_GH_CONFIG_DIR="${GH_ROUTER_GLOBAL_GH_CONFIG_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}/gh}"
 DEFAULT_ACCOUNT="${GH_ROUTER_DEFAULT_ACCOUNT:-}"
 ORG_CACHE_TTL_POSITIVE="${GH_ROUTER_ORG_CACHE_TTL_POSITIVE:-86400}"
 ORG_CACHE_TTL_NEGATIVE="${GH_ROUTER_ORG_CACHE_TTL_NEGATIVE:-600}"
 
 GHQ_ROOT_CACHE=""
+AUTH_STATUS_JSON_CACHE=""
 
 ensure_dirs() {
   mkdir -p "$PROFILE_ROOT" "$CACHE_ROOT" "$CONFIG_ROOT"
@@ -29,8 +31,78 @@ profile_exists() {
   [[ -f "$dir/hosts.yml" ]]
 }
 
+auth_status_json() {
+  if [[ -n "$AUTH_STATUS_JSON_CACHE" ]]; then
+    printf "%s\n" "$AUTH_STATUS_JSON_CACHE"
+    return 0
+  fi
+
+  command -v gh >/dev/null 2>&1 || return 1
+  command -v jq >/dev/null 2>&1 || return 1
+
+  AUTH_STATUS_JSON_CACHE="$(GH_CONFIG_DIR="$GLOBAL_GH_CONFIG_DIR" gh auth status --json hosts 2>/dev/null || true)"
+  [[ -n "$AUTH_STATUS_JSON_CACHE" ]] || return 1
+
+  printf "%s\n" "$AUTH_STATUS_JSON_CACHE"
+}
+
+auth_status_accounts() {
+  local json
+
+  json="$(auth_status_json 2>/dev/null || true)"
+  [[ -n "$json" ]] || return 1
+
+  jq -r '.hosts["github.com"][]?.login // empty' <<< "$json"
+}
+
+auth_status_git_protocol_for_account() {
+  local account="$1"
+  local json protocol
+
+  json="$(auth_status_json 2>/dev/null || true)"
+  [[ -n "$json" ]] || return 1
+
+  protocol="$(jq -r --arg account "$account" '.hosts["github.com"][]? | select(.login == $account) | (.gitProtocol // "https")' <<< "$json" | tr -d '\r' || true)"
+  [[ -n "$protocol" ]] || return 1
+
+  printf "%s\n" "$protocol"
+}
+
+ensure_profile_for_account() {
+  local account="$1"
+  local dir protocol
+
+  profile_exists "$account" && return 0
+
+  protocol="$(auth_status_git_protocol_for_account "$account" 2>/dev/null || true)"
+  [[ -n "$protocol" ]] || return 1
+
+  ensure_dirs
+  dir="$(profile_dir "$account")"
+  mkdir -p "$dir"
+
+  cat > "$dir/hosts.yml" <<EOF
+github.com:
+    users:
+        $account:
+    user: $account
+    git_protocol: $protocol
+EOF
+}
+
+hydrate_profiles_from_auth_status() {
+  local account
+
+  while IFS= read -r account; do
+    [[ -n "$account" ]] || continue
+    ensure_profile_for_account "$account" >/dev/null 2>&1 || true
+  done < <(auth_status_accounts 2>/dev/null || true)
+}
+
 list_accounts() {
   local dir
+
+  hydrate_profiles_from_auth_status
 
   for dir in "$PROFILE_ROOT"/*; do
     [[ -d "$dir" ]] || continue
@@ -265,7 +337,7 @@ org_membership_probe_account() {
 }
 
 fallback_account() {
-  if [[ -n "$DEFAULT_ACCOUNT" ]] && profile_exists "$DEFAULT_ACCOUNT"; then
+  if [[ -n "$DEFAULT_ACCOUNT" ]] && { profile_exists "$DEFAULT_ACCOUNT" || ensure_profile_for_account "$DEFAULT_ACCOUNT"; }; then
     printf "%s\n" "$DEFAULT_ACCOUNT"
     return 0
   fi
@@ -280,12 +352,12 @@ resolve_account_for_owner() {
   local had_probe_error=0
 
   account="$(owner_map_get "$owner" 2>/dev/null || true)"
-  if [[ -n "$account" ]] && profile_exists "$account"; then
+  if [[ -n "$account" ]] && { profile_exists "$account" || ensure_profile_for_account "$account"; }; then
     printf "%s\t%s\n" "$account" "owner-map"
     return 0
   fi
 
-  if profile_exists "$owner"; then
+  if profile_exists "$owner" || ensure_profile_for_account "$owner"; then
     printf "%s\t%s\n" "$owner" "owner-profile"
     return 0
   fi
@@ -295,7 +367,7 @@ resolve_account_for_owner() {
     if [[ "$cached" == "-" ]]; then
       return 1
     fi
-    if profile_exists "$cached"; then
+    if profile_exists "$cached" || ensure_profile_for_account "$cached"; then
       printf "%s\t%s\n" "$cached" "org-cache"
       return 0
     fi
@@ -396,13 +468,66 @@ resolve_context_for_credential() {
   return 1
 }
 
+is_strict_resolution_reason() {
+  local reason="$1"
+
+  case "$reason" in
+    owner-map|owner-profile|org-membership|org-cache)
+      return 0
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+git_repo_root() {
+  local cwd="${1:-$PWD}"
+  local root
+
+  command -v git >/dev/null 2>&1 || return 1
+  root="$(git -C "$cwd" rev-parse --show-toplevel 2>/dev/null || true)"
+  [[ -n "$root" ]] || return 1
+
+  printf "%s\n" "$root"
+}
+
+identity_for_account() {
+  local account="$1"
+  local profile raw name login email user_id
+  local sep=$'\x1f'
+
+  profile="$(profile_dir "$account")"
+  [[ -f "$profile/hosts.yml" ]] || return 1
+
+  raw="$(
+    GH_CONFIG_DIR="$profile" \
+      gh api /user --jq '[.name // "", .login // "", .email // "", (.id | tostring)] | join("\u001f")' 2>/dev/null || true
+  )"
+  [[ -n "$raw" ]] || return 1
+
+  IFS="$sep" read -r name login email user_id <<< "$raw"
+  [[ -n "$login" ]] || return 1
+
+  if [[ -z "$name" ]]; then
+    name="$login"
+  fi
+
+  if [[ -z "$email" ]]; then
+    [[ -n "$user_id" ]] || return 1
+    email="${user_id}+${login}@users.noreply.github.com"
+  fi
+
+  printf "%s\t%s\n" "$name" "$email"
+}
+
 apply_zsh_exports() {
   local account="$1"
   local owner="$2"
   local reason="$3"
   local dir
 
-  if [[ "$account" != "-" ]] && [[ -n "$account" ]] && profile_exists "$account"; then
+  if [[ "$account" != "-" ]] && [[ -n "$account" ]] && { profile_exists "$account" || ensure_profile_for_account "$account"; }; then
     dir="$(profile_dir "$account")"
     printf "export GH_CONFIG_DIR=%q\n" "$dir"
     printf "export GH_ROUTER_ACTIVE_ACCOUNT=%q\n" "$account"
@@ -519,12 +644,65 @@ command_clear_cache() {
   rm -f "$ORG_CACHE_FILE"
 }
 
+command_sync_identity() {
+  local cwd="$PWD"
+  local repo
+  local owner="" account="-" reason="outside-repo"
+  local line identity name email
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --cwd)
+        cwd="$2"
+        shift 2
+        ;;
+      *)
+        echo "unknown option: $1" >&2
+        return 1
+        ;;
+    esac
+  done
+
+  repo="$(git_repo_root "$cwd" 2>/dev/null || true)"
+  [[ -n "$repo" ]] || return 0
+
+  line="$(resolve_context_for_cwd "$cwd" 2>/dev/null || true)"
+  if [[ -n "$line" ]]; then
+    IFS=$'\t' read -r owner account reason <<< "$line"
+  fi
+
+  [[ -n "$owner" ]] || return 0
+  [[ "$account" != "-" ]] && [[ -n "$account" ]] || return 0
+  is_strict_resolution_reason "$reason" || return 0
+  { profile_exists "$account" || ensure_profile_for_account "$account"; } || return 0
+
+  identity="$(identity_for_account "$account" 2>/dev/null || true)"
+  [[ -n "$identity" ]] || return 0
+
+  IFS=$'\t' read -r name email <<< "$identity"
+  [[ -n "$name" ]] || return 0
+  [[ -n "$email" ]] || return 0
+
+  git -C "$repo" config --local user.name "$name"
+  git -C "$repo" config --local user.email "$email"
+}
+
 command_credential() {
+  local op="${1:-get}"
   local input_file
   local host=""
   local path=""
   local owner="" account="-" reason=""
   local line
+
+  case "$op" in
+    get|store|erase)
+      ;;
+    *)
+      echo "usage: gh-router credential [get|store|erase]" >&2
+      return 1
+      ;;
+  esac
 
   input_file="$(mktemp)"
   trap 'if [[ -n "${input_file:-}" ]]; then rm -f "$input_file"; fi' EXIT
@@ -542,7 +720,7 @@ command_credential() {
   done < "$input_file"
 
   if [[ -n "$host" ]] && [[ "$host" != "github.com" ]]; then
-    gh auth git-credential < "$input_file"
+    gh auth git-credential "$op" < "$input_file"
     return $?
   fi
 
@@ -551,10 +729,10 @@ command_credential() {
     IFS=$'\t' read -r owner account reason <<< "$line"
   fi
 
-  if [[ "$account" != "-" ]] && [[ -n "$account" ]] && profile_exists "$account"; then
-    GH_CONFIG_DIR="$(profile_dir "$account")" gh auth git-credential < "$input_file"
+  if [[ "$account" != "-" ]] && [[ -n "$account" ]] && { profile_exists "$account" || ensure_profile_for_account "$account"; }; then
+    GH_CONFIG_DIR="$(profile_dir "$account")" gh auth git-credential "$op" < "$input_file"
   else
-    gh auth git-credential < "$input_file"
+    gh auth git-credential "$op" < "$input_file"
   fi
 }
 
@@ -617,6 +795,10 @@ main() {
       shift
       command_clear_cache "$@"
       ;;
+    sync-identity)
+      shift
+      command_sync_identity "$@"
+      ;;
     credential)
       shift
       command_credential "$@"
@@ -631,12 +813,14 @@ commands:
   resolve [--cwd PATH]
   login <account> [gh auth login options...]
   clear-cache
-  credential
+  sync-identity [--cwd PATH]
+  credential [get|store|erase]
 
 notes:
   - stateless resolver: no session/account state
   - cache enabled: org membership cache with TTL
   - negative cache is written only on definitive 404-style misses
+  - profiles can be auto-generated from gh auth status
   - owner map source: GH_ROUTER_OWNER_MAP or $GH_ROUTER_OWNER_MAP_FILE
 EOF
       return 1
