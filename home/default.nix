@@ -174,6 +174,12 @@ in
         config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/claude/si/skills";
       ".claude/plugins/lite-agents".source =
         config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/claude/plugins/lite-agents";
+      ".local/bin/beacon-status-popup.sh".source =
+        config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/tmux/beacon-status-popup.sh";
+      ".local/bin/beacon-window-jump.sh".source =
+        config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/tmux/beacon-window-jump.sh";
+      ".local/bin/beacon-pane-focus.sh".source =
+        config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/tmux/beacon-pane-focus.sh";
     };
   };
 
@@ -495,6 +501,15 @@ in
 
         # tmuxcc agent dashboard popup
         bind a display-popup -E -w 80% -h 80% "tmuxcc || (echo 'tmuxcc failed. Press Enter to close.' && read)"
+
+        # Beacon shortcuts (Ctrl+q b then key)
+        bind b switch-client -T beacon
+        bind -T beacon s display-popup -E -w 90% -h 80% "bash ~/.local/bin/beacon-status-popup.sh || (echo 'beacon status failed. Press Enter to close.' && read)"
+        bind -T beacon w display-popup -E -w 90% -h 80% "bash ~/.local/bin/beacon-window-jump.sh || (echo 'beacon window jump failed. Press Enter to close.' && read)"
+        bind -T beacon p display-popup -E -w 90% -h 80% "bash ~/.local/bin/beacon-pane-focus.sh || (echo 'beacon pane focus failed. Press Enter to close.' && read)"
+        bind -T beacon c run-shell "beacon clean >/dev/null 2>&1"
+        bind -T beacon q switch-client -T prefix
+        bind -T beacon Escape switch-client -T prefix
 
         # Status bar
         set -g status on
