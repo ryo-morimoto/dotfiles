@@ -1,5 +1,12 @@
 {
-  "runtime.version": "LuaJIT",
-  "diagnostics.globals": ["vim"],
-  "workspace.checkThirdParty": false
+  "runtime": {
+    "version": "LuaJIT"
+  },
+  "diagnostics": {
+    "globals": ["vim"]
+  },
+  "workspace": {
+    "checkThirdParty": false,
+    "library": ["${3rd}/luv/library"]
+  }
 }

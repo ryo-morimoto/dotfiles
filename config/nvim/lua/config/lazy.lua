@@ -48,3 +48,4 @@ require("lazy").setup({
 
 -- Load autocmds after plugins
 require("config.autocmds")
+require("config.askvim")
