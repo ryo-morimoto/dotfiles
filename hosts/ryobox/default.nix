@@ -69,7 +69,7 @@
       enable = true;
       package = pkgs.caddy.withPlugins {
         plugins = [ "github.com/caddy-dns/cloudflare@v0.2.2" ];
-        hash = "sha256-dnhEjopeA0UiI+XVYHYpsjcEI6Y1Hacbi28hVKYQURg="; # caddy 2.10.2 + cloudflare v0.2.2
+        hash = "sha256-biQdtiscdmrwP6VUsuXmZrvcdewl+g50kdmab5lhE0s=";
       };
       virtualHosts = {
         "vk.ryobox.xyz" = {

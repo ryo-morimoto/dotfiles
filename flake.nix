@@ -49,11 +49,14 @@
       url = "https://github.com/mizchi/starlint/releases/latest/download/starlint-macos-arm64.tar.gz";
       flake = false;
     };
+    # FIXME: pinned for khal; remove when nixpkgs#khal sphinx build is fixed
+    nixpkgs-khal.url = "github:nixos/nixpkgs/0182a361324364ae3f436a63005877674cf45efb";
   };
 
   outputs =
     {
       nixpkgs,
+      nixpkgs-khal,
       home-manager,
       llm-agents,
       dms,
@@ -79,6 +82,8 @@
         starlint = final.callPackage ./packages/starlint.nix {
           inherit starlintLinuxBin starlintDarwinArm64Bin;
         };
+        # FIXME: remove when nixpkgs#khal sphinx build is fixed upstream
+        inherit (nixpkgs-khal.legacyPackages.${final.system}) khal;
       };
     in
     {
