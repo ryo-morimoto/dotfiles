@@ -1,0 +1,111 @@
+Implement the following plan:
+
+# Markdown 編集体験改善計画
+
+## Context
+
+Neovim での Markdown 編集・レビュー体験を向上させる。現状は conform.nvim + prettierd/prettier での保存時フォーマットと markdown-preview.nvim のみ。リスト継続・連番振り直し・テーブル整形・wrap 制御が不足している。
+
+## 変更内容
+
+### 1. oxfmt パッケージ追加 + prettierd 置換
+
+**`home/default.nix`**
+- `prettierd` → `oxfmt` に置換（Formatters セクション）
+- oxfmt は JS/TS/JSON/YAML/CSS/HTML/Markdown すべて対応するため prettierd 不要
+
+### 2. conform.nvim の formatter を oxfmt に変更
+
+**`config/nvim/lua/plugins/format.lua`**
+- `prettierd`/`prettier` を使っている全 filetype を `oxfmt` に置換
+- oxfmt は `--stdin-filepath` でファイル種別を推定するため追加設定不要
+- conform.nvim には oxfmt 定義が組み込み済み（`from_node_modules` fallback で PATH の oxfmt を使用）
+
+```lua
+formatters_by_ft = {
+  javascript = { "oxfmt" },
+  typescript = { "oxfmt" },
+  javascriptreact = { "oxfmt" },
+  typescriptreact = { "oxfmt" },
+  css = { "oxfmt" },
+  html = { "oxfmt" },
+  json = { "oxfmt" },
+  yaml = { "oxfmt" },
+  markdown = { "oxfmt" },
+  -- python, go, lua, nix, rust, moonbit は変更なし
+}
+```
+
+### 3. autolist.nvim 追加（リスト継続 + 連番振り直し + インデント）
+
+**`config/nvim/lua/plugins/markdown.lua`** に追加
+
+```lua
+{
+  "gaoDean/autolist.nvim",
+  ft = { "markdown", "text", "tex", "plaintex" },
+  config = function()
+    require("autolist").setup()
+    vim.keymap.set("i", "<CR>", "<CR><cmd>AutolistNewBullet<cr>")
+    vim.keymap.set("n", "o", "o<cmd>AutolistNewBullet<cr>")
+    vim.keymap.set("n", "O", "O<cmd>AutolistNewBulletBefore<cr>")
+    vim.keymap.set("i", "<tab>", "<cmd>AutolistTab<cr>")
+    vim.keymap.set("i", "<s-tab>", "<cmd>AutolistShiftTab<cr>")
+    vim.keymap.set("n", "<C-r>", "<cmd>AutolistRecalculate<cr>")
+  end,
+}
+```
+
+提供する機能:
+- Enter で次の番号/箇条書きマーカーを自動挿入
+- `o`/`O` でもリスト継続
+- Tab/S-Tab でインデント調整（マーカー自動変更）
+- `<C-r>` で連番再計算
+- 空行 Enter でリストマーカー自動削除
+
+### 4. Markdown 用 wrap 設定
+
+**`config/nvim/lua/config/autocmds.lua`** に FileType autocmd 追加
+
+```lua
+autocmd("FileType", {
+  group = augroup("markdown_settings", { clear = true }),
+  pattern = { "markdown" },
+  callback = function()
+    vim.opt_local.wrap = true
+    vim.opt_local.linebreak = true
+    vim.opt_local.textwidth = 100
+    vim.opt_local.formatoptions:append("t")
+  end,
+})
+```
+
+- `wrap = true`: 画面上での折り返し表示（グローバルでは false）
+- `linebreak = true`: 単語境界で折り返し
+- `textwidth = 100`: colorcolumn と一致
+- `formatoptions += t`: 入力中の自動折り返し + `gq` による整形
+
+## 変更ファイル一覧
+
+| ファイル | 変更内容 |
+|---|---|
+| `home/default.nix` | `prettierd` → `oxfmt` |
+| `config/nvim/lua/plugins/format.lua` | formatter を oxfmt に変更 |
+| `config/nvim/lua/plugins/markdown.lua` | autolist.nvim 追加 |
+| `config/nvim/lua/config/autocmds.lua` | Markdown 用 wrap/formatoptions 設定追加 |
+
+## 検証基準
+
+- WHEN `.md` ファイルを保存 THEN oxfmt がバッファを整形する
+- WHEN `1. item` と入力して Enter THEN `2. ` が自動挿入される
+- WHEN 番号付きリストの途中行を削除して `<C-r>` THEN 残りが連番に振り直される
+- WHEN リスト行で Tab THEN インデントされマーカーが調整される
+- WHEN Markdown ファイルで長い行を入力 THEN textwidth=100 で自動折り返しされる
+- WHEN `gqip` をパラグラフ上で実行 THEN 100 文字幅に整形される
+
+
+If you need specific details from before exiting plan mode (like exact code snippets, error messages, or content you generated), read the full transcript at: /home/ryo-morimoto/.REDACTED.jsonl
+
+---
+
+commit this

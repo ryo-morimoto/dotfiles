@@ -1,0 +1,29 @@
+{
+  "cli_version": "0.4.2",
+  "checkpoint_id": "4eab1dcf63e4",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "config/nvim/lua/config/autocmds.lua",
+    "config/nvim/lua/plugins/format.lua",
+    "config/nvim/lua/plugins/markdown.lua",
+    "home/default.nix"
+  ],
+  "sessions": [
+    {
+      "metadata": "/4e/ab1dcf63e4/0/metadata.json",
+      "transcript": "/4e/ab1dcf63e4/0/full.jsonl",
+      "context": "/4e/ab1dcf63e4/0/context.md",
+      "content_hash": "/4e/ab1dcf63e4/0/content_hash.txt",
+      "prompt": "/4e/ab1dcf63e4/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 2434,
+    "cache_creation_tokens": 76272,
+    "cache_read_tokens": 504106,
+    "output_tokens": 1881,
+    "api_call_count": 10
+  }
+}
