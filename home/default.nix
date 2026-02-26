@@ -103,6 +103,7 @@ in
       # Development
       ghq
       gh
+      git-wt
       llm-agents.claude-code
       llm-agents.codex
       socat
@@ -210,6 +211,11 @@ in
         };
         merge.conflictstyle = "diff3";
         diff.colorMoved = "default";
+        wt = {
+          basedir = "../{gitroot}-wt";
+          hook = "${dotfilesPath}/scripts/git-wt/on-create.sh";
+          deletehook = "${dotfilesPath}/scripts/git-wt/on-delete.sh";
+        };
       };
     };
 
@@ -277,6 +283,11 @@ in
             gco = "git checkout";
             gcb = "git checkout -b";
             lg = "lazygit";
+            wt = "git wt";
+            wtd = "git wt -d";
+            wtc = "GIT_WT_AGENT=claude git wt";
+            wto = "GIT_WT_AGENT=opencode git wt";
+            wtx = "GIT_WT_AGENT=codex git wt";
           };
           modern = {
             ls = "eza --icons";

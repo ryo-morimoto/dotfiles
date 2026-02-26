@@ -52,6 +52,7 @@ return {
 
       -- Register key groups
       wk.add({
+        { "<leader>a", group = "Agent" },
         { "<leader>b", group = "Buffer" },
         { "<leader>f", group = "Find" },
         { "<leader>g", group = "Git" },
