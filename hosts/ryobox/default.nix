@@ -64,9 +64,6 @@
     };
     gnome.gnome-keyring.enable = true;
 
-    # banto task dashboard
-    banto.enable = true;
-
     # Caddy reverse proxy (TLS via Let's Encrypt DNS-01 + Cloudflare)
     caddy = {
       enable = true;
@@ -75,14 +72,6 @@
         hash = "sha256-dnhEjopeA0UiI+XVYHYpsjcEI6Y1Hacbi28hVKYQURg="; # caddy 2.10.2 + cloudflare v0.2.2
       };
       virtualHosts = {
-        "banto.ryobox.xyz" = {
-          extraConfig = ''
-            reverse_proxy localhost:3000
-            tls {
-              dns cloudflare {env.CLOUDFLARE_API_TOKEN}
-            }
-          '';
-        };
         "vk.ryobox.xyz" = {
           extraConfig = ''
             reverse_proxy localhost:3001
@@ -123,7 +112,6 @@
     mode = "0400";
   };
   systemd.services = {
-    banto.environment.CLAUDE_CODE_EXECUTABLE = lib.getExe pkgs.llm-agents.claude-code;
     caddy.serviceConfig.EnvironmentFile = config.age.secrets.caddy-cloudflare.path;
     "vibe-kanban" = {
       description = "vibe-kanban service";
