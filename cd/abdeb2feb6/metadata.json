@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.4.2",
+  "checkpoint_id": "cdabdeb2feb6",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "config/nvim/lua/config/askvim.lua"
+  ],
+  "sessions": [
+    {
+      "metadata": "/cd/abdeb2feb6/0/metadata.json",
+      "transcript": "/cd/abdeb2feb6/0/full.jsonl",
+      "context": "/cd/abdeb2feb6/0/context.md",
+      "content_hash": "/cd/abdeb2feb6/0/content_hash.txt",
+      "prompt": "/cd/abdeb2feb6/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 158,
+    "cache_creation_tokens": 65298,
+    "cache_read_tokens": 324539,
+    "output_tokens": 68,
+    "api_call_count": 5
+  }
+}
