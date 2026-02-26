@@ -18,6 +18,10 @@
   networking = {
     hostName = "ryobox";
     networkmanager.enable = true;
+    firewall.interfaces.tailscale0.allowedTCPPorts = [
+      80
+      443
+    ];
   };
 
   # Locale
@@ -70,13 +74,23 @@
         plugins = [ "github.com/caddy-dns/cloudflare@v0.2.2" ];
         hash = "sha256-dnhEjopeA0UiI+XVYHYpsjcEI6Y1Hacbi28hVKYQURg="; # caddy 2.10.2 + cloudflare v0.2.2
       };
-      virtualHosts."banto.ryobox.xyz" = {
-        extraConfig = ''
-          reverse_proxy localhost:3000
-          tls {
-            dns cloudflare {env.CLOUDFLARE_API_TOKEN}
-          }
-        '';
+      virtualHosts = {
+        "banto.ryobox.xyz" = {
+          extraConfig = ''
+            reverse_proxy localhost:3000
+            tls {
+              dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+            }
+          '';
+        };
+        "vk.ryobox.xyz" = {
+          extraConfig = ''
+            reverse_proxy localhost:3001
+            tls {
+              dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+            }
+          '';
+        };
       };
     };
 
@@ -108,8 +122,28 @@
     group = "caddy";
     mode = "0400";
   };
-  systemd.services.banto.environment.CLAUDE_CODE_EXECUTABLE = lib.getExe pkgs.llm-agents.claude-code;
-  systemd.services.caddy.serviceConfig.EnvironmentFile = config.age.secrets.caddy-cloudflare.path;
+  systemd.services = {
+    banto.environment.CLAUDE_CODE_EXECUTABLE = lib.getExe pkgs.llm-agents.claude-code;
+    caddy.serviceConfig.EnvironmentFile = config.age.secrets.caddy-cloudflare.path;
+    "vibe-kanban" = {
+      description = "vibe-kanban service";
+      wantedBy = [ "multi-user.target" ];
+      after = [ "network-online.target" ];
+      wants = [ "network-online.target" ];
+      environment = {
+        HOST = "127.0.0.1";
+        PORT = "3001";
+        BROWSER = "${pkgs.coreutils}/bin/true";
+      };
+      serviceConfig = {
+        ExecStart = lib.getExe pkgs.vibe-kanban;
+        Restart = "on-failure";
+        RestartSec = "5s";
+        User = "ryo-morimoto";
+        WorkingDirectory = "/home/ryo-morimoto";
+      };
+    };
+  };
 
   # Bluetooth
   hardware.bluetooth = {
