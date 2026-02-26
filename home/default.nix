@@ -49,7 +49,7 @@ in
       tailwindcss-language-server
 
       # Formatters (for Neovim)
-      prettierd
+      oxfmt
       black
       gofumpt
       stylua

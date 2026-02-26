@@ -72,3 +72,15 @@ autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
   group = augroup("checktime", { clear = true }),
   command = "checktime",
 })
+
+-- Markdown editing settings
+autocmd("FileType", {
+  group = augroup("markdown_settings", { clear = true }),
+  pattern = { "markdown" },
+  callback = function()
+    vim.opt_local.wrap = true
+    vim.opt_local.linebreak = true
+    vim.opt_local.textwidth = 100
+    vim.opt_local.formatoptions:append("t")
+  end,
+})
