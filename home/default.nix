@@ -64,6 +64,7 @@ in
 
       # Communication
       vesktop
+      slack
 
       # AppImage
       appimage-run
@@ -597,10 +598,10 @@ in
             inherit (pkgs) libxcb;
           };
         };
-    systemd.enable = false;
+    systemd.enable = true;
     niri = {
       enableKeybinds = true;
-      enableSpawn = true;
+      enableSpawn = false;
       includes.enable = false;
     };
   };
