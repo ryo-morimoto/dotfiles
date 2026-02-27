@@ -489,17 +489,20 @@ in
         set -ag terminal-overrides ",xterm-256color:RGB"
         set -ag terminal-overrides ",ghostty:RGB"
 
-        # Clipboard integration (Wayland)
+        # Clipboard integration (OSC 52 — works over SSH + local Wayland)
         set -s set-clipboard on
-        set -ag terminal-overrides ",ghostty:clipboard"
+        set -g allow-passthrough on
+        set -ag terminal-overrides ",xterm-256color:Ms=\\E]52;c;%p2%s\\7"
+        set -ag terminal-overrides ",ghostty:Ms=\\E]52;c;%p2%s\\7"
 
-        # Mouse drag auto-copy
-        bind -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "wl-copy"
-        bind -T copy-mode MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "wl-copy"
+        # Copy: OSC 52 (always via set-clipboard on) + wl-copy (local only, silent fail over SSH)
+        bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "wl-copy 2>/dev/null || true"
+        bind -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "wl-copy 2>/dev/null || true"
+        bind -T copy-mode MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "wl-copy 2>/dev/null || true"
 
-        # Easy paste: Ctrl+q v or right-click
-        bind v run "wl-paste -n | tmux load-buffer - ; tmux paste-buffer"
-        bind -n MouseDown3Pane run "wl-paste -n | tmux load-buffer - ; tmux paste-buffer"
+        # Paste: wl-paste (local) / tmux buffer fallback (SSH)
+        bind v run "wl-paste -n 2>/dev/null | tmux load-buffer - ; tmux paste-buffer"
+        bind -n MouseDown3Pane run "wl-paste -n 2>/dev/null | tmux load-buffer - ; tmux paste-buffer"
 
         # Pane base index
         setw -g pane-base-index 1
