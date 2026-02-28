@@ -748,14 +748,12 @@ in
       # Applications
       "Mod+T".action.spawn = "ghostty";
 
-      # Voice input toggle (voxtype, overrides DMS clipboard)
-      "Mod+V".action = lib.mkForce {
-        spawn = [
-          "voxtype"
-          "record"
-          "toggle"
-        ];
-      };
+      # Voice input toggle (voxtype)
+      "Mod+Shift+V".action.spawn = [
+        "voxtype"
+        "record"
+        "toggle"
+      ];
 
       # System controls (DMS handles launcher, notifications, lock, power menu)
       "Mod+A".action.spawn = "pavucontrol";
