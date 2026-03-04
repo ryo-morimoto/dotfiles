@@ -1,0 +1,31 @@
+{
+  "cli_version": "0.4.2",
+  "checkpoint_id": "247d61341c8f",
+  "session_id": "58496036-8b19-427c-ac4b-02ea83b32228",
+  "strategy": "manual-commit",
+  "created_at": "2026-03-04T16:39:54.469660575Z",
+  "branch": "main",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "config/ghostty/config",
+    "home/default.nix"
+  ],
+  "agent": "Claude Code",
+  "transcript_identifier_at_start": "fe081018-6132-4d2a-b730-866ff8d6c804",
+  "token_usage": {
+    "input_tokens": 1217,
+    "cache_creation_tokens": 102189,
+    "cache_read_tokens": 274701,
+    "output_tokens": 5911,
+    "api_call_count": 8
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-03-04T16:39:54.461046961Z",
+    "agent_lines": 1,
+    "human_added": 0,
+    "human_modified": 1,
+    "human_removed": 0,
+    "total_committed": 2,
+    "agent_percentage": 50
+  }
+}
