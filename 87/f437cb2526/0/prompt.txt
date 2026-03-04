@@ -1,0 +1,48 @@
+nvim pluginでリストのインデントを揃える機能が悪さをしていてタブでイ トを確保しようとしたときに文字目の後にスペースが入るような挙動になっているので原因を特定するか一旦機能をオフにしたい
+
+---
+
+## Context
+
+- Current git status: On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   config/nvim/lua/plugins/markdown.lua
+
+no changes added to commit (use "git add" and/or "git commit -a")
+- Current git diff (staged and unstaged changes): diff --git a/config/nvim/lua/plugins/markdown.lua b/config/nvim/lua/plugins/markdown.lua
+index 13c309b..24122c1 100644
+--- a/config/nvim/lua/plugins/markdown.lua
++++ b/config/nvim/lua/plugins/markdown.lua
+@@ -19,8 +19,9 @@ return {
+       vim.keymap.set("i", "<CR>", "<CR><cmd>AutolistNewBullet<cr>")
+       vim.keymap.set("n", "o", "o<cmd>AutolistNewBullet<cr>")
+       vim.keymap.set("n", "O", "O<cmd>AutolistNewBulletBefore<cr>")
+-      vim.keymap.set("i", "<tab>", "<cmd>AutolistTab<cr>")
+-      vim.keymap.set("i", "<s-tab>", "<cmd>AutolistShiftTab<cr>")
++      -- Disabled: AutolistTab interferes with normal Tab indentation
++      -- vim.keymap.set("i", "<tab>", "<cmd>AutolistTab<cr>")
++      -- vim.keymap.set("i", "<s-tab>", "<cmd>AutolistShiftTab<cr>")
+       vim.keymap.set("n", "<C-r>", "<cmd>AutolistRecalculate<cr>")
+     end,
+   },
+- Current branch: main
+- Recent commits: e122c33 feat(niri): restore DMS clipboard history on Mod+V
+573b65e chore: update flake.lock
+d84ca27 feat(home): add Slack and adjust DMS settings
+9f7a4f8 feat(tmux): switch clipboard to OSC 52 for SSH-transparent copy/paste
+1e4fa82 feat(nvim): add AskVim for quick Neovim usage Q&A via claude -p
+30d2d17 fix(nix): unblock autoUpgrade by pinning khal and updating caddy hash
+e46bc4e feat(nvim): improve Markdown editing with oxfmt, autolist, and wrap settings
+76204ad feat(workflow): integrate git-wt with Neovim agent controls
+6512b2b chore(ryobox): disable banto service and caddy route
+2478568 feat(ryobox): route vk subdomain to local vibe-kanban
+
+## Your task
+
+Based on the above changes, create a single git commit.
+
+You have the capability to call multiple tools in a single response. Stage and create the commit using a single message. Do not use any other tools or do anything else. Do not send any other text or messages besides these tool calls.

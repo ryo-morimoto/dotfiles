@@ -1,0 +1,30 @@
+{
+  "cli_version": "0.4.2",
+  "checkpoint_id": "87f437cb2526",
+  "session_id": "c65e267c-ad86-4c91-810d-c72c0a217400",
+  "strategy": "manual-commit",
+  "created_at": "2026-03-04T04:00:14.752084115Z",
+  "branch": "main",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "config/nvim/lua/plugins/markdown.lua"
+  ],
+  "agent": "Claude Code",
+  "transcript_identifier_at_start": "3a9ebac8-7728-4668-8f5f-2f368f13ccf8",
+  "token_usage": {
+    "input_tokens": 1116,
+    "cache_creation_tokens": 97383,
+    "cache_read_tokens": 179749,
+    "output_tokens": 1536,
+    "api_call_count": 6
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-03-04T04:00:14.747203353Z",
+    "agent_lines": 2,
+    "human_added": 0,
+    "human_modified": 1,
+    "human_removed": 0,
+    "total_committed": 3,
+    "agent_percentage": 66.66666666666666
+  }
+}
