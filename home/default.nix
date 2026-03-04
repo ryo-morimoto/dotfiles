@@ -493,8 +493,7 @@ in
         # Clipboard integration (OSC 52 — works over SSH + local Wayland)
         set -s set-clipboard on
         set -g allow-passthrough on
-        set -ag terminal-overrides ",xterm-256color:Ms=\\E]52;c;%p2%s\\7"
-        set -ag terminal-overrides ",ghostty:Ms=\\E]52;c;%p2%s\\7"
+        set -ag terminal-overrides ",*:Ms=\\E]52;c;%p2%s\\7"
 
         # Copy: OSC 52 (always via set-clipboard on) + wl-copy (local only, silent fail over SSH)
         bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "wl-copy 2>/dev/null || true"

@@ -47,6 +47,7 @@ shell-integration-features = cursor,sudo,title
 # Clipboard & Security
 # =============================================================================
 clipboard-read = ask
+clipboard-write = allow
 clipboard-paste-protection = true
 copy-on-select = true
 
