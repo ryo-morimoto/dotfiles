@@ -77,6 +77,7 @@
         claude-squad = final.callPackage ./packages/claude-squad.nix { };
         tmuxcc = final.callPackage ./packages/tmuxcc.nix { inherit tmuxcc-src; };
         beacon = final.callPackage ./packages/beacon.nix { };
+        vde-monitor = final.callPackage ./packages/vde-monitor.nix { };
         entire = final.callPackage ./packages/entire.nix { };
         zen-browser = zen-browser.packages.${final.system}.default;
         starlint = final.callPackage ./packages/starlint.nix {

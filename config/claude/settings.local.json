@@ -1,5 +1,17 @@
 {
   "preferences": {
     "statusline": "~/.claude/statusline.sh"
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "vde-monitor-summary --async Stop -- vde-monitor-hook"
+          }
+        ]
+      }
+    ]
   }
 }

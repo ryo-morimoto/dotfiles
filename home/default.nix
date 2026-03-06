@@ -169,6 +169,7 @@ in
       claude-squad
       tmuxcc
       beacon
+      vde-monitor
       llm-agents.opencode
       llm-agents.openspec
       entire
@@ -657,6 +658,22 @@ in
     "LD_PRELOAD=${pkgs.alsa-lib}/lib/libasound.so.2"
   ];
 
+  # vde-monitor: browser-based tmux session monitor
+  systemd.user.services.vde-monitor = {
+    Unit = {
+      Description = "vde-monitor - tmux session monitor";
+      After = [ "network.target" ];
+    };
+    Service = {
+      ExecStart = "${lib.getExe pkgs.vde-monitor} --tailscale";
+      Restart = "on-failure";
+      RestartSec = 5;
+    };
+    Install = {
+      WantedBy = [ "default.target" ];
+    };
+  };
+
   # Niri compositor (managed by niri-flake, DMS merges keybinds/spawn into settings)
   programs.niri.package = pkgs.niri;
   programs.niri.settings = {
@@ -1008,6 +1025,7 @@ in
       "zsh".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/zsh";
       "wallpaper".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/wallpaper";
       "tmuxcc".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/tmuxcc";
+      "vde/monitor".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/vde/monitor";
       "opencode/AGENTS.md".source =
         config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/opencode/AGENTS.md";
     };
