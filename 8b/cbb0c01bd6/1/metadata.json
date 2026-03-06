@@ -1,0 +1,35 @@
+{
+  "cli_version": "0.4.2",
+  "checkpoint_id": "8bcbb0c01bd6",
+  "session_id": "42517c93-59b7-4d65-b7e7-c87527d6fac2",
+  "strategy": "manual-commit",
+  "created_at": "2026-03-06T14:02:39.310363769Z",
+  "branch": "main",
+  "checkpoints_count": 7,
+  "files_touched": [
+    "config/claude/settings.local.json",
+    "config/vde/monitor/config.yml",
+    "flake.nix",
+    "home/default.nix",
+    "packages/vde-monitor-lock.json",
+    "packages/vde-monitor.nix"
+  ],
+  "agent": "Claude Code",
+  "transcript_identifier_at_start": "63d261d0-27b6-42bf-bee3-c30dfa134724",
+  "token_usage": {
+    "input_tokens": 1901,
+    "cache_creation_tokens": 84960,
+    "cache_read_tokens": 5220343,
+    "output_tokens": 19523,
+    "api_call_count": 92
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-03-06T14:02:39.254408751Z",
+    "agent_lines": 78,
+    "human_added": 2,
+    "human_modified": 17,
+    "human_removed": 0,
+    "total_committed": 97,
+    "agent_percentage": 80.41237113402062
+  }
+}
