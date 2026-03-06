@@ -79,12 +79,12 @@
         beacon = final.callPackage ./packages/beacon.nix { };
         vde-monitor = final.callPackage ./packages/vde-monitor.nix { };
         entire = final.callPackage ./packages/entire.nix { };
-        zen-browser = zen-browser.packages.${final.system}.default;
+        zen-browser = zen-browser.packages.${final.stdenv.hostPlatform.system}.default;
         starlint = final.callPackage ./packages/starlint.nix {
           inherit starlintLinuxBin starlintDarwinArm64Bin;
         };
         # FIXME: remove when nixpkgs#khal sphinx build is fixed upstream
-        inherit (nixpkgs-khal.legacyPackages.${final.system}) khal;
+        inherit (nixpkgs-khal.legacyPackages.${final.stdenv.hostPlatform.system}) khal;
       };
     in
     {
