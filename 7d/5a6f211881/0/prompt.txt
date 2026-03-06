@@ -1,0 +1,21 @@
+build check
+
+---
+
+fix the system deprecation warning
+
+---
+
+nixos check
+
+---
+
+rebuildでfailed起きてた
+
+---
+
+ドライラン
+
+---
+
+commit this
