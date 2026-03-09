@@ -9,6 +9,8 @@
 
 let
   dotfilesPath = "${config.home.homeDirectory}/ghq/github.com/ryo-morimoto/dotfiles";
+  compoundEngineeringPluginVersion = "2.34.4";
+  opencodeConfigPath = "${config.home.homeDirectory}/.config/opencode";
   zenBrowserLauncher = pkgs.writeShellScriptBin "zen-browser" ''
     exec ${lib.getExe pkgs.zen-browser} "$@"
   '';
@@ -165,6 +167,7 @@ in
       libnotify
 
       # AI tools
+      seiren-mcp
       vibe-kanban
       claude-squad
       tmuxcc
@@ -973,6 +976,33 @@ in
       "Mod+Shift+P".action.power-off-monitors = { };
     };
   };
+
+  home.activation.installCompoundEngineering = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    opencode_dir="${opencodeConfigPath}"
+    ce_version_file="$opencode_dir/.compound-engineering-version"
+    ce_plan_file="$opencode_dir/commands/ce:plan.md"
+    desired_version="${compoundEngineeringPluginVersion}"
+    current_version=""
+    needs_install=1
+
+    mkdir -p "$opencode_dir"
+
+    if [ -f "$ce_version_file" ]; then
+      current_version="$(tr -d '\n' < "$ce_version_file")"
+    fi
+
+    if [ -f "$ce_plan_file" ] && [ "$current_version" = "$desired_version" ]; then
+      needs_install=0
+    fi
+
+    if [ "$needs_install" -eq 1 ]; then
+      if ${pkgs.bun}/bin/bunx "@every-env/compound-plugin@${compoundEngineeringPluginVersion}" install compound-engineering --to opencode; then
+        printf "%s\n" "$desired_version" > "$ce_version_file"
+      else
+        printf "warning: failed to install compound-engineering for opencode\n" >&2
+      fi
+    fi
+  '';
 
   xdg = {
     desktopEntries = {

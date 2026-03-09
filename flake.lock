@@ -477,11 +477,33 @@
         "niri-flake": "niri-flake",
         "nixpkgs": "nixpkgs_2",
         "nixpkgs-khal": "nixpkgs-khal",
+        "seiren": "seiren",
         "starlintDarwinArm64Bin": "starlintDarwinArm64Bin",
         "starlintLinuxBin": "starlintLinuxBin",
         "tmuxcc-src": "tmuxcc-src",
         "voxtype": "voxtype",
         "zen-browser": "zen-browser"
+      }
+    },
+    "seiren": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1772809965,
+        "narHash": "sha256-si/mq7TluB9hlBlluy+GJO7w8RVCaJyOQJfyoQYa0RI=",
+        "owner": "ryo-morimoto",
+        "repo": "seiren",
+        "rev": "b38580ba360511b9c4f82e08b27fd8561f066c68",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ryo-morimoto",
+        "ref": "nix-pkgs",
+        "repo": "seiren",
+        "type": "github"
       }
     },
     "starlintDarwinArm64Bin": {

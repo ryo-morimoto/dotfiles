@@ -49,6 +49,10 @@
       url = "https://github.com/mizchi/starlint/releases/latest/download/starlint-macos-arm64.tar.gz";
       flake = false;
     };
+    seiren = {
+      url = "github:ryo-morimoto/seiren/nix-pkgs";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     # FIXME: pinned for khal; remove when nixpkgs#khal sphinx build is fixed
     nixpkgs-khal.url = "github:nixos/nixpkgs/0182a361324364ae3f436a63005877674cf45efb";
   };
@@ -67,6 +71,7 @@
       agenix,
       voxtype,
       moonbit-overlay,
+      seiren,
       starlintLinuxBin,
       starlintDarwinArm64Bin,
       ...
@@ -80,6 +85,7 @@
         vde-monitor = final.callPackage ./packages/vde-monitor.nix { };
         entire = final.callPackage ./packages/entire.nix { };
         zen-browser = zen-browser.packages.${final.stdenv.hostPlatform.system}.default;
+        seiren-mcp = seiren.packages.${final.stdenv.hostPlatform.system}.default;
         starlint = final.callPackage ./packages/starlint.nix {
           inherit starlintLinuxBin starlintDarwinArm64Bin;
         };

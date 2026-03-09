@@ -101,6 +101,7 @@
 - [コミット運用]: Conventional Commits を基本に、小さめの差分を高頻度で積む
 - [依存更新運用]: `chore: update flake.lock` を定期実行し、依存更新を継続する
 - [Playwright運用]: Chromium-only は `PLAYWRIGHT_BROWSERS_PATH=${pkgs.playwright-driver.browsers.override { withFirefox = false; withWebkit = false; }}` を標準にし、`playwright install*` を使わない
+- [OpenCode運用]: `compound-engineering` は Home Manager activation で自動適用する
 
 ## 未確定ドメイン（U）
 
