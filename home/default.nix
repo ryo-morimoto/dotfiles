@@ -167,6 +167,7 @@ in
       libnotify
 
       # AI tools
+      qmd
       seiren-mcp
       vibe-kanban
       claude-squad

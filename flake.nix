@@ -53,6 +53,10 @@
       url = "github:ryo-morimoto/seiren/nix-pkgs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    qmd = {
+      url = "github:tobi/qmd";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     # FIXME: pinned for khal; remove when nixpkgs#khal sphinx build is fixed
     nixpkgs-khal.url = "github:nixos/nixpkgs/0182a361324364ae3f436a63005877674cf45efb";
   };
@@ -72,6 +76,7 @@
       voxtype,
       moonbit-overlay,
       seiren,
+      qmd,
       starlintLinuxBin,
       starlintDarwinArm64Bin,
       ...
@@ -86,6 +91,7 @@
         entire = final.callPackage ./packages/entire.nix { };
         zen-browser = zen-browser.packages.${final.stdenv.hostPlatform.system}.default;
         seiren-mcp = seiren.packages.${final.stdenv.hostPlatform.system}.default;
+        qmd = qmd.packages.${final.stdenv.hostPlatform.system}.default;
         starlint = final.callPackage ./packages/starlint.nix {
           inherit starlintLinuxBin starlintDarwinArm64Bin;
         };
