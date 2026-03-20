@@ -213,11 +213,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1773935367,
-        "narHash": "sha256-+RjULqqbCYmOJG+99pNqEGRJV7bX8DYPbxKUhKWFKsI=",
+        "lastModified": 1774007980,
+        "narHash": "sha256-FOnZjElEI8pqqCvB6K/1JRHTE8o4rer8driivTpq2uo=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "a7ec5440474cdcc9939cc67c320f01aea0a2f195",
+        "rev": "9670de2921812bc4e0452f6e3efd8c859696c183",
         "type": "github"
       },
       "original": {
@@ -274,11 +274,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1773930710,
-        "narHash": "sha256-VzR/HQV6beRr0MjQPvoA2zYaLh04PpLAOnhrxwDgF80=",
+        "lastModified": 1774017304,
+        "narHash": "sha256-4+MRnM772f76dpsXUxVp/2jW68C2wp4766pujWyqzx8=",
         "owner": "numtide",
         "repo": "llm-agents.nix",
-        "rev": "6e67383a3e3c0c9142adde7cfebbd3c9fbf6fac2",
+        "rev": "bbf9d11b64b8f42df45a8eb5829c9f64fe02cea8",
         "type": "github"
       },
       "original": {
@@ -641,11 +641,11 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1773236838,
-        "narHash": "sha256-O3lUhuF1mSymij52VXVALB1L+ubMK5DDkIPibfu9Yuo=",
+        "lastModified": 1773969410,
+        "narHash": "sha256-tbgHV3lkFo/o+xWJWoJcuLmkzOdpeCCPwwhYpNbHCiU=",
         "owner": "peteonrails",
         "repo": "voxtype",
-        "rev": "97e87a30d6f41393867fdeadc4af41453acd614b",
+        "rev": "46e414e33e88da388b1bcbbae999c53bedacadbd",
         "type": "github"
       },
       "original": {
