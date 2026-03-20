@@ -142,9 +142,6 @@ in
       # Dev environments
       devbox
 
-      # Cloud
-      google-cloud-sdk
-
       # Container/Infra
       docker
       dive
