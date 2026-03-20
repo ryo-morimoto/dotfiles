@@ -14,6 +14,25 @@ let
   zenBrowserLauncher = pkgs.writeShellScriptBin "zen-browser" ''
     exec ${lib.getExe pkgs.zen-browser} "$@"
   '';
+  actrun = pkgs.stdenv.mkDerivation rec {
+    pname = "actrun";
+    version = "0.19.0";
+    src = pkgs.fetchurl {
+      url = "https://github.com/mizchi/actrun/releases/download/v${version}/actrun-linux-x64.tar.gz";
+      sha256 = "sha256-VZonZb3dLXZ5JHSdBe8xZuJylOHm8XqP0QZXDTfOgjw=";
+    };
+    sourceRoot = ".";
+    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
+    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    installPhase = ''
+      install -Dm755 actrun $out/bin/actrun
+    '';
+    meta = {
+      description = "Local GitHub Actions runner";
+      homepage = "https://github.com/mizchi/actrun";
+      platforms = [ "x86_64-linux" ];
+    };
+  };
 in
 {
   home = {
@@ -147,6 +166,7 @@ in
       dive
       kubectl
       k9s
+      actrun
 
       # Database
       sqlite
