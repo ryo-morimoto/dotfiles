@@ -39,6 +39,7 @@ in
     packages = with pkgs; [
       # Editor
       neovim
+      code-cursor
 
       # LSP servers (for Neovim)
       nodePackages.typescript-language-server
@@ -140,6 +141,9 @@ in
 
       # Dev environments
       devbox
+
+      # Cloud
+      google-cloud-sdk
 
       # Container/Infra
       docker
