@@ -53,6 +53,7 @@ in
 
     sessionPath = [
       "$HOME/.moon/bin"
+      "$HOME/.bun/bin"
     ];
 
     packages = with pkgs; [
@@ -188,7 +189,7 @@ in
       libnotify
 
       # AI tools
-      qmd
+      cursor-agent
       seiren-mcp
       vibe-kanban
       claude-squad
@@ -1026,6 +1027,11 @@ in
     fi
   '';
 
+  home.activation.installBunGlobalPackages = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    ${pkgs.bun}/bin/bun install -g @tobilu/qmd@2.0.1 2>/dev/null || \
+      printf "warning: failed to install qmd via bun\n" >&2
+  '';
+
   xdg = {
     desktopEntries = {
       "zen-browser" = {
@@ -1078,6 +1084,7 @@ in
       "wallpaper".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/wallpaper";
       "tmuxcc".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/tmuxcc";
       "vde/monitor".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/vde/monitor";
+      "lazygit".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/lazygit";
       "opencode/AGENTS.md".source =
         config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/opencode/AGENTS.md";
     };
