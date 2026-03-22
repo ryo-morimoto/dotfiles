@@ -175,6 +175,9 @@
     polkit.enable = true;
   };
 
+  # Docker
+  virtualisation.docker.enable = true;
+
   # Programs
   programs = {
     niri.enable = true;
@@ -190,6 +193,7 @@
       "networkmanager"
       "video"
       "audio"
+      "docker"
     ];
     initialPassword = "changeme";
     shell = pkgs.zsh;
