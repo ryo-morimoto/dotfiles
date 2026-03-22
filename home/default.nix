@@ -130,6 +130,7 @@ in
       git-wt
       llm-agents.claude-code
       llm-agents.codex
+      pi-coding-agent
       socat
       bubblewrap
       lazygit
@@ -164,6 +165,7 @@ in
 
       # Container/Infra
       docker
+      docker-credential-helpers
       dive
       kubectl
       k9s
@@ -214,6 +216,10 @@ in
         config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/claude/si/skills";
       ".claude/plugins/lite-agents".source =
         config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/claude/plugins/lite-agents";
+      ".claude/plugins/keel".source =
+        config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/ghq/github.com/ryo-morimoto/keel";
+      ".pi/agent/settings.json".source =
+        config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/pi/settings.json";
       ".local/bin/beacon-status-popup.sh".source =
         config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/tmux/beacon-status-popup.sh";
       ".local/bin/beacon-window-jump.sh".source =
@@ -350,6 +356,9 @@ in
         in
         navigation // git // modern // utils // k8s;
       initContent = ''
+        # GPG
+        export GPG_TTY=$(tty)
+
         # Shell options
         setopt AUTO_CD              # cd by typing directory name
         setopt AUTO_PUSHD           # Push to directory stack on cd
@@ -581,6 +590,22 @@ in
         setw -g window-status-format ' #I:#W '
       '';
     };
+
+    gpg.enable = true;
+
+    password-store = {
+      enable = true;
+      settings = {
+        PASSWORD_STORE_DIR = "$HOME/.password-store";
+      };
+    };
+  };
+
+  services.gpg-agent = {
+    enable = true;
+    defaultCacheTtl = 86400;
+    maxCacheTtl = 86400;
+    pinentry.package = pkgs.pinentry-curses;
   };
 
   # GTK theme (Catppuccin Mocha)

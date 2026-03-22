@@ -1,0 +1,9 @@
+{
+  "packages": [
+    "https://github.com/davebcn87/pi-autoresearch",
+    "https://github.com/mitsuhiko/agent-stuff",
+    "https://github.com/badlogic/pi-skills",
+    "https://github.com/nicobailon/pi-rewind-hook",
+    "https://github.com/zenobi-us/pi-dcp"
+  ]
+}
