@@ -589,6 +589,24 @@ in
         setw -g window-status-style 'fg=#cdd6f4 bg=#313244'
         setw -g window-status-format ' #I:#W '
       '';
+      plugins = with pkgs.tmuxPlugins; [
+        {
+          plugin = resurrect;
+          extraConfig = ''
+            set -g @resurrect-capture-pane-contents 'on'
+            set -g @resurrect-processes 'false'
+            # Strip Nix store paths so restore works after nixos-rebuild
+            set -g @resurrect-hook-post-save-all 'target=$(readlink -f $HOME/.tmux/resurrect/last); sed -i "s| --cmd .*-vim-pack-dir||g; s|/etc/profiles/per-user/$USER/bin/||g; s|/home/$USER/.nix-profile/bin/||g" $target'
+          '';
+        }
+        {
+          plugin = continuum;
+          extraConfig = ''
+            set -g @continuum-restore 'on'
+            set -g @continuum-save-interval '15'
+          '';
+        }
+      ];
     };
 
     gpg.enable = true;
