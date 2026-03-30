@@ -128,11 +128,11 @@
     "compound-engineering-plugin": {
       "flake": false,
       "locked": {
-        "lastModified": 1774839634,
-        "narHash": "sha256-1iEoliu8e93HfA2gPajtnN7fAgo1+PvAC3/C3aQy+tc=",
+        "lastModified": 1774855363,
+        "narHash": "sha256-OE8/XX/TnAmbr8uYsd9T7eOFz7zQJsUj8a66xIErQpw=",
         "owner": "EveryInc",
         "repo": "compound-engineering-plugin",
-        "rev": "a01a8aa0d29474c031a5b403f4f9bfc42a23ad78",
+        "rev": "42fa8c3e084db464ee0e04673f7c38cd422b32d6",
         "type": "github"
       },
       "original": {
