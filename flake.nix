@@ -52,6 +52,15 @@
       url = "github:ryo-morimoto/seiren/nix-pkgs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    agent-skills-nix = {
+      url = "github:Kyure-A/agent-skills-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
+    compound-engineering-plugin = {
+      url = "github:EveryInc/compound-engineering-plugin";
+      flake = false;
+    };
     # FIXME: pinned for khal; remove when nixpkgs#khal sphinx build is fixed
     nixpkgs-khal.url = "github:nixos/nixpkgs/0182a361324364ae3f436a63005877674cf45efb";
   };
@@ -71,6 +80,8 @@
       voxtype,
       moonbit-overlay,
       seiren,
+      agent-skills-nix,
+      compound-engineering-plugin,
       starlintLinuxBin,
       starlintDarwinArm64Bin,
       ...
@@ -115,11 +126,12 @@
                   dms.homeModules.dank-material-shell
                   dms.homeModules.niri
                   voxtype.homeManagerModules.default
+                  agent-skills-nix.homeManagerModules.default
                   ./home
                 ];
               };
               extraSpecialArgs = {
-                inherit dms voxtype;
+                inherit dms voxtype compound-engineering-plugin;
               };
             };
           }

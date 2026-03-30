@@ -102,14 +102,23 @@
   };
 
   # agenix: use host SSH key for decryption (openssh is disabled; Tailscale SSH is used instead)
-  age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-
-  # Caddy: load Cloudflare API token (decrypted by agenix)
-  age.secrets.caddy-cloudflare = {
-    file = ../../secrets/caddy-cloudflare.age;
-    owner = "caddy";
-    group = "caddy";
-    mode = "0400";
+  age = {
+    identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+    secrets = {
+      # Caddy: load Cloudflare API token
+      caddy-cloudflare = {
+        file = ../../secrets/caddy-cloudflare.age;
+        owner = "caddy";
+        group = "caddy";
+        mode = "0400";
+      };
+      # Exa API key for Claude Code MCP server
+      exa-api-key = {
+        file = ../../secrets/exa-api-key.age;
+        owner = "ryo-morimoto";
+        mode = "0400";
+      };
+    };
   };
   systemd.services = {
     caddy.serviceConfig.EnvironmentFile = config.age.secrets.caddy-cloudflare.path;

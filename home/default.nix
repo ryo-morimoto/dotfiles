@@ -9,13 +9,12 @@
 
 let
   dotfilesPath = "${config.home.homeDirectory}/ghq/github.com/ryo-morimoto/dotfiles";
-  compoundEngineeringPluginVersion = "2.34.4";
-  opencodeConfigPath = "${config.home.homeDirectory}/.config/opencode";
   zenBrowserLauncher = pkgs.writeShellScriptBin "zen-browser" ''
     exec ${lib.getExe pkgs.zen-browser} "$@"
   '';
 in
 {
+  imports = [ ./agents ];
   home = {
     username = "ryo-morimoto";
     homeDirectory = "/home/ryo-morimoto";
@@ -103,8 +102,6 @@ in
       ghq
       gh
       git-wt
-      llm-agents.claude-code
-      llm-agents.codex
       pi-coding-agent
       lazygit
       just
@@ -163,24 +160,9 @@ in
       claude-squad
       tmuxcc
       beacon
-      llm-agents.opencode
     ];
 
     file = {
-      ".claude/CLAUDE.md".text =
-        builtins.readFile ../config/claude/CLAUDE.md + builtins.readFile ../config/claude/CLAUDE.md.tmpl;
-      ".claude/statusline.sh".source =
-        config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/claude/statusline.sh";
-      ".claude/settings.local.json".source =
-        config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/claude/settings.local.json";
-      ".claude/si/scripts".source =
-        config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/claude/si/scripts";
-      ".claude/si/skills".source =
-        config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/claude/si/skills";
-      ".claude/plugins/lite-agents".source =
-        config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/claude/plugins/lite-agents";
-      ".claude/plugins/keel".source =
-        config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/ghq/github.com/ryo-morimoto/keel";
       ".pi/agent/settings.json".source =
         config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/pi/settings.json";
       ".local/bin/beacon-status-popup.sh".source =
@@ -321,6 +303,12 @@ in
       initContent = ''
         # GPG
         export GPG_TTY=$(tty)
+
+        # Exa API key (decrypted by agenix)
+        [[ -r /run/agenix/exa-api-key ]] && export EXA_API_KEY="$(cat /run/agenix/exa-api-key)"
+
+        # Pencil MCP server path (discovered from AppImage cache)
+        [[ -r "$HOME/.cache/pencil-mcp-path" ]] && export PENCIL_MCP_PATH="$(cat "$HOME/.cache/pencil-mcp-path")"
 
         # Shell options
         setopt AUTO_CD              # cd by typing directory name
@@ -1010,33 +998,6 @@ in
     };
   };
 
-  home.activation.installCompoundEngineering = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    opencode_dir="${opencodeConfigPath}"
-    ce_version_file="$opencode_dir/.compound-engineering-version"
-    ce_plan_file="$opencode_dir/commands/ce:plan.md"
-    desired_version="${compoundEngineeringPluginVersion}"
-    current_version=""
-    needs_install=1
-
-    mkdir -p "$opencode_dir"
-
-    if [ -f "$ce_version_file" ]; then
-      current_version="$(tr -d '\n' < "$ce_version_file")"
-    fi
-
-    if [ -f "$ce_plan_file" ] && [ "$current_version" = "$desired_version" ]; then
-      needs_install=0
-    fi
-
-    if [ "$needs_install" -eq 1 ]; then
-      if ${pkgs.bun}/bin/bunx "@every-env/compound-plugin@${compoundEngineeringPluginVersion}" install compound-engineering --to opencode; then
-        printf "%s\n" "$desired_version" > "$ce_version_file"
-      else
-        printf "warning: failed to install compound-engineering for opencode\n" >&2
-      fi
-    fi
-  '';
-
   home.activation.installBunGlobalPackages = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     ${pkgs.bun}/bin/bun install -g @tobilu/qmd@2.0.1 2>/dev/null || \
       printf "warning: failed to install qmd via bun\n" >&2
@@ -1110,8 +1071,6 @@ in
       "tmuxcc".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/tmuxcc";
       "vde/monitor".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/vde/monitor";
       "lazygit".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/lazygit";
-      "opencode/AGENTS.md".source =
-        config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/opencode/AGENTS.md";
     };
   };
 }

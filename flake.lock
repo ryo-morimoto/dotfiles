@@ -23,6 +23,29 @@
         "type": "github"
       }
     },
+    "agent-skills-nix": {
+      "inputs": {
+        "home-manager": [
+          "home-manager"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1774607140,
+        "narHash": "sha256-0P89BLGEzRUumWKSOEayi+Dal6mIlVumlBgcyk5Qo6s=",
+        "owner": "Kyure-A",
+        "repo": "agent-skills-nix",
+        "rev": "e29bef0e9e56c4cc683cead15a6eda1d6fb1074e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Kyure-A",
+        "repo": "agent-skills-nix",
+        "type": "github"
+      }
+    },
     "banto": {
       "inputs": {
         "nixpkgs": [
@@ -99,6 +122,22 @@
       "original": {
         "owner": "nix-community",
         "repo": "bun2nix",
+        "type": "github"
+      }
+    },
+    "compound-engineering-plugin": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1774839634,
+        "narHash": "sha256-1iEoliu8e93HfA2gPajtnN7fAgo1+PvAC3/C3aQy+tc=",
+        "owner": "EveryInc",
+        "repo": "compound-engineering-plugin",
+        "rev": "a01a8aa0d29474c031a5b403f4f9bfc42a23ad78",
+        "type": "github"
+      },
+      "original": {
+        "owner": "EveryInc",
+        "repo": "compound-engineering-plugin",
         "type": "github"
       }
     },
@@ -483,7 +522,9 @@
     "root": {
       "inputs": {
         "agenix": "agenix",
+        "agent-skills-nix": "agent-skills-nix",
         "banto": "banto",
+        "compound-engineering-plugin": "compound-engineering-plugin",
         "dms": "dms",
         "home-manager": "home-manager_2",
         "llm-agents": "llm-agents",
