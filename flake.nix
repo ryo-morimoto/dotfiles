@@ -82,7 +82,6 @@
         tmuxcc = final.callPackage ./packages/tmuxcc.nix { inherit tmuxcc-src; };
         beacon = final.callPackage ./packages/beacon.nix { };
         vde-monitor = final.callPackage ./packages/vde-monitor.nix { };
-        entire = final.callPackage ./packages/entire.nix { };
         cursor-agent = final.callPackage ./packages/cursor-agent.nix { };
         zen-browser = zen-browser.packages.${final.stdenv.hostPlatform.system}.default;
         seiren-mcp = seiren.packages.${final.stdenv.hostPlatform.system}.default;

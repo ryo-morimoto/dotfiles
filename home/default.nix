@@ -14,25 +14,6 @@ let
   zenBrowserLauncher = pkgs.writeShellScriptBin "zen-browser" ''
     exec ${lib.getExe pkgs.zen-browser} "$@"
   '';
-  actrun = pkgs.stdenv.mkDerivation rec {
-    pname = "actrun";
-    version = "0.19.0";
-    src = pkgs.fetchurl {
-      url = "https://github.com/mizchi/actrun/releases/download/v${version}/actrun-linux-x64.tar.gz";
-      sha256 = "sha256-VZonZb3dLXZ5JHSdBe8xZuJylOHm8XqP0QZXDTfOgjw=";
-    };
-    sourceRoot = ".";
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
-    installPhase = ''
-      install -Dm755 actrun $out/bin/actrun
-    '';
-    meta = {
-      description = "Local GitHub Actions runner";
-      homepage = "https://github.com/mizchi/actrun";
-      platforms = [ "x86_64-linux" ];
-    };
-  };
 in
 {
   home = {
@@ -98,12 +79,6 @@ in
       ripgrep
       fd
       jq
-      yq-go
-      httpie
-      tokei
-      kubo
-      iroh-relay
-      iroh-dns-server
 
       # Modern CLI replacements
       btop
@@ -131,8 +106,6 @@ in
       llm-agents.claude-code
       llm-agents.codex
       pi-coding-agent
-      socat
-      bubblewrap
       lazygit
       just
 
@@ -147,11 +120,9 @@ in
       # System/CLI development
       moonbit-bin.moonbit.latest
       go
-      llvmPackages.clang-unwrapped
       gcc
       rustc
       cargo
-      mold
 
       # Shell development
       shellcheck
@@ -166,15 +137,11 @@ in
       # Container/Infra
       docker
       docker-credential-helpers
-      dive
       kubectl
       k9s
-      actrun
 
       # Database
       sqlite
-      usql
-      turso-cli
 
       # File operations
       trash-cli
@@ -182,7 +149,6 @@ in
       wtype
       ffmpeg
       imagemagick
-      pandoc
 
       # Utilities
       watchexec
@@ -197,10 +163,7 @@ in
       claude-squad
       tmuxcc
       beacon
-      vde-monitor
       llm-agents.opencode
-      llm-agents.openspec
-      entire
     ];
 
     file = {
@@ -639,6 +602,7 @@ in
         variant = "mocha";
       };
     };
+    gtk4.theme = null;
     iconTheme = {
       name = "Papirus-Dark";
       package = pkgs.papirus-icon-theme;
