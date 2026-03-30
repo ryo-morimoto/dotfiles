@@ -20,6 +20,9 @@
 # oh-my-claudecode runtime data
 .omc/
 
+# OpenCode runtime data
+.opencode/
+
 # Self-improvement runtime data
 .si/data/
 
