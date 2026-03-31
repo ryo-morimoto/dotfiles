@@ -85,11 +85,11 @@
     "compound-engineering-plugin": {
       "flake": false,
       "locked": {
-        "lastModified": 1774917403,
-        "narHash": "sha256-tEKPEVJfL0FcQY/tb1vmU0gfUKBX8HI0V2ga3e5YHeQ=",
+        "lastModified": 1774943684,
+        "narHash": "sha256-01+Cp0WwflqUcLnyJf1B0+yKH4x/6YmuA7b5pb+jiNk=",
         "owner": "EveryInc",
         "repo": "compound-engineering-plugin",
-        "rev": "2619ad9f58e6c45968ec10d7f8aa7849fe43eb25",
+        "rev": "1840b0c7cc0f804d3785450551e569486c7984d3",
         "type": "github"
       },
       "original": {
@@ -225,11 +225,11 @@
     "keel-marketplace": {
       "flake": false,
       "locked": {
-        "lastModified": 1774209635,
-        "narHash": "sha256-9wdo+Y4QV5zj2A4jtkPoOGGYg/8tD5IGbEPuz8q8/ms=",
+        "lastModified": 1774961411,
+        "narHash": "sha256-ypd5g9fdK9Y4SKNNhjrktDMFazaVYryN0XotGv0kotk=",
         "owner": "ryo-morimoto",
         "repo": "keel",
-        "rev": "01e9ac08b6c38bb1fbc0f07d6b26db9d7ec94a92",
+        "rev": "667ff47f09089c74b3b025c07a1cb352cf3609bb",
         "type": "github"
       },
       "original": {
@@ -262,11 +262,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1773202721,
-        "narHash": "sha256-Sl1XwAIexjiFsYOOPIqNZ85/gm7FlQMX7ie6LQtpGh4=",
+        "lastModified": 1774948263,
+        "narHash": "sha256-5g6Fl5+39UlOjTa+dm9mOTtklHmAr+ai0G9fmq/L+kg=",
         "owner": "moonbit-community",
         "repo": "moonbit-overlay",
-        "rev": "4eaba82a29e555a4383f40617851c210d53fb32c",
+        "rev": "50118f5c3c0298b5cb17cc6f1c346165801014c8",
         "type": "github"
       },
       "original": {
@@ -301,11 +301,11 @@
         "xwayland-satellite-unstable": "xwayland-satellite-unstable"
       },
       "locked": {
-        "lastModified": 1774840705,
-        "narHash": "sha256-qHQCPuNj3Rug8NzxK3YhCx8N2RJBNr6nyAS2tqaLYNo=",
+        "lastModified": 1774921404,
+        "narHash": "sha256-oHqaEduwYqXx3itq7ckP+iuC9nU6DzfCVery4YhUjAU=",
         "owner": "sodiboo",
         "repo": "niri-flake",
-        "rev": "622435f64df8f7294293f2dfd59852614edacda4",
+        "rev": "3d02f5c53d09af97a7d66065b8c058d0599bc547",
         "type": "github"
       },
       "original": {
@@ -381,11 +381,11 @@
     },
     "nixpkgs-stable": {
       "locked": {
-        "lastModified": 1774388614,
-        "narHash": "sha256-tFwzTI0DdDzovdE9+Ras6CUss0yn8P9XV4Ja6RjA+nU=",
+        "lastModified": 1774799055,
+        "narHash": "sha256-Tsq9BCz0q47ej1uFF39m4tuhcwru/ls6vCCJzutEpaw=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "1073dad219cb244572b74da2b20c7fe39cb3fa9e",
+        "rev": "107cba9eb4a8d8c9f8e9e61266d78d340867913a",
         "type": "github"
       },
       "original": {

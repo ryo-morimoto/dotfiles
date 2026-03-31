@@ -140,6 +140,19 @@
         WorkingDirectory = "/home/ryo-morimoto";
       };
     };
+    "dotfiles-pull" = {
+      description = "Pull latest dotfiles from GitHub";
+      serviceConfig = {
+        Type = "oneshot";
+        User = "ryo-morimoto";
+        WorkingDirectory = "/home/ryo-morimoto/ghq/github.com/ryo-morimoto/dotfiles";
+        ExecStart = "${pkgs.git}/bin/git pull --ff-only";
+      };
+    };
+    "nixos-upgrade" = {
+      after = [ "dotfiles-pull.service" ];
+      wants = [ "dotfiles-pull.service" ];
+    };
   };
 
   # Bluetooth
@@ -245,10 +258,10 @@
       ln -sfn ${pkgs.bash}/bin/bash /bin/bash
     '';
 
-    # Automatic system upgrade (GitOps: pulls from GitHub)
+    # Automatic system upgrade from local repo (git pull → rebuild)
     autoUpgrade = {
       enable = true;
-      flake = "github:ryo-morimoto/dotfiles#ryobox";
+      flake = "/home/ryo-morimoto/ghq/github.com/ryo-morimoto/dotfiles#ryobox";
       dates = "05:00";
       randomizedDelaySec = "45min";
       allowReboot = false;
