@@ -494,6 +494,12 @@ in
         # Pane base index
         setw -g pane-base-index 1
 
+        # Pane border title (shows haiku from Claude Code Stop hook)
+        set -g pane-border-status top
+        set -g pane-border-format " #{pane_index}: #{?pane_title,#{pane_title},#{pane_current_command}} "
+        set -g pane-border-style "fg=#585b70"
+        set -g pane-active-border-style "fg=#89b4fa"
+
         # Split panes
         bind | split-window -h -c "#{pane_current_path}"
         bind - split-window -v -c "#{pane_current_path}"
