@@ -78,6 +78,7 @@ in
         "data@claude-plugins-official" = true;
         "clangd-lsp@claude-plugins-official" = true;
         "keel@keel" = true;
+        "knowledge-management@knowledge-management" = true;
         # Explicitly disabled
         "superpowers@claude-plugins-official" = false;
         "frontend-design@claude-plugins-official" = false;
@@ -109,6 +110,11 @@ in
         every-marketplace.source = {
           source = "github";
           repo = "EveryInc/compound-engineering-plugin";
+        };
+        knowledge-management.source = {
+          source = "git-subdir";
+          url = "https://github.com/ryo-morimoto/dotfiles.git";
+          path = "config/knowledge/knowledge-management";
         };
       };
       autoUpdatesChannel = "stable";

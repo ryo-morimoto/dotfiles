@@ -1,0 +1,6 @@
+{
+  "name": "knowledge-management",
+  "version": "1.0.0",
+  "description": "Obsidian vault knowledge management with automated session logging and knowledge capture",
+  "skills": "./"
+}
