@@ -1,5 +1,4 @@
 {
-  pkgs,
   pencilMcp,
   compound-engineering-plugin,
   ...
@@ -15,7 +14,7 @@ in
 {
   programs.opencode = {
     enable = true;
-    package = pkgs.llm-agents.opencode;
+    # Uses pkgs.opencode from nixpkgs (default)
 
     settings = {
       "$schema" = "https://opencode.ai/config.json";

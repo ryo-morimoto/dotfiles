@@ -1,12 +1,11 @@
 {
-  pkgs,
   pencilMcp,
   ...
 }:
 {
   programs.codex = {
     enable = true;
-    package = pkgs.llm-agents.codex;
+    # Uses pkgs.codex from nixpkgs (default)
 
     settings = {
       personality = "pragmatic";

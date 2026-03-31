@@ -7,9 +7,6 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    llm-agents = {
-      url = "github:numtide/llm-agents.nix";
-    };
     dms = {
       url = "github:AvengeMedia/DankMaterialShell/stable";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -70,7 +67,6 @@
       nixpkgs,
       nixpkgs-khal,
       home-manager,
-      llm-agents,
       dms,
       niri-flake,
       zen-browser,
@@ -92,7 +88,6 @@
         claude-squad = final.callPackage ./packages/claude-squad.nix { };
         tmuxcc = final.callPackage ./packages/tmuxcc.nix { inherit tmuxcc-src; };
         beacon = final.callPackage ./packages/beacon.nix { };
-        vde-monitor = final.callPackage ./packages/vde-monitor.nix { };
         cursor-agent = final.callPackage ./packages/cursor-agent.nix { };
         zen-browser = zen-browser.packages.${final.stdenv.hostPlatform.system}.default;
         seiren-mcp = seiren.packages.${final.stdenv.hostPlatform.system}.default;
@@ -115,7 +110,6 @@
             nixpkgs.overlays = [
               moonbit-overlay.overlays.default
               localOverlay
-              llm-agents.overlays.default
             ];
             home-manager = {
               backupFileExtension = "bak";
