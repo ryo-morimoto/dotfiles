@@ -85,11 +85,11 @@
     "compound-engineering-plugin": {
       "flake": false,
       "locked": {
-        "lastModified": 1774943684,
-        "narHash": "sha256-01+Cp0WwflqUcLnyJf1B0+yKH4x/6YmuA7b5pb+jiNk=",
+        "lastModified": 1774976873,
+        "narHash": "sha256-tbGyhsvlAc4npf4QI7vsoZ94Cn431lC+7eVJd2syjm4=",
         "owner": "EveryInc",
         "repo": "compound-engineering-plugin",
-        "rev": "1840b0c7cc0f804d3785450551e569486c7984d3",
+        "rev": "0294652395cb62d5569f73ebfea543cfe8b514d6",
         "type": "github"
       },
       "original": {
@@ -188,11 +188,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1774898676,
-        "narHash": "sha256-0Utnqo+FbB+0CVUi0MI3oonF0Kuzy9VcgRkxl53Euvk=",
+        "lastModified": 1774984355,
+        "narHash": "sha256-/41Q8d4EB/bZRFfR5BYdlDl32avGyCqHNEZhznar8EI=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "a184bd2f8426087bae93f203403cd4b86c99e57d",
+        "rev": "0adb9993274f27168ec0d6c13ec292f03dc328d0",
         "type": "github"
       },
       "original": {
@@ -225,11 +225,11 @@
     "keel-marketplace": {
       "flake": false,
       "locked": {
-        "lastModified": 1774967728,
-        "narHash": "sha256-wf3vSrymwwOoVp8c7O2ip9KEPkEUFlhnoox88Q9wAFs=",
+        "lastModified": 1774974184,
+        "narHash": "sha256-DbEGBJBCNT9Q2DmUUAjYzGd17360Y0tZcV1pA6MaFw4=",
         "owner": "ryo-morimoto",
         "repo": "keel",
-        "rev": "8343460a96d727bfd37ca1b82642b4cd0c5dbbd4",
+        "rev": "8af6c62e30dcfe4a36e40778aed24aea0f6573bd",
         "type": "github"
       },
       "original": {
