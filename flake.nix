@@ -58,6 +58,22 @@
       url = "github:EveryInc/compound-engineering-plugin";
       flake = false;
     };
+    claude-plugins-official = {
+      url = "github:anthropics/claude-plugins-official";
+      flake = false;
+    };
+    kuu-marketplace = {
+      url = "github:fumiya-kume/claude-code";
+      flake = false;
+    };
+    moonbit-practice-marketplace = {
+      url = "github:mizchi/moonbit-practice";
+      flake = false;
+    };
+    keel-marketplace = {
+      url = "github:ryo-morimoto/keel";
+      flake = false;
+    };
     # FIXME: pinned for khal; remove when nixpkgs#khal sphinx build is fixed
     nixpkgs-khal.url = "github:nixos/nixpkgs/0182a361324364ae3f436a63005877674cf45efb";
   };
@@ -78,6 +94,10 @@
       seiren,
       agent-skills-nix,
       compound-engineering-plugin,
+      claude-plugins-official,
+      kuu-marketplace,
+      moonbit-practice-marketplace,
+      keel-marketplace,
       starlintLinuxBin,
       starlintDarwinArm64Bin,
       ...
@@ -126,7 +146,15 @@
                 ];
               };
               extraSpecialArgs = {
-                inherit dms voxtype compound-engineering-plugin;
+                inherit
+                  dms
+                  voxtype
+                  compound-engineering-plugin
+                  claude-plugins-official
+                  kuu-marketplace
+                  moonbit-practice-marketplace
+                  keel-marketplace
+                  ;
               };
             };
           }

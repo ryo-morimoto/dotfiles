@@ -66,6 +66,22 @@
         "type": "github"
       }
     },
+    "claude-plugins-official": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1774915488,
+        "narHash": "sha256-60se6HXrY85KZ1adp+gBXvg/kJZR+naqcXOl4ZTjl3o=",
+        "owner": "anthropics",
+        "repo": "claude-plugins-official",
+        "rev": "52e95f6756e577b6a788c941f994ca44de2cf2d6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "anthropics",
+        "repo": "claude-plugins-official",
+        "type": "github"
+      }
+    },
     "compound-engineering-plugin": {
       "flake": false,
       "locked": {
@@ -206,6 +222,38 @@
         "type": "github"
       }
     },
+    "keel-marketplace": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1774209635,
+        "narHash": "sha256-9wdo+Y4QV5zj2A4jtkPoOGGYg/8tD5IGbEPuz8q8/ms=",
+        "owner": "ryo-morimoto",
+        "repo": "keel",
+        "rev": "01e9ac08b6c38bb1fbc0f07d6b26db9d7ec94a92",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ryo-morimoto",
+        "repo": "keel",
+        "type": "github"
+      }
+    },
+    "kuu-marketplace": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1773320696,
+        "narHash": "sha256-oeVtNqs/lZhJ64wCuE4CVXgWCuFH+h9NgWx0wBwV96s=",
+        "owner": "fumiya-kume",
+        "repo": "claude-code",
+        "rev": "9af58e46b4435244152a373f80308ee456c86f75",
+        "type": "github"
+      },
+      "original": {
+        "owner": "fumiya-kume",
+        "repo": "claude-code",
+        "type": "github"
+      }
+    },
     "moonbit-overlay": {
       "inputs": {
         "nixpkgs": [
@@ -224,6 +272,22 @@
       "original": {
         "owner": "moonbit-community",
         "repo": "moonbit-overlay",
+        "type": "github"
+      }
+    },
+    "moonbit-practice-marketplace": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1770901290,
+        "narHash": "sha256-IWw064akw9xUCXdjYN6r51G6Sfh8DpRB/JUmxQwUNis=",
+        "owner": "mizchi",
+        "repo": "moonbit-practice",
+        "rev": "325778761740c932a56e167906fe9bdb9b8d94b9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mizchi",
+        "repo": "moonbit-practice",
         "type": "github"
       }
     },
@@ -390,10 +454,14 @@
         "agenix": "agenix",
         "agent-skills-nix": "agent-skills-nix",
         "banto": "banto",
+        "claude-plugins-official": "claude-plugins-official",
         "compound-engineering-plugin": "compound-engineering-plugin",
         "dms": "dms",
         "home-manager": "home-manager_2",
+        "keel-marketplace": "keel-marketplace",
+        "kuu-marketplace": "kuu-marketplace",
         "moonbit-overlay": "moonbit-overlay",
+        "moonbit-practice-marketplace": "moonbit-practice-marketplace",
         "niri-flake": "niri-flake",
         "nixpkgs": "nixpkgs_2",
         "nixpkgs-khal": "nixpkgs-khal",

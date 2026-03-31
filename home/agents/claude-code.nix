@@ -1,5 +1,10 @@
 {
   config,
+  compound-engineering-plugin,
+  claude-plugins-official,
+  kuu-marketplace,
+  moonbit-practice-marketplace,
+  keel-marketplace,
   ...
 }:
 
@@ -65,19 +70,18 @@ in
         "deslop@kuu-marketplace" = true;
         "dig@kuu-marketplace" = true;
         "fix-ci@kuu-marketplace" = true;
-        "compound-engineering@every-marketplace" = true;
-        "coding-tutor@every-marketplace" = true;
         "decomposition@kuu-marketplace" = true;
         "claude-md-management@claude-plugins-official" = true;
         "skill-creator@claude-plugins-official" = true;
         "coderabbit@claude-plugins-official" = true;
         "semgrep@claude-plugins-official" = true;
-        "recore-api-explorer@agent-skills-marketplace" = true;
         "moonbit-practice@moonbit-practice" = true;
         "autofix-bot@claude-plugins-official" = true;
         "data@claude-plugins-official" = true;
         "clangd-lsp@claude-plugins-official" = true;
         "keel@keel" = true;
+        "compound-engineering@every-marketplace" = true;
+        "coding-tutor@every-marketplace" = true;
         "knowledge-management@knowledge-management" = true;
         # Explicitly disabled
         "superpowers@claude-plugins-official" = false;
@@ -90,32 +94,6 @@ in
         "rust-analyzer-lsp@claude-plugins-official" = false;
         "plugin-dev@claude-plugins-official" = false;
       };
-      extraKnownMarketplaces = {
-        agent-skills-marketplace.source = {
-          source = "git";
-          url = "https://github.com/commercex-holdings/agent-skills.git";
-        };
-        moonbit-practice.source = {
-          source = "github";
-          repo = "mizchi/moonbit-practice";
-        };
-        keel.source = {
-          source = "github";
-          repo = "ryo-morimoto/keel";
-        };
-        kuu-marketplace.source = {
-          source = "github";
-          repo = "fumiya-kume/claude-code";
-        };
-        every-marketplace.source = {
-          source = "github";
-          repo = "EveryInc/compound-engineering-plugin";
-        };
-        knowledge-management.source = {
-          source = "github";
-          repo = "ryo-morimoto/dotfiles";
-        };
-      };
       autoUpdatesChannel = "stable";
       minimumVersion = "2.1.12";
       skipDangerousModePermissionPrompt = true;
@@ -125,7 +103,18 @@ in
       builtins.readFile ../../config/claude/CLAUDE.md
       + builtins.readFile ../../config/claude/CLAUDE.md.tmpl;
 
-    plugins = [ ../../config/claude/plugins/lite-agents ];
+    plugins = [
+      ../../config/claude/plugins/lite-agents
+      ../../config/knowledge/knowledge-management/plugins/knowledge-management
+    ];
+
+    marketplaces = {
+      inherit claude-plugins-official kuu-marketplace;
+      moonbit-practice = moonbit-practice-marketplace;
+      keel = keel-marketplace;
+      every-marketplace = compound-engineering-plugin;
+      knowledge-management = ../../config/knowledge/knowledge-management;
+    };
 
     mcpServers = {
       exa = {
