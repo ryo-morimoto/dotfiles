@@ -45,6 +45,15 @@ in
               }
             ];
           }
+          {
+            hooks = [
+              {
+                type = "command";
+                command = "bash ${dotfilesPath}/scripts/claude-hooks/pane-haiku.sh";
+                timeout = 30;
+              }
+            ];
+          }
         ];
         PreCompact = [
           {
