@@ -6,8 +6,9 @@
   "plugins": [
     {
       "name": "knowledge-management",
-      "source": "./plugins/knowledge-management",
-      "description": "Record and search non-obvious learnings in Obsidian vault with CLI integration"
+      "source": "./",
+      "description": "Record and search non-obvious learnings in Obsidian vault with CLI integration",
+      "version": "1.1.0"
     }
   ]
 }
