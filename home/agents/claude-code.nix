@@ -112,9 +112,8 @@ in
           repo = "EveryInc/compound-engineering-plugin";
         };
         knowledge-management.source = {
-          source = "git-subdir";
-          url = "https://github.com/ryo-morimoto/dotfiles.git";
-          path = "config/knowledge/knowledge-management";
+          source = "github";
+          repo = "ryo-morimoto/dotfiles";
         };
       };
       autoUpdatesChannel = "stable";
