@@ -118,6 +118,7 @@
               llm-agents.overlays.default
             ];
             home-manager = {
+              backupFileExtension = "bak";
               useGlobalPkgs = true;
               useUserPackages = true;
               users.ryo-morimoto = {
