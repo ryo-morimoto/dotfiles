@@ -203,6 +203,7 @@
       "video"
       "audio"
       "docker"
+      "input"
     ];
     initialPassword = "changeme";
     shell = pkgs.zsh;

@@ -748,6 +748,11 @@ in
         pre_type_delay_ms = 0;
         auto_submit = false;
         paste_keys = "ctrl+v";
+        notification = {
+          on_recording_start = true;
+          on_recording_stop = true;
+          on_transcription = true;
+        };
       };
     };
   };
