@@ -38,6 +38,13 @@ repos:
         files: '\.sh$'
         priority: 0
 
+      - id: gitleaks
+        name: gitleaks
+        entry: gitleaks detect --no-banner --redact
+        language: system
+        pass_filenames: false
+        priority: 0
+
       # Build (priority 10: run after lint)
       - id: nix-build
         name: nix build

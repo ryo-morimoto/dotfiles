@@ -97,6 +97,7 @@ in
       statix
       deadnix
       prek
+      gitleaks
 
       # Development
       ghq
