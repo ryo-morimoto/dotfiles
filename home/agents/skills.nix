@@ -1,15 +1,10 @@
-{ compound-engineering-plugin, ... }:
-{
+_: {
   programs.agent-skills = {
     enable = true;
 
     sources = {
       personal = {
         path = ../../skills;
-      };
-      compound-engineering = {
-        path = "${compound-engineering-plugin}/plugins/compound-engineering/skills";
-        idPrefix = "ce";
       };
     };
 
