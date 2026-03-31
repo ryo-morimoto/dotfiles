@@ -243,15 +243,6 @@
             }
           ];
         }
-        {
-          hooks = [
-            {
-              type = "command";
-              command = "bash /home/ryo-morimoto/ghq/github.com/ryo-morimoto/dotfiles/scripts/claude-hooks/pane-haiku.sh";
-              timeout = 30;
-            }
-          ];
-        }
       ];
       PreCompact = [
         {
