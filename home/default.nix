@@ -448,6 +448,78 @@ in
       shellWrapperName = "yy";
     };
 
+    obsidian = {
+      enable = true;
+      cli.enable = true;
+      vaults.obsidian = {
+        target = "obsidian";
+        settings = {
+          corePlugins = [
+            {
+              name = "daily-notes";
+              enable = true;
+            }
+            {
+              name = "backlink";
+              enable = true;
+            }
+            {
+              name = "outgoing-link";
+              enable = true;
+            }
+            {
+              name = "tag-pane";
+              enable = true;
+            }
+            {
+              name = "graph";
+              enable = true;
+            }
+            {
+              name = "global-search";
+              enable = true;
+            }
+            {
+              name = "command-palette";
+              enable = true;
+            }
+            {
+              name = "file-explorer";
+              enable = true;
+            }
+            {
+              name = "switcher";
+              enable = true;
+            }
+            {
+              name = "outline";
+              enable = true;
+            }
+            {
+              name = "templates";
+              enable = true;
+            }
+            {
+              name = "word-count";
+              enable = true;
+            }
+            {
+              name = "page-preview";
+              enable = true;
+            }
+            {
+              name = "note-composer";
+              enable = true;
+            }
+            {
+              name = "file-recovery";
+              enable = true;
+            }
+          ];
+        };
+      };
+    };
+
     ssh = {
       enable = true;
       enableDefaultConfig = false;
@@ -645,15 +717,15 @@ in
     settings = {
       state_file = "auto";
       hotkey = {
-        enabled = false;
-        key = "SCROLLLOCK";
+        enabled = true;
+        key = "RIGHTCTRL";
         modifiers = [ ];
         mode = "toggle";
       };
       audio = {
         device = "default";
         sample_rate = 16000;
-        max_duration_secs = 60;
+        max_duration_secs = 300;
         feedback = {
           enabled = true;
           theme = "default";
@@ -686,22 +758,6 @@ in
   systemd.user.services.voxtype.Service.Environment = [
     "LD_PRELOAD=${pkgs.alsa-lib}/lib/libasound.so.2"
   ];
-
-  # vde-monitor: browser-based tmux session monitor
-  systemd.user.services.vde-monitor = {
-    Unit = {
-      Description = "vde-monitor - tmux session monitor";
-      After = [ "network.target" ];
-    };
-    Service = {
-      ExecStart = "${lib.getExe pkgs.vde-monitor} --tailscale";
-      Restart = "on-failure";
-      RestartSec = 5;
-    };
-    Install = {
-      WantedBy = [ "default.target" ];
-    };
-  };
 
   # Niri compositor (managed by niri-flake, DMS merges keybinds/spawn into settings)
   programs.niri.package = pkgs.niri;
