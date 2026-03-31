@@ -1,92 +1,118 @@
 ---
 name: knowledge-management
-description: Manage knowledge in the Obsidian vault at ~/obsidian. Use when asked to log learnings, search past knowledge, create notes, review drafts, or manage the vault. Also activates on "ナレッジ", "メモ", "vault", "知見", "TIL", "振り返り", "daily", "デイリー". Handles both manual capture and automated session logging.
-compatibility: Requires Obsidian CLI (v1.12+) and ~/obsidian vault
+description: >-
+  Manage knowledge in the Obsidian vault at ~/obsidian. Use when the user wants to:
+  (1) RECORD a learning — "これ記録して", "メモしておいて", "ナレッジに残す", "TILとして書いて", "知見として保存", "save this as knowledge", "log this learning", "write this down";
+  (2) SEARCH past knowledge — "前にやったはず", "以前ハマった", "知見ある?", "vault検索", "ナレッジ検索", "search vault", "check if we solved this before";
+  (3) REVIEW drafts — "ドラフト確認", "下書きレビュー", "review drafts";
+  (4) USE Obsidian CLI — "obsidian", "vault", "ノート検索", "タグ一覧".
+  Also activates on: "ナレッジ", "メモ", "知見", "TIL", "振り返り", "gotcha", "ハマり", "best practice", "pitfall", "deep dive", "設計判断", "design decision".
 ---
 
 # Knowledge Management
 
-Manage the Obsidian vault at `~/obsidian/`.
+Obsidian vault at `~/obsidian/`. Flat structure — all notes in root, classification via frontmatter.
 
-## Vault Structure
+## Usage
 
 ```
-~/obsidian/
-├── AGENTS.md      # Agent rules (read this first)
-├── Daily/         # Daily notes (YYYY-MM-DD.md)
-├── Templates/     # Note templates
-├── Attachments/   # Images, PDFs
-└── *.md           # All content notes — flat in root
+/knowledge-management <learning>        # Record a learning
+/knowledge-management search <query>    # Search past knowledge
+/knowledge-management review            # Review draft notes
 ```
 
-No nested folders. Classification is done via frontmatter, not folder hierarchy.
+## Capture Flow
 
-## Frontmatter Schema
+When the user wants to record a learning (or you detect one worth saving):
 
-Every note MUST have:
+1. Extract the core insight: **WHEN** [condition] **THEN** [what happens] **BECAUSE** [root cause]
+2. Pick a slug: `{descriptive-slug}.md`
+3. Write to `~/obsidian/{slug}.md` with frontmatter:
 
 ```yaml
 ---
 date: "YYYY-MM-DD"
-categories: [knowledge]     # knowledge | project | reading | idea | daily
-tags: [kebab-case-tags]     # technical tags
-source: auto | manual       # who created it
-status: draft | published   # draft = unreviewed by human
+categories: [knowledge]
+tags: [kebab-case-tags]
+source: manual
+status: published
 ---
 ```
 
-## 記録すべき知見
+4. Add `[[wikilinks]]` to related notes if any exist
+5. Confirm to user: note name + tags + one-line summary
 
-ドキュメントだけでは到達しにくい知見のみ記録する。
+### What to Record
 
-| 種類 | タグ |
+Only knowledge that's hard to reach from docs alone:
+
+| Kind | Tags |
 |---|---|
-| システムの非自明な挙動・undocumented な動作 | `gotcha`, `undocumented` |
-| ライブラリのハマりどころ（エッジケース、バージョン非互換、暗黙の前提） | `pitfall`, `library-specific` |
-| deep dive で得た内部実装の理解・根本原因 | `deep-dive`, `root-cause` |
-| best practice の curation（状況・適用方法・選択理由の三点セット） | `best-practice`, `curation` |
-| 設計判断の理由（選択理由＋棄却理由） | `decision`, `trade-off` |
+| Undocumented behavior, surprising system interactions | `gotcha`, `undocumented` |
+| Library pitfalls (edge cases, version incompatibilities) | `pitfall`, `library-specific` |
+| Deep-dive findings, root causes | `deep-dive`, `root-cause` |
+| Best practice with context (when/why/how) | `best-practice`, `curation` |
+| Design decisions (chosen option + rejected alternatives + why) | `decision`, `trade-off` |
 
-記録は `WHEN [条件] THEN [起きること] BECAUSE [原因]` の形式で具体的に書く。
+### What NOT to Record
 
-## 検索トリガー
+- Things easily found in official docs
+- Temporary workarounds that will be fixed
+- Generic programming knowledge
 
-以下の状況では実装前に vault を検索する:
+## Search Flow
 
-- 同種のエラー・問題に遭遇した
-- ライブラリの設定・統合に取り組む
-- 設計判断を求められた
-- best practice を適用しようとしている
-- 「前にやったはず」という感覚がある
+1. Use `obsidian search query="<text>"` for full-text search
+2. Use `obsidian tags` to browse by tag, `obsidian tag name="<tag>"` for files with a specific tag
+3. Use `obsidian backlinks file="<name>"` to find related notes
+4. Read top matches and synthesize with `[[note-name]]` citations
 
-## Agent Write Rules
+## Review Flow
 
-1. **Daily/** — Free to append. `## Session {HH:MM}` heading で追記。
-2. **Root notes** — `source: auto, status: draft` で作成。human が publish する。
-3. 既存ノートの `status`, `categories`, `source` は変更しない。
-4. 既存ノートの削除・上書きはしない。
-5. `[[wikilinks]]` で相互参照する。
+1. Grep for `status: draft` in `~/obsidian/*.md`
+2. Present each draft with summary
+3. User decides: promote (`status: published`), edit, or delete
 
-## Workflows
+## Obsidian CLI Reference
 
-### Capture
+The `obsidian` CLI can be used directly from the terminal for quick vault operations.
 
-1. category 判定 → `{descriptive-slug}.md` を vault root に作成
-2. user 起点なら `source: manual, status: published`、agent 起点なら `source: auto, status: draft`
-3. 関連タグ・`[[wikilinks]]` 付与 → Daily note に参照追記
+### Search & Browse
 
-### Search
+```bash
+obsidian search query="nix flake"              # Full-text search
+obsidian search query="pitfall" format=json     # JSON output
+obsidian tags                                   # List all tags
+obsidian tag name="gotcha"                      # Files with tag
+obsidian backlinks file="nix-flake-check"       # What links to this note
+obsidian links file="nix-flake-check"           # Outgoing links from note
+obsidian recents                                # Recently opened files
+```
 
-1. `~/obsidian/` を keyword + frontmatter tags で検索
-2. 上位 5 件を読み、`[[note-name]]` で引用して回答
+### Read & Write
 
-### Review Drafts
+```bash
+obsidian read file="nix-flake-check"            # Read note content
+obsidian create name="my-note" content="..."    # Create note
+obsidian append file="my-note" content="..."    # Append to note
+obsidian daily                                  # Open today's daily note
+```
 
-1. `status: draft` を検索 → 一覧提示
-2. user が publish / edit / delete を判断
+### Vault Info
 
-### Daily Log (自動)
+```bash
+obsidian orphans          # Notes with no incoming links
+obsidian deadends         # Notes with no outgoing links
+obsidian unresolved       # Broken wikilinks
+obsidian outline          # Headings of active file
+```
 
-Stop hook (`scripts/session-sync.mjs`) がセッションサマリを `Daily/YYYY-MM-DD.md` に追記。
+## Write Rules
 
-See [vault rules](references/vault-rules.md) for detailed specs.
+- Root notes: `source: manual, status: published` when user-initiated
+- Agent-initiated notes: `source: auto, status: draft`
+- Never modify `status`, `categories`, or `source` on existing notes
+- Never delete or overwrite existing notes
+- Use `[[wikilinks]]` for cross-references
+
+See [vault rules](references/vault-rules.md) for full specs.
