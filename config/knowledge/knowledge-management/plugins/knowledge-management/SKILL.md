@@ -35,48 +35,58 @@ status: draft | published   # draft = unreviewed by human
 ---
 ```
 
+## 記録すべき知見
+
+ドキュメントだけでは到達しにくい知見のみ記録する。
+
+| 種類 | タグ |
+|---|---|
+| システムの非自明な挙動・undocumented な動作 | `gotcha`, `undocumented` |
+| ライブラリのハマりどころ（エッジケース、バージョン非互換、暗黙の前提） | `pitfall`, `library-specific` |
+| deep dive で得た内部実装の理解・根本原因 | `deep-dive`, `root-cause` |
+| best practice の curation（状況・適用方法・選択理由の三点セット） | `best-practice`, `curation` |
+| 設計判断の理由（選択理由＋棄却理由） | `decision`, `trade-off` |
+
+記録は `WHEN [条件] THEN [起きること] BECAUSE [原因]` の形式で具体的に書く。
+
+## 検索トリガー
+
+以下の状況では実装前に vault を検索する:
+
+- 同種のエラー・問題に遭遇した
+- ライブラリの設定・統合に取り組む
+- 設計判断を求められた
+- best practice を適用しようとしている
+- 「前にやったはず」という感覚がある
+
 ## Agent Write Rules
 
-1. **Daily/** — Free to append. Use `## Session {HH:MM}` heading for each entry.
-2. **Root notes** — May create with `source: auto, status: draft`. Human promotes to `published`.
-3. **Never** modify `status`, `categories`, or `source` on existing notes.
-4. **Never** delete or overwrite existing notes.
-5. Use `[[wikilinks]]` for cross-references.
+1. **Daily/** — Free to append. `## Session {HH:MM}` heading で追記。
+2. **Root notes** — `source: auto, status: draft` で作成。human が publish する。
+3. 既存ノートの `status`, `categories`, `source` は変更しない。
+4. 既存ノートの削除・上書きはしない。
+5. `[[wikilinks]]` で相互参照する。
 
 ## Workflows
 
-### Capture Knowledge
+### Capture
 
-When the user wants to log a learning or note:
+1. category 判定 → `{descriptive-slug}.md` を vault root に作成
+2. user 起点なら `source: manual, status: published`、agent 起点なら `source: auto, status: draft`
+3. 関連タグ・`[[wikilinks]]` 付与 → Daily note に参照追記
 
-1. Determine category: knowledge, project, reading, or idea
-2. Create `{descriptive-slug}.md` in vault root
-3. Set `source: manual, status: published` (user-initiated)
-4. Add relevant tags and `[[wikilinks]]` to related notes
-5. Append a reference to today's Daily note
+### Search
 
-### Search Vault
-
-When looking up past knowledge:
-
-1. Grep `~/obsidian/` with `glob: "*.md"` for keywords
-2. Check frontmatter tags for matches
-3. Read top matches (max 5)
-4. Synthesize and cite with `[[note-name]]`
+1. `~/obsidian/` を keyword + frontmatter tags で検索
+2. 上位 5 件を読み、`[[note-name]]` で引用して回答
 
 ### Review Drafts
 
-When the user asks to review agent-created drafts:
+1. `status: draft` を検索 → 一覧提示
+2. user が publish / edit / delete を判断
 
-1. Grep for `status: draft` in `~/obsidian/*.md`
-2. Present each draft with a summary
-3. For each: user decides to promote (`status: published`), edit, or delete
+### Daily Log (自動)
 
-### Daily Log (automated via Stop hook)
+Stop hook (`scripts/session-sync.mjs`) がセッションサマリを `Daily/YYYY-MM-DD.md` に追記。
 
-The `scripts/session-sync.mjs` Stop hook automatically:
-
-1. Appends a session summary to `~/obsidian/Daily/YYYY-MM-DD.md`
-2. If notable learnings detected, creates a draft note in vault root
-
-See [vault rules](references/vault-rules.md) for detailed frontmatter and permission specs.
+See [vault rules](references/vault-rules.md) for detailed specs.
