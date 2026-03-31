@@ -149,5 +149,14 @@ in
     # keel plugin: mutable symlink for live development
     ".claude/plugins/keel".source =
       config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/ghq/github.com/ryo-morimoto/keel";
+
+    # Marketplace directories: Nix-managed symlinks so rebuild updates them
+    ".claude/plugins/marketplaces/claude-plugins-official".source = claude-plugins-official;
+    ".claude/plugins/marketplaces/kuu-marketplace".source = kuu-marketplace;
+    ".claude/plugins/marketplaces/moonbit-practice".source = moonbit-practice-marketplace;
+    ".claude/plugins/marketplaces/keel".source = keel-marketplace;
+    ".claude/plugins/marketplaces/every-marketplace".source = compound-engineering-plugin;
+    ".claude/plugins/marketplaces/knowledge-management".source =
+      ../../config/knowledge/knowledge-management;
   };
 }
