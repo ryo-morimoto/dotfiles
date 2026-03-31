@@ -540,8 +540,6 @@ in
         setw -g window-status-style 'fg=#cdd6f4 bg=#313244'
         setw -g window-status-format ' #I:#W '
 
-        # opensessions - tmux session manager sidebar
-        run-shell ~/.tmux/plugins/opensessions/opensessions.tmux
       '';
       plugins = with pkgs.tmuxPlugins; [
         {
@@ -1001,21 +999,6 @@ in
   home.activation.installBunGlobalPackages = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     ${pkgs.bun}/bin/bun install -g @tobilu/qmd@2.0.1 2>/dev/null || \
       printf "warning: failed to install qmd via bun\n" >&2
-  '';
-
-  home.activation.installOpensessions = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    OPENSESSIONS_DIR="$HOME/.tmux/plugins/opensessions"
-    OPENSESSIONS_REPO="https://github.com/ataraxy-labs/opensessions.git"
-    if [ ! -d "$OPENSESSIONS_DIR/.git" ]; then
-      ${pkgs.git}/bin/git clone "$OPENSESSIONS_REPO" "$OPENSESSIONS_DIR" 2>/dev/null || \
-        printf "warning: failed to clone opensessions\n" >&2
-    else
-      (cd "$OPENSESSIONS_DIR" && ${pkgs.git}/bin/git pull --ff-only 2>/dev/null) || true
-    fi
-    if [ -d "$OPENSESSIONS_DIR" ]; then
-      (cd "$OPENSESSIONS_DIR" && ${pkgs.bun}/bin/bun install --frozen-lockfile 2>/dev/null) || \
-        printf "warning: failed to install opensessions dependencies\n" >&2
-    fi
   '';
 
   xdg = {
