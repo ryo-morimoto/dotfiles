@@ -225,11 +225,11 @@
     "keel-marketplace": {
       "flake": false,
       "locked": {
-        "lastModified": 1774962997,
-        "narHash": "sha256-MPIWUt5rO8Ljfb9dzpfEGbPsMohs3zUT7rtZb7dTIRQ=",
+        "lastModified": 1774967728,
+        "narHash": "sha256-wf3vSrymwwOoVp8c7O2ip9KEPkEUFlhnoox88Q9wAFs=",
         "owner": "ryo-morimoto",
         "repo": "keel",
-        "rev": "2c6d844a838a8c7346f841395252bd9a4e422bba",
+        "rev": "8343460a96d727bfd37ca1b82642b4cd0c5dbbd4",
         "type": "github"
       },
       "original": {
