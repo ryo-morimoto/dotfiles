@@ -1,24 +1,24 @@
 ---
-name: knowledge-management
+name: know
 description: >-
-  Manage knowledge in the Obsidian vault at ~/obsidian. Use when the user wants to:
+  Record learnings and manage knowledge in Obsidian vault at ~/obsidian.
+  Use when the user wants to:
   (1) RECORD a learning — "これ記録して", "メモしておいて", "ナレッジに残す", "TILとして書いて", "知見として保存", "save this as knowledge", "log this learning", "write this down";
-  (2) SEARCH past knowledge — "前にやったはず", "以前ハマった", "知見ある?", "vault検索", "ナレッジ検索", "search vault", "check if we solved this before";
-  (3) REVIEW drafts — "ドラフト確認", "下書きレビュー", "review drafts";
-  (4) USE Obsidian CLI — "obsidian", "vault", "ノート検索", "タグ一覧".
+  (2) REVIEW drafts — "ドラフト確認", "下書きレビュー", "review drafts";
+  (3) USE Obsidian CLI — "obsidian", "vault", "ノート検索", "タグ一覧".
   Also activates on: "ナレッジ", "メモ", "知見", "TIL", "振り返り", "gotcha", "ハマり", "best practice", "pitfall", "deep dive", "設計判断", "design decision".
+  NOT for searching — use know:search for retrieval.
 ---
 
-# Knowledge Management
+# Knowledge Record & Management
 
 Obsidian vault at `~/obsidian/`. Flat structure — all notes in root, classification via frontmatter.
 
 ## Usage
 
 ```
-/knowledge-management <learning>        # Record a learning
-/knowledge-management search <query>    # Search past knowledge
-/knowledge-management review            # Review draft notes
+/know <learning>        # Record a learning
+/know review            # Review draft notes
 ```
 
 ## Capture Flow
@@ -59,14 +59,6 @@ Only knowledge that's hard to reach from docs alone:
 - Things easily found in official docs
 - Temporary workarounds that will be fixed
 - Generic programming knowledge
-
-## Search Flow
-
-1. **Search:** `obsidian search:context query="<text>"` — matching lines with file:line context. Most token-efficient for discovery.
-2. **Drill down:** `obsidian read file="<name>"` — full content of a specific note.
-3. **Browse by tag:** `obsidian tag name="<tag>" verbose` — files with a specific tag. `obsidian tags counts` for all tags.
-4. **Related notes:** `obsidian backlinks file="<name>"` / `obsidian links file="<name>"`.
-5. Synthesize findings with `[[note-name]]` citations.
 
 ## Review Flow
 
@@ -117,4 +109,4 @@ obsidian outline          # Headings of active file
 - Never delete or overwrite existing notes
 - Use `[[wikilinks]]` for cross-references
 
-See [vault rules](references/vault-rules.md) for full specs.
+See [vault rules](../../references/vault-rules.md) for full specs.

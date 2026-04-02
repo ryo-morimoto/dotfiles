@@ -282,3 +282,112 @@ lib.mkOption {
 - Prefer small, focused commits (1 commit = 1 concern)
 - Update `flake.lock` with `chore: update flake.lock`
 - Example: `feat(niri): add workspace keybindings`
+
+## Grepika (CLI)
+
+Token-efficient なコード検索ツール。BM25 + trigram + ripgrep の3バックエンドスコア合算でランキング付き検索結果を返す。MCP ではなく CLI として使う。
+
+### セットアップ
+
+プロジェクトに入ったら最初にインデックスを構築する:
+
+```bash
+grepika --root $(pwd) index
+```
+
+フルリビルド:
+
+```bash
+grepika --root $(pwd) index --force
+```
+
+### コマンドリファレンス
+
+`--root <path>` はグローバルオプション。**サブコマンドの前**に置くこと。
+
+```bash
+# ランキング付き検索（BM25 + trigram + grep 合算）
+grepika --root . search "authentication" -l 20
+
+# 検索モード指定: combined(default) / fts(自然言語向き) / grep(正確パターン)
+grepika --root . search "error handling" -m fts
+
+# シンボル参照一覧（definition/import/usage 分類付き）
+grepika --root . refs "localOverlay"
+
+# ファイル構造抽出（関数/クラス/構造体）
+grepika --root . outline src/main.rs
+
+# ディレクトリツリー
+grepika --root . toc
+
+# ファイル内容取得
+grepika --root . get src/main.rs
+
+# 指定行の周辺コンテキスト
+grepika --root . context src/main.rs 42
+
+# インデックス統計
+grepika --root . stats
+
+# ファイル間差分
+grepika --root . diff a.rs b.rs
+```
+
+### スキル: コードベース学習 (`/learn-codebase` 相当)
+
+```bash
+grepika --root . stats          # 言語・ファイル数・規模
+grepika --root . toc            # ディレクトリ構造
+grepika --root . search "main entry point"  # エントリーポイント特定
+grepika --root . outline <key-file>         # 主要ファイルの構造
+grepika --root . get <key-file>             # 重要コード断片
+```
+
+→ 統計、ディレクトリ構造と役割、主要モジュール一覧、エントリーポイント、推奨リーディング順序を出力する。
+
+### スキル: バグ調査 (`/investigate` 相当)
+
+```bash
+grepika --root . search "<error message>"   # エラーメッセージ検索
+grepika --root . context <path> <line>       # マッチ周辺確認
+grepika --root . refs <function>             # 呼び出しチェーン追跡
+grepika --root . outline <path>              # 関連ファイル構造
+```
+
+→ エラー発生箇所 (file:line)、呼び出しチェーン、エラーハンドリング、修正案を出力する。
+
+### スキル: 変更影響分析 (`/impact` 相当)
+
+```bash
+grepika --root . refs <symbol>              # 直接参照を全件取得
+grepika --root . search "<related pattern>" # 類似パターン検索
+grepika --root . outline <impacted-file>    # 影響ファイル構造
+grepika --root . search "test.*<symbol>"    # テストカバレッジ確認
+```
+
+→ 直接影響、間接影響、テストカバレッジ、リスク評価 (Low/Medium/High)、安全なリファクタリング手順を出力する。
+
+### スキル: シンボル使用箇所分析 (`/find-usages` 相当)
+
+```bash
+grepika --root . refs <symbol>              # 全参照取得
+grepika --root . context <path> <line>      # 重要な使用箇所のコンテキスト
+grepika --root . refs <caller>              # 呼び出し元をさらに追跡（最大3階層）
+grepika --root . outline <path>             # 多参照ファイルの構造
+```
+
+→ 定義箇所 (file:line + シグネチャ)、使用サマリ (カテゴリ別件数)、呼び出し階層 (ツリー形式)、リファクタリング注意点を出力する。
+
+### 既知の制限
+
+- **シンボル分類は正規表現ベース。** `refs` の definition/import/usage 分類は行頭パターンマッチ。以下で誤分類する:
+  - Go: `func` キーワード未対応（全て Usage 扱い）
+  - Rust: `async fn`, `pub(crate) fn`, `impl` 未対応
+  - TS/JS: `export function/class/type/interface`, アロー関数, クラスメソッド未対応
+  - Python: `async def` 未対応
+- **コメント・文字列のフィルタなし。** コメント内の `import` も Import として分類される
+- **Import alias 未解決。** `import { A as B }` で `B` から `A` に辿れない
+- **依存チェーンの自動追従は不可能。** 手動で refs → context → refs を繰り返す必要がある
+
+→ 正確なシンボル解決が必要な場合は LSP を使うこと。grepika はランキング付き高速検索として併用する。

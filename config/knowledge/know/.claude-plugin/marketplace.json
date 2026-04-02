@@ -1,14 +1,14 @@
 {
-  "name": "knowledge-management",
+  "name": "know",
   "owner": {
     "name": "ryo-morimoto"
   },
   "plugins": [
     {
-      "name": "knowledge-management",
+      "name": "know",
       "source": "./",
       "description": "Record and search non-obvious learnings in Obsidian vault with CLI integration",
-      "version": "1.1.0"
+      "version": "2.0.0"
     }
   ]
 }

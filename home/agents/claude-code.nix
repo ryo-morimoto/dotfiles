@@ -42,7 +42,7 @@
         "keel@keel" = true;
         "compound-engineering@every-marketplace" = true;
         "coding-tutor@every-marketplace" = true;
-        "knowledge-management@knowledge-management" = true;
+        "know@know" = true;
         # Explicitly disabled
         "superpowers@claude-plugins-official" = false;
         "frontend-design@claude-plugins-official" = false;
@@ -62,7 +62,7 @@
     memory.text = builtins.readFile ./_AGENTS.md;
 
     plugins = [
-      ../../config/knowledge/knowledge-management/plugins/knowledge-management
+      ../../config/knowledge/know/plugins/know
     ];
 
     marketplaces = {
@@ -70,7 +70,7 @@
       moonbit-practice = moonbit-practice-marketplace;
       keel = keel-marketplace;
       every-marketplace = compound-engineering-plugin;
-      knowledge-management = ../../config/knowledge/knowledge-management;
+      know = ../../config/knowledge/know;
     };
 
     mcpServers = {
@@ -114,7 +114,6 @@
     ".claude/plugins/marketplaces/moonbit-practice".source = moonbit-practice-marketplace;
     ".claude/plugins/marketplaces/keel".source = keel-marketplace;
     ".claude/plugins/marketplaces/every-marketplace".source = compound-engineering-plugin;
-    ".claude/plugins/marketplaces/knowledge-management".source =
-      ../../config/knowledge/knowledge-management;
+    ".claude/plugins/marketplaces/know".source = ../../config/knowledge/know;
   };
 }

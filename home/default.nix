@@ -66,6 +66,11 @@ in
       nodePackages.eslint
       ruff
       starlint
+      semgrep
+
+      # Nix static analysis
+      nixf
+      flake-checker
 
       # Terminal
       ghostty
@@ -101,6 +106,8 @@ in
       nixfmt
       statix
       deadnix
+      nvd
+      nix-tree
       prek
       gitleaks
 
@@ -137,8 +144,7 @@ in
       # Dev environments
       devbox
 
-      # Container/Infra
-      docker
+      # Container/Infra (docker CLI provided by virtualisation.docker.enable)
       docker-credential-helpers
       kubectl
       k9s
@@ -148,7 +154,6 @@ in
 
       # File operations
       trash-cli
-      wl-clipboard
       wtype
       ffmpeg
       imagemagick
@@ -166,6 +171,10 @@ in
       claude-squad
       tmuxcc
       beacon
+      showboat
+      rodney
+      agent-browser
+      grepika
     ];
 
     file = {

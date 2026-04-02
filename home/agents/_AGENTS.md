@@ -64,13 +64,32 @@ Standard commands are aliased to modern replacements on this system:
 
 ## Knowledge Management (Obsidian)
 
-`knowledge-management` skill で Obsidian vault (`~/obsidian/`) にナレッジを蓄積する。
+Obsidian vault (`~/obsidian/`) にナレッジを蓄積・検索する。skill は用途別に分離されている。
 
-- **記録**: 非自明な挙動、ライブラリのハマりどころ、deep dive 知見、best practice curation、設計判断の理由を発見次第キャプチャ
-- **検索**: 同種の問題・ライブラリ統合・設計判断・best practice 適用の前に vault を検索してから着手
-- **対象外**: 公式ドキュメントを読めばわかる知見は記録しない
+### know（記録）
 
-詳細は skill 定義を参照。
+`/know` skill で非自明な知見を記録する。
+
+- 非自明な挙動、ライブラリのハマりどころ、deep dive 知見、best practice curation、設計判断の理由を発見次第キャプチャ
+- 公式ドキュメントを読めばわかる知見は記録しない
+
+### know:search（検索）— sub-agent 必須
+
+**「調査して」「調べて」「investigate」を受けたとき、web search の前に Agent tool で `know:search` sub-agent を起動して vault の既存知見を検索せよ。**
+
+```
+Agent tool → subagent_type: general-purpose
+prompt: "/know:search <検索クエリ>" を実行し、vault の該当知見を返せ。
+```
+
+**自動トリガー条件（確認不要で実行）:**
+
+- ライブラリ統合・フレームワーク導入の前
+- 設計判断の前（過去の trade-off、rejected alternatives）
+- デバッグ開始時（既知の問題・root cause）
+- best practice 適用の前
+
+**順序:** vault 検索 → コード読解 → 公式ドキュメント → web search。vault が最初。
 
 ## Retry Limits
 

@@ -14,5 +14,15 @@ jobs:
       - uses: DeterminateSystems/magic-nix-cache-action@87b14cf437d03d37989d87f0fa5ce4f5dc1a330b # v8
       - name: Check flake
         run: nix flake check
+      - name: Lint (nixf-tidy)
+        run: |
+          nix profile install nixpkgs#nixf
+          fd -e nix -x nixf-tidy {}
+      - name: Check flake.lock health
+        uses: DeterminateSystems/flake-checker-action@4b90f4006df80246b249b6beb1bbaa4b1eb6e46e # v9
+      - name: Semgrep (nix)
+        run: |
+          nix profile install nixpkgs#semgrep
+          semgrep scan --config .semgrep/ --error --severity ERROR --severity WARNING --no-git-ignore -j 1
       - name: Build NixOS configuration
         run: nix build .#nixosConfigurations.ryobox.config.system.build.toplevel --dry-run

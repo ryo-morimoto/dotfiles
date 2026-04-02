@@ -1,7 +1,11 @@
 {
+  config,
   pencilMcp,
   ...
 }:
+let
+  ghqDir = "${config.home.homeDirectory}/ghq/github.com/ryo-morimoto";
+in
 {
   programs.codex = {
     custom-instructions = builtins.readFile ./_AGENTS.md;
@@ -14,9 +18,9 @@
       model_reasoning_effort = "xhigh";
       features.collab = true;
       projects = {
-        "/home/ryo-morimoto/ghq/github.com/ryo-morimoto/dotfiles".trust_level = "trusted";
-        "/home/ryo-morimoto/ghq/github.com/ryo-morimoto/newsfeed-ai".trust_level = "trusted";
-        "/home/ryo-morimoto/ghq/github.com/ryo-morimoto/ccinsights".trust_level = "trusted";
+        "${ghqDir}/dotfiles".trust_level = "trusted";
+        "${ghqDir}/newsfeed-ai".trust_level = "trusted";
+        "${ghqDir}/ccinsights".trust_level = "trusted";
       };
       mcp_servers.pencil = {
         command = toString pencilMcp;

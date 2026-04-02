@@ -449,7 +449,6 @@
         "niri-flake": "niri-flake",
         "nixpkgs": "nixpkgs_2",
         "seiren": "seiren",
-        "starlintDarwinArm64Bin": "starlintDarwinArm64Bin",
         "starlintLinuxBin": "starlintLinuxBin",
         "tmuxcc-src": "tmuxcc-src",
         "voxtype": "voxtype",
@@ -475,19 +474,6 @@
         "ref": "nix-pkgs",
         "repo": "seiren",
         "type": "github"
-      }
-    },
-    "starlintDarwinArm64Bin": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1770616964,
-        "narHash": "sha256-l2mQlEF9q6UjULvGzb9fm5++SZNC5j48sD0+NtWHtOw=",
-        "type": "tarball",
-        "url": "https://github.com/mizchi/starlint/releases/latest/download/starlint-macos-arm64.tar.gz"
-      },
-      "original": {
-        "type": "tarball",
-        "url": "https://github.com/mizchi/starlint/releases/latest/download/starlint-macos-arm64.tar.gz"
       }
     },
     "starlintLinuxBin": {

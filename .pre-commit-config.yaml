@@ -24,6 +24,29 @@ repos:
         files: '\.nix$'
         priority: 0
 
+      - id: nixf-tidy
+        name: nixf-tidy
+        entry: nixf-tidy
+        language: system
+        files: '\.nix$'
+        priority: 0
+
+      - id: flake-checker
+        name: flake-checker
+        entry: flake-checker --no-telemetry
+        language: system
+        pass_filenames: false
+        files: 'flake\.lock$'
+        priority: 0
+
+      - id: semgrep-nix
+        name: semgrep (nix)
+        entry: semgrep scan --config .semgrep/ --error --severity ERROR --severity WARNING --no-git-ignore -j 1
+        language: system
+        files: '\.nix$'
+        pass_filenames: false
+        priority: 0
+
       - id: shellcheck
         name: shellcheck
         entry: shellcheck

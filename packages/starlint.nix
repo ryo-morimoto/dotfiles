@@ -4,31 +4,16 @@
   stdenv,
   stdenvNoCC,
   starlintLinuxBin,
-  starlintDarwinArm64Bin,
 }:
 
-let
-  version = "latest";
-  srcForSystem =
-    {
-      x86_64-linux = starlintLinuxBin;
-      aarch64-darwin = starlintDarwinArm64Bin;
-    }
-    .${stdenvNoCC.hostPlatform.system}
-      or (throw "Unsupported system for starlint: ${stdenvNoCC.hostPlatform.system}");
-in
 stdenvNoCC.mkDerivation {
   pname = "starlint";
-  inherit version;
+  version = "latest";
 
-  src = srcForSystem;
+  src = starlintLinuxBin;
 
-  nativeBuildInputs = lib.optionals stdenvNoCC.hostPlatform.isLinux [
-    autoPatchelfHook
-  ];
-  buildInputs = lib.optionals stdenvNoCC.hostPlatform.isLinux [
-    stdenv.cc.cc.lib
-  ];
+  nativeBuildInputs = [ autoPatchelfHook ];
+  buildInputs = [ stdenv.cc.cc.lib ];
 
   dontBuild = true;
 
@@ -47,10 +32,7 @@ stdenvNoCC.mkDerivation {
     description = "A linter for MoonBit language";
     homepage = "https://github.com/mizchi/starlint";
     license = licenses.mit;
-    platforms = [
-      "x86_64-linux"
-      "aarch64-darwin"
-    ];
+    platforms = [ "x86_64-linux" ];
     mainProgram = "starlint";
   };
 }

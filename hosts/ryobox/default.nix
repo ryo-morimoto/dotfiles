@@ -5,6 +5,11 @@
   ...
 }:
 
+let
+  username = "ryo-morimoto";
+  homeDir = "/home/${username}";
+  dotfilesDir = "${homeDir}/ghq/github.com/${username}/dotfiles";
+in
 {
   imports = [ ./hardware-configuration.nix ];
 
@@ -115,7 +120,7 @@
       # Exa API key for Claude Code MCP server
       exa-api-key = {
         file = ../../secrets/exa-api-key.age;
-        owner = "ryo-morimoto";
+        owner = username;
         mode = "0400";
       };
     };
@@ -136,16 +141,16 @@
         ExecStart = lib.getExe pkgs.vibe-kanban;
         Restart = "on-failure";
         RestartSec = "5s";
-        User = "ryo-morimoto";
-        WorkingDirectory = "/home/ryo-morimoto";
+        User = username;
+        WorkingDirectory = homeDir;
       };
     };
     "dotfiles-pull" = {
       description = "Pull latest dotfiles from GitHub";
       serviceConfig = {
         Type = "oneshot";
-        User = "ryo-morimoto";
-        WorkingDirectory = "/home/ryo-morimoto/ghq/github.com/ryo-morimoto/dotfiles";
+        User = username;
+        WorkingDirectory = dotfilesDir;
         ExecStart = "${pkgs.git}/bin/git pull --ff-only";
       };
     };
@@ -208,7 +213,7 @@
   };
 
   # User
-  users.users.ryo-morimoto = {
+  users.users.${username} = {
     isNormalUser = true;
     extraGroups = [
       "wheel"
@@ -234,20 +239,21 @@
       extra-trusted-public-keys = [ "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g=" ];
     };
 
-    # Automatic garbage collection (weekly, keep last 7 days)
+    # Automatic garbage collection (weekly, keep last 3 days)
     gc = {
       automatic = true;
       dates = "weekly";
-      options = "--delete-older-than 7d";
-    };
-
-    # Automatic store optimization (weekly)
-    optimise = {
-      automatic = true;
-      dates = [ "weekly" ];
+      options = "--delete-older-than 3d";
     };
   };
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.allowUnfreePredicate =
+    pkg:
+    builtins.elem (lib.getName pkg) [
+      "claude-code"
+      "cursor"
+      "obsidian"
+      "slack"
+    ];
 
   # Allow running dynamically linked binaries (for uv, etc.)
   programs.nix-ld.enable = true;
@@ -261,7 +267,7 @@
     # Automatic system upgrade from local repo (git pull → rebuild)
     autoUpgrade = {
       enable = true;
-      flake = "/home/ryo-morimoto/ghq/github.com/ryo-morimoto/dotfiles#ryobox";
+      flake = "${dotfilesDir}#ryobox";
       dates = "05:00";
       randomizedDelaySec = "45min";
       allowReboot = false;

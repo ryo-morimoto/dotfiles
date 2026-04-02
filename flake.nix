@@ -41,10 +41,6 @@
       url = "https://github.com/mizchi/starlint/releases/latest/download/starlint-linux-x64.tar.gz";
       flake = false;
     };
-    starlintDarwinArm64Bin = {
-      url = "https://github.com/mizchi/starlint/releases/latest/download/starlint-macos-arm64.tar.gz";
-      flake = false;
-    };
     seiren = {
       url = "github:ryo-morimoto/seiren/nix-pkgs";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -96,7 +92,6 @@
       moonbit-practice-marketplace,
       keel-marketplace,
       starlintLinuxBin,
-      starlintDarwinArm64Bin,
       ...
     }:
     let
@@ -108,8 +103,12 @@
         cursor-agent = final.callPackage ./packages/cursor-agent.nix { };
         zen-browser = zen-browser.packages.${final.stdenv.hostPlatform.system}.default;
         seiren-mcp = seiren.packages.${final.stdenv.hostPlatform.system}.default;
+        showboat = final.callPackage ./packages/showboat.nix { };
+        rodney = final.callPackage ./packages/rodney.nix { };
+        agent-browser = final.callPackage ./packages/agent-browser.nix { };
+        grepika = final.callPackage ./packages/grepika.nix { };
         starlint = final.callPackage ./packages/starlint.nix {
-          inherit starlintLinuxBin starlintDarwinArm64Bin;
+          inherit starlintLinuxBin;
         };
       };
     in
