@@ -62,10 +62,11 @@ Only knowledge that's hard to reach from docs alone:
 
 ## Search Flow
 
-1. Use `obsidian search query="<text>"` for full-text search
-2. Use `obsidian tags` to browse by tag, `obsidian tag name="<tag>"` for files with a specific tag
-3. Use `obsidian backlinks file="<name>"` to find related notes
-4. Read top matches and synthesize with `[[note-name]]` citations
+1. **Search:** `obsidian search:context query="<text>"` — matching lines with file:line context. Most token-efficient for discovery.
+2. **Drill down:** `obsidian read file="<name>"` — full content of a specific note.
+3. **Browse by tag:** `obsidian tag name="<tag>" verbose` — files with a specific tag. `obsidian tags counts` for all tags.
+4. **Related notes:** `obsidian backlinks file="<name>"` / `obsidian links file="<name>"`.
+5. Synthesize findings with `[[note-name]]` citations.
 
 ## Review Flow
 
@@ -80,10 +81,11 @@ The `obsidian` CLI can be used directly from the terminal for quick vault operat
 ### Search & Browse
 
 ```bash
-obsidian search query="nix flake"              # Full-text search
-obsidian search query="pitfall" format=json     # JSON output
-obsidian tags                                   # List all tags
-obsidian tag name="gotcha"                      # Files with tag
+obsidian search:context query="nix flake"      # File:line:content matches (primary)
+obsidian search query="nix flake"              # File names only
+obsidian tags counts                            # All tags with counts
+obsidian tag name="gotcha" verbose              # Files with tag + count
+obsidian outline file="nix-flake-check"         # Headings tree
 obsidian backlinks file="nix-flake-check"       # What links to this note
 obsidian links file="nix-flake-check"           # Outgoing links from note
 obsidian recents                                # Recently opened files
