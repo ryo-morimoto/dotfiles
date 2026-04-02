@@ -90,6 +90,10 @@
           "--mcp"
         ];
       };
+      secretary = {
+        type = "url";
+        url = "https://secretary.ryo-morimoto-dev.workers.dev/mcp";
+      };
     };
 
     # Skills managed by agent-skills-nix (see skills.nix)
