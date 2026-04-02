@@ -142,6 +142,27 @@
         "type": "github"
       }
     },
+    "fenix": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "rust-analyzer-src": "rust-analyzer-src"
+      },
+      "locked": {
+        "lastModified": 1775115015,
+        "narHash": "sha256-XO7jmyFupI82Sr1M2tLfsSxslIJwUOjzhFqeffaWyNw=",
+        "owner": "nix-community",
+        "repo": "fenix",
+        "rev": "45f82ed61800d52e27390b70823426045d982c84",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "fenix",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "inputs": {
         "systems": "systems_2"
@@ -441,6 +462,7 @@
         "claude-plugins-official": "claude-plugins-official",
         "compound-engineering-plugin": "compound-engineering-plugin",
         "dms": "dms",
+        "fenix": "fenix",
         "home-manager": "home-manager_2",
         "keel-marketplace": "keel-marketplace",
         "kuu-marketplace": "kuu-marketplace",
@@ -453,6 +475,23 @@
         "tmuxcc-src": "tmuxcc-src",
         "voxtype": "voxtype",
         "zen-browser": "zen-browser"
+      }
+    },
+    "rust-analyzer-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1775045117,
+        "narHash": "sha256-PLZYhcg3HUZ+lUMUV+JbXs9ExOAYpZC0PAtOVHCgYss=",
+        "owner": "rust-lang",
+        "repo": "rust-analyzer",
+        "rev": "e599ad4fc8861e0401906e4d730f74bfcc530e07",
+        "type": "github"
+      },
+      "original": {
+        "owner": "rust-lang",
+        "ref": "nightly",
+        "repo": "rust-analyzer",
+        "type": "github"
       }
     },
     "seiren": {

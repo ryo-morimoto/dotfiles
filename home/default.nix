@@ -88,6 +88,7 @@ in
       ripgrep
       fd
       jq
+      ast-grep
 
       # Modern CLI replacements
       btop
@@ -131,8 +132,17 @@ in
       moonbit-bin.moonbit.latest
       go
       gcc
-      rustc
-      cargo
+      (fenix.combine [
+        (fenix.stable.withComponents [
+          "cargo"
+          "clippy"
+          "rust-src"
+          "rustc"
+          "rustfmt"
+        ])
+        fenix.targets.wasm32-unknown-unknown.stable.rust-std
+      ])
+      wasm-pack
 
       # Shell development
       shellcheck
@@ -175,6 +185,7 @@ in
       rodney
       agent-browser
       grepika
+      portless
     ];
 
     file = {

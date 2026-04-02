@@ -33,6 +33,10 @@
     voxtype = {
       url = "github:peteonrails/voxtype";
     };
+    fenix = {
+      url = "github:nix-community/fenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     moonbit-overlay = {
       url = "github:moonbit-community/moonbit-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -83,6 +87,7 @@
       banto,
       agenix,
       voxtype,
+      fenix,
       moonbit-overlay,
       seiren,
       agent-skills-nix,
@@ -107,6 +112,7 @@
         rodney = final.callPackage ./packages/rodney.nix { };
         agent-browser = final.callPackage ./packages/agent-browser.nix { };
         grepika = final.callPackage ./packages/grepika.nix { };
+        portless = final.callPackage ./packages/portless.nix { };
         starlint = final.callPackage ./packages/starlint.nix {
           inherit starlintLinuxBin;
         };
@@ -122,6 +128,7 @@
           {
             nixpkgs.hostPlatform = "x86_64-linux";
             nixpkgs.overlays = [
+              fenix.overlays.default
               moonbit-overlay.overlays.default
               localOverlay
             ];
