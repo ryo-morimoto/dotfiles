@@ -91,11 +91,11 @@
         ];
       };
       secretary = {
-        type = "url";
+        type = "http";
         url = "https://secretary.ryo-morimoto-dev.workers.dev/mcp";
       };
       ronbun = {
-        type = "url";
+        type = "http";
         url = "https://ronbun-web-production.ryo-morimoto-dev.workers.dev/mcp";
       };
     };
