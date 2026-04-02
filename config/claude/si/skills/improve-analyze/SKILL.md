@@ -86,6 +86,6 @@ proposals: <count>
 - Always read ALL entries, not just recent ones (but weight recent ones higher)
 - Be specific in proposals — include draft content that can be directly applied
 - For `project-claudemd` proposals, check the current CLAUDE.md first to avoid duplicates
-- For `global-claudemd` proposals, check `config/claude/CLAUDE.md.tmpl` first
+- For `global-claudemd` proposals, check `home/agents/_AGENTS.md` first
 - Group related small issues into a single proposal when they share a root cause
 - If there are fewer than 3 entries, still generate a report but note that more data would improve analysis

@@ -23,7 +23,7 @@ Read the latest analysis report and execute approved proposals to improve the Cl
    | Action Type | Target | Method |
    |---|---|---|
    | `project-claudemd` | `CLAUDE.md` (repo root) | Append or edit section |
-   | `global-claudemd` | `config/claude/CLAUDE.md.tmpl` | Append or edit section. Note: requires `nixos-rebuild switch` to take effect |
+   | `global-claudemd` | `home/agents/_AGENTS.md` | Append or edit section. Note: requires `nixos-rebuild switch` to take effect |
    | `new-skill` | `.si/skills/<name>/SKILL.md` | Create new skill file + symlink in `.omc/skills/` |
    | `workflow-skill` | `.si/skills/<name>/SKILL.md` | Create new skill file + symlink in `.omc/skills/` |
    | `hook-update` | `.si/scripts/` + `.claude/settings.json` | Add detection patterns or new hook scripts |

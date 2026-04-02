@@ -3,6 +3,25 @@
 
 Before starting any implementation or codebase exploration, ask the user what they want to focus on first. Do not autonomously explore or begin work without confirming the starting point.
 
+## CRITICAL: Source-First Decision Making
+
+実装・設計の判断は必ず一次ソースを読んでから行え。推論だけで済ませることを禁止する。
+
+**優先順位:** コード（実装の実態） > 公式ドキュメント > コミュニティ（issue, discussion, blog）
+
+**手順:**
+1. 判断に関わるコードを Read/Grep/Glob で実際に読む
+2. コードだけで判断できない場合、公式ドキュメントを Context7 MCP または WebFetch で取得する
+3. 公式ドキュメントにも記載がない場合のみ、GitHub issue/discussion 等のコミュニティソースを検索する
+4. 参照したソースを回答に明示する（ファイルパス:行番号、ドキュメントURL、issue番号など）
+
+**禁止事項:**
+- 「おそらく〜でしょう」「一般的には〜」など、ソース未確認の推測に基づく提案
+- トレーニングデータの知識だけで設計判断を下すこと
+- ソースを読まずに「こう動くはず」と断定すること
+
+ソースが見つからない場合は、見つからなかった旨を正直に伝え、推測であることを明示せよ。
+
 ## Flow Control
 
 After receiving an AskUserQuestion answer, immediately execute the next action. Do not summarize, confirm, or pause. The answer is input to continue work, not a stopping point.

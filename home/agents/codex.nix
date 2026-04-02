@@ -4,6 +4,7 @@
 }:
 {
   programs.codex = {
+    custom-instructions = builtins.readFile ./_AGENTS.md;
     enable = true;
     # Uses pkgs.codex from nixpkgs (default)
 

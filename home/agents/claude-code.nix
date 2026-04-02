@@ -99,9 +99,7 @@ in
       skipDangerousModePermissionPrompt = true;
     };
 
-    memory.text =
-      builtins.readFile ../../config/claude/CLAUDE.md
-      + builtins.readFile ../../config/claude/CLAUDE.md.tmpl;
+    memory.text = builtins.readFile ./_AGENTS.md;
 
     plugins = [
       ../../config/claude/plugins/lite-agents

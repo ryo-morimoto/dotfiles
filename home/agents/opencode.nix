@@ -46,7 +46,7 @@ in
       };
     };
 
-    rules = builtins.readFile ../../config/opencode/AGENTS.md;
+    rules = builtins.readFile ./_AGENTS.md;
 
     # compound-engineering commands (sourced from flake input)
     commands = {
