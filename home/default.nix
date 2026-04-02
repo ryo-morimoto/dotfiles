@@ -32,6 +32,8 @@ in
       }}";
       PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
       CHROME_PATH = lib.getExe pkgs.chromium;
+      CLAUDE_CODE_NO_FLICKER = "1";
+      CLAUDE_CODE_DISABLE_MOUSE = "1";
     };
 
     sessionPath = [
