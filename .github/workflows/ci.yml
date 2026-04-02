@@ -16,10 +16,10 @@ jobs:
         run: nix flake check
       - name: Lint (nixf-tidy)
         run: |
-          nix profile install nixpkgs#nixf
+          nix profile install nixpkgs#nixf nixpkgs#fd
           fd -e nix -x nixf-tidy {}
       - name: Check flake.lock health
-        uses: DeterminateSystems/flake-checker-action@4b90f4006df80246b249b6beb1bbaa4b1eb6e46e # v9
+        uses: DeterminateSystems/flake-checker-action@3164002371bc90729c68af0e24d5aacf20d7c9f6 # v12
       - name: Semgrep (nix)
         run: |
           nix profile install nixpkgs#semgrep
