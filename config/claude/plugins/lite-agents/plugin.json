@@ -1,6 +1,0 @@
-{
-  "name": "lite-agents",
-  "version": "1.0.0",
-  "description": "Lightweight subagent collection: executor, researcher, architect, critic + systematic-debugging skill",
-  "skills": "./skills/"
-}

@@ -8,9 +8,6 @@
   ...
 }:
 
-let
-  dotfilesPath = "${config.home.homeDirectory}/ghq/github.com/ryo-morimoto/dotfiles";
-in
 {
   programs.claude-code = {
     enable = true;
@@ -18,43 +15,6 @@ in
 
     settings = {
       permissions.allow = [ "mcp__pencil" ];
-      hooks = {
-        PostToolUse = [
-          {
-            matcher = "";
-            hooks = [
-              {
-                type = "command";
-                command = "node ~/.claude/si/scripts/improvement-post-tool.mjs";
-                timeout = 3000;
-              }
-            ];
-          }
-        ];
-        Stop = [
-          {
-            hooks = [
-              {
-                type = "command";
-                command = "node ~/.claude/si/scripts/improvement-session-end.mjs";
-                timeout = 10000;
-              }
-            ];
-          }
-        ];
-        PreCompact = [
-          {
-            matcher = "";
-            hooks = [
-              {
-                type = "command";
-                command = "node ~/.claude/si/scripts/improvement-pre-compact.mjs";
-                timeout = 5000;
-              }
-            ];
-          }
-        ];
-      };
       statusLine = {
         type = "command";
         command = "node /home/ryo-morimoto/.claude/hud/omc-hud.mjs";
@@ -102,7 +62,6 @@ in
     memory.text = builtins.readFile ./_AGENTS.md;
 
     plugins = [
-      ../../config/claude/plugins/lite-agents
       ../../config/knowledge/knowledge-management/plugins/knowledge-management
     ];
 
@@ -137,13 +96,6 @@ in
   };
 
   home.file = {
-    # Mutable symlinks (live editing without rebuild)
-    ".claude/si/scripts".source =
-      config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/claude/si/scripts";
-    ".claude/si/skills".source =
-      config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/claude/si/skills";
-    ".claude/statusline.sh".source =
-      config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/claude/statusline.sh";
     # keel plugin: mutable symlink for live development
     ".claude/plugins/keel".source =
       config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/ghq/github.com/ryo-morimoto/keel";
