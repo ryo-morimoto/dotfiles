@@ -74,14 +74,11 @@
       url = "github:ryo-morimoto/keel";
       flake = false;
     };
-    # FIXME: pinned for khal; remove when nixpkgs#khal sphinx build is fixed
-    nixpkgs-khal.url = "github:nixos/nixpkgs/0182a361324364ae3f436a63005877674cf45efb";
   };
 
   outputs =
     {
       nixpkgs,
-      nixpkgs-khal,
       home-manager,
       dms,
       niri-flake,
@@ -114,8 +111,6 @@
         starlint = final.callPackage ./packages/starlint.nix {
           inherit starlintLinuxBin starlintDarwinArm64Bin;
         };
-        # FIXME: remove when nixpkgs#khal sphinx build is fixed upstream
-        inherit (nixpkgs-khal.legacyPackages.${final.stdenv.hostPlatform.system}) khal;
       };
     in
     {
