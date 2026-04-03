@@ -17,8 +17,8 @@ description: >
 
 ## 診断の核心原則
 
-1. **決定論的メカニズムが主、エージェント指示は補助** — linter/型チェッカー/テスト/CIが強制層。CLAUDE.md/AGENTS.mdはガイダンスに過ぎない
-2. **防御の多層化** — IDE→pre-commit→CI→PRレビューの4層。1層が突破されても他が捕捉する
+1. **決定論的メカニズムが主、CIは再確認層** — linter/型チェッカー/テスト/セキュリティ検査はまず local で即時実行できること。CI は同じチェックの mirror と、遅い全体スキャンの受け皿
+2. **防御の多層化** — IDE→local command / pre-commit→CI→PRレビューの4層。1層が突破されても他が捕捉する
 3. **スナップショットよりトレンド** — 今の状態だけでなく、健全性が改善傾向か悪化傾向かを見る
 4. **プロジェクト特性に応じた判断** — 個人ツールとプロダクションサービスでは要求水準が異なる
 
@@ -69,13 +69,13 @@ tokei --compact 2>/dev/null || cloc --quiet --csv 2>/dev/null
 | # | 次元 | reference | 主な検出対象 |
 |---|------|-----------|-------------|
 | 1 | 環境再現性 | `dimensions/reproducibility.md` | flake.nix, devcontainer, mise, lock files |
-| 2 | ディレクトリ構造 | `dimensions/structure.md` | 規模に応じた分割、ADR、README |
-| 3 | Git Hooks | `dimensions/git-hooks.md` | pre-commit/lefthook/husky, 実行速度 |
+| 2 | ディレクトリ構造 | `dimensions/structure.md` | `tree --gitignore` による構造明瞭性、規模適合、living documentation |
+| 3 | Git Hooks | `dimensions/git-hooks.md` | prek/lefthook/pre-commit/husky, 実行速度 |
 | 4 | 静的解析 | `dimensions/static-analysis.md` | linter/formatter/型チェッカー設定 |
 | 5 | セキュリティ | `dimensions/security.md` | secret検知、SCA、SAST |
 | 6 | テスト | `dimensions/testing.md` | ピラミッド構造、カバレッジ、mutation |
-| 7 | Dead Code & 依存衛生 | `dimensions/dead-code.md` | 未使用コード/依存、更新自動化、ライセンス |
-| 8 | CI/CD | `dimensions/ci-cd.md` | パイプライン構成、quality gate |
+| 7 | Dead Code & 依存衛生 | `dimensions/dead-code.md` | 未使用コード/依存、local + CI の dead-code 再検証、更新自動化、ライセンス |
+| 8 | CI/CD | `dimensions/ci-cd.md` | local parity を持つパイプライン構成、quality gate |
 | 9 | コラボレーション | `dimensions/collaboration.md` | PR template, CODEOWNERS, conventional commits |
 | 10 | 可観測性 | `dimensions/observability.md` | 複雑度/カバレッジのトレンド追跡 |
 | 11 | AI ガードレール | `dimensions/ai-guardrails.md` | CLAUDE.md, AGENTS.md, アーキテクチャ適合テスト |
@@ -148,13 +148,28 @@ tokei --compact 2>/dev/null || cloc --quiet --csv 2>/dev/null
 3. 1つの改善が完了するごとにユーザーに確認
 4. ツール固有のAPIや設定は Context7 MCP で最新ドキュメントを取得してから実装
 
+## Repo Doctor の既定推奨
+
+- **共有コマンド**: CI と local の両方で使う 30 文字超のコマンドは `just` recipe に抽出し、workflow / hook / package scripts / docs に生の長文コマンドを重複させない
+- **local-first**: 主要チェックは必ず local command / hook / package script / `just` から叩けること。CI は同じチェックの再確認を基本とし、CI-only は重い全体スキャンに限定する
+- **Git Hooks**: 第一候補は `prek`。既存導入やエコシステム制約がある場合のみ `lefthook` / `pre-commit` / `husky` を優先する
+- **SAST**: 第一候補は `Semgrep`。既に `Semgrep` が入っているリポジトリでは標準SASTとして扱い、CodeQL などは補完として追加する
+- **依存の鮮度ガード**: 対応する package manager では `minimumReleaseAge` 相当の設定を必須とし、既定値は 7 日。Renovate を使う場合も package manager native の設定を省略しない
+- **GitHub Actions**: `uses:` は action の種類を問わずフル SHA で pin し、元の tag / version は trailing comment 等で併記する
+
 ## 判断基準
 
-**ツールを推奨するとき** → ツール名だけでなく、Context7 MCPで最新ドキュメントを確認し、プロジェクトのスタックに適合するか検証してから推奨する。`references/sources.md` に主要ツールのドキュメントURLを記載。
+**ツールを推奨するとき** → ツール名だけでなく、Context7 MCPで最新ドキュメントを確認し、プロジェクトのスタックに適合するか検証してから推奨する。`references/sources.md` に主要ツールのドキュメントURLを記載。とくに shared command は `just`、Git hooks は `prek`、SAST は `Semgrep` を既定として評価する。
 
 **スタック固有のツールを選ぶとき** → 以下の優先順位で判断：
 1. プロジェクトに既に導入済みのツール（package.json, flake.nix等で検出）
 2. そのエコシステムのデファクト（references内の推奨ツール）
 3. クロスプラットフォーム汎用ツール
+
+**依存更新を評価するとき** → Renovate / Dependabot の有無だけで充足扱いにしない。対応 package manager が `minimumReleaseAge` 相当を持つ場合は package manager 側でも 7 日以上を要求し、Renovate を使うなら `minimumReleaseAge` も揃える。
+
+**local と CI の関係を評価するとき** → CI-only のチェックを高評価にしない。まず local から同じ検査を実行できることを必須とし、CI はその再確認として評価する。例外はフルリポジトリスキャン、重い matrix build、リリース時 SBOM 生成などの高コスト処理のみ。
+
+**GitHub Actions を評価するとき** → major tag pin だけでは充足扱いにしない。`uses:` がフル SHA pin されていることを必須とし、可読性のための tag は comment 併記を推奨する。
 
 **診断が曖昧なとき** → 根拠を明示した上で「部分充足」とし、ユーザーに判断を委ねる。推測で「充足」にしない。

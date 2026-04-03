@@ -50,7 +50,7 @@ PRプロセス、レビュー体制、コミット規約が整備されている
 
 | ツール | 用途 | 特徴 |
 |--------|------|------|
-| **commitlint** | コミットメッセージ検証 | husky/lefthook と統合。conventional commits 準拠チェック |
+| **commitlint** | コミットメッセージ検証 | `prek` / `lefthook` / `husky` と統合。conventional commits 準拠チェック |
 | **git-cliff** | Changelog 生成 | Rust製、高速。conventional commits からchangelog自動生成 |
 | **semantic-release** | バージョニング+リリース | conventional commits からバージョン判定、changelog、npm publish |
 | **danger** | PRレビュー自動化 | PRサイズ警告、changelog更新チェック等 |
