@@ -7,11 +7,18 @@ skill内のコード例やツール情報は執筆時点のもの。実際の導
 
 | ツール | ドキュメント | Context7 library |
 |--------|-------------|-----------------|
+| prek | https://github.com/j178/prek | - |
 | pre-commit | https://pre-commit.com/ | - |
 | Lefthook | https://github.com/evilmartians/lefthook | - |
 | Husky | https://typicode.github.io/husky/ | - |
 | lint-staged | https://github.com/lint-staged/lint-staged | - |
 | commitlint | https://commitlint.js.org/ | - |
+
+## Task Runner
+
+| ツール | ドキュメント | Context7 library |
+|--------|-------------|-----------------|
+| just | https://just.systems/man/en/ | - |
 
 ## Linter / Formatter
 
@@ -39,6 +46,8 @@ skill内のコード例やツール情報は執筆時点のもの。実際の導
 | CodeQL | https://codeql.github.com/docs/ | - |
 | Snyk | https://docs.snyk.io/ | - |
 | Checkov | https://www.checkov.io/1.Welcome/Quick%20Start.html | - |
+| pnpm minimumReleaseAge | https://pnpm.io/settings#minimumreleaseage | - |
+| Bun `install.minimumReleaseAge` | https://bun.sh/docs/pm/cli/install#minimum-release-age | - |
 | OWASP CI/CD Cheat Sheet | https://cheatsheetseries.owasp.org/cheatsheets/CI_CD_Security_Cheat_Sheet.html | - |
 
 ## Testing
@@ -62,11 +71,46 @@ skill内のコード例やツール情報は執筆時点のもの。実際の導
 | FOSSA | https://docs.fossa.com/ | - |
 | Syft (SBOM) | https://github.com/anchore/syft | - |
 
+## Structure & Living Documentation
+
+| リソース | ドキュメント | Context7 library |
+|----------|-------------|-----------------|
+| dependency-cruiser | https://github.com/sverweij/dependency-cruiser | - |
+| Import Linter contract types | https://import-linter.readthedocs.io/en/stable/contract_types/ | - |
+| Import Linter forbidden | https://import-linter.readthedocs.io/en/stable/contract_types/forbidden/ | - |
+| ESLint `no-restricted-imports` | https://eslint.org/docs/latest/rules/no-restricted-imports | `/eslint/eslint` |
+| Go module layout | https://go.dev/doc/modules/layout | - |
+| Cargo package layout | https://doc.rust-lang.org/cargo/guide/project-layout.html | - |
+| Cargo workspaces | https://doc.rust-lang.org/cargo/reference/workspaces.html | - |
+| React Router `routes.ts` | https://reactrouter.com/api/framework-conventions/routes.ts | - |
+| React Router file route conventions | https://reactrouter.com/how-to/file-route-conventions | - |
+| Turborepo repository structure | https://turborepo.dev/docs/crafting-your-repository/structuring-a-repository | - |
+| Nx enforce module boundaries | https://nx.dev/docs/features/enforce-module-boundaries | - |
+| DDD-oriented microservice | https://learn.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/ddd-oriented-microservice | - |
+| ADR homepage | https://adr.github.io/ | - |
+| MADR | https://adr.github.io/madr/ | - |
+| e-adr | https://adr.github.io/e-adr/ | - |
+| Diataxis foundations | https://diataxis.fr/foundations/ | - |
+| Diataxis workflow | https://diataxis.fr/how-to-use-diataxis/ | - |
+| Diataxis reference | https://diataxis.fr/reference/ | - |
+| GitHub Docs content model | https://docs.github.com/en/enterprise-cloud@latest/contributing/style-guide-and-content-model/about-the-content-model | - |
+| GitHub Docs reusable content | https://docs.github.com/en/contributing/writing-for-github-docs/creating-reusable-content | - |
+| GitHub Docs versioning | https://docs.github.com/en/contributing/writing-for-github-docs/versioning-documentation | - |
+| GitHub Docs content linter | https://docs.github.com/en/contributing/collaborating-on-github-docs/using-the-content-linter | - |
+| Semgrep write rules | https://semgrep.dev/docs/writing-rules/overview | `/semgrep/semgrep` |
+| Semgrep test rules | https://semgrep.dev/docs/writing-rules/testing-rules | `/semgrep/semgrep` |
+| Semgrep how it works | https://semgrep.dev/docs/for-developers/detection | `/semgrep/semgrep` |
+| C4 review checklist | https://c4model.com/diagrams/checklist | - |
+| C4 code diagram | https://c4model.com/diagrams/code | - |
+| arc42 documentation | https://arc42.org/documentation/ | - |
+
 ## CI/CD
 
 | ツール | ドキュメント | Context7 library |
 |--------|-------------|-----------------|
 | GitHub Actions | https://docs.github.com/en/actions | - |
+| GitHub Actions secure use / SHA pinning | https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions | - |
+| GitHub immutable releases and tags | https://docs.github.com/en/actions/how-tos/create-and-publish-actions/using-immutable-releases-and-tags-to-manage-your-actions-releases | - |
 | SonarCloud | https://docs.sonarsource.com/sonarcloud/ | - |
 
 ## Collaboration
