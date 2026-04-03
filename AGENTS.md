@@ -104,7 +104,7 @@
 - [Playwright運用]: Chromium-only は `PLAYWRIGHT_BROWSERS_PATH=${pkgs.playwright-driver.browsers.override { withFirefox = false; withWebkit = false; }}` を標準にし、`playwright install*` を使わない
 - [OpenCode運用]: `compound-engineering` は Home Manager activation で自動適用する
 - [ローカルWebツール運用]: `agent-browser` はブラウザ操作・観測、`portless` は stable な local URL と worktree 分離に使い分ける
-- [Codex運用]: alias 追加より skill 化を優先し、subagent への役割指示テンプレートは prompt 断片ではなく skill として管理する
+- [Codex運用]: alias 追加より skill 化を優先し、subagent への役割指示テンプレートは prompt 断片ではなく skill として管理する。`~/.codex/config.toml` は Codex 自身が更新できる mutable file を維持し、Home Manager では activation でデフォルトを書き込む
 - [Claude Code配布元]: `pkgs.claude-code` に問題があるときは `ryoppippi/nix-claude-code` overlay を優先し、Home Manager の `programs.claude-code.package` 差し替え口で設定を維持する
 - [Neovim Markdown閲覧]: 日本語 Markdown では spell を無効化せず、`spelllang=en,cjk` で英単語チェックを残す
 - [repo-doctor運用]: shared CI/local command は `just`、Git hooks は `prek`、SAST は `Semgrep`、dependency age gate は 7 日、GitHub Actions は full SHA pin、主要チェックは local-first で CI は同一チェックの再確認、directory structure は `tree --gitignore` と言語/アプリ特性/規模適合または明示ルールで評価し、living documentation は oldest-5 と関連コードの対応、orphan doc/code の有無で鮮度を確認する
