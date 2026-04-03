@@ -368,6 +368,26 @@
         "type": "github"
       }
     },
+    "nix-claude-code": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1775171219,
+        "narHash": "sha256-3poVYyTB/THwwX2OIA4YNTEhg5pW3XEt1l53GV0j2mk=",
+        "owner": "ryoppippi",
+        "repo": "nix-claude-code",
+        "rev": "644838d512a95c415886736f1e6dc28531625f7d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ryoppippi",
+        "repo": "nix-claude-code",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1775036866,
@@ -469,6 +489,7 @@
         "moonbit-overlay": "moonbit-overlay",
         "moonbit-practice-marketplace": "moonbit-practice-marketplace",
         "niri-flake": "niri-flake",
+        "nix-claude-code": "nix-claude-code",
         "nixpkgs": "nixpkgs_2",
         "seiren": "seiren",
         "starlintLinuxBin": "starlintLinuxBin",

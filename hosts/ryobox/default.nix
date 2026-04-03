@@ -249,6 +249,7 @@ in
   nixpkgs.config.allowUnfreePredicate =
     pkg:
     builtins.elem (lib.getName pkg) [
+      "claude"
       "claude-code"
       "cursor"
       "obsidian"

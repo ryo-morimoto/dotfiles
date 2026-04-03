@@ -54,6 +54,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
+    nix-claude-code = {
+      url = "github:ryoppippi/nix-claude-code";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     compound-engineering-plugin = {
       url = "github:EveryInc/compound-engineering-plugin";
       flake = false;
@@ -91,6 +95,7 @@
       moonbit-overlay,
       seiren,
       agent-skills-nix,
+      nix-claude-code,
       compound-engineering-plugin,
       claude-plugins-official,
       kuu-marketplace,
@@ -130,6 +135,7 @@
             nixpkgs.overlays = [
               fenix.overlays.default
               moonbit-overlay.overlays.default
+              nix-claude-code.overlays.default
               localOverlay
             ];
             home-manager = {

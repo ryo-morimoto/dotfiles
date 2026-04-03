@@ -1,5 +1,6 @@
 {
   config,
+  pkgs,
   compound-engineering-plugin,
   claude-plugins-official,
   kuu-marketplace,
@@ -11,7 +12,7 @@
 {
   programs.claude-code = {
     enable = true;
-    # Uses pkgs.claude-code from nixpkgs (default)
+    package = pkgs.claude-code;
 
     settings = {
       permissions.allow = [ "mcp__pencil" ];

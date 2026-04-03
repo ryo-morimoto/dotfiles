@@ -47,7 +47,7 @@ in
       code-cursor
 
       # LSP servers (for Neovim)
-      nodePackages.typescript-language-server
+      typescript-language-server
       vscode-langservers-extracted
       pyright
       rust-analyzer
@@ -63,7 +63,7 @@ in
       stylua
 
       # Linters (for Neovim)
-      nodePackages.eslint
+      eslint
       ruff
       starlint
       semgrep
