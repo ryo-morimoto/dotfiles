@@ -95,14 +95,21 @@
 
 ## 選好ログ（L）
 
-- [進め方]: 破壊的変更・契約変更以外は自律実行する
+- [進め方]: 破壊的変更・契約変更以外は自律実行し、開始点が明示されている依頼では着手前確認を挟まない
 - [dotfiles品質]: `.nix` 編集後は `nixfmt`、flake 変更時は `nix flake check` で検証する
 - [構成方針]: Nix Flakes + Home Manager の宣言的構成を維持する
+- [Python実行環境]: `python3` は system-wide ではなく Home Manager のユーザー環境に追加する
 - [コミット運用]: Conventional Commits を基本に、小さめの差分を高頻度で積む
 - [依存更新運用]: `chore: update flake.lock` を定期実行し、依存更新を継続する
 - [Playwright運用]: Chromium-only は `PLAYWRIGHT_BROWSERS_PATH=${pkgs.playwright-driver.browsers.override { withFirefox = false; withWebkit = false; }}` を標準にし、`playwright install*` を使わない
 - [OpenCode運用]: `compound-engineering` は Home Manager activation で自動適用する
+- [ローカルWebツール運用]: `agent-browser` はブラウザ操作・観測、`portless` は stable な local URL と worktree 分離に使い分ける
+- [Codex運用]: alias 追加より skill 化を優先し、subagent への役割指示テンプレートは prompt 断片ではなく skill として管理する
 - [Claude Code配布元]: `pkgs.claude-code` に問題があるときは `ryoppippi/nix-claude-code` overlay を優先し、Home Manager の `programs.claude-code.package` 差し替え口で設定を維持する
+- [Neovim Markdown閲覧]: 日本語 Markdown では spell を無効化せず、`spelllang=en,cjk` で英単語チェックを残す
+- [repo-doctor運用]: shared CI/local command は `just`、Git hooks は `prek`、SAST は `Semgrep`、dependency age gate は 7 日、GitHub Actions は full SHA pin、主要チェックは local-first で CI は同一チェックの再確認、directory structure は `tree --gitignore` と言語/アプリ特性/規模適合または明示ルールで評価し、living documentation は oldest-5 と関連コードの対応、orphan doc/code の有無で鮮度を確認する
+- [エージェント自動化]: フォーマット・静的解析・リリースノート生成など機械的に処理できる作業は LLM ではなく script / CI に委譲する
+- [エージェントレビュー]: impact / correctness / ops / cleanup など観点を固定したレビューを Codex の主要用途として優先する
 
 ## 未確定ドメイン（U）
 
@@ -201,6 +208,32 @@ nix build .#vibe-kanban
 # Test a single module (requires evaluation)
 nix eval .#nixosConfigurations.ryobox.config.home-manager.users.ryo-morimoto
 ```
+
+## Browser Automation / Local URLs
+
+### `agent-browser`
+
+- ブラウザを実際に開いて操作・観測するときに使う。クリック、入力、snapshot、screenshot、PDF、console/errors 確認、CDP 接続は `agent-browser` の責務
+- AI/agent の標準フローは `open` → `snapshot -i` → `@ref` で操作 → 必要に応じて `wait` / `get` / `screenshot`
+- 認証状態や既存 Chrome を再利用したいときは `--profile` / `--session-name` / `--auto-connect` / `--cdp` を使う
+- 人間がブラウザの状態を見ながら進めたいときだけ `dashboard` や `stream` を使う
+- local URL の命名や port 管理は担当しない。URL を安定させたいだけなら `portless` を使う
+
+### `portless`
+
+- dev server を raw な `localhost:<port>` ではなく stable な `https://<name>.localhost` で公開したいときに使う
+- `portless run <cmd>` は project 名から URL を推論し、git worktree では branch/worktree prefix を付けて URL 衝突を避ける
+- 複数アプリや API を同時に立ち上げるときは `portless <name> <cmd>` や `portless alias <name> <port>` を使って名前付きで管理する
+- HTTPS + HTTP/2 をデフォルトで有効化したい、cookie/storage を app ごとに分離したい、port 番号の記憶や衝突を避けたいときに向いている
+- ブラウザ操作はしない。UI 操作やレンダリング確認は `agent-browser` と組み合わせる
+
+### 併用ルール
+
+- browser automation が目的なら、先に `portless` で安定 URL を作り、その URL を `agent-browser open <url>` に渡す
+- 例: `portless run next dev` で `https://myapp.localhost` を立て、`agent-browser open https://myapp.localhost` で操作する
+- repo 内の他ツールが CDP 付き Chrome を起動済みなら、URL 管理は `portless`、ブラウザ接続は `agent-browser --cdp ...` で分担する
+- `agent-browser` 単独で十分なのは「既存 URL に対する操作・確認」が主目的のとき
+- `portless` 単独で十分なのは「開発 URL を固定したい」「worktree ごとに URL を分けたい」「cross-service URL を名前で解決したい」とき
 
 ## Code Style Guidelines
 
