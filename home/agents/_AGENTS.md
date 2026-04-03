@@ -1,8 +1,4 @@
 
-## General Behavior
-
-Before starting any implementation or codebase exploration, ask the user what they want to focus on first. Do not autonomously explore or begin work without confirming the starting point.
-
 ## CRITICAL: Source-First Decision Making
 
 実装・設計の判断は必ず一次ソースを読んでから行え。推論だけで済ませることを禁止する。
