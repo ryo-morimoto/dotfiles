@@ -9,7 +9,7 @@ Default: Catppuccin Mocha gradient (included as `wallpaper.png`)
 cp ~/Downloads/your-wallpaper.png ~/.config/wallpaper/wallpaper.png
 
 # Apply immediately with animation
-swww img ~/.config/wallpaper/wallpaper.png --transition-type grow --transition-pos center
+awww img ~/.config/wallpaper/wallpaper.png --transition-type grow --transition-pos center
 ```
 
 ## Catppuccin Wallpapers
@@ -21,14 +21,14 @@ swww img ~/.config/wallpaper/wallpaper.png --transition-type grow --transition-p
 
 ```bash
 # Grow from center
-swww img wallpaper.png --transition-type grow --transition-pos center
+awww img wallpaper.png --transition-type grow --transition-pos center
 
 # Fade
-swww img wallpaper.png --transition-type fade
+awww img wallpaper.png --transition-type fade
 
 # Wipe from left
-swww img wallpaper.png --transition-type wipe --transition-angle 0
+awww img wallpaper.png --transition-type wipe --transition-angle 0
 
 # Wave effect
-swww img wallpaper.png --transition-type wave
+awww img wallpaper.png --transition-type wave
 ```

@@ -103,6 +103,7 @@
 - [依存更新運用]: `chore: update flake.lock` を定期実行し、依存更新を継続する
 - [Playwright運用]: Chromium-only は `PLAYWRIGHT_BROWSERS_PATH=${pkgs.playwright-driver.browsers.override { withFirefox = false; withWebkit = false; }}` を標準にし、`playwright install*` を使わない
 - [OpenCode運用]: `compound-engineering` は Home Manager activation で自動適用する
+- [デスクトップ構成]: Niri + DankMaterialShell を継続し、置き換え済みの旧 desktop stack は repo に残さない
 - [ローカルWebツール運用]: `agent-browser` はブラウザ操作・観測、`portless` は stable な local URL と worktree 分離に使い分ける
 - [Codex運用]: alias 追加より skill 化を優先し、subagent への役割指示テンプレートは prompt 断片ではなく skill として管理する。`~/.codex/config.toml` は Codex 自身が更新できる mutable file を維持し、Home Manager では activation でデフォルトを書き込む
 - [Claude Code配布元]: `pkgs.claude-code` に問題があるときは `ryoppippi/nix-claude-code` overlay を優先し、Home Manager の `programs.claude-code.package` 差し替え口で設定を維持する
@@ -113,7 +114,6 @@
 
 ## 未確定ドメイン（U）
 
-- デスクトップ環境の方向性（Niri + waybar 継続 / DMS 導入）
 - 既定ブラウザの方向性（Firefox 基準の維持 / Zen への移行）
 
 ## 直近100件のコミットログ分析（2026-01-20〜2026-02-25）

@@ -69,7 +69,7 @@ PanelWindow {
     function applyWallpaper(filePath) {
         wallpaperProcess.command = [
             "sh", "-c",
-            "swww img '" + filePath + "' --transition-type grow --transition-step 90 --transition-duration 2 --transition-fps 60 && " +
+            "awww img '" + filePath + "' --transition-type grow --transition-step 90 --transition-duration 2 --transition-fps 60 && " +
             "wallust run '" + filePath + "' && " +
             "~/.config/wallust/scripts/reload-theme.sh"
         ]

@@ -644,7 +644,7 @@ in
     };
   };
 
-  # DankMaterialShell (desktop shell replacing waybar, mako, fuzzel, swaylock)
+  # DankMaterialShell desktop shell
   programs.dank-material-shell = {
     enable = true;
     enableDynamicTheming = true;
@@ -767,7 +767,7 @@ in
     };
 
     spawn-at-startup = [
-      { command = [ "swww-daemon" ]; }
+      { command = [ "awww-daemon" ]; }
       { command = [ "swayosd-server" ]; }
       { command = [ "blueman-applet" ]; }
     ];
@@ -1074,7 +1074,6 @@ in
       "mimeapps.list".force = true;
       "nvim".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/nvim";
       "ghostty".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/ghostty";
-      "hypr".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/hypr";
       "zsh".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/zsh";
       "wallpaper".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/wallpaper";
       "tmuxcc".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/tmuxcc";

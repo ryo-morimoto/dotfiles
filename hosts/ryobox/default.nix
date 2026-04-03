@@ -182,7 +182,7 @@ in
     swayosd
 
     # Wallpaper
-    swww
+    awww
 
     # Utilities
     wl-clipboard

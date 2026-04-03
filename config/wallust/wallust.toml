@@ -21,10 +21,6 @@ alpha = 100
 [templates]
 # Apps with import support - output directly to config
 ghostty = { template = "ghostty.conf", target = "~/.config/ghostty/colors" }
-waybar = { template = "waybar.css", target = "~/.config/waybar/colors.css" }
 
-# Apps without import support - output to cache, reload script concatenates with base
-mako = { template = "mako-colors.conf", target = "~/.cache/wallust/mako-colors.conf" }
-fuzzel = { template = "fuzzel-colors.ini", target = "~/.cache/wallust/fuzzel-colors.ini" }
-swaylock = { template = "swaylock-colors.conf", target = "~/.cache/wallust/swaylock-colors.conf" }
+# Keep the Niri template available until a consumer is wired back in.
 niri = { template = "niri-colors.txt", target = "~/.cache/wallust/niri-colors.txt" }
