@@ -149,6 +149,7 @@ in
       shfmt
 
       # Python
+      python3
       uv
 
       # Dev environments
@@ -158,6 +159,10 @@ in
       docker-credential-helpers
       kubectl
       k9s
+
+      # Google
+      google-cloud-sdk
+      gws
 
       # Database
       sqlite
