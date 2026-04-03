@@ -102,6 +102,7 @@
 - [依存更新運用]: `chore: update flake.lock` を定期実行し、依存更新を継続する
 - [Playwright運用]: Chromium-only は `PLAYWRIGHT_BROWSERS_PATH=${pkgs.playwright-driver.browsers.override { withFirefox = false; withWebkit = false; }}` を標準にし、`playwright install*` を使わない
 - [OpenCode運用]: `compound-engineering` は Home Manager activation で自動適用する
+- [Claude Code配布元]: `pkgs.claude-code` に問題があるときは `ryoppippi/nix-claude-code` overlay を優先し、Home Manager の `programs.claude-code.package` 差し替え口で設定を維持する
 
 ## 未確定ドメイン（U）
 
