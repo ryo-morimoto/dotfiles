@@ -10,19 +10,6 @@ let
   ghqDir = "${config.home.homeDirectory}/ghq/github.com/ryo-morimoto";
   codexConfigDir = "${config.home.homeDirectory}/.codex";
   codexConfigFile = "${codexConfigDir}/config.toml";
-  codexPackage = pkgs.symlinkJoin {
-    name = "codex";
-    paths = [ pkgs.codex ];
-    postBuild = ''
-      mv $out/bin/codex $out/bin/.codex-wrapped
-      cat > $out/bin/codex <<'EOF'
-      #! ${pkgs.bash}/bin/bash -e
-      exec -a "$0" "$out/bin/.codex-wrapped" --full-auto "$@"
-      EOF
-      chmod +x $out/bin/codex
-    '';
-    inherit (pkgs.codex) meta;
-  };
   renderCompoundEngineeringPrompt =
     prompt:
     ''
@@ -70,7 +57,6 @@ in
   programs.codex = {
     custom-instructions = builtins.readFile ./_AGENTS.md;
     enable = true;
-    package = codexPackage;
     settings = { };
     inherit (compoundEngineering.codex) skills;
   };

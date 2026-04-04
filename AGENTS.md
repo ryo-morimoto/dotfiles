@@ -118,8 +118,8 @@
 - [git worktree配置]: repo 内の `worktrees/` は持たず、各 worktree は `{project-parent}/{project}-wt/<name>` に配置して repo 隣接で管理する
 - [デスクトップ構成]: Niri + DankMaterialShell を継続し、置き換え済みの旧 desktop stack は repo に残さない
 - [ローカルWebツール運用]: `agent-browser` はブラウザ操作・観測、`portless` は stable な local URL と worktree 分離に使い分ける
-- [Codex運用]: alias 追加より skill 化を優先し、subagent への役割指示テンプレートは prompt 断片ではなく skill として管理する。`~/.codex/config.toml` は Codex 自身が更新できる mutable file を維持し、Home Manager では activation でデフォルトを書き込む。実行 package は wrapper で `--full-auto` を常時付与し、managed config で approval/sandbox を縛らない
-- [Claude Code承認運用]: Claude Code は wrapper で `--dangerously-skip-permissions` を常時付与する。managed settings での細かい permission 制御は持ち込まない
+- [Codex運用]: alias 追加より skill 化を優先するが、CLI option だけで足りる既定挙動は shell alias で付与してよい。`~/.codex/config.toml` は Codex 自身が更新できる mutable file を維持し、Home Manager では activation でデフォルトを書き込む。`codex` は shell alias で `--full-auto` を既定にし、managed config で approval/sandbox を縛らない
+- [Claude Code承認運用]: Claude Code の `--dangerously-skip-permissions` は wrapper ではなく shell alias で付与する。managed settings での細かい permission 制御は持ち込まない
 - [Claude Code plugin運用]: `semgrep@claude-plugins-official` は `semgrep mcp` hook を自動実行するため既定では無効化し、必要時だけ一時的に有効化する
 - [ローカルSAST運用]: `semgrep` CLI は Home Manager に常設せず、必要時だけ一時導入または個別環境で使う
 - [Claude Code配布元]: `pkgs.claude-code` に問題があるときは `ryoppippi/nix-claude-code` overlay を優先し、Home Manager の `programs.claude-code.package` 差し替え口で設定を維持する

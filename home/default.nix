@@ -397,8 +397,12 @@ in
             kx = "kubectx";
             kn = "kubens";
           };
+          agents = {
+            claude = "claude --dangerously-skip-permissions";
+            codex = "codex --full-auto";
+          };
         in
-        navigation // git // modern // utils // k8s;
+        navigation // git // modern // utils // k8s // agents;
       initContent = ''
         # GPG
         export GPG_TTY=$(tty)

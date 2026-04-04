@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   compoundEngineering,
   mcpServers,
   sharedAgentPolicy,
@@ -13,19 +12,6 @@
 }:
 
 let
-  claudePackage = pkgs.symlinkJoin {
-    name = "claude-code";
-    paths = [ pkgs.claude-code ];
-    postBuild = ''
-      mv $out/bin/claude $out/bin/.claude-wrapped
-      cat > $out/bin/claude <<'EOF'
-      #! ${pkgs.bash}/bin/bash -e
-      exec -a "$0" "$out/bin/.claude-wrapped" --dangerously-skip-permissions "$@"
-      EOF
-      chmod +x $out/bin/claude
-    '';
-    inherit (pkgs.claude-code) meta;
-  };
   mkClaudeMcp =
     server:
     if server.transport == "stdio" then
@@ -85,7 +71,6 @@ in
 {
   programs.claude-code = {
     enable = true;
-    package = claudePackage;
 
     settings = claudeUserSettings;
 
