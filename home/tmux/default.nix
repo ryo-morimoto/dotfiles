@@ -26,8 +26,10 @@ in
       set -ag terminal-overrides ",ghostty:RGB"
 
       # Clipboard integration (OSC 52 -- works over SSH + local Wayland)
+      # Keep passthrough off because some interactive TUIs can read terminal
+      # control responses as input when tmux forwards them.
       set -s set-clipboard on
-      set -g allow-passthrough on
+      set -g allow-passthrough off
       set -ag terminal-overrides ",*:Ms=\\E]52;c;%p2%s\\7"
 
       # Copy: OSC 52 (always via set-clipboard on) + wl-copy (local only, silent fail over SSH)
