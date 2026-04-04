@@ -25,8 +25,6 @@ deadnix .         # Find unused code
 
 # Git hooks (run once after clone)
 prek install
-git config filter.waypaper.clean './scripts/git-filters/waypaper-clean.sh'
-git config filter.waypaper.smudge 'cat'
 ```
 
 ## Architecture

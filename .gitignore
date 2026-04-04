@@ -10,21 +10,32 @@
 # Editor/IDE
 .idea
 .vscode
+.nvimlog
 
 # Git submodules (if any)
 .gitmodules
 
 # Claude Code
 .claude/settings.local.json
+.claude/agents/
+.claude/commands/
+.claude/skills/
+.mcp.json
 
 # oh-my-claudecode runtime data
 .omc/
+
+# compound-engineering runtime data
+.context/
 
 # OpenCode runtime data
 .opencode/
 
 # Self-improvement runtime data
 .si/data/
+
+# Local agent/runtime markers
+.codex
 
 # Nix build output
 result

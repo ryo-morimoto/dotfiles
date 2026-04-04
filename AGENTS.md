@@ -26,8 +26,6 @@
 |   `-- *.age
 |-- tools/
 |   `-- <tool>/...
-|-- scripts/
-|   `-- ...
 |-- skills/
 |   `-- <skill>/...
 |-- docs/
@@ -42,7 +40,7 @@
 - `packages/`: ローカル package 定義（overlay で公開）
 - `config/`: アプリ設定（Out-of-store symlink の実体）
 - `secrets/`: agenix 管理の暗号化シークレット
-- `tools/` / `scripts/`: 補助ツールと運用スクリプト
+- `tools/`: 補助ツール
 - `docs/plans/`: 設計メモ・実装計画
 
 ## 管理・拡張ルール
@@ -119,7 +117,7 @@
 - [デスクトップ構成]: Niri + DankMaterialShell を継続し、置き換え済みの旧 desktop stack は repo に残さない
 - [ローカルWebツール運用]: `agent-browser` はブラウザ操作・観測、`portless` は stable な local URL と worktree 分離に使い分ける
 - [Codex運用]: alias 追加より skill 化を優先するが、CLI option だけで足りる既定挙動は shell alias で付与してよい。`~/.codex/config.toml` は Codex 自身が更新できる mutable file を維持し、Home Manager では activation でデフォルトを書き込む。`codex` は shell alias で `--full-auto` を既定にし、managed config で approval/sandbox を縛らない
-- [Claude Code承認運用]: Claude Code の `--dangerously-skip-permissions` は wrapper ではなく shell alias で付与する。managed settings での細かい permission 制御は持ち込まない
+- [Claude Code承認運用]: Claude Code の `--dangerously-skip-permissions` は wrapper ではなく shell alias で付与する。sandbox は `settings.json` で常時有効化し、`failIfUnavailable = true` と `allowUnsandboxedCommands = false` を既定にする。Linux では `sandbox-runtime` の seccomp asset を `.claude/vendor/seccomp/<arch>/` に配布して `sandbox.seccomp.{bpfPath,applyPath}` を明示する
 - [Claude Code plugin運用]: `semgrep@claude-plugins-official` は `semgrep mcp` hook を自動実行するため既定では無効化し、必要時だけ一時的に有効化する
 - [ローカルSAST運用]: `semgrep` CLI は Home Manager に常設せず、必要時だけ一時導入または個別環境で使う
 - [Claude Code配布元]: `pkgs.claude-code` に問題があるときは `ryoppippi/nix-claude-code` overlay を優先し、Home Manager の `programs.claude-code.package` 差し替え口で設定を維持する
