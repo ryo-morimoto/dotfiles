@@ -2,6 +2,10 @@
   config,
   lib ? null,
   compound-engineering-plugin ? null,
+  claude-plugins-official ? null,
+  keel-marketplace ? null,
+  kuu-marketplace ? null,
+  moonbit-practice-marketplace ? null,
   ...
 }:
 
@@ -159,62 +163,81 @@ let
     };
   };
   ceSkillsPath = "${compound-engineering-plugin}/plugins/compound-engineering/skills";
-  ceWorkflowPrompts = [
+  ceSkills = [
     {
-      prompt = "ce-brainstorm";
-      skill = "ce:brainstorm";
+      name = "ce:brainstorm";
       source = "ce-brainstorm";
-      description = "Explore requirements and approaches before planning";
-      argumentHint = "[feature idea or problem to explore]";
+      prompt = {
+        name = "ce-brainstorm";
+        description = "Explore requirements and approaches before planning";
+        argumentHint = "[feature idea or problem to explore]";
+      };
+      opencodeCommand = "ce:brainstorm";
     }
     {
-      prompt = "ce-compound";
-      skill = "ce:compound";
+      name = "ce:compound";
       source = "ce-compound";
-      description = "Document a recently solved problem to compound your team's knowledge";
-      argumentHint = null;
+      prompt = {
+        name = "ce-compound";
+        description = "Document a recently solved problem to compound your team's knowledge";
+        argumentHint = null;
+      };
+      opencodeCommand = "ce:compound";
     }
     {
-      prompt = "ce-ideate";
-      skill = "ce:ideate";
+      name = "ce:ideate";
       source = "ce-ideate";
-      description = "Discover high-impact project improvements through divergent ideation and adversarial filtering";
-      argumentHint = "[feature, focus area, or constraint]";
+      prompt = {
+        name = "ce-ideate";
+        description = "Discover high-impact project improvements through divergent ideation and adversarial filtering";
+        argumentHint = "[feature, focus area, or constraint]";
+      };
+      opencodeCommand = "deepen-plan";
     }
     {
-      prompt = "ce-plan";
-      skill = "ce:plan";
+      name = "ce:plan";
       source = "ce-plan";
-      description = "Turn feature ideas into detailed implementation plans";
-      argumentHint = "[optional: feature description, requirements doc path, plan path to deepen, or improvement idea]";
+      prompt = {
+        name = "ce-plan";
+        description = "Turn feature ideas into detailed implementation plans";
+        argumentHint = "[optional: feature description, requirements doc path, plan path to deepen, or improvement idea]";
+      };
+      opencodeCommand = "ce:plan";
     }
     {
-      prompt = "ce-review";
-      skill = "ce:review";
+      name = "ce:review";
       source = "ce-review";
-      description = "Multi-agent code review before merging";
-      argumentHint = "[blank to review current branch, or provide PR link]";
+      prompt = {
+        name = "ce-review";
+        description = "Multi-agent code review before merging";
+        argumentHint = "[blank to review current branch, or provide PR link]";
+      };
+      opencodeCommand = "ce:review";
     }
     {
-      prompt = "ce-work";
-      skill = "ce:work";
+      name = "ce:work";
       source = "ce-work";
-      description = "Execute plans with worktrees and task tracking";
-      argumentHint = "[Plan doc path or description of work. Blank to auto use latest plan doc]";
+      prompt = {
+        name = "ce-work";
+        description = "Execute plans with worktrees and task tracking";
+        argumentHint = "[Plan doc path or description of work. Blank to auto use latest plan doc]";
+      };
+      opencodeCommand = "ce:work";
     }
-  ];
-  ceCodexSupplementalSkills = [
     {
       name = "feature-video";
       source = "feature-video";
+      opencodeCommand = "feature-video";
     }
     {
       name = "resolve-pr-feedback";
       source = "resolve-pr-feedback";
+      opencodeCommand = "resolve_todo_parallel";
     }
     {
       name = "test-browser";
       source = "test-browser";
+      opencodeCommand = "test-browser";
     }
   ];
   compoundEngineering = {
@@ -230,25 +253,72 @@ let
     };
     codex = {
       skills = builtins.listToAttrs (
-        map (
-          workflow: lib.nameValuePair workflow.skill "${ceSkillsPath}/${workflow.source}"
-        ) ceWorkflowPrompts
-        ++ map (
-          skill: lib.nameValuePair skill.name "${ceSkillsPath}/${skill.source}"
-        ) ceCodexSupplementalSkills
+        map (skill: lib.nameValuePair skill.name "${ceSkillsPath}/${skill.source}") ceSkills
       );
       prompts = builtins.listToAttrs (
         map (
-          workflow:
-          lib.nameValuePair workflow.prompt {
-            inherit (workflow)
+          skill:
+          lib.nameValuePair skill.prompt.name {
+            inherit (skill.prompt)
               argumentHint
               description
-              skill
               ;
+            skill = skill.name;
           }
-        ) ceWorkflowPrompts
+        ) (lib.filter (skill: skill ? prompt) ceSkills)
       );
+    };
+    opencode.commands = builtins.listToAttrs (
+      map (skill: lib.nameValuePair skill.opencodeCommand "${ceSkillsPath}/${skill.source}/SKILL.md") (
+        lib.filter (skill: skill ? opencodeCommand) ceSkills
+      )
+    );
+  };
+  sharedClaudeCode = {
+    enabledPlugins = {
+      "commit-commands@claude-plugins-official" = true;
+      "feature-dev@claude-plugins-official" = true;
+      "pr-review-toolkit@claude-plugins-official" = true;
+      "typescript-lsp@claude-plugins-official" = true;
+      "pyright-lsp@claude-plugins-official" = true;
+      "lua-lsp@claude-plugins-official" = true;
+      "code-simplifier@claude-plugins-official" = true;
+      "deslop@kuu-marketplace" = true;
+      "dig@kuu-marketplace" = true;
+      "fix-ci@kuu-marketplace" = true;
+      "decomposition@kuu-marketplace" = true;
+      "claude-md-management@claude-plugins-official" = true;
+      "skill-creator@claude-plugins-official" = true;
+      "coderabbit@claude-plugins-official" = true;
+      "moonbit-practice@moonbit-practice" = true;
+      "autofix-bot@claude-plugins-official" = true;
+      "data@claude-plugins-official" = true;
+      "clangd-lsp@claude-plugins-official" = true;
+      "keel@keel" = true;
+      "know@know" = true;
+    }
+    // compoundEngineering.claude.enabledPlugins
+    // {
+      "superpowers@claude-plugins-official" = false;
+      "frontend-design@claude-plugins-official" = false;
+      "code-review@claude-plugins-official" = false;
+      "security-guidance@claude-plugins-official" = false;
+      "semgrep@claude-plugins-official" = false;
+      "ralph-loop@claude-plugins-official" = false;
+      "agent-sdk-dev@claude-plugins-official" = false;
+      "gopls-lsp@claude-plugins-official" = false;
+      "rust-analyzer-lsp@claude-plugins-official" = false;
+      "plugin-dev@claude-plugins-official" = false;
+    };
+    plugins = [ ../../config/knowledge/know/plugins/know ];
+    marketplaces = {
+      inherit claude-plugins-official kuu-marketplace;
+      moonbit-practice = moonbit-practice-marketplace;
+      keel = keel-marketplace;
+      know = ../../config/knowledge/know;
+    }
+    // {
+      "${compoundEngineering.claude.marketplaceName}" = compoundEngineering.claude.marketplaceSource;
     };
   };
 in
@@ -266,6 +336,7 @@ in
       dangerousBashPatterns
       mcpServers
       secretPathRules
+      sharedClaudeCode
       sharedAgentPolicy
       trustedHttpDomains
       trustedReadPaths
