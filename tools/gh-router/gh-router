@@ -692,7 +692,7 @@ command_credential() {
       ;;
   esac
 
-  input_file="$(mktemp)"
+  input_file="$(mktemp /tmp/gh-router-credential.XXXXXXXXXX)"
   trap 'if [[ -n "${input_file:-}" ]]; then rm -f "$input_file"; fi' EXIT
   cat > "$input_file"
 
