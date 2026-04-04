@@ -1,5 +1,4 @@
 {
-  config,
   lib,
   compoundEngineering,
   policy,
@@ -37,7 +36,7 @@ let
     else
       {
         type = "remote";
-        url = server.url;
+        inherit (server) url;
         enabled = true;
       };
   opencodePermission = {
@@ -65,7 +64,7 @@ in
 
     settings = {
       "$schema" = "https://opencode.ai/config.json";
-      share = agentPolicy.opencode.share;
+      inherit (agentPolicy.opencode) share;
       permission = opencodePermission;
       mcp = opencodeMcp;
     };

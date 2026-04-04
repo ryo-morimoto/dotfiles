@@ -31,12 +31,11 @@ let
     server:
     if server.transport == "stdio" then
       {
-        command = server.command;
-        args = server.args;
+        inherit (server) command args;
       }
     else
       {
-        url = server.url;
+        inherit (server) url;
       };
   codexSettings = {
     personality = "pragmatic";

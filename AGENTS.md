@@ -110,6 +110,7 @@
 - [Playwright運用]: Chromium-only は `PLAYWRIGHT_BROWSERS_PATH=${pkgs.playwright-driver.browsers.override { withFirefox = false; withWebkit = false; }}` を標準にし、`playwright install*` を使わない
 - [OpenCode運用]: `compound-engineering` は Home Manager activation で自動適用する
 - [エージェント共有定義]: multi-agent に配布する shared skill/plugin 定義は `home/agents/default.nix` に集約し、`home/agents/<agent>.nix` はそれを消費する構成を優先する
+- [エージェント設定変換]: `home/agents/policy.nix` は中立な shared policy data のみを持ち、Claude/Codex/OpenCode など各ツール固有フォーマットへの変換は消費側 module/host で行う
 - [Home Manager module構成]: 関連設定は一箇所で確認できる粒度で `home/<domain>/default.nix` に集約し、`home/default.nix` は import の集約に寄せる。過剰な submodule 分割は避ける
 - [tmux構成]: tmux 設定は `home/tmux/default.nix` の Home Manager module として管理し、status・binding・plugin 設定を同ファイル内で見通し良く保つ
 - [git worktree配置]: repo 内の `worktrees/` は持たず、各 worktree は `{project-parent}/{project}-wt/<name>` に配置して repo 隣接で管理する

@@ -14,6 +14,29 @@ let
       home.homeDirectory = homeDir;
     };
   };
+  sharedAgentPolicy = agentPolicy.agentPolicyData;
+  mkClaudeMcp =
+    server:
+    if server.transport == "stdio" then
+      {
+        type = "stdio";
+        inherit (server) command args;
+      }
+    else
+      {
+        type = "http";
+        inherit (server) url;
+      };
+  mkCodexRequirementMcp =
+    server:
+    if server.transport == "stdio" then
+      {
+        identity.command = server.command;
+      }
+    else
+      {
+        identity.url = server.url;
+      };
   claudeManagedSettings = {
     permissions = {
       allow = [
@@ -46,14 +69,27 @@ let
     builtins.toJSON claudeManagedSettings
   );
   claudeManagedMcpFile = pkgs.writeText "claude-managed-mcp.json" (
-    builtins.toJSON agentPolicy.claudeManagedMcp
+    builtins.toJSON {
+      mcpServers = lib.mapAttrs (_: mkClaudeMcp) (
+        lib.filterAttrs (_: server: builtins.elem "claude" server.clients) sharedAgentPolicy.mcpServers
+      );
+    }
   );
-  codexRequirementsFile =
-    (pkgs.formats.toml { }).generate "codex-requirements.toml"
-      agentPolicy.codexRequirements;
-  codexManagedConfigFile =
-    (pkgs.formats.toml { }).generate "codex-managed-config.toml"
-      agentPolicy.codexManagedConfig;
+  codexRequirementsFile = (pkgs.formats.toml { }).generate "codex-requirements.toml" {
+    allowed_approval_policies = sharedAgentPolicy.runtime.allowedApprovalPolicies;
+    allowed_sandbox_modes = sharedAgentPolicy.runtime.allowedSandboxModes;
+    allowed_web_search_modes = sharedAgentPolicy.runtime.allowedWebSearchModes;
+    rules.prefix_rules = sharedAgentPolicy.runtime.prefixRules;
+    mcp_servers = lib.mapAttrs (_: mkCodexRequirementMcp) (
+      lib.filterAttrs (_: server: builtins.elem "codex" server.clients) sharedAgentPolicy.mcpServers
+    );
+  };
+  codexManagedConfigFile = (pkgs.formats.toml { }).generate "codex-managed-config.toml" {
+    approval_policy = sharedAgentPolicy.runtime.approvalPolicy;
+    sandbox_mode = sharedAgentPolicy.runtime.sandboxMode;
+    sandbox_workspace_write.network_access = sharedAgentPolicy.runtime.sandboxNetworkAccess;
+    otel.log_user_prompt = sharedAgentPolicy.runtime.logUserPrompt;
+  };
 in
 {
   imports = [ ./hardware-configuration.nix ];

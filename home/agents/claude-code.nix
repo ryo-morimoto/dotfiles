@@ -23,13 +23,12 @@ let
     if server.transport == "stdio" then
       {
         type = "stdio";
-        command = server.command;
-        args = server.args;
+        inherit (server) command args;
       }
     else
       {
         type = "http";
-        url = server.url;
+        inherit (server) url;
       };
   claudeUserSettings = {
     "$schema" = "https://json.schemastore.org/claude-code-settings.json";
@@ -38,9 +37,7 @@ let
       command = "node /home/ryo-morimoto/.claude/hud/omc-hud.mjs";
     };
     permissions = claudePermissions;
-    autoUpdatesChannel = agentPolicy.claude.autoUpdatesChannel;
-    minimumVersion = agentPolicy.claude.minimumVersion;
-    outputStyle = agentPolicy.claude.outputStyle;
+    inherit (agentPolicy.claude) autoUpdatesChannel minimumVersion outputStyle;
     enabledPlugins = {
       "commit-commands@claude-plugins-official" = true;
       "feature-dev@claude-plugins-official" = true;

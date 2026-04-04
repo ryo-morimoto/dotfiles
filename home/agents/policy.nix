@@ -29,24 +29,6 @@ let
     "git reset *"
     "git checkout -- *"
   ];
-in
-{
-  inherit trustedReadPaths trustedWritePaths trustedHttpDomains;
-  dangerousBashPatterns = map (pattern: "Bash(${pattern})") riskyBashPatterns;
-
-  secretPathRules = [
-    "Read(~/.ssh/**)"
-    "Read(~/.gnupg/**)"
-    "Read(./.env)"
-    "Read(./.env.*)"
-    "Read(./secrets/**)"
-    "Edit(~/.ssh/**)"
-    "Edit(~/.gnupg/**)"
-    "Edit(./.env)"
-    "Edit(./.env.*)"
-    "Edit(./secrets/**)"
-  ];
-
   agentPolicyData = {
     defaultAction = "ask";
 
@@ -189,4 +171,23 @@ in
       outputStyle = "default";
     };
   };
+in
+{
+  inherit trustedReadPaths trustedWritePaths trustedHttpDomains;
+  dangerousBashPatterns = map (pattern: "Bash(${pattern})") riskyBashPatterns;
+  inherit agentPolicyData;
+
+  secretPathRules = [
+    "Read(~/.ssh/**)"
+    "Read(~/.gnupg/**)"
+    "Read(./.env)"
+    "Read(./.env.*)"
+    "Read(./secrets/**)"
+    "Edit(~/.ssh/**)"
+    "Edit(~/.gnupg/**)"
+    "Edit(./.env)"
+    "Edit(./.env.*)"
+    "Edit(./secrets/**)"
+  ];
+
 }
