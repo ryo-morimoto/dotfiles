@@ -3,6 +3,7 @@
   lib,
   pkgs,
   compoundEngineering,
+  mcpServers,
   policy,
   claude-plugins-official,
   kuu-marketplace,
@@ -99,7 +100,7 @@ in
     };
 
     mcpServers = lib.mapAttrs (_: mkClaudeMcp) (
-      lib.filterAttrs (_: server: builtins.elem "claude" server.clients) agentPolicy.mcpServers
+      lib.filterAttrs (_: server: builtins.elem "claude" server.clients) mcpServers
     );
 
     # Skills managed by agent-skills-nix (see skills.nix)

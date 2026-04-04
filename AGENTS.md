@@ -111,12 +111,14 @@
 - [OpenCode運用]: `compound-engineering` は Home Manager activation で自動適用する
 - [エージェント共有定義]: multi-agent に配布する shared skill/plugin 定義は `home/agents/default.nix` に集約し、`home/agents/<agent>.nix` はそれを消費する構成を優先する
 - [エージェント設定変換]: `home/agents/policy.nix` は中立な shared policy data のみを持ち、Claude/Codex/OpenCode など各ツール固有フォーマットへの変換は消費側 module/host で行う
+- [エージェントMCP定義]: MCP server 定義は `home/agents/default.nix` に置き、`policy.nix` には混ぜない
 - [Home Manager module構成]: 関連設定は一箇所で確認できる粒度で `home/<domain>/default.nix` に集約し、`home/default.nix` は import の集約に寄せる。過剰な submodule 分割は避ける
 - [tmux構成]: tmux 設定は `home/tmux/default.nix` の Home Manager module として管理し、status・binding・plugin 設定を同ファイル内で見通し良く保つ
 - [git worktree配置]: repo 内の `worktrees/` は持たず、各 worktree は `{project-parent}/{project}-wt/<name>` に配置して repo 隣接で管理する
 - [デスクトップ構成]: Niri + DankMaterialShell を継続し、置き換え済みの旧 desktop stack は repo に残さない
 - [ローカルWebツール運用]: `agent-browser` はブラウザ操作・観測、`portless` は stable な local URL と worktree 分離に使い分ける
 - [Codex運用]: alias 追加より skill 化を優先し、subagent への役割指示テンプレートは prompt 断片ではなく skill として管理する。`~/.codex/config.toml` は Codex 自身が更新できる mutable file を維持し、Home Manager では activation でデフォルトを書き込む
+- [Claude Code承認運用]: Claude Code は managed settings で `permissions.defaultMode = "bypassPermissions"` と `skipDangerousModePermissionPrompt = true` を既定にし、`sandbox.enabled = true` と `allowUnsandboxedCommands = false` で sandbox を強制する。細かい allow list ではなく deny と sandbox 境界を優先する
 - [Claude Code plugin運用]: `semgrep@claude-plugins-official` は `semgrep mcp` hook を自動実行するため既定では無効化し、必要時だけ一時的に有効化する
 - [ローカルSAST運用]: `semgrep` CLI は Home Manager に常設せず、必要時だけ一時導入または個別環境で使う
 - [Claude Code配布元]: `pkgs.claude-code` に問題があるときは `ryoppippi/nix-claude-code` overlay を優先し、Home Manager の `programs.claude-code.package` 差し替え口で設定を維持する

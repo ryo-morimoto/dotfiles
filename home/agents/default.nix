@@ -1,12 +1,54 @@
 {
   config,
-  lib,
-  compound-engineering-plugin,
+  lib ? null,
+  compound-engineering-plugin ? null,
   ...
 }:
 
 let
   policy = import ./policy.nix { inherit config; };
+  mcpServers = {
+    exa = {
+      transport = "stdio";
+      command = "npx";
+      args = [
+        "-y"
+        "exa-mcp-server"
+      ];
+      clients = [
+        "claude"
+        "codex"
+      ];
+    };
+    secretary = {
+      transport = "http";
+      url = "https://secretary.ryo-morimoto-dev.workers.dev/mcp";
+      clients = [
+        "claude"
+        "codex"
+        "opencode"
+      ];
+    };
+    vibe_kanban = {
+      transport = "stdio";
+      command = "npx";
+      args = [
+        "-y"
+        "vibe-kanban@latest"
+        "--mcp"
+      ];
+      clients = [
+        "claude"
+        "codex"
+        "opencode"
+      ];
+    };
+    context7 = {
+      transport = "http";
+      url = "https://mcp.context7.com/mcp";
+      clients = [ "opencode" ];
+    };
+  };
   ceSkillsPath = "${compound-engineering-plugin}/plugins/compound-engineering/skills";
   ceWorkflowPrompts = [
     {
@@ -112,6 +154,7 @@ in
   _module.args = {
     inherit
       compoundEngineering
+      mcpServers
       policy
       ;
   };

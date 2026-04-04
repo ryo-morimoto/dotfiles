@@ -9,6 +9,12 @@ let
   username = "ryo-morimoto";
   homeDir = "/home/${username}";
   dotfilesDir = "${homeDir}/ghq/github.com/${username}/dotfiles";
+  agentDefaults = import ../../home/agents/default.nix {
+    config = {
+      home.homeDirectory = homeDir;
+    };
+  };
+  sharedMcpServers = agentDefaults._module.args.mcpServers;
   agentPolicy = import ../../home/agents/policy.nix {
     config = {
       home.homeDirectory = homeDir;
@@ -39,21 +45,17 @@ let
       };
   claudeManagedSettings = {
     permissions = {
-      allow = [
-        "Bash(git status*)"
-        "Bash(git diff*)"
-        "Bash(git log*)"
-        "Bash(nixfmt *)"
-        "Bash(nix flake check*)"
-      ];
       deny = agentPolicy.dangerousBashPatterns ++ agentPolicy.secretPathRules;
-      disableBypassPermissionsMode = "disable";
+      defaultMode = "bypassPermissions";
+      skipDangerousModePermissionPrompt = true;
     };
     allowManagedPermissionRulesOnly = true;
     allowManagedMcpServersOnly = true;
     sandbox = {
       enabled = true;
-      autoAllowBashIfSandboxed = false;
+      failIfUnavailable = true;
+      autoAllowBashIfSandboxed = true;
+      allowUnsandboxedCommands = false;
       filesystem = {
         allowManagedReadPathsOnly = true;
         read = agentPolicy.trustedReadPaths;
@@ -71,7 +73,7 @@ let
   claudeManagedMcpFile = pkgs.writeText "claude-managed-mcp.json" (
     builtins.toJSON {
       mcpServers = lib.mapAttrs (_: mkClaudeMcp) (
-        lib.filterAttrs (_: server: builtins.elem "claude" server.clients) sharedAgentPolicy.mcpServers
+        lib.filterAttrs (_: server: builtins.elem "claude" server.clients) sharedMcpServers
       );
     }
   );
@@ -81,7 +83,7 @@ let
     allowed_web_search_modes = sharedAgentPolicy.runtime.allowedWebSearchModes;
     rules.prefix_rules = sharedAgentPolicy.runtime.prefixRules;
     mcp_servers = lib.mapAttrs (_: mkCodexRequirementMcp) (
-      lib.filterAttrs (_: server: builtins.elem "codex" server.clients) sharedAgentPolicy.mcpServers
+      lib.filterAttrs (_: server: builtins.elem "codex" server.clients) sharedMcpServers
     );
   };
   codexManagedConfigFile = (pkgs.formats.toml { }).generate "codex-managed-config.toml" {

@@ -1,6 +1,7 @@
 {
   lib,
   compoundEngineering,
+  mcpServers,
   policy,
   ...
 }:
@@ -50,7 +51,7 @@ let
     };
   };
   opencodeMcp = lib.mapAttrs (_: mkOpenCodeMcp) (
-    lib.filterAttrs (_: server: builtins.elem "opencode" server.clients) agentPolicy.mcpServers
+    lib.filterAttrs (_: server: builtins.elem "opencode" server.clients) mcpServers
   );
 
   # Map compound-engineering skills to OpenCode commands

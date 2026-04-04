@@ -2,6 +2,7 @@
   config,
   lib,
   compoundEngineering,
+  mcpServers,
   policy,
   pkgs,
   ...
@@ -56,7 +57,7 @@ let
       "${ghqDir}/ccinsights".trust_level = "trusted";
     };
     mcp_servers = lib.mapAttrs (_: mkCodexMcp) (
-      lib.filterAttrs (_: server: builtins.elem "codex" server.clients) agentPolicy.mcpServers
+      lib.filterAttrs (_: server: builtins.elem "codex" server.clients) mcpServers
     );
   };
   codexConfigSource = (pkgs.formats.toml { }).generate "codex-config" codexSettings;
