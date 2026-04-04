@@ -13,7 +13,10 @@
 |       |-- default.nix
 |       `-- hardware-configuration.nix
 |-- home/
-|   `-- default.nix
+|   |-- default.nix
+|   |-- agents/default.nix
+|   |-- knowledge/default.nix
+|   `-- <domain>/default.nix
 |-- packages/
 |   `-- *.nix
 |-- config/
@@ -25,6 +28,8 @@
 |   `-- <tool>/...
 |-- scripts/
 |   `-- ...
+|-- skills/
+|   `-- <skill>/...
 |-- docs/
 |   `-- plans/
 `-- .github/workflows/
@@ -32,7 +37,8 @@
 
 - `flake.nix` / `flake.lock`: 依存と出力定義の唯一の入口
 - `hosts/`: ホスト固有の NixOS 構成（`hardware-configuration.nix` は自動生成扱い）
-- `home/`: Home Manager のユーザー環境定義
+- `home/`: Home Manager のユーザー環境定義（`default.nix` は集約、関心ごとは `home/<domain>/default.nix` へ分割）
+- `skills/`: repo ローカルの skill 定義と reference 資産
 - `packages/`: ローカル package 定義（overlay で公開）
 - `config/`: アプリ設定（Out-of-store symlink の実体）
 - `secrets/`: agenix 管理の暗号化シークレット
@@ -103,9 +109,15 @@
 - [依存更新運用]: `chore: update flake.lock` を定期実行し、依存更新を継続する
 - [Playwright運用]: Chromium-only は `PLAYWRIGHT_BROWSERS_PATH=${pkgs.playwright-driver.browsers.override { withFirefox = false; withWebkit = false; }}` を標準にし、`playwright install*` を使わない
 - [OpenCode運用]: `compound-engineering` は Home Manager activation で自動適用する
+- [エージェント共有定義]: multi-agent に配布する shared skill/plugin 定義は `home/agents/default.nix` に集約し、`home/agents/<agent>.nix` はそれを消費する構成を優先する
+- [Home Manager module構成]: 関連設定は一箇所で確認できる粒度で `home/<domain>/default.nix` に集約し、`home/default.nix` は import の集約に寄せる。過剰な submodule 分割は避ける
+- [tmux構成]: tmux 設定は `home/tmux/default.nix` の Home Manager module として管理し、status・binding・plugin 設定を同ファイル内で見通し良く保つ
+- [git worktree配置]: repo 内の `worktrees/` は持たず、各 worktree は `{project-parent}/{project}-wt/<name>` に配置して repo 隣接で管理する
 - [デスクトップ構成]: Niri + DankMaterialShell を継続し、置き換え済みの旧 desktop stack は repo に残さない
 - [ローカルWebツール運用]: `agent-browser` はブラウザ操作・観測、`portless` は stable な local URL と worktree 分離に使い分ける
 - [Codex運用]: alias 追加より skill 化を優先し、subagent への役割指示テンプレートは prompt 断片ではなく skill として管理する。`~/.codex/config.toml` は Codex 自身が更新できる mutable file を維持し、Home Manager では activation でデフォルトを書き込む
+- [Claude Code plugin運用]: `semgrep@claude-plugins-official` は `semgrep mcp` hook を自動実行するため既定では無効化し、必要時だけ一時的に有効化する
+- [ローカルSAST運用]: `semgrep` CLI は Home Manager に常設せず、必要時だけ一時導入または個別環境で使う
 - [Claude Code配布元]: `pkgs.claude-code` に問題があるときは `ryoppippi/nix-claude-code` overlay を優先し、Home Manager の `programs.claude-code.package` 差し替え口で設定を維持する
 - [Neovim Markdown閲覧]: 日本語 Markdown では spell を無効化せず、`spelllang=en,cjk` で英単語チェックを残す
 - [repo-doctor運用]: shared CI/local command は `just`、Git hooks は `prek`、SAST は `Semgrep`、dependency age gate は 7 日、GitHub Actions は full SHA pin、主要チェックは local-first で CI は同一チェックの再確認、directory structure は `tree --gitignore` と言語/アプリ特性/規模適合または明示ルールで評価し、living documentation は oldest-5 と関連コードの対応、orphan doc/code の有無で鮮度を確認する
