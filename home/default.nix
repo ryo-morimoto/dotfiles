@@ -154,6 +154,7 @@ in
 
       # CLI tools
       wget
+      socat
       tree
       ripgrep
       fd
