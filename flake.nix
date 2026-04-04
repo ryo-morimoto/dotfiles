@@ -18,10 +18,6 @@
       url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    tmuxcc-src = {
-      url = "github:nyanko3141592/tmuxcc";
-      flake = false;
-    };
     banto = {
       url = "github:ryo-morimoto/banto";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -87,7 +83,6 @@
       dms,
       niri-flake,
       zen-browser,
-      tmuxcc-src,
       banto,
       agenix,
       voxtype,
@@ -108,7 +103,6 @@
       localOverlay = final: _prev: {
         vibe-kanban = final.callPackage ./packages/vibe-kanban.nix { };
         claude-squad = final.callPackage ./packages/claude-squad.nix { };
-        tmuxcc = final.callPackage ./packages/tmuxcc.nix { inherit tmuxcc-src; };
         beacon = final.callPackage ./packages/beacon.nix { };
         cursor-agent = final.callPackage ./packages/cursor-agent.nix { };
         zen-browser = zen-browser.packages.${final.stdenv.hostPlatform.system}.default;

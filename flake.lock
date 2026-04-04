@@ -493,7 +493,6 @@
         "nixpkgs": "nixpkgs_2",
         "seiren": "seiren",
         "starlintLinuxBin": "starlintLinuxBin",
-        "tmuxcc-src": "tmuxcc-src",
         "voxtype": "voxtype",
         "zen-browser": "zen-browser"
       }
@@ -576,22 +575,6 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
-        "type": "github"
-      }
-    },
-    "tmuxcc-src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1768834859,
-        "narHash": "sha256-alxVP3zuK2YXEDBvrGk0CSDLj6XlGwoHoQ/aS7yRO5o=",
-        "owner": "nyanko3141592",
-        "repo": "tmuxcc",
-        "rev": "5a00dbcb10a1f09e819849013c6bb87d71df7127",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nyanko3141592",
-        "repo": "tmuxcc",
         "type": "github"
       }
     },

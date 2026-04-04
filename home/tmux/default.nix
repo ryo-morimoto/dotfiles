@@ -63,9 +63,6 @@ in
       # Reload config
       bind r source-file ~/.config/tmux/tmux.conf \; display "Config reloaded!"
 
-      # tmuxcc agent dashboard popup
-      bind a display-popup -E -w 80% -h 80% "tmuxcc || (echo 'tmuxcc failed. Press Enter to close.' && read)"
-
       # Beacon shortcuts (Ctrl+q b then key)
       bind b switch-client -T beacon
       bind -T beacon s ${beaconPopup "bash ~/.local/bin/beacon-status-popup.sh" "beacon status failed"}

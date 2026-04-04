@@ -259,7 +259,6 @@ in
       seiren-mcp
       vibe-kanban
       claude-squad
-      tmuxcc
       beacon
       showboat
       rodney
@@ -1061,8 +1060,6 @@ in
       "ghostty".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/ghostty";
       "zsh".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/zsh";
       "wallpaper".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/wallpaper";
-      "tmuxcc".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/tmuxcc";
-      "vde/monitor".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/vde/monitor";
       "lazygit".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/lazygit";
     };
   };
