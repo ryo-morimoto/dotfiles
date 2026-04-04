@@ -4,7 +4,7 @@
   pkgs,
   compoundEngineering,
   mcpServers,
-  policy,
+  sharedAgentPolicy,
   claude-plugins-official,
   kuu-marketplace,
   moonbit-practice-marketplace,
@@ -13,11 +13,18 @@
 }:
 
 let
-  agentPolicy = policy.agentPolicyData;
-  claudePermissions = {
-    allow =
-      map (pattern: "Bash(${pattern})") agentPolicy.bash.allow
-      ++ agentPolicy.pathAccess.claudeAdditionalReadAllow;
+  claudePackage = pkgs.symlinkJoin {
+    name = "claude-code";
+    paths = [ pkgs.claude-code ];
+    postBuild = ''
+      mv $out/bin/claude $out/bin/.claude-wrapped
+      cat > $out/bin/claude <<'EOF'
+      #! ${pkgs.bash}/bin/bash -e
+      exec -a "$0" "$out/bin/.claude-wrapped" --dangerously-skip-permissions "$@"
+      EOF
+      chmod +x $out/bin/claude
+    '';
+    inherit (pkgs.claude-code) meta;
   };
   mkClaudeMcp =
     server:
@@ -37,8 +44,7 @@ let
       type = "command";
       command = "node /home/ryo-morimoto/.claude/hud/omc-hud.mjs";
     };
-    permissions = claudePermissions;
-    inherit (agentPolicy.claude) autoUpdatesChannel minimumVersion outputStyle;
+    inherit (sharedAgentPolicy.claude) autoUpdatesChannel minimumVersion outputStyle;
     enabledPlugins = {
       "commit-commands@claude-plugins-official" = true;
       "feature-dev@claude-plugins-official" = true;
@@ -79,7 +85,7 @@ in
 {
   programs.claude-code = {
     enable = true;
-    package = pkgs.claude-code;
+    package = claudePackage;
 
     settings = claudeUserSettings;
 

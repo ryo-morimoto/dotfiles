@@ -2,30 +2,11 @@
   lib,
   compoundEngineering,
   mcpServers,
-  policy,
   ...
 }:
 
 let
   ceSkillsPath = compoundEngineering.skillsPath;
-  agentPolicy = policy.agentPolicyData;
-  mkPermissionRule =
-    rules:
-    {
-      "*" = agentPolicy.defaultAction;
-    }
-    // builtins.listToAttrs (
-      map (pattern: {
-        name = pattern;
-        value = "allow";
-      }) (rules.allow or [ ])
-    )
-    // builtins.listToAttrs (
-      map (pattern: {
-        name = pattern;
-        value = "deny";
-      }) (rules.deny or [ ])
-    );
   mkOpenCodeMcp =
     server:
     if server.transport == "stdio" then
@@ -40,16 +21,6 @@ let
         inherit (server) url;
         enabled = true;
       };
-  opencodePermission = {
-    "*" = agentPolicy.defaultAction;
-  }
-  // agentPolicy.opencode.tools
-  // {
-    bash = mkPermissionRule agentPolicy.bash;
-    external_directory = mkPermissionRule {
-      allow = agentPolicy.pathAccess.externalDirectoryAllow;
-    };
-  };
   opencodeMcp = lib.mapAttrs (_: mkOpenCodeMcp) (
     lib.filterAttrs (_: server: builtins.elem "opencode" server.clients) mcpServers
   );
@@ -65,8 +36,8 @@ in
 
     settings = {
       "$schema" = "https://opencode.ai/config.json";
-      inherit (agentPolicy.opencode) share;
-      permission = opencodePermission;
+      share = "disabled";
+      permission = "allow";
       mcp = opencodeMcp;
     };
 

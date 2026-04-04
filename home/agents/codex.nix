@@ -3,7 +3,6 @@
   lib,
   compoundEngineering,
   mcpServers,
-  policy,
   pkgs,
   ...
 }:
@@ -11,7 +10,19 @@ let
   ghqDir = "${config.home.homeDirectory}/ghq/github.com/ryo-morimoto";
   codexConfigDir = "${config.home.homeDirectory}/.codex";
   codexConfigFile = "${codexConfigDir}/config.toml";
-  agentPolicy = policy.agentPolicyData;
+  codexPackage = pkgs.symlinkJoin {
+    name = "codex";
+    paths = [ pkgs.codex ];
+    postBuild = ''
+      mv $out/bin/codex $out/bin/.codex-wrapped
+      cat > $out/bin/codex <<'EOF'
+      #! ${pkgs.bash}/bin/bash -e
+      exec -a "$0" "$out/bin/.codex-wrapped" --full-auto "$@"
+      EOF
+      chmod +x $out/bin/codex
+    '';
+    inherit (pkgs.codex) meta;
+  };
   renderCompoundEngineeringPrompt =
     prompt:
     ''
@@ -43,14 +54,7 @@ let
     model = "gpt-5.3-codex";
     model_reasoning_effort = "xhigh";
     features.multi_agent = true;
-  }
-  // {
-    approval_policy = agentPolicy.runtime.approvalPolicy;
-    sandbox_mode = agentPolicy.runtime.sandboxMode;
-    sandbox_workspace_write.network_access = agentPolicy.runtime.sandboxNetworkAccess;
-    otel.log_user_prompt = agentPolicy.runtime.logUserPrompt;
-  }
-  // {
+    otel.log_user_prompt = false;
     projects = {
       "${ghqDir}/dotfiles".trust_level = "trusted";
       "${ghqDir}/newsfeed-ai".trust_level = "trusted";
@@ -66,7 +70,7 @@ in
   programs.codex = {
     custom-instructions = builtins.readFile ./_AGENTS.md;
     enable = true;
-    # Uses pkgs.codex from nixpkgs (default)
+    package = codexPackage;
     settings = { };
     inherit (compoundEngineering.codex) skills;
   };

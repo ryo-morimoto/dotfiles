@@ -15,12 +15,6 @@ let
     };
   };
   sharedMcpServers = agentDefaults._module.args.mcpServers;
-  agentPolicy = import ../../home/agents/policy.nix {
-    config = {
-      home.homeDirectory = homeDir;
-    };
-  };
-  sharedAgentPolicy = agentPolicy.agentPolicyData;
   mkClaudeMcp =
     server:
     if server.transport == "stdio" then
@@ -33,43 +27,6 @@ let
         type = "http";
         inherit (server) url;
       };
-  mkCodexRequirementMcp =
-    server:
-    if server.transport == "stdio" then
-      {
-        identity.command = server.command;
-      }
-    else
-      {
-        identity.url = server.url;
-      };
-  claudeManagedSettings = {
-    permissions = {
-      deny = agentPolicy.dangerousBashPatterns ++ agentPolicy.secretPathRules;
-      defaultMode = "bypassPermissions";
-      skipDangerousModePermissionPrompt = true;
-    };
-    allowManagedPermissionRulesOnly = true;
-    allowManagedMcpServersOnly = true;
-    sandbox = {
-      enabled = true;
-      failIfUnavailable = true;
-      autoAllowBashIfSandboxed = true;
-      allowUnsandboxedCommands = false;
-      filesystem = {
-        allowManagedReadPathsOnly = true;
-        read = agentPolicy.trustedReadPaths;
-        write = agentPolicy.trustedWritePaths;
-      };
-      network = {
-        allowManagedDomainsOnly = true;
-        allowedDomains = agentPolicy.trustedHttpDomains;
-      };
-    };
-  };
-  claudeManagedSettingsFile = pkgs.writeText "claude-managed-settings.json" (
-    builtins.toJSON claudeManagedSettings
-  );
   claudeManagedMcpFile = pkgs.writeText "claude-managed-mcp.json" (
     builtins.toJSON {
       mcpServers = lib.mapAttrs (_: mkClaudeMcp) (
@@ -77,21 +34,6 @@ let
       );
     }
   );
-  codexRequirementsFile = (pkgs.formats.toml { }).generate "codex-requirements.toml" {
-    allowed_approval_policies = sharedAgentPolicy.runtime.allowedApprovalPolicies;
-    allowed_sandbox_modes = sharedAgentPolicy.runtime.allowedSandboxModes;
-    allowed_web_search_modes = sharedAgentPolicy.runtime.allowedWebSearchModes;
-    rules.prefix_rules = sharedAgentPolicy.runtime.prefixRules;
-    mcp_servers = lib.mapAttrs (_: mkCodexRequirementMcp) (
-      lib.filterAttrs (_: server: builtins.elem "codex" server.clients) sharedMcpServers
-    );
-  };
-  codexManagedConfigFile = (pkgs.formats.toml { }).generate "codex-managed-config.toml" {
-    approval_policy = sharedAgentPolicy.runtime.approvalPolicy;
-    sandbox_mode = sharedAgentPolicy.runtime.sandboxMode;
-    sandbox_workspace_write.network_access = sharedAgentPolicy.runtime.sandboxNetworkAccess;
-    otel.log_user_prompt = sharedAgentPolicy.runtime.logUserPrompt;
-  };
 in
 {
   imports = [ ./hardware-configuration.nix ];
@@ -275,10 +217,7 @@ in
   ];
 
   environment.etc = {
-    "claude-code/managed-settings.json".source = claudeManagedSettingsFile;
     "claude-code/managed-mcp.json".source = claudeManagedMcpFile;
-    "codex/requirements.toml".source = codexRequirementsFile;
-    "codex/managed_config.toml".source = codexManagedConfigFile;
   };
 
   # XDG Portal
