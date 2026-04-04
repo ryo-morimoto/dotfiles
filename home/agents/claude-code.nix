@@ -26,6 +26,9 @@ let
       };
   claudeUserSettings = {
     "$schema" = "https://json.schemastore.org/claude-code-settings.json";
+    sandbox = {
+      enabled = false;
+    };
     statusLine = {
       type = "command";
       command = "node /home/ryo-morimoto/.claude/hud/omc-hud.mjs";
