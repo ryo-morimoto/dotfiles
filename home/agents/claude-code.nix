@@ -1,7 +1,9 @@
 {
   config,
+  lib,
   pkgs,
   compoundEngineering,
+  policy,
   claude-plugins-official,
   kuu-marketplace,
   moonbit-practice-marketplace,
@@ -10,22 +12,35 @@
 }:
 
 let
+  agentPolicy = policy.agentPolicyData;
+  claudePermissions = {
+    allow =
+      map (pattern: "Bash(${pattern})") agentPolicy.bash.allow
+      ++ agentPolicy.pathAccess.claudeAdditionalReadAllow;
+  };
+  mkClaudeMcp =
+    server:
+    if server.transport == "stdio" then
+      {
+        type = "stdio";
+        command = server.command;
+        args = server.args;
+      }
+    else
+      {
+        type = "http";
+        url = server.url;
+      };
   claudeUserSettings = {
     "$schema" = "https://json.schemastore.org/claude-code-settings.json";
     statusLine = {
       type = "command";
       command = "node /home/ryo-morimoto/.claude/hud/omc-hud.mjs";
     };
-    permissions.allow = [
-      "Bash(git status*)"
-      "Bash(git diff*)"
-      "Bash(git log*)"
-      "Bash(nixfmt *)"
-      "Bash(nix flake check*)"
-    ];
-    autoUpdatesChannel = "stable";
-    minimumVersion = "2.1.12";
-    outputStyle = "default";
+    permissions = claudePermissions;
+    autoUpdatesChannel = agentPolicy.claude.autoUpdatesChannel;
+    minimumVersion = agentPolicy.claude.minimumVersion;
+    outputStyle = agentPolicy.claude.outputStyle;
     enabledPlugins = {
       "commit-commands@claude-plugins-official" = true;
       "feature-dev@claude-plugins-official" = true;
@@ -86,28 +101,9 @@ in
       "${compoundEngineering.claude.marketplaceName}" = compoundEngineering.claude.marketplaceSource;
     };
 
-    mcpServers = {
-      exa = {
-        command = "npx";
-        args = [
-          "-y"
-          "exa-mcp-server"
-        ];
-        # EXA_API_KEY is loaded from agenix secret via shell session
-      };
-      vibe_kanban = {
-        command = "npx";
-        args = [
-          "-y"
-          "vibe-kanban@latest"
-          "--mcp"
-        ];
-      };
-      secretary = {
-        type = "http";
-        url = "https://secretary.ryo-morimoto-dev.workers.dev/mcp";
-      };
-    };
+    mcpServers = lib.mapAttrs (_: mkClaudeMcp) (
+      lib.filterAttrs (_: server: builtins.elem "claude" server.clients) agentPolicy.mcpServers
+    );
 
     # Skills managed by agent-skills-nix (see skills.nix)
   };

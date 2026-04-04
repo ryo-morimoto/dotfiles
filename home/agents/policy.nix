@@ -3,16 +3,36 @@
 let
   homeDir = config.home.homeDirectory;
   ghqDir = "${homeDir}/ghq";
+  trustedReadPaths = [
+    ghqDir
+    "${homeDir}/obsidian"
+  ];
+  trustedWritePaths = [
+    ghqDir
+  ];
+  trustedHttpDomains = [
+    "https://mcp.context7.com/*"
+    "https://secretary.ryo-morimoto-dev.workers.dev/*"
+  ];
+  safeBashPatterns = [
+    "git status*"
+    "git diff*"
+    "git log*"
+    "nixfmt *"
+    "nix flake check*"
+  ];
+  riskyBashPatterns = [
+    "git push *"
+    "rm *"
+    "curl *"
+    "wget *"
+    "git reset *"
+    "git checkout -- *"
+  ];
 in
 {
-  dangerousBashPatterns = [
-    "Bash(git push *)"
-    "Bash(rm *)"
-    "Bash(curl *)"
-    "Bash(wget *)"
-    "Bash(git reset *)"
-    "Bash(git checkout -- *)"
-  ];
+  inherit trustedReadPaths trustedWritePaths trustedHttpDomains;
+  dangerousBashPatterns = map (pattern: "Bash(${pattern})") riskyBashPatterns;
 
   secretPathRules = [
     "Read(~/.ssh/**)"
@@ -27,96 +47,146 @@ in
     "Edit(./secrets/**)"
   ];
 
-  trustedReadPaths = [
-    ghqDir
-    "${homeDir}/obsidian"
-  ];
+  agentPolicyData = {
+    defaultAction = "ask";
 
-  trustedWritePaths = [
-    ghqDir
-  ];
+    bash = {
+      allow = safeBashPatterns;
+      deny = riskyBashPatterns;
+    };
 
-  trustedHttpDomains = [
-    "https://mcp.context7.com/*"
-    "https://secretary.ryo-morimoto-dev.workers.dev/*"
-  ];
+    pathAccess = {
+      trustedRead = trustedReadPaths;
+      trustedWrite = trustedWritePaths;
+      externalDirectoryAllow = map (path: "${path}/**") trustedReadPaths;
+      secretRules = [
+        "Read(~/.ssh/**)"
+        "Read(~/.gnupg/**)"
+        "Read(./.env)"
+        "Read(./.env.*)"
+        "Read(./secrets/**)"
+        "Edit(~/.ssh/**)"
+        "Edit(~/.gnupg/**)"
+        "Edit(./.env)"
+        "Edit(./.env.*)"
+        "Edit(./secrets/**)"
+      ];
+      claudeAdditionalReadAllow = [
+        "Read(~/.claude/skills/**)"
+        "Read(~/.claude/plugins/cache/**)"
+      ];
+    };
 
-  claudeManagedMcp = {
+    http = {
+      trustedDomains = trustedHttpDomains;
+    };
+
+    runtime = {
+      approvalPolicy = "on-request";
+      sandboxMode = "workspace-write";
+      sandboxNetworkAccess = false;
+      logUserPrompt = false;
+      allowedApprovalPolicies = [
+        "untrusted"
+        "on-request"
+      ];
+      allowedSandboxModes = [
+        "read-only"
+        "workspace-write"
+      ];
+      allowedWebSearchModes = [ "cached" ];
+      prefixRules = [
+        {
+          pattern = [
+            { token = "rm"; }
+          ];
+          decision = "forbidden";
+          justification = "Avoid destructive file deletion from Codex.";
+        }
+        {
+          pattern = [
+            { token = "git"; }
+            { token = "push"; }
+          ];
+          decision = "prompt";
+          justification = "Require explicit approval before publishing changes.";
+        }
+        {
+          pattern = [
+            {
+              any_of = [
+                "curl"
+                "wget"
+              ];
+            }
+          ];
+          decision = "prompt";
+          justification = "Require approval before pulling external content.";
+        }
+      ];
+    };
+
     mcpServers = {
       exa = {
-        type = "stdio";
+        transport = "stdio";
         command = "npx";
         args = [
           "-y"
           "exa-mcp-server"
         ];
+        clients = [
+          "claude"
+          "codex"
+        ];
       };
       secretary = {
-        type = "http";
+        transport = "http";
         url = "https://secretary.ryo-morimoto-dev.workers.dev/mcp";
+        clients = [
+          "claude"
+          "codex"
+          "opencode"
+        ];
       };
       vibe_kanban = {
-        type = "stdio";
+        transport = "stdio";
         command = "npx";
         args = [
           "-y"
           "vibe-kanban@latest"
           "--mcp"
         ];
+        clients = [
+          "claude"
+          "codex"
+          "opencode"
+        ];
+      };
+      context7 = {
+        transport = "http";
+        url = "https://mcp.context7.com/mcp";
+        clients = [ "opencode" ];
       };
     };
-  };
 
-  codexRequirements = {
-    allowed_approval_policies = [
-      "untrusted"
-      "on-request"
-    ];
-    allowed_sandbox_modes = [
-      "read-only"
-      "workspace-write"
-    ];
-    allowed_web_search_modes = [ "cached" ];
-    rules.prefix_rules = [
-      {
-        pattern = [
-          { token = "rm"; }
-        ];
-        decision = "forbidden";
-        justification = "Avoid destructive file deletion from Codex.";
-      }
-      {
-        pattern = [
-          { token = "git"; }
-          { token = "push"; }
-        ];
-        decision = "prompt";
-        justification = "Require explicit approval before publishing changes.";
-      }
-      {
-        pattern = [
-          {
-            any_of = [
-              "curl"
-              "wget"
-            ];
-          }
-        ];
-        decision = "prompt";
-        justification = "Require approval before pulling external content.";
-      }
-    ];
-    mcp_servers = {
-      exa.identity.command = "npx";
-      secretary.identity.url = "https://secretary.ryo-morimoto-dev.workers.dev/mcp";
-      vibe_kanban.identity.command = "npx";
+    opencode = {
+      share = "disabled";
+      tools = {
+        read = "allow";
+        glob = "allow";
+        grep = "allow";
+        list = "allow";
+        edit = "ask";
+        task = "ask";
+        skill = "ask";
+        webfetch = "ask";
+      };
     };
-  };
 
-  codexManagedConfig = {
-    approval_policy = "on-request";
-    sandbox_mode = "workspace-write";
-    sandbox_workspace_write.network_access = false;
-    otel.log_user_prompt = false;
+    claude = {
+      autoUpdatesChannel = "stable";
+      minimumVersion = "2.1.12";
+      outputStyle = "default";
+    };
   };
 }

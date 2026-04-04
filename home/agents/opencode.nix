@@ -1,12 +1,58 @@
 {
   config,
+  lib,
   compoundEngineering,
+  policy,
   ...
 }:
 
 let
   ceSkillsPath = compoundEngineering.skillsPath;
-  homeDir = config.home.homeDirectory;
+  agentPolicy = policy.agentPolicyData;
+  mkPermissionRule =
+    rules:
+    {
+      "*" = agentPolicy.defaultAction;
+    }
+    // builtins.listToAttrs (
+      map (pattern: {
+        name = pattern;
+        value = "allow";
+      }) (rules.allow or [ ])
+    )
+    // builtins.listToAttrs (
+      map (pattern: {
+        name = pattern;
+        value = "deny";
+      }) (rules.deny or [ ])
+    );
+  mkOpenCodeMcp =
+    server:
+    if server.transport == "stdio" then
+      {
+        type = "local";
+        command = [ server.command ] ++ server.args;
+        enabled = true;
+      }
+    else
+      {
+        type = "remote";
+        url = server.url;
+        enabled = true;
+      };
+  opencodePermission = {
+    "*" = agentPolicy.defaultAction;
+  }
+  // agentPolicy.opencode.tools
+  // {
+    bash = mkPermissionRule agentPolicy.bash;
+    external_directory = mkPermissionRule {
+      allow = agentPolicy.pathAccess.externalDirectoryAllow;
+    };
+  };
+  opencodeMcp = lib.mapAttrs (_: mkOpenCodeMcp) (
+    lib.filterAttrs (_: server: builtins.elem "opencode" server.clients) agentPolicy.mcpServers
+  );
 
   # Map compound-engineering skills to OpenCode commands
   # SKILL.md content is used directly as command content
@@ -19,65 +65,9 @@ in
 
     settings = {
       "$schema" = "https://opencode.ai/config.json";
-      share = "disabled";
-      permission = {
-        "*" = "ask";
-        read = "allow";
-        glob = "allow";
-        grep = "allow";
-        list = "allow";
-        edit = "ask";
-        task = "ask";
-        skill = "ask";
-        webfetch = "ask";
-        external_directory = {
-          allowed = [
-            "${homeDir}/ghq"
-            "${homeDir}/obsidian"
-          ];
-          mode = "ask";
-        };
-        bash = {
-          default = "ask";
-          allow = [
-            "git status*"
-            "git diff*"
-            "git log*"
-            "nixfmt *"
-            "nix flake check*"
-          ];
-          deny = [
-            "git push *"
-            "rm *"
-            "curl *"
-            "wget *"
-            "git reset *"
-            "git checkout -- *"
-          ];
-        };
-      };
-      mcp = {
-        context7 = {
-          type = "remote";
-          url = "https://mcp.context7.com/mcp";
-          enabled = true;
-        };
-        vibe_kanban = {
-          command = [
-            "npx"
-            "-y"
-            "vibe-kanban@latest"
-            "--mcp"
-          ];
-          enabled = true;
-          type = "local";
-        };
-        secretary = {
-          type = "remote";
-          url = "https://secretary.ryo-morimoto-dev.workers.dev/mcp";
-          enabled = true;
-        };
-      };
+      share = agentPolicy.opencode.share;
+      permission = opencodePermission;
+      mcp = opencodeMcp;
     };
 
     rules = builtins.readFile ./_AGENTS.md;

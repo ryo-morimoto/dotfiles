@@ -2,6 +2,7 @@
   config,
   lib,
   compoundEngineering,
+  policy,
   pkgs,
   ...
 }:
@@ -9,6 +10,7 @@ let
   ghqDir = "${config.home.homeDirectory}/ghq/github.com/ryo-morimoto";
   codexConfigDir = "${config.home.homeDirectory}/.codex";
   codexConfigFile = "${codexConfigDir}/config.toml";
+  agentPolicy = policy.agentPolicyData;
   renderCompoundEngineeringPrompt =
     prompt:
     ''
@@ -25,37 +27,38 @@ let
 
       Treat any text after the prompt name as the workflow context to pass through.
     '';
+  mkCodexMcp =
+    server:
+    if server.transport == "stdio" then
+      {
+        command = server.command;
+        args = server.args;
+      }
+    else
+      {
+        url = server.url;
+      };
   codexSettings = {
     personality = "pragmatic";
     model = "gpt-5.3-codex";
     model_reasoning_effort = "xhigh";
     features.multi_agent = true;
-    approval_policy = "on-request";
-    sandbox_mode = "workspace-write";
-    sandbox_workspace_write.network_access = false;
+  }
+  // {
+    approval_policy = agentPolicy.runtime.approvalPolicy;
+    sandbox_mode = agentPolicy.runtime.sandboxMode;
+    sandbox_workspace_write.network_access = agentPolicy.runtime.sandboxNetworkAccess;
+    otel.log_user_prompt = agentPolicy.runtime.logUserPrompt;
+  }
+  // {
     projects = {
       "${ghqDir}/dotfiles".trust_level = "trusted";
       "${ghqDir}/newsfeed-ai".trust_level = "trusted";
       "${ghqDir}/ccinsights".trust_level = "trusted";
     };
-    mcp_servers = {
-      exa = {
-        command = "npx";
-        args = [
-          "-y"
-          "exa-mcp-server"
-        ];
-      };
-      secretary.url = "https://secretary.ryo-morimoto-dev.workers.dev/mcp";
-      vibe_kanban = {
-        command = "npx";
-        args = [
-          "-y"
-          "vibe-kanban@latest"
-          "--mcp"
-        ];
-      };
-    };
+    mcp_servers = lib.mapAttrs (_: mkCodexMcp) (
+      lib.filterAttrs (_: server: builtins.elem "codex" server.clients) agentPolicy.mcpServers
+    );
   };
   codexConfigSource = (pkgs.formats.toml { }).generate "codex-config" codexSettings;
 in
