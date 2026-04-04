@@ -177,6 +177,7 @@ in
       nixfmt
       statix
       deadnix
+      semgrep
       nvd
       nix-tree
       prek
