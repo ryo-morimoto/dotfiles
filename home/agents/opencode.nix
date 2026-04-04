@@ -1,11 +1,12 @@
 {
-  pencilMcp,
-  compound-engineering-plugin,
+  config,
+  compoundEngineering,
   ...
 }:
 
 let
-  ceSkillsPath = "${compound-engineering-plugin}/plugins/compound-engineering/skills";
+  ceSkillsPath = compoundEngineering.skillsPath;
+  homeDir = config.home.homeDirectory;
 
   # Map compound-engineering skills to OpenCode commands
   # SKILL.md content is used directly as command content
@@ -18,20 +19,48 @@ in
 
     settings = {
       "$schema" = "https://opencode.ai/config.json";
+      share = "disabled";
+      permission = {
+        "*" = "ask";
+        read = "allow";
+        glob = "allow";
+        grep = "allow";
+        list = "allow";
+        edit = "ask";
+        task = "ask";
+        skill = "ask";
+        webfetch = "ask";
+        external_directory = {
+          allowed = [
+            "${homeDir}/ghq"
+            "${homeDir}/obsidian"
+          ];
+          mode = "ask";
+        };
+        bash = {
+          default = "ask";
+          allow = [
+            "git status*"
+            "git diff*"
+            "git log*"
+            "nixfmt *"
+            "nix flake check*"
+          ];
+          deny = [
+            "git push *"
+            "rm *"
+            "curl *"
+            "wget *"
+            "git reset *"
+            "git checkout -- *"
+          ];
+        };
+      };
       mcp = {
         context7 = {
           type = "remote";
           url = "https://mcp.context7.com/mcp";
           enabled = true;
-        };
-        pencil = {
-          command = [
-            (toString pencilMcp)
-            "--app"
-            "desktop"
-          ];
-          enabled = true;
-          type = "local";
         };
         vibe_kanban = {
           command = [
@@ -42,6 +71,11 @@ in
           ];
           enabled = true;
           type = "local";
+        };
+        secretary = {
+          type = "remote";
+          url = "https://secretary.ryo-morimoto-dev.workers.dev/mcp";
+          enabled = true;
         };
       };
     };

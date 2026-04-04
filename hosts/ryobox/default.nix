@@ -9,6 +9,51 @@ let
   username = "ryo-morimoto";
   homeDir = "/home/${username}";
   dotfilesDir = "${homeDir}/ghq/github.com/${username}/dotfiles";
+  agentPolicy = import ../../home/agents/policy.nix {
+    config = {
+      home.homeDirectory = homeDir;
+    };
+  };
+  claudeManagedSettings = {
+    permissions = {
+      allow = [
+        "Bash(git status*)"
+        "Bash(git diff*)"
+        "Bash(git log*)"
+        "Bash(nixfmt *)"
+        "Bash(nix flake check*)"
+      ];
+      deny = agentPolicy.dangerousBashPatterns ++ agentPolicy.secretPathRules;
+      disableBypassPermissionsMode = "disable";
+    };
+    allowManagedPermissionRulesOnly = true;
+    allowManagedMcpServersOnly = true;
+    sandbox = {
+      enabled = true;
+      autoAllowBashIfSandboxed = false;
+      filesystem = {
+        allowManagedReadPathsOnly = true;
+        read = agentPolicy.trustedReadPaths;
+        write = agentPolicy.trustedWritePaths;
+      };
+      network = {
+        allowManagedDomainsOnly = true;
+        allowedDomains = agentPolicy.trustedHttpDomains;
+      };
+    };
+  };
+  claudeManagedSettingsFile = pkgs.writeText "claude-managed-settings.json" (
+    builtins.toJSON claudeManagedSettings
+  );
+  claudeManagedMcpFile = pkgs.writeText "claude-managed-mcp.json" (
+    builtins.toJSON agentPolicy.claudeManagedMcp
+  );
+  codexRequirementsFile =
+    (pkgs.formats.toml { }).generate "codex-requirements.toml"
+      agentPolicy.codexRequirements;
+  codexManagedConfigFile =
+    (pkgs.formats.toml { }).generate "codex-managed-config.toml"
+      agentPolicy.codexManagedConfig;
 in
 {
   imports = [ ./hardware-configuration.nix ];
@@ -190,6 +235,13 @@ in
     playerctl
     brightnessctl
   ];
+
+  environment.etc = {
+    "claude-code/managed-settings.json".source = claudeManagedSettingsFile;
+    "claude-code/managed-mcp.json".source = claudeManagedMcpFile;
+    "codex/requirements.toml".source = codexRequirementsFile;
+    "codex/managed_config.toml".source = codexManagedConfigFile;
+  };
 
   # XDG Portal
   xdg.portal = {
