@@ -17,6 +17,71 @@ let
   zenBrowserLauncher = pkgs.writeShellScriptBin "zen-browser" ''
     exec ${lib.getExe pkgs.zen-browser} "$@"
   '';
+
+  # Katakana → English technical term dictionary (KEINOS/google-ime-user-dictionary-ja-en)
+  katakana-en-dict = pkgs.fetchFromGitHub {
+    owner = "KEINOS";
+    repo = "google-ime-user-dictionary-ja-en";
+    rev = "7d241dafcf6ee1f9eafefc0ae7a929c095860246";
+    hash = "sha256-7ZhDWv+CN/kTqMhgcXXR120f8L2cWZZCC4VdH4N05aM=";
+  };
+
+  # Voxtype post-process: fuzzy-match katakana technical terms against distributed dictionary
+  voxtype-post-process =
+    pkgs.writers.writePython3Bin "voxtype-post-process"
+      { libraries = [ pkgs.python3Packages.rapidfuzz ]; }
+      ''
+        import csv
+        import os
+        import re
+        import sys
+
+        from rapidfuzz import fuzz, process
+
+        _BASE = "${katakana-en-dict}"
+        DICT_DIR = os.path.join(
+            _BASE, "Google-ime-カタカナ語英字辞典"
+        )
+        KATAKANA_RE = re.compile(r"[\u30A0-\u30FF]{3,}")
+
+
+        def load_dict():
+            """Load KEINOS TSV: @hiragana, english, pos, katakana"""
+            terms = {}
+            for fname in os.listdir(DICT_DIR):
+                if not fname.endswith(".txt"):
+                    continue
+                with open(os.path.join(DICT_DIR, fname), encoding="utf-8") as fh:
+                    for row in csv.reader(fh, delimiter="\t"):
+                        if len(row) >= 4:
+                            katakana, english = row[3], row[1]
+                            if katakana and english:
+                                terms[katakana] = english
+            return terms
+
+
+        def correct(text, terms):
+            keys = list(terms.keys())
+            offset = 0
+            for m in KATAKANA_RE.finditer(text):
+                start = m.start() + offset
+                end = m.end() + offset
+                kata = text[start:end]
+                hit = process.extractOne(
+                    kata, keys,
+                    scorer=fuzz.ratio, score_cutoff=80,
+                )
+                if hit:
+                    replacement = terms[hit[0]]
+                    text = text[:start] + replacement + text[end:]
+                    offset += len(replacement) - len(kata)
+            return text
+
+
+        text = sys.stdin.read().strip()
+        if text:
+            print(correct(text, load_dict()))
+      '';
 in
 {
   imports = [
@@ -607,6 +672,10 @@ in
           on_recording_start = true;
           on_recording_stop = true;
           on_transcription = true;
+        };
+        post_process = {
+          command = "${voxtype-post-process}/bin/voxtype-post-process";
+          timeout_ms = 5000;
         };
       };
     };
