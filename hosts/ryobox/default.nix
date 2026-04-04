@@ -280,6 +280,7 @@ in
     builtins.elem (lib.getName pkg) [
       "claude"
       "claude-code"
+      "coderabbit"
       "cursor"
       "obsidian"
       "slack"

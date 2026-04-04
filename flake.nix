@@ -124,6 +124,7 @@
         starlint = final.callPackage ./packages/starlint.nix {
           inherit starlintLinuxBin;
         };
+        coderabbit = final.callPackage ./packages/coderabbit.nix { };
       };
     in
     {

@@ -184,6 +184,9 @@ in
       prek
       gitleaks
 
+      # Code review
+      coderabbit
+
       # Development
       ghq
       gh
