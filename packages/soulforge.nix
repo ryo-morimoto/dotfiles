@@ -1,8 +1,6 @@
 {
-  autoPatchelfHook,
   fetchurl,
   lib,
-  stdenv,
   stdenvNoCC,
 }:
 
@@ -17,10 +15,9 @@ stdenvNoCC.mkDerivation rec {
 
   sourceRoot = "soulforge-${version}-linux-x64";
 
-  nativeBuildInputs = [ autoPatchelfHook ];
-  buildInputs = [ stdenv.cc.cc.lib ];
-
   dontBuild = true;
+  dontPatchELF = true;
+  dontFixup = true;
 
   installPhase = ''
     runHook preInstall
