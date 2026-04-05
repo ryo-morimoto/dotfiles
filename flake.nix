@@ -28,6 +28,7 @@
     };
     voxtype = {
       url = "github:peteonrails/voxtype";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     fenix = {
       url = "github:nix-community/fenix";
