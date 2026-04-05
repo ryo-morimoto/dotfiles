@@ -161,6 +161,19 @@ let
       url = "https://mcp.context7.com/mcp";
       clients = [ "opencode" ];
     };
+    codedb = {
+      transport = "stdio";
+      command = "codedb";
+      args = [
+        "mcp"
+        "."
+      ];
+      clients = [
+        "claude"
+        "codex"
+        "opencode"
+      ];
+    };
   };
   ceSkillsPath = "${compound-engineering-plugin}/plugins/compound-engineering/skills";
   ceSkills = [

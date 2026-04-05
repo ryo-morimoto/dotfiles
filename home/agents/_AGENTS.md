@@ -1,4 +1,26 @@
 
+## CodeDB Integration
+
+codedb MCP サーバーがプロジェクトにアタッチされている場合、以下のツールマッピングに従え：
+
+| 用途 | CodeDB ツール（優先） | ビルトイン（フォールバック） |
+|------|----------------------|--------------------------|
+| コード検索 | `codedb_search`, `codedb_word` | Grep, rg |
+| ファイルツリー | `codedb_tree` | Glob, ls, find |
+| シンボル定義探索 | `codedb_symbol` | Grep + Glob |
+| ファイル構造 | `codedb_outline` | なし |
+| 依存関係 | `codedb_deps` | なし |
+| ファイル読み取り | `codedb_read` | Read |
+| ファイル編集 | `codedb_edit` | Edit |
+| バッチクエリ | `codedb_bundle` | なし |
+| 最近の変更 | `codedb_hot` | git diff |
+
+**ルール:**
+1. 検索系操作は CodeDB ツールを最初に試みよ
+2. CodeDB ツールがエラーを返した場合のみビルトインにフォールバック
+3. `codedb_bundle` で複数の読み取りクエリをまとめられる場合は積極的に使え
+4. 初回アクセス時に `codedb_status` でインデックス状態を確認し、未完了ならビルトインを使え
+
 ## CRITICAL: Source-First Decision Making
 
 実装・設計の判断は必ず一次ソースを読んでから行え。推論だけで済ませることを禁止する。

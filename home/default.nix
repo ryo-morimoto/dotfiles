@@ -255,6 +255,7 @@ in
       libnotify
 
       # AI tools
+      codedb
       soulforge
       cursor-agent
       seiren-mcp
