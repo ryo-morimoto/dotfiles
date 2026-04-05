@@ -116,6 +116,7 @@
         pi-agent-stuff = final.callPackage ./packages/pi-agent-stuff.nix { };
         pi-autoresearch = final.callPackage ./packages/pi-autoresearch.nix { };
         pi-rewind-hook = final.callPackage ./packages/pi-rewind-hook.nix { };
+        soulforge = final.callPackage ./packages/soulforge.nix { };
         starlint = final.callPackage ./packages/starlint.nix {
           inherit starlintLinuxBin;
         };

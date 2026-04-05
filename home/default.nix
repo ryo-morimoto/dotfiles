@@ -255,6 +255,7 @@ in
       libnotify
 
       # AI tools
+      soulforge
       cursor-agent
       seiren-mcp
       vibe-kanban

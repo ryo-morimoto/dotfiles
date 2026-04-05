@@ -284,6 +284,7 @@ in
       "cursor"
       "obsidian"
       "slack"
+      "soulforge"
     ];
 
   # Allow running dynamically linked binaries (for uv, etc.)
