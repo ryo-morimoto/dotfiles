@@ -18,6 +18,9 @@ in
     keyMode = "vi";
     prefix = "C-q";
     extraConfig = ''
+      # Extended keys (fixes modified Enter in Claude Code etc.)
+      set -g extended-keys on
+
       # Terminal overrides
       set -ag terminal-overrides ",xterm-256color:RGB"
       set -ag terminal-overrides ",ghostty:RGB"

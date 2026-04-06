@@ -159,27 +159,27 @@ let
   ceSkillsPath = "${compound-engineering-plugin}/plugins/compound-engineering/skills";
   ceSkills = [
     {
-      name = "ce:brainstorm";
+      name = "ce-brainstorm";
       source = "ce-brainstorm";
       prompt = {
         name = "ce-brainstorm";
         description = "Explore requirements and approaches before planning";
         argumentHint = "[feature idea or problem to explore]";
       };
-      opencodeCommand = "ce:brainstorm";
+      opencodeCommand = "ce-brainstorm";
     }
     {
-      name = "ce:compound";
+      name = "ce-compound";
       source = "ce-compound";
       prompt = {
         name = "ce-compound";
         description = "Document a recently solved problem to compound your team's knowledge";
         argumentHint = null;
       };
-      opencodeCommand = "ce:compound";
+      opencodeCommand = "ce-compound";
     }
     {
-      name = "ce:ideate";
+      name = "ce-ideate";
       source = "ce-ideate";
       prompt = {
         name = "ce-ideate";
@@ -189,34 +189,34 @@ let
       opencodeCommand = "deepen-plan";
     }
     {
-      name = "ce:plan";
+      name = "ce-plan";
       source = "ce-plan";
       prompt = {
         name = "ce-plan";
         description = "Turn feature ideas into detailed implementation plans";
         argumentHint = "[optional: feature description, requirements doc path, plan path to deepen, or improvement idea]";
       };
-      opencodeCommand = "ce:plan";
+      opencodeCommand = "ce-plan";
     }
     {
-      name = "ce:review";
+      name = "ce-review";
       source = "ce-review";
       prompt = {
         name = "ce-review";
         description = "Multi-agent code review before merging";
         argumentHint = "[blank to review current branch, or provide PR link]";
       };
-      opencodeCommand = "ce:review";
+      opencodeCommand = "ce-review";
     }
     {
-      name = "ce:work";
+      name = "ce-work";
       source = "ce-work";
       prompt = {
         name = "ce-work";
         description = "Execute plans with worktrees and task tracking";
         argumentHint = "[Plan doc path or description of work. Blank to auto use latest plan doc]";
       };
-      opencodeCommand = "ce:work";
+      opencodeCommand = "ce-work";
     }
     {
       name = "feature-video";

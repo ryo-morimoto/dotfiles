@@ -54,11 +54,11 @@
       ];
       enableAll = false;
       explicit = {
-        gstack-browse = {
+        browse = {
           from = "gstack";
           path = "browse";
         };
-        gstack-codex = {
+        codex = {
           from = "gstack";
           path = "codex";
         };

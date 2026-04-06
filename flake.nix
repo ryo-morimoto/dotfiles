@@ -131,7 +131,7 @@
       ...
     }:
     let
-      localOverlay = final: _prev: {
+      localOverlay = final: prev: {
         cursor-agent = final.callPackage ./packages/cursor-agent.nix { };
         zen-browser = zen-browser.packages.${final.stdenv.hostPlatform.system}.default;
         seiren-mcp = seiren.packages.${final.stdenv.hostPlatform.system}.default;
@@ -144,6 +144,20 @@
         pi-autoresearch = final.callPackage ./packages/pi-autoresearch.nix { };
         pi-codedb = pi-codedb.packages.${final.stdenv.hostPlatform.system}.default;
         pi-lens = final.callPackage ./packages/pi-lens.nix { };
+        pi-coding-agent = prev.pi-coding-agent.overrideAttrs (old: rec {
+          version = "0.65.2";
+          src = final.fetchFromGitHub {
+            owner = "badlogic";
+            repo = "pi-mono";
+            rev = "refs/tags/v${version}";
+            hash = "sha256-nHCQboyRT8k2t7dD0knmQSaUciQua17518CG/3jC7Rg=";
+          };
+          npmDeps = final.fetchNpmDeps {
+            name = "${old.pname}-${version}-npm-deps";
+            inherit src;
+            hash = "sha256-ZFrOh2P2kkKz4kwD153ltPX852sS1JcTCvSLYwZbyoo=";
+          };
+        });
         soulforge = soulforge.packages.${final.stdenv.hostPlatform.system}.default;
         starlint = final.callPackage ./packages/starlint.nix {
           inherit starlintLinuxBin;
