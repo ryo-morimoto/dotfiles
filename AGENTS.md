@@ -135,7 +135,7 @@
 - 種別内訳: `feat 41` / `chore 36` / `refactor 7` / `fix 6` / `docs 4` / `style 3` / `revert 1` / 非Conventional 1件
 - `chore: update flake.lock` が22件（flake関連合計28件）で、依存更新を高頻度で継続
 - デスクトップ環境・テーマ関連（`niri`/`waybar`/`DMS`/`wallust`/`theme` など）が22件
-- エージェント運用関連（`agent`/`claude`/`opencode`/`entire`/`tmuxcc`）が12件
+- エージェント運用関連（`agent`/`claude`/`opencode`/`entire`）が12件
 - 傾向: 小さめの差分を高頻度で積み、依存更新と開発体験改善を並行して進める
 
 ## メンテナンスワークフロー
@@ -199,8 +199,6 @@ sudo nixos-rebuild switch --flake .
 
 # Build a single package (defined in packages/*.nix)
 nix build .#beacon
-nix build .#claude-squad
-nix build .#tmuxcc
 nix build .#entire
 
 # Enter development shell if available
@@ -217,7 +215,7 @@ nix eval .#nixosConfigurations.ryobox.config.home-manager.users.ryo-morimoto.pro
 nix eval .#nixosConfigurations.ryobox.config.system.build.toplevel
 
 # Check a specific package
-nix build .#claude-squad
+nix build .#beacon
 
 # Test a single module (requires evaluation)
 nix eval .#nixosConfigurations.ryobox.config.home-manager.users.ryo-morimoto
@@ -281,7 +279,7 @@ This repository uses Nix (nixpkgs/lib, Home Manager modules) as the primary conf
 - **Variables**: `snake_case` (e.g., `enableTiling`, `my_package`)
 - **Functions**: `camelCase` (e.g., `mkIf`, `mkEnableOption`)
 - **Options**: `camelCase` (e.g., `programs.zsh.enable`)
-- **Packages**: `kebab-case` (e.g., `claude-squad`, `beacon`)
+- **Packages**: `kebab-case` (e.g., `beacon`, `cursor-agent`)
 - **Files**: `kebab-case.nix` for packages, `default.nix` for modules
 
 ### Types and Assertions

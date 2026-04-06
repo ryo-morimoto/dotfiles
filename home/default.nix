@@ -258,7 +258,6 @@ in
       soulforge
       cursor-agent
       seiren-mcp
-      claude-squad
       beacon
       showboat
       rodney

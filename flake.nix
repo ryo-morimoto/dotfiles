@@ -102,7 +102,6 @@
     }:
     let
       localOverlay = final: _prev: {
-        claude-squad = final.callPackage ./packages/claude-squad.nix { };
         beacon = final.callPackage ./packages/beacon.nix { };
         cursor-agent = final.callPackage ./packages/cursor-agent.nix { };
         zen-browser = zen-browser.packages.${final.stdenv.hostPlatform.system}.default;
