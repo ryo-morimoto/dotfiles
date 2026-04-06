@@ -25,6 +25,9 @@
 # compound-engineering runtime data
 .context/
 
+# Soulforge runtime data
+.soulforge/
+
 # OpenCode runtime data
 .opencode/
 
