@@ -22,9 +22,6 @@
 .claude/skills/
 .mcp.json
 
-# oh-my-claudecode runtime data
-.omc/
-
 # compound-engineering runtime data
 .context/
 

@@ -25,10 +25,6 @@ let
     sandbox = {
       enabled = false;
     };
-    statusLine = {
-      type = "command";
-      command = "node /home/ryo-morimoto/.claude/hud/omc-hud.mjs";
-    };
     inherit (sharedAgentPolicy.claude) autoUpdatesChannel minimumVersion outputStyle;
     inherit (sharedClaudeCode) enabledPlugins;
   };
