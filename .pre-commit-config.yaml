@@ -41,7 +41,7 @@ repos:
 
       - id: semgrep-nix
         name: semgrep (nix)
-        entry: env SEMGREP_CORE_OPTS=-use_parmap semgrep scan --config .semgrep/ --error --severity ERROR --severity WARNING --no-git-ignore -j 1
+        entry: semgrep scan --config .semgrep/ --error --severity ERROR --severity WARNING --no-git-ignore -j 1
         language: system
         files: '\.nix$'
         pass_filenames: false
