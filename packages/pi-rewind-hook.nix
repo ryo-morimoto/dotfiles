@@ -6,13 +6,13 @@
 
 stdenvNoCC.mkDerivation rec {
   pname = "pi-rewind-hook";
-  version = "2026-04-03";
+  version = "2026-04-05";
 
   src = fetchFromGitHub {
     owner = "nicobailon";
     repo = "pi-rewind-hook";
-    rev = "d5415335e7455b215987023631d6db07a79aed96";
-    hash = "sha256-h2uSagCt73hIG6ysQJhsGDHVFSF71GQHEJ9PXk5ISsA=";
+    rev = "932be34c64d8dbf96ca107b074fee415c2750062";
+    hash = "sha256-k+9WzXPuMkQlRSSbJ3vfnRrqs8j7A0V0M9Uf5iBFdHk=";
   };
 
   dontBuild = true;

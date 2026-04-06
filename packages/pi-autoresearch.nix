@@ -6,13 +6,13 @@
 
 stdenvNoCC.mkDerivation rec {
   pname = "pi-autoresearch";
-  version = "2025-03-25";
+  version = "2026-04-06";
 
   src = fetchFromGitHub {
     owner = "davebcn87";
     repo = "pi-autoresearch";
-    rev = "62feb2f46ef2a1b8e39af381b47acc4d7af42ca8";
-    hash = "sha256-abER02Ed6c48Pny9jJ/BXEhF1jJ3J7tA0bMSGT62o60=";
+    rev = "a16920294eb59c07ee210ed6851bec54a994e212";
+    hash = "sha256-8/Me+In7oOEAzLmtp9jMYFwJjrhj5xvUZRhvn6O7eSM=";
   };
 
   dontBuild = true;
