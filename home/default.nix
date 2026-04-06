@@ -307,6 +307,7 @@ in
 
     git = {
       enable = true;
+      lfs.enable = true;
       settings = {
         user.name = "ryo-morimoto";
         user.email = "ryo.morimoto.dev@gmail.com";
