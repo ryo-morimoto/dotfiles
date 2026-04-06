@@ -11,8 +11,6 @@ let
   dotfilesPath = "${config.home.homeDirectory}/ghq/github.com/ryo-morimoto/dotfiles";
   piPackageSources = [
     "${pkgs.pi-autoresearch}/share/pi/packages/pi-autoresearch"
-    "${pkgs.pi-agent-stuff}/share/pi/packages/pi-agent-stuff"
-    "${pkgs.pi-rewind-hook}/share/pi/packages/pi-rewind-hook"
   ];
   zenBrowserLauncher = pkgs.writeShellScriptBin "zen-browser" ''
     exec ${lib.getExe pkgs.zen-browser} "$@"
