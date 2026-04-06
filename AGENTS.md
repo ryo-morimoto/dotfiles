@@ -217,7 +217,7 @@ nix eval .#nixosConfigurations.ryobox.config.home-manager.users.ryo-morimoto.pro
 nix eval .#nixosConfigurations.ryobox.config.system.build.toplevel
 
 # Check a specific package
-nix build .#vibe-kanban
+nix build .#claude-squad
 
 # Test a single module (requires evaluation)
 nix eval .#nixosConfigurations.ryobox.config.home-manager.users.ryo-morimoto
@@ -281,7 +281,7 @@ This repository uses Nix (nixpkgs/lib, Home Manager modules) as the primary conf
 - **Variables**: `snake_case` (e.g., `enableTiling`, `my_package`)
 - **Functions**: `camelCase` (e.g., `mkIf`, `mkEnableOption`)
 - **Options**: `camelCase` (e.g., `programs.zsh.enable`)
-- **Packages**: `kebab-case` (e.g., `vibe-kanban`, `claude-squad`)
+- **Packages**: `kebab-case` (e.g., `claude-squad`, `beacon`)
 - **Files**: `kebab-case.nix` for packages, `default.nix` for modules
 
 ### Types and Assertions

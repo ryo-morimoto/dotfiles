@@ -142,20 +142,6 @@ let
         "opencode"
       ];
     };
-    vibe_kanban = {
-      transport = "stdio";
-      command = "npx";
-      args = [
-        "-y"
-        "vibe-kanban@latest"
-        "--mcp"
-      ];
-      clients = [
-        "claude"
-        "codex"
-        "opencode"
-      ];
-    };
     context7 = {
       transport = "http";
       url = "https://mcp.context7.com/mcp";

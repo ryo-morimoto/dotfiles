@@ -152,24 +152,6 @@ in
   };
   systemd.services = {
     caddy.serviceConfig.EnvironmentFile = config.age.secrets.caddy-cloudflare.path;
-    "vibe-kanban" = {
-      description = "vibe-kanban service";
-      wantedBy = [ "multi-user.target" ];
-      after = [ "network-online.target" ];
-      wants = [ "network-online.target" ];
-      environment = {
-        HOST = "127.0.0.1";
-        PORT = "3001";
-        BROWSER = "${pkgs.coreutils}/bin/true";
-      };
-      serviceConfig = {
-        ExecStart = lib.getExe pkgs.vibe-kanban;
-        Restart = "on-failure";
-        RestartSec = "5s";
-        User = username;
-        WorkingDirectory = homeDir;
-      };
-    };
     "dotfiles-pull" = {
       description = "Pull latest dotfiles from GitHub";
       serviceConfig = {

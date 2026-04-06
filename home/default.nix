@@ -258,7 +258,6 @@ in
       soulforge
       cursor-agent
       seiren-mcp
-      vibe-kanban
       claude-squad
       beacon
       showboat
