@@ -101,16 +101,7 @@ in
         plugins = [ "github.com/caddy-dns/cloudflare@v0.2.2" ];
         hash = "sha256-7DGnojZvcQBZ6LEjT0e5O9gZgsvEeHlQP9aKaJIs/Zg=";
       };
-      virtualHosts = {
-        "vk.ryobox.xyz" = {
-          extraConfig = ''
-            reverse_proxy localhost:3001
-            tls {
-              dns cloudflare {env.CLOUDFLARE_API_TOKEN}
-            }
-          '';
-        };
-      };
+      virtualHosts = { };
     };
 
     # Tailscale VPN with SSH
