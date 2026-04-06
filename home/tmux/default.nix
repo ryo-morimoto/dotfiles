@@ -6,9 +6,6 @@
 let
   statusLeft = "#[fg=#1e1e2e,bg=#89b4fa,bold] #S #[fg=#89b4fa,bg=#1e1e2e]";
   statusRight = ''#(cat /tmp/claude-status 2>/dev/null || echo "")#[fg=#a6e3a1]#{b:pane_current_path} #[fg=#cdd6f4]%H:%M'';
-  beaconPopup =
-    command: fallback:
-    ''display-popup -E -w 90% -h 80% "${command} || (echo '${fallback}. Press Enter to close.' && read)"'';
 in
 {
   programs.tmux = {
@@ -62,15 +59,6 @@ in
 
       # Reload config
       bind r source-file ~/.config/tmux/tmux.conf \; display "Config reloaded!"
-
-      # Beacon shortcuts (Ctrl+q b then key)
-      bind b switch-client -T beacon
-      bind -T beacon s ${beaconPopup "bash ~/.local/bin/beacon-status-popup.sh" "beacon status failed"}
-      bind -T beacon w ${beaconPopup "bash ~/.local/bin/beacon-window-jump.sh" "beacon window jump failed"}
-      bind -T beacon p ${beaconPopup "bash ~/.local/bin/beacon-pane-focus.sh" "beacon pane focus failed"}
-      bind -T beacon c run-shell "beacon clean >/dev/null 2>&1"
-      bind -T beacon q switch-client -T prefix
-      bind -T beacon Escape switch-client -T prefix
 
       # Status bar
       set -g status on

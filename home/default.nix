@@ -258,7 +258,6 @@ in
       soulforge
       cursor-agent
       seiren-mcp
-      beacon
       showboat
       rodney
       agent-browser
@@ -278,12 +277,6 @@ in
       ".soulforge/opentui-assets".source = "${pkgs.soulforge}/share/soulforge/opentui-assets";
       ".soulforge/init.lua".source = "${pkgs.soulforge}/share/soulforge/init.lua";
 
-      ".local/bin/beacon-status-popup.sh".source =
-        config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/tmux/beacon-status-popup.sh";
-      ".local/bin/beacon-window-jump.sh".source =
-        config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/tmux/beacon-window-jump.sh";
-      ".local/bin/beacon-pane-focus.sh".source =
-        config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/tmux/beacon-pane-focus.sh";
     };
   };
 

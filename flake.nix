@@ -102,7 +102,6 @@
     }:
     let
       localOverlay = final: _prev: {
-        beacon = final.callPackage ./packages/beacon.nix { };
         cursor-agent = final.callPackage ./packages/cursor-agent.nix { };
         zen-browser = zen-browser.packages.${final.stdenv.hostPlatform.system}.default;
         seiren-mcp = seiren.packages.${final.stdenv.hostPlatform.system}.default;
