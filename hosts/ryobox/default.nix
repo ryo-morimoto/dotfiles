@@ -133,7 +133,13 @@ in
         group = "caddy";
         mode = "0400";
       };
-      # Exa API key for Claude Code MCP server
+      # Context7 API key for documentation search
+      context7-api-key = {
+        file = ../../secrets/context7-api-key.age;
+        owner = username;
+        mode = "0400";
+      };
+      # Exa API key for web search
       exa-api-key = {
         file = ../../secrets/exa-api-key.age;
         owner = username;

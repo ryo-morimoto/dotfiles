@@ -13,6 +13,7 @@ let
     "${pkgs.pi-autoresearch}/share/pi/packages/pi-autoresearch"
     "${pkgs.pi-codedb}/share/pi/packages/pi-codedb"
     "${pkgs.pi-lens}/share/pi/packages/pi-lens"
+    "${pkgs.pi-mcp-adapter}/share/pi/packages/pi-mcp-adapter"
   ];
   zenBrowserLauncher = pkgs.writeShellScriptBin "zen-browser" ''
     exec ${lib.getExe pkgs.zen-browser} "$@"
@@ -271,6 +272,33 @@ in
         packages = piPackageSources;
       };
 
+      ".pi/agent/mcp.json".text = builtins.toJSON {
+        mcpServers = {
+          context7 = {
+            command = "npx";
+            args = [
+              "-y"
+              "@upstash/context7-mcp"
+            ];
+            env = {
+              CONTEXT7_API_KEY = "\${CONTEXT7_API_KEY}";
+            };
+            lifecycle = "lazy";
+          };
+          exa = {
+            command = "npx";
+            args = [
+              "-y"
+              "exa-mcp-server"
+            ];
+            env = {
+              EXA_API_KEY = "\${EXA_API_KEY}";
+            };
+            lifecycle = "lazy";
+          };
+        };
+      };
+
     };
   };
 
@@ -403,7 +431,8 @@ in
         # GPG
         export GPG_TTY=$(tty)
 
-        # Exa API key (decrypted by agenix)
+        # API keys (decrypted by agenix)
+        [[ -r /run/agenix/context7-api-key ]] && export CONTEXT7_API_KEY="$(cat /run/agenix/context7-api-key)"
         [[ -r /run/agenix/exa-api-key ]] && export EXA_API_KEY="$(cat /run/agenix/exa-api-key)"
 
         # Pencil MCP server path (discovered from AppImage cache)

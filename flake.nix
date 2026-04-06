@@ -144,6 +144,7 @@
         pi-autoresearch = final.callPackage ./packages/pi-autoresearch.nix { };
         pi-codedb = pi-codedb.packages.${final.stdenv.hostPlatform.system}.default;
         pi-lens = final.callPackage ./packages/pi-lens.nix { };
+        pi-mcp-adapter = final.callPackage ./packages/pi-mcp-adapter.nix { };
         pi-coding-agent = prev.pi-coding-agent.overrideAttrs (old: rec {
           version = "0.65.2";
           src = final.fetchFromGitHub {

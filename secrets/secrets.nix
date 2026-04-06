@@ -3,5 +3,6 @@ let
 in
 {
   "caddy-cloudflare.age".publicKeys = [ ryobox ];
+  "context7-api-key.age".publicKeys = [ ryobox ];
   "exa-api-key.age".publicKeys = [ ryobox ];
 }
