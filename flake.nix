@@ -7,6 +7,10 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    gstack-skills = {
+      url = "github:garrytan/gstack/03973c2fabfb4988a2a4c2fefc44a7e280804884";
+      flake = false;
+    };
     dms = {
       url = "github:AvengeMedia/DankMaterialShell/stable";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -79,6 +83,18 @@
       url = "github:ryo-morimoto/keel";
       flake = false;
     };
+    callstack-agent-skills = {
+      url = "github:callstackincubator/agent-skills";
+      flake = false;
+    };
+    expo-plugins = {
+      url = "github:expo/skills";
+      flake = false;
+    };
+    pm-skills = {
+      url = "github:phuryn/pm-skills";
+      flake = false;
+    };
   };
 
   outputs =
@@ -96,12 +112,16 @@
       seiren,
       soulforge,
       agent-skills-nix,
+      gstack-skills,
       nix-claude-code,
       compound-engineering-plugin,
       claude-plugins-official,
       kuu-marketplace,
       moonbit-practice-marketplace,
       keel-marketplace,
+      callstack-agent-skills,
+      expo-plugins,
+      pm-skills,
       starlintLinuxBin,
       ...
     }:
@@ -163,6 +183,10 @@
                   kuu-marketplace
                   moonbit-practice-marketplace
                   keel-marketplace
+                  callstack-agent-skills
+                  expo-plugins
+                  gstack-skills
+                  pm-skills
                   ;
               };
             };

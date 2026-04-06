@@ -66,6 +66,22 @@
         "type": "github"
       }
     },
+    "callstack-agent-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1774889305,
+        "narHash": "sha256-pjzGTco93tNsBE+r65Cszb5KJo6PMEC4nQvHUwTSkZM=",
+        "owner": "callstackincubator",
+        "repo": "agent-skills",
+        "rev": "d1834201a633f23b7603291a3d3e95812268fa96",
+        "type": "github"
+      },
+      "original": {
+        "owner": "callstackincubator",
+        "repo": "agent-skills",
+        "type": "github"
+      }
+    },
     "claude-plugins-official": {
       "flake": false,
       "locked": {
@@ -142,6 +158,22 @@
         "type": "github"
       }
     },
+    "expo-plugins": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1775206331,
+        "narHash": "sha256-eecTc6YhclTojLudf2QhNPGDvLXPLuOTuS6o8xh1/0U=",
+        "owner": "expo",
+        "repo": "skills",
+        "rev": "cef67e4da5200eba0934f3af09a98364447f5364",
+        "type": "github"
+      },
+      "original": {
+        "owner": "expo",
+        "repo": "skills",
+        "type": "github"
+      }
+    },
     "fenix": {
       "inputs": {
         "nixpkgs": [
@@ -196,6 +228,23 @@
       "original": {
         "owner": "numtide",
         "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "gstack-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1775461624,
+        "narHash": "sha256-DS85BZ6aoVQ16Om9wA+oDYqwgIEEbF8eIcmi63f9zw4=",
+        "owner": "garrytan",
+        "repo": "gstack",
+        "rev": "03973c2fabfb4988a2a4c2fefc44a7e280804884",
+        "type": "github"
+      },
+      "original": {
+        "owner": "garrytan",
+        "repo": "gstack",
+        "rev": "03973c2fabfb4988a2a4c2fefc44a7e280804884",
         "type": "github"
       }
     },
@@ -454,6 +503,22 @@
         "type": "github"
       }
     },
+    "pm-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1773042641,
+        "narHash": "sha256-DkzuTb/GUX48dv0bSq8HYPjGHJajwIwjj4I5RfoFHdc=",
+        "owner": "phuryn",
+        "repo": "pm-skills",
+        "rev": "36ccefdc6c2e00d7c0c12cb0a52bf93e8ec50da4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "phuryn",
+        "repo": "pm-skills",
+        "type": "github"
+      }
+    },
     "quickshell": {
       "inputs": {
         "nixpkgs": [
@@ -481,10 +546,13 @@
         "agenix": "agenix",
         "agent-skills-nix": "agent-skills-nix",
         "banto": "banto",
+        "callstack-agent-skills": "callstack-agent-skills",
         "claude-plugins-official": "claude-plugins-official",
         "compound-engineering-plugin": "compound-engineering-plugin",
         "dms": "dms",
+        "expo-plugins": "expo-plugins",
         "fenix": "fenix",
+        "gstack-skills": "gstack-skills",
         "home-manager": "home-manager_2",
         "keel-marketplace": "keel-marketplace",
         "kuu-marketplace": "kuu-marketplace",
@@ -493,6 +561,7 @@
         "niri-flake": "niri-flake",
         "nix-claude-code": "nix-claude-code",
         "nixpkgs": "nixpkgs_2",
+        "pm-skills": "pm-skills",
         "seiren": "seiren",
         "soulforge": "soulforge",
         "starlintLinuxBin": "starlintLinuxBin",

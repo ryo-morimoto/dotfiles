@@ -1,4 +1,5 @@
-_: {
+{ gstack-skills, ... }:
+{
   programs.agent-skills = {
     enable = true;
 
@@ -6,9 +7,57 @@ _: {
       personal = {
         path = ../../skills;
       };
+      gstack = {
+        path = gstack-skills;
+      };
     };
 
-    skills.enableAll = true;
+    skills = {
+      enable = [
+        "office-hours"
+        "plan-ceo-review"
+        "plan-eng-review"
+        "plan-design-review"
+        "plan-devex-review"
+        "design-consultation"
+        "design-shotgun"
+        "design-html"
+        "design-review"
+        "review"
+        "ship"
+        "land-and-deploy"
+        "canary"
+        "benchmark"
+        "qa"
+        "qa-only"
+        "open-gstack-browser"
+        "setup-browser-cookies"
+        "setup-deploy"
+        "retro"
+        "investigate"
+        "document-release"
+        "cso"
+        "autoplan"
+        "devex-review"
+        "careful"
+        "freeze"
+        "guard"
+        "unfreeze"
+        "gstack-upgrade"
+        "learn"
+      ];
+      enableAll = false;
+      explicit = {
+        gstack-browse = {
+          from = "gstack";
+          path = "browse";
+        };
+        gstack-codex = {
+          from = "gstack";
+          path = "codex";
+        };
+      };
+    };
 
     targets = {
       claude.enable = true;

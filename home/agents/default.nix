@@ -6,6 +6,9 @@
   keel-marketplace ? null,
   kuu-marketplace ? null,
   moonbit-practice-marketplace ? null,
+  callstack-agent-skills ? null,
+  expo-plugins ? null,
+  pm-skills ? null,
   ...
 }:
 
@@ -131,6 +134,7 @@ let
       clients = [
         "claude"
         "codex"
+        "opencode"
       ];
     };
     secretary = {
@@ -145,7 +149,11 @@ let
     context7 = {
       transport = "http";
       url = "https://mcp.context7.com/mcp";
-      clients = [ "opencode" ];
+      clients = [
+        "claude"
+        "codex"
+        "opencode"
+      ];
     };
   };
   ceSkillsPath = "${compound-engineering-plugin}/plugins/compound-engineering/skills";
@@ -282,6 +290,20 @@ let
       "clangd-lsp@claude-plugins-official" = true;
       "keel@keel" = true;
       "know@know" = true;
+      "react-native-best-practices@callstack-agent-skills" = true;
+      "github@callstack-agent-skills" = true;
+      "github-actions@callstack-agent-skills" = true;
+      "upgrading-react-native@callstack-agent-skills" = true;
+      "react-native-brownfield-migration@callstack-agent-skills" = true;
+      "expo@expo-plugins" = true;
+      "pm-product-discovery@pm-skills" = true;
+      "pm-product-strategy@pm-skills" = true;
+      "pm-execution@pm-skills" = true;
+      "pm-market-research@pm-skills" = true;
+      "pm-data-analytics@pm-skills" = true;
+      "pm-go-to-market@pm-skills" = true;
+      "pm-marketing-growth@pm-skills" = true;
+      "pm-toolkit@pm-skills" = true;
     }
     // compoundEngineering.claude.enabledPlugins
     // {
@@ -298,7 +320,13 @@ let
     };
     plugins = [ ../../config/knowledge/know/plugins/know ];
     marketplaces = {
-      inherit claude-plugins-official kuu-marketplace;
+      inherit
+        claude-plugins-official
+        kuu-marketplace
+        callstack-agent-skills
+        expo-plugins
+        pm-skills
+        ;
       moonbit-practice = moonbit-practice-marketplace;
       keel = keel-marketplace;
       know = ../../config/knowledge/know;
