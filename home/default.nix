@@ -11,6 +11,8 @@ let
   dotfilesPath = "${config.home.homeDirectory}/ghq/github.com/ryo-morimoto/dotfiles";
   piPackageSources = [
     "${pkgs.pi-autoresearch}/share/pi/packages/pi-autoresearch"
+    "${pkgs.pi-codedb}/share/pi/packages/pi-codedb"
+    "${pkgs.pi-lens}/share/pi/packages/pi-lens"
   ];
   zenBrowserLauncher = pkgs.writeShellScriptBin "zen-browser" ''
     exec ${lib.getExe pkgs.zen-browser} "$@"
@@ -253,6 +255,7 @@ in
       libnotify
 
       # AI tools
+      codedb
       soulforge
       cursor-agent
       seiren-mcp

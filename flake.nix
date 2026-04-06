@@ -50,6 +50,10 @@
       url = "github:ryo-morimoto/seiren/nix-pkgs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    pi-codedb = {
+      url = "github:ryo-morimoto/pi-codedb";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     soulforge = {
       url = "github:ryo-morimoto/soulforge";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -110,6 +114,7 @@
       fenix,
       moonbit-overlay,
       seiren,
+      pi-codedb,
       soulforge,
       agent-skills-nix,
       gstack-skills,
@@ -135,7 +140,10 @@
         agent-browser = final.callPackage ./packages/agent-browser.nix { };
         grepika = final.callPackage ./packages/grepika.nix { };
         portless = final.callPackage ./packages/portless.nix { };
+        codedb = final.callPackage ./packages/codedb.nix { };
         pi-autoresearch = final.callPackage ./packages/pi-autoresearch.nix { };
+        pi-codedb = pi-codedb.packages.${final.stdenv.hostPlatform.system}.default;
+        pi-lens = final.callPackage ./packages/pi-lens.nix { };
         soulforge = soulforge.packages.${final.stdenv.hostPlatform.system}.default;
         starlint = final.callPackage ./packages/starlint.nix {
           inherit starlintLinuxBin;

@@ -503,6 +503,26 @@
         "type": "github"
       }
     },
+    "pi-codedb": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1775498233,
+        "narHash": "sha256-Qh39eTxAG+K7bZbMOWh1AwWEkn9ZY/WT1K2oinACn+8=",
+        "owner": "ryo-morimoto",
+        "repo": "pi-codedb",
+        "rev": "a511f9dc92856103dcbe07b330f761a05107b9f2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ryo-morimoto",
+        "repo": "pi-codedb",
+        "type": "github"
+      }
+    },
     "pm-skills": {
       "flake": false,
       "locked": {
@@ -561,6 +581,7 @@
         "niri-flake": "niri-flake",
         "nix-claude-code": "nix-claude-code",
         "nixpkgs": "nixpkgs_2",
+        "pi-codedb": "pi-codedb",
         "pm-skills": "pm-skills",
         "seiren": "seiren",
         "soulforge": "soulforge",
