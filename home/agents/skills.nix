@@ -45,6 +45,12 @@
         "unfreeze"
         "gstack-upgrade"
         "learn"
+        "context7-mcp"
+        "design-thinking"
+        "domain-modeling"
+        "fp-typescript"
+        "mermaid-validator"
+        "repo-doctor"
       ];
       enableAll = false;
       explicit = {
