@@ -272,6 +272,14 @@ in
       ".pi/agent/settings.json".text = builtins.toJSON {
         packages = piPackageSources;
       };
+
+      # Soulforge runtime assets (binary hardcodes ~/.soulforge/)
+      ".soulforge/native".source = "${pkgs.soulforge}/share/soulforge/native";
+      ".soulforge/wasm".source = "${pkgs.soulforge}/share/soulforge/wasm";
+      ".soulforge/workers".source = "${pkgs.soulforge}/share/soulforge/workers";
+      ".soulforge/opentui-assets".source = "${pkgs.soulforge}/share/soulforge/opentui-assets";
+      ".soulforge/init.lua".source = "${pkgs.soulforge}/share/soulforge/init.lua";
+
       ".local/bin/beacon-status-popup.sh".source =
         config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/tmux/beacon-status-popup.sh";
       ".local/bin/beacon-window-jump.sh".source =

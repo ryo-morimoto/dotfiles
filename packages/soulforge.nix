@@ -21,8 +21,18 @@ stdenvNoCC.mkDerivation rec {
 
   installPhase = ''
     runHook preInstall
+
     install -Dm755 soulforge $out/bin/soulforge
     ln -s soulforge $out/bin/sf
+
+    # Runtime assets expected under ~/.soulforge/ — symlinked by Home Manager
+    mkdir -p $out/share/soulforge
+    cp -r deps/native $out/share/soulforge/native
+    cp -r deps/wasm $out/share/soulforge/wasm
+    cp -r deps/workers $out/share/soulforge/workers
+    cp -r deps/opentui-assets $out/share/soulforge/opentui-assets
+    cp deps/init.lua $out/share/soulforge/init.lua
+
     runHook postInstall
   '';
 
