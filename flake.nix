@@ -46,6 +46,10 @@
       url = "github:ryo-morimoto/seiren/nix-pkgs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    soulforge = {
+      url = "github:ryo-morimoto/soulforge";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     agent-skills-nix = {
       url = "github:Kyure-A/agent-skills-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -90,6 +94,7 @@
       fenix,
       moonbit-overlay,
       seiren,
+      soulforge,
       agent-skills-nix,
       nix-claude-code,
       compound-engineering-plugin,
@@ -113,7 +118,7 @@
         pi-agent-stuff = final.callPackage ./packages/pi-agent-stuff.nix { };
         pi-autoresearch = final.callPackage ./packages/pi-autoresearch.nix { };
         pi-rewind-hook = final.callPackage ./packages/pi-rewind-hook.nix { };
-        soulforge = final.callPackage ./packages/soulforge.nix { };
+        soulforge = soulforge.packages.${final.stdenv.hostPlatform.system}.default;
         starlint = final.callPackage ./packages/starlint.nix {
           inherit starlintLinuxBin;
         };

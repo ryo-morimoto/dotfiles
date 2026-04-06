@@ -270,13 +270,6 @@ in
         packages = piPackageSources;
       };
 
-      # Soulforge runtime assets (binary hardcodes ~/.soulforge/)
-      ".soulforge/native".source = "${pkgs.soulforge}/share/soulforge/native";
-      ".soulforge/wasm".source = "${pkgs.soulforge}/share/soulforge/wasm";
-      ".soulforge/workers".source = "${pkgs.soulforge}/share/soulforge/workers";
-      ".soulforge/opentui-assets".source = "${pkgs.soulforge}/share/soulforge/opentui-assets";
-      ".soulforge/init.lua".source = "${pkgs.soulforge}/share/soulforge/init.lua";
-
     };
   };
 
