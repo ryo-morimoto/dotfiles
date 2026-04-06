@@ -546,11 +546,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1775468319,
-        "narHash": "sha256-uPyYz/Buea7E85Uii7KSiUGH07MRswZYLjRzrazPtlI=",
+        "lastModified": 1775469254,
+        "narHash": "sha256-zrCLjTs8YqADIuDU3NPkXYShDVQHGNbx0I6+35ZJkhA=",
         "owner": "ryo-morimoto",
         "repo": "soulforge",
-        "rev": "92931e44868bfc793601b36b53f72f13f6db4e98",
+        "rev": "10a5adea135df56dbc65a218104840a0b601f9f5",
         "type": "github"
       },
       "original": {
