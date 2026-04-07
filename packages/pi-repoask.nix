@@ -10,8 +10,8 @@ let
   repoaskSrc = fetchFromGitHub {
     owner = "ryo-morimoto";
     repo = "repoask";
-    rev = "5a0ae26cccdeb0efd4eadb158bd4bff30936fc59";
-    hash = "sha256-uiVb9wjpkrWzcioFzIuQI9Cc53qdajuFYlsePuNtv54=";
+    rev = "e3a5345b298a37511a6b49311dc8e5e76d84819a";
+    hash = "sha256-+ueDcvDbutegmqBCrqN5A2UfZ2ZZUFLCf4SJRoClCmo=";
   };
 
   packageJson = writeText "package.json" (
