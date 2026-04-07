@@ -54,6 +54,10 @@
       url = "github:ryo-morimoto/pi-codedb";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    repoask = {
+      url = "github:ryo-morimoto/repoask";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     soulforge = {
       url = "github:ryo-morimoto/soulforge";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -115,6 +119,7 @@
       moonbit-overlay,
       seiren,
       pi-codedb,
+      repoask,
       soulforge,
       agent-skills-nix,
       gstack-skills,
@@ -145,6 +150,8 @@
         pi-codedb = pi-codedb.packages.${final.stdenv.hostPlatform.system}.default;
         pi-lens = final.callPackage ./packages/pi-lens.nix { };
         pi-mcp-adapter = final.callPackage ./packages/pi-mcp-adapter.nix { };
+        repoask = repoask.packages.${final.stdenv.hostPlatform.system}.default;
+        pi-repoask = final.callPackage ./packages/pi-repoask.nix { };
         pi-coding-agent = prev.pi-coding-agent.overrideAttrs (old: rec {
           version = "0.65.2";
           src = final.fetchFromGitHub {

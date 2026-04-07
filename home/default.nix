@@ -14,6 +14,7 @@ let
     "${pkgs.pi-codedb}/share/pi/packages/pi-codedb"
     "${pkgs.pi-lens}/share/pi/packages/pi-lens"
     "${pkgs.pi-mcp-adapter}/share/pi/packages/pi-mcp-adapter"
+    "${pkgs.pi-repoask}/share/pi/packages/pi-repoask"
   ];
   zenBrowserLauncher = pkgs.writeShellScriptBin "zen-browser" ''
     exec ${lib.getExe pkgs.zen-browser} "$@"
@@ -257,6 +258,7 @@ in
 
       # AI tools
       codedb
+      pi-repoask
       soulforge
       cursor-agent
       seiren-mcp
