@@ -16,6 +16,10 @@ let
     url = "https://registry.npmjs.org/brace-expansion/-/brace-expansion-2.0.1.tgz";
     hash = "sha256-JGQSfaQdpQ35coHEzb7rZrNTyO69CcNVB7tknmbYAUE=";
   };
+  balancedMatch = fetchurl {
+    url = "https://registry.npmjs.org/balanced-match/-/balanced-match-1.0.2.tgz";
+    hash = "sha256-2FT3q90MeoEgzzgeCtX5csvQJV9dmHQkvWcsjE/OvME=";
+  };
 in
 
 stdenvNoCC.mkDerivation rec {
@@ -41,6 +45,8 @@ stdenvNoCC.mkDerivation rec {
     tar xzf ${minimatch} --strip-components=1 -C $out/share/pi/packages/${pname}/node_modules/minimatch
     mkdir -p $out/share/pi/packages/${pname}/node_modules/brace-expansion
     tar xzf ${braceExpansion} --strip-components=1 -C $out/share/pi/packages/${pname}/node_modules/brace-expansion
+    mkdir -p $out/share/pi/packages/${pname}/node_modules/balanced-match
+    tar xzf ${balancedMatch} --strip-components=1 -C $out/share/pi/packages/${pname}/node_modules/balanced-match
 
     runHook postInstall
   '';
