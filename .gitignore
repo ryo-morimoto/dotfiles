@@ -36,6 +36,7 @@
 
 # Local agent/runtime markers
 .codex
+.pi-lens/
 
 # Nix build output
 result
