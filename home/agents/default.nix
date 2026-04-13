@@ -25,6 +25,7 @@ let
   trustedHttpDomains = [
     "https://mcp.context7.com/*"
     "https://secretary.ryo-morimoto-dev.workers.dev/*"
+    "https://mcp.linear.app/*"
   ];
   safeBashPatterns = [
     "git status*"
@@ -155,6 +156,13 @@ let
         "opencode"
       ];
     };
+    linear = {
+      transport = "http";
+      url = "https://mcp.linear.app/mcp";
+      clients = [
+        "claude"
+      ];
+    };
   };
   ceSkillsPath = "${compound-engineering-plugin}/plugins/compound-engineering/skills";
   ceSkills = [
@@ -217,11 +225,6 @@ let
         argumentHint = "[Plan doc path or description of work. Blank to auto use latest plan doc]";
       };
       opencodeCommand = "ce-work";
-    }
-    {
-      name = "feature-video";
-      source = "feature-video";
-      opencodeCommand = "feature-video";
     }
     {
       name = "resolve-pr-feedback";
