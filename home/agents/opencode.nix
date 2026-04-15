@@ -36,7 +36,7 @@ in
       mcp = opencodeMcp;
     };
 
-    rules = builtins.readFile ./_AGENTS.md;
+    context = builtins.readFile ./_AGENTS.md;
 
     inherit (compoundEngineering.opencode) commands;
   };

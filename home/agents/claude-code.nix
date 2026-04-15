@@ -50,7 +50,7 @@ in
 
     settings = claudeUserSettings;
 
-    memory.text = builtins.readFile ./_AGENTS.md;
+    context = builtins.readFile ./_AGENTS.md;
 
     # marketplaces は渡さない — known_marketplaces.json を mutable にするため activation で管理
     inherit (sharedClaudeCode) plugins;

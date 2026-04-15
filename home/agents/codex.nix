@@ -55,7 +55,7 @@ let
 in
 {
   programs.codex = {
-    custom-instructions = builtins.readFile ./_AGENTS.md;
+    context = builtins.readFile ./_AGENTS.md;
     enable = true;
     settings = { };
     inherit (compoundEngineering.codex) skills;
