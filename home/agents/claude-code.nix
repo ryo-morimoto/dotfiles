@@ -23,6 +23,8 @@ let
       };
   claudeUserSettings = {
     "$schema" = "https://json.schemastore.org/claude-code-settings.json";
+    model = "claude-opus-4-6[1m]";
+    effortLevel = "high";
     sandbox = {
       enabled = false;
     };
@@ -73,8 +75,6 @@ in
   '';
 
   home.file = {
-    ".claude/settings.json".text = builtins.toJSON claudeUserSettings;
-
     # keel plugin: mutable symlink for live development
     ".claude/plugins/keel".source =
       config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/ghq/github.com/ryo-morimoto/keel";
