@@ -8,7 +8,6 @@
   moonbit-practice-marketplace ? null,
   callstack-agent-skills ? null,
   expo-plugins ? null,
-  pm-skills ? null,
   ...
 }:
 
@@ -299,14 +298,6 @@ let
       "upgrading-react-native@callstack-agent-skills" = true;
       "react-native-brownfield-migration@callstack-agent-skills" = true;
       "expo@expo-plugins" = true;
-      "pm-product-discovery@pm-skills" = true;
-      "pm-product-strategy@pm-skills" = true;
-      "pm-execution@pm-skills" = true;
-      "pm-market-research@pm-skills" = true;
-      "pm-data-analytics@pm-skills" = true;
-      "pm-go-to-market@pm-skills" = true;
-      "pm-marketing-growth@pm-skills" = true;
-      "pm-toolkit@pm-skills" = true;
     }
     // compoundEngineering.claude.enabledPlugins
     // {
@@ -328,7 +319,6 @@ let
         kuu-marketplace
         callstack-agent-skills
         expo-plugins
-        pm-skills
         ;
       moonbit-practice = moonbit-practice-marketplace;
       keel = keel-marketplace;

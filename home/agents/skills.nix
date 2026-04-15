@@ -1,4 +1,31 @@
-{ gstack-skills, ... }:
+{
+  gstack-skills,
+  pm-skills,
+  lib,
+  ...
+}:
+let
+  pmCategories = [
+    "pm-data-analytics"
+    "pm-execution"
+    "pm-go-to-market"
+    "pm-market-research"
+    "pm-marketing-growth"
+    "pm-product-discovery"
+    "pm-product-strategy"
+    "pm-toolkit"
+  ];
+  pmSources = lib.listToAttrs (
+    map (
+      cat:
+      lib.nameValuePair cat {
+        path = pm-skills;
+        subdir = "${cat}/skills";
+        idPrefix = cat;
+      }
+    ) pmCategories
+  );
+in
 {
   programs.agent-skills = {
     enable = true;
@@ -10,7 +37,8 @@
       gstack = {
         path = gstack-skills;
       };
-    };
+    }
+    // pmSources;
 
     skills = {
       enable = [
@@ -52,7 +80,7 @@
         "mermaid-validator"
         "repo-doctor"
       ];
-      enableAll = false;
+      enableAll = pmCategories;
       explicit = {
         browse = {
           from = "gstack";
