@@ -79,6 +79,12 @@ in
         "fp-typescript"
         "mermaid-validator"
         "repo-doctor"
+        "rdra-setup"
+        "rdra-ingest"
+        "rdra-reverse"
+        "rdra-check"
+        "rdra-review"
+        "rdra-summary"
       ];
       enableAll = pmCategories;
       explicit = {
