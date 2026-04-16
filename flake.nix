@@ -7,10 +7,6 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    gstack-skills = {
-      url = "github:garrytan/gstack/03973c2fabfb4988a2a4c2fefc44a7e280804884";
-      flake = false;
-    };
     dms = {
       url = "github:AvengeMedia/DankMaterialShell/stable";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -103,6 +99,10 @@
       url = "github:phuryn/pm-skills";
       flake = false;
     };
+    evolutionary-naming = {
+      url = "github:kawasima/evolutionary-naming";
+      flake = false;
+    };
   };
 
   outputs =
@@ -122,7 +122,6 @@
       repoask,
       soulforge,
       agent-skills-nix,
-      gstack-skills,
       nix-claude-code,
       compound-engineering-plugin,
       claude-plugins-official,
@@ -132,6 +131,7 @@
       callstack-agent-skills,
       expo-plugins,
       pm-skills,
+      evolutionary-naming,
       starlintLinuxBin,
       ...
     }:
@@ -213,8 +213,8 @@
                   keel-marketplace
                   callstack-agent-skills
                   expo-plugins
-                  gstack-skills
                   pm-skills
+                  evolutionary-naming
                   ;
               };
             };

@@ -173,6 +173,22 @@
         "type": "github"
       }
     },
+    "evolutionary-naming": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1776310353,
+        "narHash": "sha256-sVQvR6OOzmWYl7iA0tiYUVeqPRYjhtCI+UGdLvtusAc=",
+        "owner": "kawasima",
+        "repo": "evolutionary-naming",
+        "rev": "9ff0280833cc781018618d5294b52cbeced0d409",
+        "type": "github"
+      },
+      "original": {
+        "owner": "kawasima",
+        "repo": "evolutionary-naming",
+        "type": "github"
+      }
+    },
     "expo-plugins": {
       "flake": false,
       "locked": {
@@ -261,23 +277,6 @@
       "original": {
         "owner": "numtide",
         "repo": "flake-utils",
-        "type": "github"
-      }
-    },
-    "gstack-skills": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1775461624,
-        "narHash": "sha256-DS85BZ6aoVQ16Om9wA+oDYqwgIEEbF8eIcmi63f9zw4=",
-        "owner": "garrytan",
-        "repo": "gstack",
-        "rev": "03973c2fabfb4988a2a4c2fefc44a7e280804884",
-        "type": "github"
-      },
-      "original": {
-        "owner": "garrytan",
-        "repo": "gstack",
-        "rev": "03973c2fabfb4988a2a4c2fefc44a7e280804884",
         "type": "github"
       }
     },
@@ -625,9 +624,9 @@
         "claude-plugins-official": "claude-plugins-official",
         "compound-engineering-plugin": "compound-engineering-plugin",
         "dms": "dms",
+        "evolutionary-naming": "evolutionary-naming",
         "expo-plugins": "expo-plugins",
         "fenix": "fenix",
-        "gstack-skills": "gstack-skills",
         "home-manager": "home-manager_2",
         "keel-marketplace": "keel-marketplace",
         "kuu-marketplace": "kuu-marketplace",
