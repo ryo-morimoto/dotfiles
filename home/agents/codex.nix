@@ -38,8 +38,9 @@ let
       };
   codexSettings = {
     personality = "pragmatic";
-    model = "gpt-5.3-codex";
-    model_reasoning_effort = "xhigh";
+    model = "gpt-5.4";
+    review_model = "gpt-5.4";
+    model_reasoning_effort = "high";
     approval_policy = "never";
     sandbox_mode = "workspace-write";
     features.multi_agent = true;

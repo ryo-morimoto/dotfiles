@@ -161,6 +161,7 @@ let
       url = "https://mcp.linear.app/mcp";
       clients = [
         "claude"
+        "codex"
       ];
     };
     linear-personal = {
@@ -168,6 +169,7 @@ let
       url = "https://mcp.linear.app/mcp";
       clients = [
         "claude"
+        "codex"
       ];
     };
   };
