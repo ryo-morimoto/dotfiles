@@ -23,7 +23,7 @@ let
       };
   claudeUserSettings = {
     "$schema" = "https://json.schemastore.org/claude-code-settings.json";
-    model = "claude-opus-4-6[1m]";
+    model = "claude-opus-4-7";
     effortLevel = "high";
     sandbox = {
       enabled = false;

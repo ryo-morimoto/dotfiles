@@ -116,8 +116,10 @@
 - [git worktree配置]: repo 内の `worktrees/` は持たず、各 worktree は `{project-parent}/{project}-wt/<name>` に配置して repo 隣接で管理する
 - [デスクトップ構成]: Niri + DankMaterialShell を継続し、置き換え済みの旧 desktop stack は repo に残さない
 - [ローカルWebツール運用]: `agent-browser` はブラウザ操作・観測、`portless` は stable な local URL と worktree 分離に使い分ける
-- [Codex運用]: alias 追加より skill 化を優先するが、CLI option だけで足りる既定挙動は shell alias で付与してよい。`~/.codex/config.toml` は Codex 自身が更新できる mutable file を維持し、Home Manager では activation でデフォルトを書き込む。`codex` は shell alias で `--full-auto` を既定にし、managed config で approval/sandbox を縛らない
+- [Codex運用]: alias 追加より skill 化を優先するが、CLI option だけで足りる既定挙動は shell alias で付与してよい。`~/.codex/config.toml` は Codex 自身が更新できる mutable file を維持し、Home Manager では activation でデフォルトを書き込む。`--full-auto` は `on-request` のため既定にせず、Codex は `approval_policy = "never"` + `sandbox_mode = "workspace-write"` + workspace-write network access を標準にする
 - [Claude Code承認運用]: Claude Code の `--dangerously-skip-permissions` は wrapper ではなく shell alias で付与する。sandbox は `settings.json` で常時有効化し、`failIfUnavailable = true` と `allowUnsandboxedCommands = false` を既定にする。Linux では `sandbox-runtime` の seccomp asset を `.claude/vendor/seccomp/<arch>/` に配布して `sandbox.seccomp.{bpfPath,applyPath}` を明示する
+- [Claude Codeモデル運用]: Claude Code の既定モデルは公式 docs の Claude API alias に合わせ、Opus 4.7 は `claude-opus-4-7` を使う
+- [Claude Code Codex連携]: Claude Code から Codex を使う入口は OpenAI の `codex-plugin-cc` marketplace を Home Manager で登録し、`codex@openai-codex` を既定で有効化する
 - [Claude Code plugin運用]: `semgrep@claude-plugins-official` は `semgrep mcp` hook を自動実行するため既定では無効化し、必要時だけ一時的に有効化する
 - [ローカルSAST運用]: `semgrep` CLI は Home Manager に常設せず、必要時だけ一時導入または個別環境で使う
 - [Claude Code配布元]: `pkgs.claude-code` に問題があるときは `ryoppippi/nix-claude-code` overlay を優先し、Home Manager の `programs.claude-code.package` 差し替え口で設定を維持する

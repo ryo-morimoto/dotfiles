@@ -40,8 +40,11 @@ let
     personality = "pragmatic";
     model = "gpt-5.3-codex";
     model_reasoning_effort = "xhigh";
+    approval_policy = "never";
+    sandbox_mode = "workspace-write";
     features.multi_agent = true;
     otel.log_user_prompt = false;
+    sandbox_workspace_write.network_access = true;
     projects = {
       "${ghqDir}/dotfiles".trust_level = "trusted";
       "${ghqDir}/newsfeed-ai".trust_level = "trusted";

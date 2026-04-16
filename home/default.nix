@@ -426,7 +426,7 @@ in
           };
           agents = {
             claude = "claude --dangerously-skip-permissions";
-            codex = "codex --full-auto";
+            codex = "codex --ask-for-approval never --sandbox workspace-write";
           };
         in
         navigation // git // modern // utils // k8s // agents;

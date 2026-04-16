@@ -3,6 +3,7 @@
   lib ? null,
   compound-engineering-plugin ? null,
   claude-plugins-official ? null,
+  codex-plugin-cc ? null,
   keel-marketplace ? null,
   kuu-marketplace ? null,
   moonbit-practice-marketplace ? null,
@@ -155,7 +156,14 @@ let
         "opencode"
       ];
     };
-    linear = {
+    linear-work = {
+      transport = "http";
+      url = "https://mcp.linear.app/mcp";
+      clients = [
+        "claude"
+      ];
+    };
+    linear-personal = {
       transport = "http";
       url = "https://mcp.linear.app/mcp";
       clients = [
@@ -298,6 +306,7 @@ let
       "upgrading-react-native@callstack-agent-skills" = true;
       "react-native-brownfield-migration@callstack-agent-skills" = true;
       "expo@expo-plugins" = true;
+      "codex@openai-codex" = true;
     }
     // compoundEngineering.claude.enabledPlugins
     // {
@@ -320,6 +329,7 @@ let
         callstack-agent-skills
         expo-plugins
         ;
+      openai-codex = codex-plugin-cc;
       moonbit-practice = moonbit-practice-marketplace;
       keel = keel-marketplace;
       know = ../../config/knowledge/know;

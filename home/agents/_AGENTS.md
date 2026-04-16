@@ -30,6 +30,33 @@ This project primarily uses TypeScript and Rust. When generating code, default t
 
 Follow Conventional Commits for commit messages. Examples: `fix:`, `feat:`, `chore:`, `docs:`, `refactor:`, `test:`
 
+## Agent Role Division
+
+Claude（このセッション）は人間の窓口であり、オーケストレーターである。実作業は Codex に委譲する。
+
+**Claude が担う:**
+- 人間との対話・ゴールの方向性合わせ
+- 全体のオーケストレーション・進行管理
+- 実行可能なタスクへの分解
+- 複雑な情報収集（複数ソースの横断、判断を伴う調査）
+
+**Codex に委譲する:**
+- クエリが明確な調査（特定のコード・ドキュメントの読解）
+- 詳細設計（Claude が決めた方針に基づく具体化）
+- コードレビュー
+- 実装
+
+**フォールバック:** Codex が token 切れの場合は Claude が直接実行する。
+
+## Linear MCP Routing
+
+Linear MCP サーバーはワークスペース別に2つ存在する。作業ディレクトリで使い分けること。
+
+| パス パターン | MCP サーバー |
+|---|---|
+| `~/ghq/github.com/ryo-morimoto/*` | `linear-personal` |
+| それ以外 | `linear-work` |
+
 ## Development Workflow
 
 Use compound-engineering workflows as the default process for non-trivial tasks:

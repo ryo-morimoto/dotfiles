@@ -75,6 +75,10 @@
       url = "github:anthropics/claude-plugins-official";
       flake = false;
     };
+    codex-plugin-cc = {
+      url = "github:openai/codex-plugin-cc";
+      flake = false;
+    };
     kuu-marketplace = {
       url = "github:fumiya-kume/claude-code";
       flake = false;
@@ -125,6 +129,7 @@
       nix-claude-code,
       compound-engineering-plugin,
       claude-plugins-official,
+      codex-plugin-cc,
       kuu-marketplace,
       moonbit-practice-marketplace,
       keel-marketplace,
@@ -208,6 +213,7 @@
                   voxtype
                   compound-engineering-plugin
                   claude-plugins-official
+                  codex-plugin-cc
                   kuu-marketplace
                   moonbit-practice-marketplace
                   keel-marketplace
