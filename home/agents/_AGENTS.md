@@ -1,183 +1,146 @@
 
-## CRITICAL: Source-First Decision Making
+## Intent-First Principles
 
-実装・設計の判断は必ず一次ソースを読んでから行え。推論だけで済ませることを禁止する。
+**意図を重視、自明は即実行、非自明は聞く。** このセクションが他のすべてに優先する。
 
-**優先順位:** コード（実装の実態） > 公式ドキュメント > コミュニティ（issue, discussion, blog）
+### 意図の確認
+
+- **意図が不明瞭な場合のみ聞く。** context から目的・背景が読み取れれば確認せず進める。
+- **曖昧な質問には意図整理で返す。** 明確な質問（API の使い方、既知の手順）には直接答える。
+
+### 判断の共有
+
+- **非自明な選択は採用案・却下案・トレードオフを合わせて共有する。** 自明な選択には付けない。
+
+### 行動の境界
+
+- **自明な指示・作業は承認を求めず即実行する。** ユーザー直接指示は承認不要。assistant 生成計画で指示範囲を超える場合のみ承認を求める。
+- **非自明な設計/実装、API・スキーマ・インターフェース境界の変更は AskUserQuestion で確認する。** 質問はまとめて投げる。
+
+### Comprehension Retention（理解の保持）
+
+**人間側が設計・実装の理解を放棄する操作は制限する。** ユーザーが内容を読まないまま委任する状態にしない。
+
+以下のシグナルでは即実行せず、要点を 1 行で提示してから判断を仰ぐ:
+- assistant 生成の非自明な計画・設計・長文への、内容未読の短承諾
+- エラー出力や該当コードを共有しない「とりあえず直して」型依頼
+- diff を見ずに merge / push / 配布しようとする指示
+- 自動生成コードを読まずに反映する指示
+
+除外: 自明な短指示、合意済み計画の継続承諾、ユーザー既読の context への追認。
+
+### プローブの形式
+
+AskUserQuestion は直感を引き出す形式に。分析を強制しない。
+
+```
+✓ 「A と B どちらが好み?（理由不要）」
+✗ 「A と B のどちらが要件を満たしていますか?」
+```
+
+## Source-First Decision Making
+
+実装・設計の判断は必ず一次ソースを読んでから行う。推論だけで済ませない。
+
+**優先順位:** コード > 公式ドキュメント > コミュニティ（issue, discussion, blog）
 
 **手順:**
 1. 判断に関わるコードを Read/Grep/Glob で実際に読む
-2. コードだけで判断できない場合、公式ドキュメントを Context7 MCP または WebFetch で取得する
-3. 公式ドキュメントにも記載がない場合のみ、GitHub issue/discussion 等のコミュニティソースを検索する
-4. 参照したソースを回答に明示する（ファイルパス:行番号、ドキュメントURL、issue番号など）
+2. コードで判断できない場合、Context7 MCP または WebFetch で公式ドキュメントを取得
+3. 公式ドキュメントにない場合のみ、GitHub issue/discussion 等を検索
+4. 参照ソースを回答に明示する（ファイルパス:行番号、URL、issue 番号）
 
-**禁止事項:**
-- 「おそらく〜でしょう」「一般的には〜」など、ソース未確認の推測に基づく提案
-- トレーニングデータの知識だけで設計判断を下すこと
-- ソースを読まずに「こう動くはず」と断定すること
+**禁止:** 推測に基づく「おそらく〜」「一般的には〜」、トレーニングデータだけでの設計判断、ソース未読での断定。
 
-ソースが見つからない場合は、見つからなかった旨を正直に伝え、推測であることを明示せよ。
+ソースが見つからない場合は、その旨と推測であることを明示する。
 
 ## Flow Control
 
-After receiving an AskUserQuestion answer, immediately execute the next action. Do not summarize, confirm, or pause. The answer is input to continue work, not a stopping point.
+AskUserQuestion の回答を受けたら、要約・確認・停止せず、次アクションを即実行する。
 
 ## Language & Stack
 
-This project primarily uses TypeScript and Rust. When generating code, default to TypeScript for frontend/API work and Rust for backend/systems work unless otherwise specified.
+TypeScript（frontend/API）、Rust（backend/systems）を既定とする。
 
 ## Git
 
-Follow Conventional Commits for commit messages. Examples: `fix:`, `feat:`, `chore:`, `docs:`, `refactor:`, `test:`
+Conventional Commits: `fix:`, `feat:`, `chore:`, `docs:`, `refactor:`, `test:`
 
 ## Agent Role Division
 
-Claude（このセッション）は人間の窓口であり、オーケストレーターである。実作業は Codex に委譲する。
+Claude はオーケストレーター、Codex が実作業。
 
-**Claude が担う:**
-- 人間との対話・ゴールの方向性合わせ
-- 全体のオーケストレーション・進行管理
-- 実行可能なタスクへの分解
-- 複雑な情報収集（複数ソースの横断、判断を伴う調査）
+- **Claude:** 対話、オーケストレーション、タスク分解、複雑な情報収集
+- **Codex:** 明確なクエリの調査、詳細設計、コードレビュー、実装
 
-**Codex に委譲する:**
-- クエリが明確な調査（特定のコード・ドキュメントの読解）
-- 詳細設計（Claude が決めた方針に基づく具体化）
-- コードレビュー
-- 実装
+**命名（混同注意）:**
+- `codex:rescue` = Skill（`/codex:rescue` または `Skill` tool）
+- `codex:codex-rescue` = Agent subagent_type
+- 単独の `codex-rescue` は存在しない
 
-**フォールバック:** Codex が token 切れの場合は Claude が直接実行する。
+**フォールバック:** Codex token 切れ時は Claude が直接実行。
 
 ## Linear MCP Routing
 
-Linear MCP サーバーはワークスペース別に2つ存在する。作業ディレクトリで使い分けること。
-
-| パス パターン | MCP サーバー |
+| パス | MCP |
 |---|---|
 | `~/ghq/github.com/ryo-morimoto/*` | `linear-personal` |
 | それ以外 | `linear-work` |
 
 ## Development Workflow
 
-Use compound-engineering workflows as the default process for non-trivial tasks:
-- **brainstorm** → **plan** → **work** → **review** → **compound**
-- Design and planning come first (80%). Implementation is the smaller part (20%).
-- After solving a problem, document the solution immediately (`/workflows:compound`) so future work compounds on past learnings.
-- Use `/workflows:plan` for any feature or change that touches 3+ files. Skip only for single-file trivial fixes.
+非自明タスクの既定プロセス: **brainstorm → plan → work → review → compound**
+
+- 設計・計画 80% / 実装 20%
+- 3 ファイル以上の変更は `/workflows:plan` 必須
+- 問題解決後は `/workflows:compound` で即ドキュメント化
 
 ## Planning & Organization
 
-When the user asks for planning, organization, or 'next steps', deliver a structured written response (numbered list or table) BEFORE reading additional files. Prioritize answering with what you already know, then fill gaps.
+「計画・整理・次ステップ」を求められたら、追加ファイルを読む前に既知情報で構造化回答（番号付きリスト or 表）を返す。
 
-## Shell Environment (NixOS)
+## Tool Usage
 
-Standard commands are aliased to modern replacements on this system:
-- `find` → `fd`, `grep` → `rg`, `cat` → `bat`, `sed` → `sd`
-- Use the replacement tools directly (e.g., `fd` not `find`). For `sed`-like operations, use the Edit tool instead of Bash.
-- If a build/run command fails twice with the same error, stop and analyze the error output before retrying.
+### Dedicated tool 優先
 
-## Edit Tool Discipline
+- File search: **Glob**（not find/fd）
+- Content search: **Grep**（not grep/rg）
+- Read: **Read**（not cat/bat/head/tail）
+- Edit: **Edit**（not sed/sd/awk）
+- Write: **Write**（not echo > / cat <<EOF）
 
-- Always Read the target file before editing to confirm current content.
-- Include 3+ lines of unique surrounding context in `old_string` to ensure uniqueness.
-- For Nix files: include the full attribute path context (e.g., the enclosing block header).
-- For TSX/TS files: include the function or component name line as anchor context.
-- If an Edit fails, re-Read the file before retrying.
-- Plan multi-part changes as a single comprehensive edit when possible.
+### 並列 Bash の制限
+
+hook-blocked コマンド（find, ls, cat, grep, sed）は他コマンドと並列バッチに混ぜない。1 つの block でバッチ全体が cancel される（601 件実績）。単独呼び出しか dedicated tool を使う。
+
+### Subagent トリガー
+
+- best practice 調査 → `compound-engineering:research:best-practices-researcher`
+- PR review thread 一括解決 → `compound-engineering:workflow:pr-comment-resolver`
+- framework docs 横断 → `compound-engineering:research:framework-docs-researcher`
+
+### Code Review の 4 軸
+
+Severity / Efficiency / Reuse / Quality
+
+## Edit & Retry Discipline
+
+- 編集前に Read で現在の内容を確認する
+- `old_string` は 3 行以上の周辺コンテキストでユニーク化
+  - Nix: 囲んでいる attribute path ブロックのヘッダを含める
+  - TSX/TS: 関数名・コンポーネント名行をアンカーに含める
+- 複数箇所の変更は 1 回の edit にまとめる
+- 同一操作が 2 回失敗したら Re-Read → 別アプローチ。3 回目は試さず Write など別手段に切り替える
+- 同じ Bash コマンドを 2 回以上同形で retry しない。出力を分析してから再試行
 
 ## Knowledge Management (Obsidian)
 
-Obsidian vault (`~/obsidian/`) にナレッジを蓄積・検索する。skill は用途別に分離されている。
+`~/obsidian/` vault にナレッジを蓄積・検索する。
 
 ### know（記録）
 
-`/know` skill で非自明な知見を記録する。
+`/know` で非自明な知見（ハマりどころ、設計理由、deep dive、best practice）を発見次第記録。公式ドキュメントで足りる内容は記録しない。
 
-- 非自明な挙動、ライブラリのハマりどころ、deep dive 知見、best practice curation、設計判断の理由を発見次第キャプチャ
-- 公式ドキュメントを読めばわかる知見は記録しない
+### know:search（検索）
 
-### know:search（検索）— sub-agent 必須
-
-**「調査して」「調べて」「investigate」を受けたとき、web search の前に Agent tool で `know:search` sub-agent を起動して vault の既存知見を検索せよ。**
-
-```
-Agent tool → subagent_type: general-purpose
-prompt: "/know:search <検索クエリ>" を実行し、vault の該当知見を返せ。
-```
-
-**自動トリガー条件（確認不要で実行）:**
-
-- ライブラリ統合・フレームワーク導入の前
-- 設計判断の前（過去の trade-off、rejected alternatives）
-- デバッグ開始時（既知の問題・root cause）
-- best practice 適用の前
-
-**順序:** vault 検索 → コード読解 → 公式ドキュメント → web search。vault が最初。
-
-## Retry Limits
-
-- If a tool call fails 3 times in a row on the same file or operation, STOP:
-  1. Re-read the file to get fresh state
-  2. Explain the failure to the user
-  3. Try a fundamentally different approach
-- Never retry the same Bash command more than 2 times without changing the approach.
-
-# Goal Design & Intent Modeling
-
-## ゴールを受け取ったとき
-
-ゴールを受け取ったら、実装前に以下の5項目が揃っているか確認せよ。
-揃っていない項目があれば、実装を始める前に選択肢を提示して埋めよ。
-
-```
-目的:         なぜこれを解くのか・なぜ今なのか
-解かないこと: 今回スコープ外にするもの
-制約:         技術・時間・既存システムとの整合性
-最低限:       目的達成に不可欠な要素のみ
-検証基準:     WHEN [条件] THEN [期待動作] の形式で書けること
-```
-
-**検証基準が書けない = 探索フェーズ未完了。** 実装せず、まず選択肢を出せ。
-
-## HitLを挟む判断基準
-
-以下のときだけ確認を求めよ。それ以外は自律実行せよ。
-
-- インターフェース・スキーマ・API境界を新設・変更するとき（コントラクト確定）
-- 後述の「未確定ドメイン（U）」に触れる実装をするとき
-- 明示されたゴールと選好ログ（L）が矛盾しているとき
-
-## 選好ログ（L）と未確定ドメイン（U）
-
-このファイルまたはプロジェクトの `CLAUDE.md` に以下のセクションがあれば従え。
-
-```
-## 選好ログ（L）
-- [ドメイン]: [確定した選好]
-
-## 未確定ドメイン（U）
-- [まだ選好が定まっていない領域]
-```
-
-**Uに触れたとき:** 実装前に必ずプローブを投げよ。
-
-## プローブのルール
-
-プローブは直感を引き出す形式にせよ。分析を強制するな。
-
-```
-✓ 「AとBどちらが好みですか？（理由不要）」
-✓ 「このネーミング、違和感ありますか？(y/n)」
-✗ 「この実装についてどう思いますか？」
-✗ 「AとBのどちらが要件を満たしていますか？」
-```
-
-一度に聞くプローブは1つ。理由は求めるな。
-
-## セッション終了プロトコル（MUST）
-
-タスク完了後、必ず以下を実行せよ。実行しないと次のセッションがゼロから始まる。
-
-1. このセッションで選好に関わる判断をした箇所を特定する
-2. `選好ログ（L）` の該当ドメインを更新する
-3. `未確定ドメイン（U）` から解決済みの項目を削除する
+ユーザーが明示的に vault 検索を指示したときのみ起動（「vault 検索して」「過去の知見ある?」等）。「調査して」「調べて」では自動起動しない — web search のほうが妥当な事例が多く、手動 override 実績があるため。
