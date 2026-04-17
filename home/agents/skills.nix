@@ -63,6 +63,10 @@ in
         "design-an-interface"
         "grill-me"
         "improve-codebase-architecture"
+        "domain-model"
+        "to-prd"
+        "to-linear-issues"
+        "linear-triage"
       ];
       enableAll = pmCategories;
     };
