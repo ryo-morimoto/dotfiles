@@ -390,6 +390,22 @@
         "type": "github"
       }
     },
+    "mattpocock-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1775044635,
+        "narHash": "sha256-kInYwg1xaBrcW6lZXm2AuyHKZ9gjL6qGvoope+25ADs=",
+        "owner": "mattpocock",
+        "repo": "skills",
+        "rev": "651eab033bdf8f7fd535c274f8cbe839075aba5e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mattpocock",
+        "repo": "skills",
+        "type": "github"
+      }
+    },
     "moonbit-overlay": {
       "inputs": {
         "nixpkgs": [
@@ -647,6 +663,7 @@
         "home-manager": "home-manager_2",
         "keel-marketplace": "keel-marketplace",
         "kuu-marketplace": "kuu-marketplace",
+        "mattpocock-skills": "mattpocock-skills",
         "moonbit-overlay": "moonbit-overlay",
         "moonbit-practice-marketplace": "moonbit-practice-marketplace",
         "niri-flake": "niri-flake",

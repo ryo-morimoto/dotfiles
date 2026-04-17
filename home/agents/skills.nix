@@ -1,6 +1,7 @@
 {
   pm-skills,
   evolutionary-naming,
+  mattpocock-skills,
   lib,
   ...
 }:
@@ -38,6 +39,9 @@ in
         path = evolutionary-naming;
         subdir = "skills";
       };
+      mattpocock = {
+        path = mattpocock-skills;
+      };
     }
     // pmSources;
 
@@ -56,6 +60,9 @@ in
         "rdra-check"
         "rdra-review"
         "rdra-summary"
+        "design-an-interface"
+        "grill-me"
+        "improve-codebase-architecture"
       ];
       enableAll = pmCategories;
     };

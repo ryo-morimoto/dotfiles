@@ -107,6 +107,10 @@
       url = "github:kawasima/evolutionary-naming";
       flake = false;
     };
+    mattpocock-skills = {
+      url = "github:mattpocock/skills";
+      flake = false;
+    };
   };
 
   outputs =
@@ -137,6 +141,7 @@
       expo-plugins,
       pm-skills,
       evolutionary-naming,
+      mattpocock-skills,
       starlintLinuxBin,
       ...
     }:
@@ -194,7 +199,7 @@
               localOverlay
             ];
             home-manager = {
-              backupFileExtension = "bak";
+              backupFileExtension = "hm-bak";
               useGlobalPkgs = true;
               useUserPackages = true;
               users.ryo-morimoto = {
@@ -221,6 +226,7 @@
                   expo-plugins
                   pm-skills
                   evolutionary-naming
+                  mattpocock-skills
                   ;
               };
             };
