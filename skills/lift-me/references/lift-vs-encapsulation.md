@@ -50,8 +50,26 @@ An encapsulation helper is still valuable — it localizes change, reduces noise
 - Base classes that collect cross-cutting framework concerns
 - "Manager" / "Helper" / "Utils" / "Common" that concentrate unrelated code by proximity
 - Controller / handler convenience methods that only hide transport details
+- **Small-class extraction that relocates wiring without introducing a law** — see next section
 
 Some of these are legitimate encapsulations. None of them are lifts.
+
+## Small-class extraction — a recurring false positive
+
+Extracting a small class to host a sequence of calls (e.g. `allocations → items / location_ids / ratios → SyncRuleService`) feels like progress because structure visibly increases. It only earns the word "lift" when **all** of these hold:
+
+1. the new class names a **judgment** the team already recognizes as the same across callsites (not merely a code shape the author spotted),
+2. at least one **law or invariant** is now enforced or advertised by the class (sum preservation, key preservation, totality, ordering, absence handling, …), AND
+3. reviewers will stop re-reading the wiring and instead ask whether the law holds.
+
+If the class only reroutes the same inputs to the same downstream call, with no new invariant and no pre-existing shared mental model, it is **wiring relocation**. The honest labels are:
+
+- **Encapsulation**, if it genuinely localizes a boundary (framework, vendor, transport).
+- **Structure cost with no payoff**, if it does not even do that.
+
+Neither is a lift. When the team does not yet share the mental model, do **not** start with a class. Produce a memo, a review-lens checklist, or a workshop first; let the shared noun form in human conversation before it appears in the code.
+
+A lift introduced before its mental model exists reads as noise, not as a shared vocabulary — reviewers still re-read the mechanics, and the cost of the extra class is paid without the reasoning-ability gain.
 
 ## What a real lift usually looks like
 
