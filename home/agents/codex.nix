@@ -47,11 +47,16 @@ in
       sandbox_mode = "workspace-write";
       features.multi_agent = true;
       otel.log_user_prompt = false;
-      sandbox_workspace_write.network_access = true;
-      projects = {
-        "${ghqDir}/dotfiles".trust_level = "trusted";
-        "${ghqDir}/newsfeed-ai".trust_level = "trusted";
-        "${ghqDir}/ccinsights".trust_level = "trusted";
+      sandbox_workspace_write = {
+        network_access = true;
+        # Keep /tmp and $TMPDIR writable — many CLIs (git, npm, build tools)
+        # stage intermediate files there and silently break when excluded.
+        exclude_slash_tmp = false;
+        exclude_tmpdir_env_var = false;
+        # Grant writes across the whole personal ghq tree so cross-repo edits
+        # (e.g. invoking tools that live in a sibling checkout) don't trip
+        # the workspace-write fence.
+        writable_roots = [ ghqDir ];
       };
       mcp_servers = lib.mapAttrs (_: mkCodexMcp) (
         lib.filterAttrs (_: server: builtins.elem "codex" server.clients) mcpServers
