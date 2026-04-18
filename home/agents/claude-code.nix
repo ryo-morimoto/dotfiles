@@ -4,6 +4,7 @@
   pkgs,
   mcpServers,
   sharedClaudeCode,
+  sharedClaudeHookSources,
   sharedAgentPolicy,
   ...
 }:
@@ -21,6 +22,37 @@ let
         type = "http";
         inherit (server) url;
       };
+  # Materialize each hook script body via writeShellApplication so jq is
+  # guaranteed on PATH regardless of the runtime shell environment.
+  mkHookScript =
+    name: spec:
+    pkgs.writeShellApplication {
+      inherit name;
+      runtimeInputs = [ pkgs.jq ];
+      text = builtins.readFile spec.source;
+    };
+  claudeHookScripts = lib.mapAttrs mkHookScript sharedClaudeHookSources;
+  # Group hooks by event (PostToolUse, PreToolUse, ...) into the shape
+  # settings.hooks expects: { <event>: [ { matcher; hooks = [ {type;command} ]; } ]; }
+  claudeHooksByEvent =
+    lib.mapAttrs
+      (
+        _event: entries:
+        map (entry: {
+          inherit (entry) matcher;
+          hooks = [
+            {
+              type = "command";
+              command = "${claudeHookScripts.${entry.name}}/bin/${entry.name}";
+            }
+          ];
+        }) entries
+      )
+      (
+        builtins.groupBy (entry: entry.event) (
+          lib.mapAttrsToList (name: spec: spec // { inherit name; }) sharedClaudeHookSources
+        )
+      );
   claudeUserSettings = {
     "$schema" = "https://json.schemastore.org/claude-code-settings.json";
     model = "opus[1m]";
@@ -30,6 +62,7 @@ let
     };
     inherit (sharedAgentPolicy.claude) autoUpdatesChannel minimumVersion outputStyle;
     inherit (sharedClaudeCode) enabledPlugins;
+    hooks = claudeHooksByEvent;
   };
   # Nix 管理分の known_marketplaces.json コンテンツ
   knownMarketplacesContent = builtins.toJSON (

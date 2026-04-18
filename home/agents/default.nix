@@ -340,6 +340,15 @@ let
       "${compoundEngineering.claude.marketplaceName}" = compoundEngineering.claude.marketplaceSource;
     };
   };
+  # PostToolUse hooks for Claude Code. Script bodies live under ./hooks/
+  # and are materialized via writeShellApplication in claude-code.nix.
+  sharedClaudeHookSources = {
+    linear-response-strip = {
+      source = ./hooks/linear-response-strip.sh;
+      matcher = "mcp__linear-(personal|work)__(save_issue|save_project)";
+      event = "PostToolUse";
+    };
+  };
 in
 {
   imports = [
@@ -356,6 +365,7 @@ in
       mcpServers
       secretPathRules
       sharedClaudeCode
+      sharedClaudeHookSources
       sharedAgentPolicy
       trustedHttpDomains
       trustedReadPaths
