@@ -16,7 +16,10 @@
     };
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        home-manager.follows = "home-manager";
+      };
     };
     banto = {
       url = "github:ryo-morimoto/banto";
@@ -214,6 +217,7 @@
                   dms.homeModules.niri
                   voxtype.homeManagerModules.default
                   agent-skills-nix.homeManagerModules.default
+                  zen-browser.homeModules.beta
                   ./home
                 ];
               };

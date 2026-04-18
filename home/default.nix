@@ -16,9 +16,6 @@ let
     "${pkgs.pi-mcp-adapter}/share/pi/packages/pi-mcp-adapter"
     "${pkgs.pi-repoask}/share/pi/packages/pi-repoask"
   ];
-  zenBrowserLauncher = pkgs.writeShellScriptBin "zen-browser" ''
-    exec ${lib.getExe pkgs.zen-browser} "$@"
-  '';
 
   # Katakana → English technical term dictionary (KEINOS/google-ime-user-dictionary-ja-en)
   katakana-en-dict = pkgs.fetchFromGitHub {
@@ -97,7 +94,6 @@ in
     stateVersion = "25.11";
 
     sessionVariables = {
-      BROWSER = "zen-browser";
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1";
       PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright-driver.browsers.override {
         withFirefox = false;
@@ -202,8 +198,6 @@ in
       bun
       pnpm
       chromium
-      zen-browser
-      zenBrowserLauncher
 
       # System/CLI development
       moonbit-bin.moonbit.latest
@@ -1032,23 +1026,6 @@ in
 
   xdg = {
     desktopEntries = {
-      "zen-browser" = {
-        name = "Zen Browser";
-        genericName = "Web Browser";
-        exec = "zen-browser %U";
-        terminal = false;
-        icon = "zen-beta";
-        categories = [
-          "Network"
-          "WebBrowser"
-        ];
-        mimeType = [
-          "text/html"
-          "application/xhtml+xml"
-          "x-scheme-handler/http"
-          "x-scheme-handler/https"
-        ];
-      };
       "pencil-desktop" = {
         name = "Pencil";
         genericName = "Design Tool";
@@ -1061,16 +1038,7 @@ in
       };
     };
 
-    # Default browser associations
-    mimeApps = {
-      enable = true;
-      defaultApplications = {
-        "text/html" = [ "zen-browser.desktop" ];
-        "application/xhtml+xml" = [ "zen-browser.desktop" ];
-        "x-scheme-handler/http" = [ "zen-browser.desktop" ];
-        "x-scheme-handler/https" = [ "zen-browser.desktop" ];
-      };
-    };
+    mimeApps.enable = true;
 
     # Dotfiles (mkOutOfStoreSymlink for instant updates)
     configFile = {
@@ -1079,6 +1047,20 @@ in
       "ghostty".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/ghostty";
       "zsh".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/zsh";
       "lazygit".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/lazygit";
+    };
+  };
+
+  programs.zen-browser = {
+    enable = true;
+    setAsDefaultBrowser = true;
+    profiles.default = {
+      isDefault = true;
+      path = "7e6w7csf.Default Profile";
+      settings = {
+        "zen.tab-unloader.timeout-minutes" = 10;
+        "browser.tabs.min_inactive_duration_before_unload" = 300000;
+        "browser.cache.memory.capacity" = 262144;
+      };
     };
   };
 }
