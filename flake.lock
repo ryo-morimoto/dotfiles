@@ -130,6 +130,22 @@
         "type": "github"
       }
     },
+    "context-mode-marketplace": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1776428179,
+        "narHash": "sha256-fFPbSmc72Aelq2CnE0Tw0XECGbq28kN21sGtM77Nu80=",
+        "owner": "mksglu",
+        "repo": "context-mode",
+        "rev": "2e1ac303796126c0860c67b8cc1e89e2e701da50",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mksglu",
+        "repo": "context-mode",
+        "type": "github"
+      }
+    },
     "crane": {
       "locked": {
         "lastModified": 1775236976,
@@ -656,6 +672,7 @@
         "claude-plugins-official": "claude-plugins-official",
         "codex-plugin-cc": "codex-plugin-cc",
         "compound-engineering-plugin": "compound-engineering-plugin",
+        "context-mode-marketplace": "context-mode-marketplace",
         "dms": "dms",
         "evolutionary-naming": "evolutionary-naming",
         "expo-plugins": "expo-plugins",

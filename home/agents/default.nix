@@ -9,6 +9,7 @@
   moonbit-practice-marketplace ? null,
   callstack-agent-skills ? null,
   expo-plugins ? null,
+  context-mode-marketplace ? null,
   ...
 }:
 
@@ -309,6 +310,7 @@ let
       "react-native-brownfield-migration@callstack-agent-skills" = true;
       "expo@expo-plugins" = true;
       "codex@openai-codex" = true;
+      "context-mode@context-mode" = true;
     }
     // compoundEngineering.claude.enabledPlugins
     // {
@@ -335,6 +337,7 @@ let
       moonbit-practice = moonbit-practice-marketplace;
       keel = keel-marketplace;
       know = ../../config/knowledge/know;
+      context-mode = context-mode-marketplace;
     }
     // {
       "${compoundEngineering.claude.marketplaceName}" = compoundEngineering.claude.marketplaceSource;
