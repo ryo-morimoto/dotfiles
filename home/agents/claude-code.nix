@@ -55,7 +55,7 @@ let
       );
   claudeUserSettings = {
     "$schema" = "https://json.schemastore.org/claude-code-settings.json";
-    model = "opus[1m]";
+    model = "opus";
     effortLevel = "xhigh";
     sandbox = {
       enabled = false;
