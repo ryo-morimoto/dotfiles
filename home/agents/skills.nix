@@ -63,6 +63,7 @@ in
         "design-an-interface"
         "grill-me"
         "improve-codebase-architecture"
+        "lift-me"
         "domain-model"
         "to-prd"
         "to-linear-issues"
