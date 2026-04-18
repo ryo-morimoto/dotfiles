@@ -24,7 +24,7 @@ statix check .    # Lint for anti-patterns
 deadnix .         # Find unused code
 
 # Git hooks (run once after clone)
-prek install
+prek install -t pre-commit -t pre-push
 ```
 
 ## Architecture
