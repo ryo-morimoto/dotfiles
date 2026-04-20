@@ -298,7 +298,6 @@ let
       "skill-creator@claude-plugins-official" = true;
       "coderabbit@claude-plugins-official" = true;
       "moonbit-practice@moonbit-practice" = true;
-      "autofix-bot@claude-plugins-official" = true;
       "data@claude-plugins-official" = true;
       "clangd-lsp@claude-plugins-official" = true;
       "keel@keel" = true;
@@ -309,8 +308,9 @@ let
       "upgrading-react-native@callstack-agent-skills" = true;
       "react-native-brownfield-migration@callstack-agent-skills" = true;
       "expo@expo-plugins" = true;
-      "codex@openai-codex" = true;
-      "context-mode@context-mode" = true;
+      # context-mode / codex は marketplace install path が broken なので
+      # cfg.plugins (--plugin-dir) 経由で直接ロード。enabledPlugins から外す。
+      # autofix-bot は marketplace source に plugin 本体が含まれていないため disable。
     }
     // compoundEngineering.claude.enabledPlugins
     // {
@@ -324,8 +324,17 @@ let
       "gopls-lsp@claude-plugins-official" = false;
       "rust-analyzer-lsp@claude-plugins-official" = false;
       "plugin-dev@claude-plugins-official" = false;
+      "autofix-bot@claude-plugins-official" = false;
     };
-    plugins = [ ../../config/knowledge/know/plugins/know ];
+    # cfg.plugins → Claude Code wrapper に --plugin-dir <path> として注入される
+    # (home-manager programs.claude-code module, modules/programs/claude-code.nix 参照)
+    # installed_plugins.json の cache populate に依存しないので single-plugin
+    # marketplace (Nix store read-only) でも MCP server / hooks がそのまま起動する。
+    plugins = [
+      ../../config/knowledge/know/plugins/know
+      context-mode-marketplace
+      "${codex-plugin-cc}/plugins/codex"
+    ];
     marketplaces = {
       inherit
         claude-plugins-official
@@ -333,11 +342,9 @@ let
         callstack-agent-skills
         expo-plugins
         ;
-      openai-codex = codex-plugin-cc;
       moonbit-practice = moonbit-practice-marketplace;
       keel = keel-marketplace;
       know = ../../config/knowledge/know;
-      context-mode = context-mode-marketplace;
     }
     // {
       "${compoundEngineering.claude.marketplaceName}" = compoundEngineering.claude.marketplaceSource;
