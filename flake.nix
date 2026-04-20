@@ -163,6 +163,7 @@
         agent-browser = final.callPackage ./packages/agent-browser.nix { };
         grepika = final.callPackage ./packages/grepika.nix { };
         portless = final.callPackage ./packages/portless.nix { };
+        k1low-mo = final.callPackage ./packages/mo.nix { };
         codedb = final.callPackage ./packages/codedb.nix { };
         pi-autoresearch = final.callPackage ./packages/pi-autoresearch.nix { };
         pi-codedb = pi-codedb.packages.${final.stdenv.hostPlatform.system}.default;

@@ -261,6 +261,7 @@ in
       agent-browser
       grepika
       portless
+      k1low-mo
     ];
 
     file = {
