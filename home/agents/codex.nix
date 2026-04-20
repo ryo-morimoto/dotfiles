@@ -43,21 +43,38 @@ in
       model = "gpt-5.4";
       review_model = "gpt-5.4";
       model_reasoning_effort = "high";
-      approval_policy = "never";
       sandbox_mode = "workspace-write";
+      approvals_reviewer = "guardian_subagent";
+      approval_policy.granular = {
+        sandbox_approval = true;
+        rules = true;
+        skill_approval = false;
+        request_permissions = false;
+        mcp_elicitations = true;
+      };
       features.multi_agent = true;
       otel.log_user_prompt = false;
       sandbox_workspace_write = {
         network_access = true;
-        # Keep /tmp and $TMPDIR writable — many CLIs (git, npm, build tools)
-        # stage intermediate files there and silently break when excluded.
         exclude_slash_tmp = false;
         exclude_tmpdir_env_var = false;
-        # Grant writes across the whole personal ghq tree so cross-repo edits
-        # (e.g. invoking tools that live in a sibling checkout) don't trip
-        # the workspace-write fence.
         writable_roots = [ ghqDir ];
       };
+      rules.prefix_rules = [
+        {
+          pattern = [ { token = "rm"; } ];
+          decision = "forbidden";
+          justification = "Destructive file deletion is not allowed";
+        }
+        {
+          pattern = [
+            { token = "git"; }
+            { token = "push"; }
+          ];
+          decision = "prompt";
+          justification = "Require approval before publishing changes";
+        }
+      ];
       mcp_servers = lib.mapAttrs (_: mkCodexMcp) (
         lib.filterAttrs (_: server: builtins.elem "codex" server.clients) mcpServers
       );
