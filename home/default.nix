@@ -984,6 +984,42 @@ in
       "ghostty".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/ghostty";
       "zsh".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/zsh";
       "lazygit".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/lazygit";
+
+      "fcitx5/profile" = {
+        force = true;
+        text = lib.generators.toINI { } {
+          "Groups/0" = {
+            Name = "Default";
+            "Default Layout" = "jp";
+            DefaultIM = "hazkey";
+          };
+          "Groups/0/Items/0" = {
+            Name = "keyboard-jp";
+            Layout = "";
+          };
+          "Groups/0/Items/1" = {
+            Name = "hazkey";
+            Layout = "";
+          };
+          GroupOrder = {
+            "0" = "Default";
+          };
+        };
+      };
+      "fcitx5/config" = {
+        force = true;
+        text = lib.generators.toINI { } {
+          "Hotkey/TriggerKeys" = {
+            "0" = "Control+space";
+          };
+          "Hotkey/ActivateKeys" = {
+            "0" = "Hangul";
+          };
+          "Hotkey/DeactivateKeys" = {
+            "0" = "Hangul_Hanja";
+          };
+        };
+      };
     };
   };
 

@@ -66,23 +66,22 @@ in
           globalOptions = {
             "Hotkey/TriggerKeys" = {
               "0" = "Control+space";
-              "1" = "Zenkaku_Hankaku";
             };
             "Hotkey/ActivateKeys" = {
-              "0" = "Hiragana_Katakana";
+              "0" = "Hangul";
             };
             "Hotkey/DeactivateKeys" = {
-              "0" = "Eisu_toggle";
+              "0" = "Hangul_Hanja";
             };
           };
           inputMethod = {
             "Groups/0" = {
               Name = "Default";
-              "Default Layout" = "us";
+              "Default Layout" = "jp";
               DefaultIM = "hazkey";
             };
             "Groups/0/Items/0" = {
-              Name = "keyboard-us";
+              Name = "keyboard-jp";
               Layout = "";
             };
             "Groups/0/Items/1" = {
@@ -112,6 +111,10 @@ in
 
   # Audio
   services = {
+    xserver.xkb = {
+      layout = "jp";
+      model = "jp106";
+    };
     hazkey.enable = true;
     pipewire = {
       enable = true;
