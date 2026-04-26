@@ -598,13 +598,7 @@ in
     enableDynamicTheming = true;
     enableClipboardPaste = true;
     enableSystemMonitoring = true;
-    quickshell.package =
-      dms.inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default.override
-        {
-          xorg = pkgs.xorg // {
-            inherit (pkgs) libxcb;
-          };
-        };
+    quickshell.package = dms.inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default;
     systemd.enable = true;
     niri = {
       enableKeybinds = true;
@@ -966,21 +960,6 @@ in
       "Mod+Shift+P".action.power-off-monitors = { };
     };
   };
-
-  home.activation.installBunGlobalPackages = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    ${pkgs.bun}/bin/bun install -g @tobilu/qmd@2.0.1 2>/dev/null || \
-      printf "warning: failed to install qmd via bun\n" >&2
-  '';
-
-  home.activation.cleanupPiGitPackages = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    pi_git_dir="${config.home.homeDirectory}/.pi/agent/git"
-
-    if [ ! -d "$pi_git_dir" ]; then
-      exit 0
-    fi
-
-    rm -rf "$pi_git_dir"
-  '';
 
   xdg = {
     desktopEntries = {
