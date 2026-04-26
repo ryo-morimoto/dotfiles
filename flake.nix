@@ -63,7 +63,8 @@
       inputs.home-manager.follows = "home-manager";
     };
     nix-claude-code = {
-      url = "github:ryoppippi/nix-claude-code";
+      # pinned to 2.1.119 — 2.1.120 has session bug, rollback to url once upstream publishes fix
+      url = "github:ryoppippi/nix-claude-code/59bb590492ee6af9eeb0d8e9e8f6a73140aec761";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     compound-engineering-plugin = {
