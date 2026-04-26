@@ -9,14 +9,6 @@
 
 let
   dotfilesPath = "${config.home.homeDirectory}/ghq/github.com/ryo-morimoto/dotfiles";
-  piPackageSources = [
-    "${pkgs.pi-autoresearch}/share/pi/packages/pi-autoresearch"
-    "${pkgs.pi-codedb}/share/pi/packages/pi-codedb"
-    "${pkgs.pi-lens}/share/pi/packages/pi-lens"
-    "${pkgs.pi-mcp-adapter}/share/pi/packages/pi-mcp-adapter"
-    "${pkgs.pi-repoask}/share/pi/packages/pi-repoask"
-  ];
-
   # Katakana → English technical term dictionary (KEINOS/google-ime-user-dictionary-ja-en)
   katakana-en-dict = pkgs.fetchFromGitHub {
     owner = "KEINOS";
@@ -189,7 +181,6 @@ in
       ghq
       gh
       git-wt
-      pi-coding-agent
       lazygit
       just
 
@@ -252,7 +243,6 @@ in
 
       # AI tools
       codedb
-      pi-repoask
       soulforge
       cursor-agent
       seiren-mcp
@@ -264,39 +254,7 @@ in
       k1low-mo
     ];
 
-    file = {
-      ".pi/agent/settings.json".text = builtins.toJSON {
-        packages = piPackageSources;
-      };
-
-      ".pi/agent/mcp.json".text = builtins.toJSON {
-        mcpServers = {
-          context7 = {
-            command = "npx";
-            args = [
-              "-y"
-              "@upstash/context7-mcp"
-            ];
-            env = {
-              CONTEXT7_API_KEY = "\${CONTEXT7_API_KEY}";
-            };
-            lifecycle = "lazy";
-          };
-          exa = {
-            command = "npx";
-            args = [
-              "-y"
-              "exa-mcp-server"
-            ];
-            env = {
-              EXA_API_KEY = "\${EXA_API_KEY}";
-            };
-            lifecycle = "lazy";
-          };
-        };
-      };
-
-    };
+    file = { };
   };
 
   programs = {

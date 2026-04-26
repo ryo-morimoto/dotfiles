@@ -49,14 +49,6 @@
       url = "github:ryo-morimoto/seiren/nix-pkgs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    pi-codedb = {
-      url = "github:ryo-morimoto/pi-codedb";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    repoask = {
-      url = "github:ryo-morimoto/repoask";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     soulforge = {
       url = "github:ryo-morimoto/soulforge";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -137,8 +129,6 @@
       fenix,
       moonbit-overlay,
       seiren,
-      pi-codedb,
-      repoask,
       soulforge,
       nix-hazkey,
       agent-skills-nix,
@@ -159,7 +149,7 @@
       ...
     }:
     let
-      localOverlay = final: prev: {
+      localOverlay = final: _prev: {
         cursor-agent = final.callPackage ./packages/cursor-agent.nix { };
         zen-browser = zen-browser.packages.${final.stdenv.hostPlatform.system}.default;
         seiren-mcp = seiren.packages.${final.stdenv.hostPlatform.system}.default;
@@ -170,26 +160,6 @@
         portless = final.callPackage ./packages/portless.nix { };
         k1low-mo = final.callPackage ./packages/mo.nix { };
         codedb = final.callPackage ./packages/codedb.nix { };
-        pi-autoresearch = final.callPackage ./packages/pi-autoresearch.nix { };
-        pi-codedb = pi-codedb.packages.${final.stdenv.hostPlatform.system}.default;
-        pi-lens = final.callPackage ./packages/pi-lens.nix { };
-        pi-mcp-adapter = final.callPackage ./packages/pi-mcp-adapter.nix { };
-        repoask = repoask.packages.${final.stdenv.hostPlatform.system}.default;
-        pi-repoask = final.callPackage ./packages/pi-repoask.nix { };
-        pi-coding-agent = prev.pi-coding-agent.overrideAttrs (old: rec {
-          version = "0.65.2";
-          src = final.fetchFromGitHub {
-            owner = "badlogic";
-            repo = "pi-mono";
-            rev = "refs/tags/v${version}";
-            hash = "sha256-nHCQboyRT8k2t7dD0knmQSaUciQua17518CG/3jC7Rg=";
-          };
-          npmDeps = final.fetchNpmDeps {
-            name = "${old.pname}-${version}-npm-deps";
-            inherit src;
-            hash = "sha256-ZFrOh2P2kkKz4kwD153ltPX852sS1JcTCvSLYwZbyoo=";
-          };
-        });
         soulforge = soulforge.packages.${final.stdenv.hostPlatform.system}.default;
         starlint = final.callPackage ./packages/starlint.nix {
           inherit starlintLinuxBin;

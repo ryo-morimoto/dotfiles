@@ -146,21 +146,6 @@
         "type": "github"
       }
     },
-    "crane": {
-      "locked": {
-        "lastModified": 1775236976,
-        "narHash": "sha256-gCgX+AXN7K1gAIEqcLcZHxmC+QoZcwn9m6Z9r2Az+N8=",
-        "owner": "ipetkov",
-        "repo": "crane",
-        "rev": "6c23998526351a53ce734f0ac84940da988ccef1",
-        "type": "github"
-      },
-      "original": {
-        "owner": "ipetkov",
-        "repo": "crane",
-        "type": "github"
-      }
-    },
     "darwin": {
       "inputs": {
         "nixpkgs": [
@@ -279,24 +264,6 @@
     "flake-utils_2": {
       "inputs": {
         "systems": "systems_3"
-      },
-      "locked": {
-        "lastModified": 1731533236,
-        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "type": "github"
-      }
-    },
-    "flake-utils_3": {
-      "inputs": {
-        "systems": "systems_4"
       },
       "locked": {
         "lastModified": 1731533236,
@@ -604,26 +571,6 @@
         "type": "github"
       }
     },
-    "pi-codedb": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1775652933,
-        "narHash": "sha256-DKMkPVa+tx3p0CmmGjQcBHCUpOCAt8sRW4VTxHpjW0o=",
-        "owner": "ryo-morimoto",
-        "repo": "pi-codedb",
-        "rev": "192d7ad167939bf7590d19baffb6c0616aa2bc00",
-        "type": "github"
-      },
-      "original": {
-        "owner": "ryo-morimoto",
-        "repo": "pi-codedb",
-        "type": "github"
-      }
-    },
     "pm-skills": {
       "flake": false,
       "locked": {
@@ -662,28 +609,6 @@
         "url": "https://git.outfoxxed.me/quickshell/quickshell"
       }
     },
-    "repoask": {
-      "inputs": {
-        "crane": "crane",
-        "flake-utils": "flake-utils",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1775569097,
-        "narHash": "sha256-+ueDcvDbutegmqBCrqN5A2UfZ2ZZUFLCf4SJRoClCmo=",
-        "owner": "ryo-morimoto",
-        "repo": "repoask",
-        "rev": "e3a5345b298a37511a6b49311dc8e5e76d84819a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "ryo-morimoto",
-        "repo": "repoask",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "agenix": "agenix",
@@ -708,9 +633,7 @@
         "nix-claude-code": "nix-claude-code",
         "nix-hazkey": "nix-hazkey",
         "nixpkgs": "nixpkgs_2",
-        "pi-codedb": "pi-codedb",
         "pm-skills": "pm-skills",
-        "repoask": "repoask",
         "seiren": "seiren",
         "soulforge": "soulforge",
         "starlintLinuxBin": "starlintLinuxBin",
@@ -758,7 +681,7 @@
     },
     "soulforge": {
       "inputs": {
-        "flake-utils": "flake-utils_2",
+        "flake-utils": "flake-utils",
         "nixpkgs": [
           "nixpkgs"
         ]
@@ -835,21 +758,6 @@
         "type": "github"
       }
     },
-    "systems_4": {
-      "locked": {
-        "lastModified": 1681028828,
-        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
-        "owner": "nix-systems",
-        "repo": "default",
-        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-systems",
-        "repo": "default",
-        "type": "github"
-      }
-    },
     "treefmt-nix": {
       "inputs": {
         "nixpkgs": [
@@ -873,7 +781,7 @@
     },
     "voxtype": {
       "inputs": {
-        "flake-utils": "flake-utils_3",
+        "flake-utils": "flake-utils_2",
         "nixpkgs": [
           "nixpkgs"
         ]
