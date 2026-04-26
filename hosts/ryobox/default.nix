@@ -1,5 +1,4 @@
 {
-  config,
   lib,
   pkgs,
   ...
@@ -61,7 +60,42 @@ in
     inputMethod = {
       enable = true;
       type = "fcitx5";
-      fcitx5.addons = with pkgs; [ fcitx5-mozc ];
+      fcitx5 = {
+        addons = with pkgs; [ fcitx5-mozc ];
+        waylandFrontend = true;
+        settings = {
+          globalOptions = {
+            "Hotkey/TriggerKeys" = {
+              "0" = "Control+space";
+              "1" = "Zenkaku_Hankaku";
+            };
+            "Hotkey/ActivateKeys" = {
+              "0" = "Hiragana_Katakana";
+            };
+            "Hotkey/DeactivateKeys" = {
+              "0" = "Eisu_toggle";
+            };
+          };
+          inputMethod = {
+            "Groups/0" = {
+              Name = "Default";
+              "Default Layout" = "us";
+              DefaultIM = "mozc";
+            };
+            "Groups/0/Items/0" = {
+              Name = "keyboard-us";
+              Layout = "";
+            };
+            "Groups/0/Items/1" = {
+              Name = "mozc";
+              Layout = "";
+            };
+            GroupOrder = {
+              "0" = "Default";
+            };
+          };
+        };
+      };
     };
   };
   console = {
@@ -94,16 +128,6 @@ in
     };
     gnome.gnome-keyring.enable = true;
 
-    # Caddy reverse proxy (TLS via Let's Encrypt DNS-01 + Cloudflare)
-    caddy = {
-      enable = true;
-      package = pkgs.caddy.withPlugins {
-        plugins = [ "github.com/caddy-dns/cloudflare@v0.2.2" ];
-        hash = "sha256-7DGnojZvcQBZ6LEjT0e5O9gZgsvEeHlQP9aKaJIs/Zg=";
-      };
-      virtualHosts = { };
-    };
-
     # Tailscale VPN with SSH
     tailscale = {
       enable = true;
@@ -126,13 +150,6 @@ in
   age = {
     identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
     secrets = {
-      # Caddy: load Cloudflare API token
-      caddy-cloudflare = {
-        file = ../../secrets/caddy-cloudflare.age;
-        owner = "caddy";
-        group = "caddy";
-        mode = "0400";
-      };
       # Context7 API key for documentation search
       context7-api-key = {
         file = ../../secrets/context7-api-key.age;
@@ -148,7 +165,6 @@ in
     };
   };
   systemd.services = {
-    caddy.serviceConfig.EnvironmentFile = config.age.secrets.caddy-cloudflare.path;
     "dotfiles-pull" = {
       description = "Pull latest dotfiles from GitHub";
       serviceConfig = {
@@ -247,11 +263,11 @@ in
       extra-trusted-public-keys = [ "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g=" ];
     };
 
-    # Automatic garbage collection (weekly, keep last 3 days)
+    # Automatic garbage collection (daily, keep last 7 days)
     gc = {
       automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 3d";
+      dates = "daily";
+      options = "--delete-older-than 7d";
     };
   };
   nixpkgs.config.allowUnfreePredicate =

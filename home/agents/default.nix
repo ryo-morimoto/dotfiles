@@ -218,7 +218,7 @@ let
     }
     {
       name = "ce-review";
-      source = "ce-review";
+      source = "ce-code-review";
       prompt = {
         name = "ce-review";
         description = "Multi-agent code review before merging";
@@ -238,12 +238,12 @@ let
     }
     {
       name = "resolve-pr-feedback";
-      source = "resolve-pr-feedback";
+      source = "ce-resolve-pr-feedback";
       opencodeCommand = "resolve_todo_parallel";
     }
     {
       name = "test-browser";
-      source = "test-browser";
+      source = "ce-test-browser";
       opencodeCommand = "test-browser";
     }
   ];
