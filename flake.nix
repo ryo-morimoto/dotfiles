@@ -111,10 +111,6 @@
       url = "github:mattpocock/skills";
       flake = false;
     };
-    context-mode-marketplace = {
-      url = "github:mksglu/context-mode";
-      flake = false;
-    };
   };
 
   outputs =
@@ -145,7 +141,6 @@
       pm-skills,
       evolutionary-naming,
       mattpocock-skills,
-      context-mode-marketplace,
       starlintLinuxBin,
       ...
     }:
@@ -219,7 +214,6 @@
                   pm-skills
                   evolutionary-naming
                   mattpocock-skills
-                  context-mode-marketplace
                   ;
               };
             };

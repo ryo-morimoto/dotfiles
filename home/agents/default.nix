@@ -9,7 +9,6 @@
   moonbit-practice-marketplace ? null,
   callstack-agent-skills ? null,
   expo-plugins ? null,
-  context-mode-marketplace ? null,
   ...
 }:
 
@@ -308,7 +307,7 @@ let
       "upgrading-react-native@callstack-agent-skills" = true;
       "react-native-brownfield-migration@callstack-agent-skills" = true;
       "expo@expo-plugins" = true;
-      # context-mode / codex は marketplace install path が broken なので
+      # codex は marketplace install path が broken なので
       # cfg.plugins (--plugin-dir) 経由で直接ロード。enabledPlugins から外す。
       # autofix-bot は marketplace source に plugin 本体が含まれていないため disable。
     }
@@ -332,7 +331,6 @@ let
     # marketplace (Nix store read-only) でも MCP server / hooks がそのまま起動する。
     plugins = [
       ../../config/knowledge/know/plugins/know
-      context-mode-marketplace
       "${codex-plugin-cc}/plugins/codex"
     ];
     marketplaces = {
