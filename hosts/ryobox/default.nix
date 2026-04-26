@@ -61,7 +61,6 @@ in
       enable = true;
       type = "fcitx5";
       fcitx5 = {
-        addons = with pkgs; [ fcitx5-mozc ];
         waylandFrontend = true;
         settings = {
           globalOptions = {
@@ -80,14 +79,14 @@ in
             "Groups/0" = {
               Name = "Default";
               "Default Layout" = "us";
-              DefaultIM = "mozc";
+              DefaultIM = "hazkey";
             };
             "Groups/0/Items/0" = {
               Name = "keyboard-us";
               Layout = "";
             };
             "Groups/0/Items/1" = {
-              Name = "mozc";
+              Name = "hazkey";
               Layout = "";
             };
             GroupOrder = {
@@ -98,6 +97,7 @@ in
       };
     };
   };
+
   console = {
     font = "Lat2-Terminus16";
     keyMap = "jp106";
@@ -112,6 +112,7 @@ in
 
   # Audio
   services = {
+    hazkey.enable = true;
     pipewire = {
       enable = true;
       alsa.enable = true;

@@ -61,6 +61,10 @@
       url = "github:ryo-morimoto/soulforge";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-hazkey = {
+      url = "github:aster-void/nix-hazkey";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     agent-skills-nix = {
       url = "github:Kyure-A/agent-skills-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -136,6 +140,7 @@
       pi-codedb,
       repoask,
       soulforge,
+      nix-hazkey,
       agent-skills-nix,
       nix-claude-code,
       compound-engineering-plugin,
@@ -198,6 +203,12 @@
           ./hosts/ryobox
           agenix.nixosModules.default
           banto.nixosModules.default
+          nix-hazkey.nixosModules.hazkey
+          {
+            services.hazkey.server.package = nix-hazkey.packages.x86_64-linux.hazkey-server.override {
+              enableVulkan = true;
+            };
+          }
           home-manager.nixosModules.home-manager
           {
             nixpkgs.hostPlatform = "x86_64-linux";

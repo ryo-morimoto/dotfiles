@@ -353,6 +353,27 @@
         "type": "github"
       }
     },
+    "home-manager_3": {
+      "inputs": {
+        "nixpkgs": [
+          "nix-hazkey",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1767556355,
+        "narHash": "sha256-RDTUBDQBi9D4eD9iJQWtUDN/13MDLX+KmE+TwwNUp2s=",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "f894bc4ffde179d178d8deb374fcf9855d1a82b7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "type": "github"
+      }
+    },
     "keel-marketplace": {
       "flake": false,
       "locked": {
@@ -514,6 +535,27 @@
         "type": "github"
       }
     },
+    "nix-hazkey": {
+      "inputs": {
+        "home-manager": "home-manager_3",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1773145693,
+        "narHash": "sha256-yxtvNdQWofRRkFbMcLtmK4uiA+1AM2TGvcrXOMzOloI=",
+        "owner": "aster-void",
+        "repo": "nix-hazkey",
+        "rev": "05527ef2659aab53c1cb0d0972a25347ef3161d4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "aster-void",
+        "repo": "nix-hazkey",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1776877367,
@@ -664,6 +706,7 @@
         "moonbit-practice-marketplace": "moonbit-practice-marketplace",
         "niri-flake": "niri-flake",
         "nix-claude-code": "nix-claude-code",
+        "nix-hazkey": "nix-hazkey",
         "nixpkgs": "nixpkgs_2",
         "pi-codedb": "pi-codedb",
         "pm-skills": "pm-skills",
