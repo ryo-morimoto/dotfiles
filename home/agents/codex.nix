@@ -1,28 +1,11 @@
 {
   config,
   lib,
-  compoundEngineering,
   mcpServers,
   ...
 }:
 let
   ghqDir = "${config.home.homeDirectory}/ghq/github.com/ryo-morimoto";
-  renderCompoundEngineeringPrompt =
-    prompt:
-    ''
-      ---
-      description: ${builtins.toJSON prompt.description}
-    ''
-    + lib.optionalString (prompt.argumentHint != null) ''
-      argument-hint: ${builtins.toJSON prompt.argumentHint}
-    ''
-    + ''
-      ---
-
-      Use the ${prompt.skill} skill for this workflow and follow its instructions exactly.
-
-      Treat any text after the prompt name as the workflow context to pass through.
-    '';
   mkCodexMcp =
     server:
     if server.transport == "stdio" then
@@ -79,13 +62,5 @@ in
         lib.filterAttrs (_: server: builtins.elem "codex" server.clients) mcpServers
       );
     };
-    inherit (compoundEngineering.codex) skills;
   };
-
-  home.file = lib.mapAttrs' (
-    name: prompt:
-    lib.nameValuePair ".codex/prompts/${name}.md" {
-      text = renderCompoundEngineeringPrompt prompt;
-    }
-  ) compoundEngineering.codex.prompts;
 }

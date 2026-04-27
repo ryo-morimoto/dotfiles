@@ -67,10 +67,6 @@
       url = "github:ryoppippi/nix-claude-code/59bb590492ee6af9eeb0d8e9e8f6a73140aec761";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    compound-engineering-plugin = {
-      url = "github:EveryInc/compound-engineering-plugin";
-      flake = false;
-    };
     claude-plugins-official = {
       url = "github:anthropics/claude-plugins-official";
       flake = false;
@@ -79,20 +75,8 @@
       url = "github:sadjow/codex-cli-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    codex-plugin-cc = {
-      url = "github:openai/codex-plugin-cc";
-      flake = false;
-    };
     kuu-marketplace = {
       url = "github:fumiya-kume/claude-code";
-      flake = false;
-    };
-    moonbit-practice-marketplace = {
-      url = "github:mizchi/moonbit-practice";
-      flake = false;
-    };
-    keel-marketplace = {
-      url = "github:ryo-morimoto/keel";
       flake = false;
     };
     callstack-agent-skills = {
@@ -103,8 +87,8 @@
       url = "github:expo/skills";
       flake = false;
     };
-    pm-skills = {
-      url = "github:phuryn/pm-skills";
+    context7-skills = {
+      url = "github:upstash/context7";
       flake = false;
     };
     evolutionary-naming = {
@@ -134,16 +118,12 @@
       nix-hazkey,
       agent-skills-nix,
       nix-claude-code,
-      compound-engineering-plugin,
       claude-plugins-official,
       codex-cli-nix,
-      codex-plugin-cc,
       kuu-marketplace,
-      moonbit-practice-marketplace,
-      keel-marketplace,
       callstack-agent-skills,
       expo-plugins,
-      pm-skills,
+      context7-skills,
       evolutionary-naming,
       mattpocock-skills,
       starlintLinuxBin,
@@ -209,15 +189,11 @@
                 inherit
                   dms
                   voxtype
-                  compound-engineering-plugin
                   claude-plugins-official
-                  codex-plugin-cc
                   kuu-marketplace
-                  moonbit-practice-marketplace
-                  keel-marketplace
                   callstack-agent-skills
                   expo-plugins
-                  pm-skills
+                  context7-skills
                   evolutionary-naming
                   mattpocock-skills
                   ;

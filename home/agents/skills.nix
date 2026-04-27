@@ -1,32 +1,9 @@
 {
-  pm-skills,
+  context7-skills,
   evolutionary-naming,
   mattpocock-skills,
-  lib,
   ...
 }:
-let
-  pmCategories = [
-    "pm-data-analytics"
-    "pm-execution"
-    "pm-go-to-market"
-    "pm-market-research"
-    "pm-marketing-growth"
-    "pm-product-discovery"
-    "pm-product-strategy"
-    "pm-toolkit"
-  ];
-  pmSources = lib.listToAttrs (
-    map (
-      cat:
-      lib.nameValuePair cat {
-        path = pm-skills;
-        subdir = "${cat}/skills";
-        idPrefix = cat;
-      }
-    ) pmCategories
-  );
-in
 {
   programs.agent-skills = {
     enable = true;
@@ -35,6 +12,10 @@ in
       personal = {
         path = ../../skills;
       };
+      context7 = {
+        path = context7-skills;
+        subdir = "skills";
+      };
       evolutionary-naming = {
         path = evolutionary-naming;
         subdir = "skills";
@@ -42,34 +23,22 @@ in
       mattpocock = {
         path = mattpocock-skills;
       };
-    }
-    // pmSources;
+    };
 
     skills = {
       enable = [
-        "context7-mcp"
-        "design-thinking"
-        "domain-modeling"
         "fp-typescript"
-        "mermaid-validator"
         "repo-doctor"
         "evolutionary-naming"
-        "rdra-setup"
-        "rdra-ingest"
-        "rdra-reverse"
-        "rdra-check"
-        "rdra-review"
-        "rdra-summary"
+        "context7-mcp"
+        "context7-cli"
+        "find-docs"
         "design-an-interface"
         "grill-me"
         "improve-codebase-architecture"
-        "lift-me"
         "domain-model"
         "to-prd"
-        "to-linear-issues"
-        "linear-triage"
       ];
-      enableAll = pmCategories;
     };
 
     targets = {
