@@ -75,6 +75,10 @@
       url = "github:anthropics/claude-plugins-official";
       flake = false;
     };
+    codex-cli-nix = {
+      url = "github:sadjow/codex-cli-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     codex-plugin-cc = {
       url = "github:openai/codex-plugin-cc";
       flake = false;
@@ -132,6 +136,7 @@
       nix-claude-code,
       compound-engineering-plugin,
       claude-plugins-official,
+      codex-cli-nix,
       codex-plugin-cc,
       kuu-marketplace,
       moonbit-practice-marketplace,
@@ -182,6 +187,7 @@
               fenix.overlays.default
               moonbit-overlay.overlays.default
               nix-claude-code.overlays.default
+              codex-cli-nix.overlays.default
               localOverlay
             ];
             home-manager = {
