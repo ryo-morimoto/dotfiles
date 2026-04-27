@@ -40,8 +40,8 @@ in
     enable = true;
     settings = {
       personality = "pragmatic";
-      model = "gpt-5.4";
-      review_model = "gpt-5.4";
+      model = "gpt-5.5";
+      review_model = "gpt-5.5";
       model_reasoning_effort = "high";
       sandbox_mode = "workspace-write";
       approvals_reviewer = "guardian_subagent";
