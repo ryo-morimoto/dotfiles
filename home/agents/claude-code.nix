@@ -1,5 +1,4 @@
 {
-  config,
   lib,
   pkgs,
   mcpServers,
@@ -107,12 +106,7 @@ in
     fi
   '';
 
-  home.file = {
-    # keel plugin: mutable symlink for live development
-    ".claude/plugins/keel".source =
-      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/ghq/github.com/ryo-morimoto/keel";
-  }
-  // lib.mapAttrs' (
+  home.file = lib.mapAttrs' (
     name: source:
     lib.nameValuePair ".claude/plugins/marketplaces/${name}" {
       inherit source;

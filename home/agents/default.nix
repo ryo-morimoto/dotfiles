@@ -1,12 +1,7 @@
 {
   config,
-  lib ? null,
-  compound-engineering-plugin ? null,
   claude-plugins-official ? null,
-  codex-plugin-cc ? null,
-  keel-marketplace ? null,
   kuu-marketplace ? null,
-  moonbit-practice-marketplace ? null,
   callstack-agent-skills ? null,
   expo-plugins ? null,
   ...
@@ -135,7 +130,6 @@ let
       clients = [
         "claude"
         "codex"
-        "opencode"
       ];
     };
     secretary = {
@@ -144,7 +138,6 @@ let
       clients = [
         "claude"
         "codex"
-        "opencode"
       ];
     };
     context7 = {
@@ -153,7 +146,6 @@ let
       clients = [
         "claude"
         "codex"
-        "opencode"
       ];
     };
     linear-work = {
@@ -173,113 +165,6 @@ let
       ];
     };
   };
-  ceSkillsPath = "${compound-engineering-plugin}/plugins/compound-engineering/skills";
-  ceSkills = [
-    {
-      name = "ce-brainstorm";
-      source = "ce-brainstorm";
-      prompt = {
-        name = "ce-brainstorm";
-        description = "Explore requirements and approaches before planning";
-        argumentHint = "[feature idea or problem to explore]";
-      };
-      opencodeCommand = "ce-brainstorm";
-    }
-    {
-      name = "ce-compound";
-      source = "ce-compound";
-      prompt = {
-        name = "ce-compound";
-        description = "Document a recently solved problem to compound your team's knowledge";
-        argumentHint = null;
-      };
-      opencodeCommand = "ce-compound";
-    }
-    {
-      name = "ce-ideate";
-      source = "ce-ideate";
-      prompt = {
-        name = "ce-ideate";
-        description = "Discover high-impact project improvements through divergent ideation and adversarial filtering";
-        argumentHint = "[feature, focus area, or constraint]";
-      };
-      opencodeCommand = "deepen-plan";
-    }
-    {
-      name = "ce-plan";
-      source = "ce-plan";
-      prompt = {
-        name = "ce-plan";
-        description = "Turn feature ideas into detailed implementation plans";
-        argumentHint = "[optional: feature description, requirements doc path, plan path to deepen, or improvement idea]";
-      };
-      opencodeCommand = "ce-plan";
-    }
-    {
-      name = "ce-review";
-      source = "ce-code-review";
-      prompt = {
-        name = "ce-review";
-        description = "Multi-agent code review before merging";
-        argumentHint = "[blank to review current branch, or provide PR link]";
-      };
-      opencodeCommand = "ce-review";
-    }
-    {
-      name = "ce-work";
-      source = "ce-work";
-      prompt = {
-        name = "ce-work";
-        description = "Execute plans with worktrees and task tracking";
-        argumentHint = "[Plan doc path or description of work. Blank to auto use latest plan doc]";
-      };
-      opencodeCommand = "ce-work";
-    }
-    {
-      name = "resolve-pr-feedback";
-      source = "ce-resolve-pr-feedback";
-      opencodeCommand = "resolve_todo_parallel";
-    }
-    {
-      name = "test-browser";
-      source = "ce-test-browser";
-      opencodeCommand = "test-browser";
-    }
-  ];
-  compoundEngineering = {
-    plugin = compound-engineering-plugin;
-    skillsPath = ceSkillsPath;
-    claude = {
-      marketplaceName = "every-marketplace";
-      marketplaceSource = compound-engineering-plugin;
-      enabledPlugins = {
-        "compound-engineering@every-marketplace" = true;
-        "coding-tutor@every-marketplace" = true;
-      };
-    };
-    codex = {
-      skills = builtins.listToAttrs (
-        map (skill: lib.nameValuePair skill.name "${ceSkillsPath}/${skill.source}") ceSkills
-      );
-      prompts = builtins.listToAttrs (
-        map (
-          skill:
-          lib.nameValuePair skill.prompt.name {
-            inherit (skill.prompt)
-              argumentHint
-              description
-              ;
-            skill = skill.name;
-          }
-        ) (lib.filter (skill: skill ? prompt) ceSkills)
-      );
-    };
-    opencode.commands = builtins.listToAttrs (
-      map (skill: lib.nameValuePair skill.opencodeCommand "${ceSkillsPath}/${skill.source}/SKILL.md") (
-        lib.filter (skill: skill ? opencodeCommand) ceSkills
-      )
-    );
-  };
   sharedClaudeCode = {
     enabledPlugins = {
       "commit-commands@claude-plugins-official" = true;
@@ -296,10 +181,8 @@ let
       "claude-md-management@claude-plugins-official" = true;
       "skill-creator@claude-plugins-official" = true;
       "coderabbit@claude-plugins-official" = true;
-      "moonbit-practice@moonbit-practice" = true;
       "data@claude-plugins-official" = true;
       "clangd-lsp@claude-plugins-official" = true;
-      "keel@keel" = true;
       "know@know" = true;
       "react-native-best-practices@callstack-agent-skills" = true;
       "github@callstack-agent-skills" = true;
@@ -307,12 +190,6 @@ let
       "upgrading-react-native@callstack-agent-skills" = true;
       "react-native-brownfield-migration@callstack-agent-skills" = true;
       "expo@expo-plugins" = true;
-      # codex は marketplace install path が broken なので
-      # cfg.plugins (--plugin-dir) 経由で直接ロード。enabledPlugins から外す。
-      # autofix-bot は marketplace source に plugin 本体が含まれていないため disable。
-    }
-    // compoundEngineering.claude.enabledPlugins
-    // {
       "superpowers@claude-plugins-official" = false;
       "frontend-design@claude-plugins-official" = false;
       "code-review@claude-plugins-official" = false;
@@ -325,14 +202,7 @@ let
       "plugin-dev@claude-plugins-official" = false;
       "autofix-bot@claude-plugins-official" = false;
     };
-    # cfg.plugins → Claude Code wrapper に --plugin-dir <path> として注入される
-    # (home-manager programs.claude-code module, modules/programs/claude-code.nix 参照)
-    # installed_plugins.json の cache populate に依存しないので single-plugin
-    # marketplace (Nix store read-only) でも MCP server / hooks がそのまま起動する。
-    plugins = [
-      ../../config/knowledge/know/plugins/know
-      "${codex-plugin-cc}/plugins/codex"
-    ];
+    plugins = [ ];
     marketplaces = {
       inherit
         claude-plugins-official
@@ -340,16 +210,9 @@ let
         callstack-agent-skills
         expo-plugins
         ;
-      moonbit-practice = moonbit-practice-marketplace;
-      keel = keel-marketplace;
       know = ../../config/knowledge/know;
-    }
-    // {
-      "${compoundEngineering.claude.marketplaceName}" = compoundEngineering.claude.marketplaceSource;
     };
   };
-  # PostToolUse hooks for Claude Code. Script bodies live under ./hooks/
-  # and are materialized via writeShellApplication in claude-code.nix.
   sharedClaudeHookSources = {
     linear-response-strip = {
       source = ./hooks/linear-response-strip.sh;
@@ -362,13 +225,11 @@ in
   imports = [
     ./claude-code.nix
     ./codex.nix
-    ./opencode.nix
     ./skills.nix
   ];
 
   _module.args = {
     inherit
-      compoundEngineering
       dangerousBashPatterns
       mcpServers
       secretPathRules
