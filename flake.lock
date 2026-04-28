@@ -380,6 +380,22 @@
         "type": "github"
       }
     },
+    "mgechev-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1777392507,
+        "narHash": "sha256-xSelTVSxvO13H9EqJ9ygtffV12f0BURqZhMs0b+YT2c=",
+        "owner": "mgechev",
+        "repo": "skills-best-practices",
+        "rev": "979bd0360c82064ee8cf1ca9a0a0ff5335bae2ee",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mgechev",
+        "repo": "skills-best-practices",
+        "type": "github"
+      }
+    },
     "mizchi-skills": {
       "flake": false,
       "locked": {
@@ -601,6 +617,7 @@
         "home-manager": "home-manager_2",
         "kuu-marketplace": "kuu-marketplace",
         "mattpocock-skills": "mattpocock-skills",
+        "mgechev-skills": "mgechev-skills",
         "mizchi-skills": "mizchi-skills",
         "moonbit-overlay": "moonbit-overlay",
         "niri-flake": "niri-flake",

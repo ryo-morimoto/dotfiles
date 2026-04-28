@@ -3,6 +3,7 @@
   evolutionary-naming,
   mattpocock-skills,
   mizchi-skills,
+  mgechev-skills,
   ...
 }:
 {
@@ -27,6 +28,10 @@
       mizchi = {
         path = mizchi-skills;
       };
+      skill-creator = {
+        path = mgechev-skills;
+        subdir = "skill";
+      };
     };
 
     skills = {
@@ -43,6 +48,7 @@
         "domain-model"
         "to-prd"
         "empirical-prompt-tuning"
+        "skill-creator"
       ];
     };
 

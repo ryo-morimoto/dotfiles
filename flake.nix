@@ -103,6 +103,10 @@
       url = "github:mizchi/skills";
       flake = false;
     };
+    mgechev-skills = {
+      url = "github:mgechev/skills-best-practices";
+      flake = false;
+    };
   };
 
   outputs =
@@ -131,6 +135,7 @@
       evolutionary-naming,
       mattpocock-skills,
       mizchi-skills,
+      mgechev-skills,
       starlintLinuxBin,
       ...
     }:
@@ -202,6 +207,7 @@
                   evolutionary-naming
                   mattpocock-skills
                   mizchi-skills
+                  mgechev-skills
                   ;
               };
             };
