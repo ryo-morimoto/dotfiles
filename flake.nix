@@ -99,6 +99,10 @@
       url = "github:mattpocock/skills";
       flake = false;
     };
+    mizchi-skills = {
+      url = "github:mizchi/skills";
+      flake = false;
+    };
   };
 
   outputs =
@@ -126,6 +130,7 @@
       context7-skills,
       evolutionary-naming,
       mattpocock-skills,
+      mizchi-skills,
       starlintLinuxBin,
       ...
     }:
@@ -196,6 +201,7 @@
                   context7-skills
                   evolutionary-naming
                   mattpocock-skills
+                  mizchi-skills
                   ;
               };
             };
