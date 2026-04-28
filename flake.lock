@@ -380,6 +380,22 @@
         "type": "github"
       }
     },
+    "mizchi-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1777217457,
+        "narHash": "sha256-swhJpPNOltOl+YcqeoTNBVPCgsc95iqgTkhVw2BjU5c=",
+        "owner": "mizchi",
+        "repo": "skills",
+        "rev": "a0ebf680f62836f64d7e9b741ee212f55b108f88",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mizchi",
+        "repo": "skills",
+        "type": "github"
+      }
+    },
     "moonbit-overlay": {
       "inputs": {
         "nixpkgs": [
@@ -585,6 +601,7 @@
         "home-manager": "home-manager_2",
         "kuu-marketplace": "kuu-marketplace",
         "mattpocock-skills": "mattpocock-skills",
+        "mizchi-skills": "mizchi-skills",
         "moonbit-overlay": "moonbit-overlay",
         "niri-flake": "niri-flake",
         "nix-claude-code": "nix-claude-code",

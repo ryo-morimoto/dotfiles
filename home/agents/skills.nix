@@ -2,6 +2,7 @@
   context7-skills,
   evolutionary-naming,
   mattpocock-skills,
+  mizchi-skills,
   ...
 }:
 {
@@ -23,6 +24,9 @@
       mattpocock = {
         path = mattpocock-skills;
       };
+      mizchi = {
+        path = mizchi-skills;
+      };
     };
 
     skills = {
@@ -38,6 +42,7 @@
         "improve-codebase-architecture"
         "domain-model"
         "to-prd"
+        "empirical-prompt-tuning"
       ];
     };
 
