@@ -10,6 +10,17 @@
 let
   dotfilesPath = "${config.home.homeDirectory}/ghq/github.com/ryo-morimoto/dotfiles";
   # Katakana → English technical term dictionary (KEINOS/google-ime-user-dictionary-ja-en)
+  coreDevTools = with pkgs; [
+    lsof
+    openssl
+    strace
+    tcpdump
+    dig
+    file
+    pciutils
+    usbutils
+  ];
+
   katakana-en-dict = pkgs.fetchFromGitHub {
     owner = "KEINOS";
     repo = "google-ime-user-dictionary-ja-en";
@@ -143,157 +154,159 @@ in
       "$HOME/.bun/bin"
     ];
 
-    packages = with pkgs; [
-      # Editor
-      neovim
-      code-cursor
+    packages =
+      coreDevTools
+      ++ (with pkgs; [
+        # Editor
+        neovim
+        code-cursor
 
-      # LSP servers (for Neovim)
-      typescript-language-server
-      vscode-langservers-extracted
-      pyright
-      rust-analyzer
-      gopls
-      lua-language-server
-      nixd
-      tailwindcss-language-server
+        # LSP servers (for Neovim)
+        typescript-language-server
+        vscode-langservers-extracted
+        pyright
+        rust-analyzer
+        gopls
+        lua-language-server
+        nixd
+        tailwindcss-language-server
 
-      # Formatters (for Neovim)
-      oxfmt
-      black
-      gofumpt
-      stylua
+        # Formatters (for Neovim)
+        oxfmt
+        black
+        gofumpt
+        stylua
 
-      # Linters (for Neovim)
-      eslint
-      ruff
-      starlint
+        # Linters (for Neovim)
+        eslint
+        ruff
+        starlint
 
-      # Nix static analysis
-      nixf
-      flake-checker
+        # Nix static analysis
+        nixf
+        flake-checker
 
-      # Terminal
-      ghostty
+        # Terminal
+        ghostty
 
-      # Communication
-      vesktop
-      slack
+        # Communication
+        vesktop
+        slack
 
-      # AppImage
-      appimage-run
+        # AppImage
+        appimage-run
 
-      # CLI tools
-      wget
-      socat
-      tree
-      ripgrep
-      fd
-      jq
-      ast-grep
+        # CLI tools
+        wget
+        socat
+        tree
+        ripgrep
+        fd
+        jq
+        ast-grep
 
-      # Modern CLI replacements
-      btop
-      procs
-      duf
-      dust
-      sd
-      difftastic
-      hyperfine
-      glow
-      ouch
-      bandwhich
-      navi
+        # Modern CLI replacements
+        btop
+        procs
+        duf
+        dust
+        sd
+        difftastic
+        hyperfine
+        glow
+        ouch
+        bandwhich
+        navi
 
-      # Nix tools
-      nixfmt
-      statix
-      deadnix
-      semgrep
-      nvd
-      nix-tree
-      prek
-      gitleaks
+        # Nix tools
+        nixfmt
+        statix
+        deadnix
+        semgrep
+        nvd
+        nix-tree
+        prek
+        gitleaks
 
-      # Code review
-      coderabbit
+        # Code review
+        coderabbit
 
-      # Development
-      ghq
-      gh
-      git-wt
-      lazygit
-      just
+        # Development
+        ghq
+        gh
+        git-wt
+        lazygit
+        just
 
-      # Web development
-      nodejs
-      bun
-      pnpm
-      chromium
+        # Web development
+        nodejs
+        bun
+        pnpm
+        chromium
 
-      # System/CLI development
-      moonbit-bin.moonbit.latest
-      go
-      gcc
-      (fenix.combine [
-        (fenix.stable.withComponents [
-          "cargo"
-          "clippy"
-          "rust-src"
-          "rustc"
-          "rustfmt"
+        # System/CLI development
+        moonbit-bin.moonbit.latest
+        go
+        gcc
+        (fenix.combine [
+          (fenix.stable.withComponents [
+            "cargo"
+            "clippy"
+            "rust-src"
+            "rustc"
+            "rustfmt"
+          ])
+          fenix.targets.wasm32-unknown-unknown.stable.rust-std
         ])
-        fenix.targets.wasm32-unknown-unknown.stable.rust-std
-      ])
-      wasm-pack
+        wasm-pack
 
-      # Shell development
-      shellcheck
-      shfmt
+        # Shell development
+        shellcheck
+        shfmt
 
-      # Python
-      python3
-      uv
+        # Python
+        python3
+        uv
 
-      # Dev environments
-      devbox
+        # Dev environments
+        devbox
 
-      # Container/Infra (docker CLI provided by virtualisation.docker.enable)
-      docker-credential-helpers
-      kubectl
-      k9s
+        # Container/Infra (docker CLI provided by virtualisation.docker.enable)
+        docker-credential-helpers
+        kubectl
+        k9s
 
-      # Google
-      google-cloud-sdk
-      gws
+        # Google
+        google-cloud-sdk
+        gws
 
-      # Database
-      sqlite
+        # Database
+        sqlite
 
-      # File operations
-      trash-cli
-      wtype
-      ffmpeg
-      imagemagick
+        # File operations
+        trash-cli
+        wtype
+        ffmpeg
+        imagemagick
 
-      # Utilities
-      watchexec
-      fastfetch
-      age
-      libnotify
+        # Utilities
+        watchexec
+        fastfetch
+        age
+        libnotify
 
-      # AI tools
-      codedb
-      soulforge
-      cursor-agent
-      seiren-mcp
-      showboat
-      rodney
-      agent-browser
-      grepika
-      portless
-      k1low-mo
-    ];
+        # AI tools
+        codedb
+        soulforge
+        cursor-agent
+        seiren-mcp
+        showboat
+        rodney
+        agent-browser
+        grepika
+        portless
+        k1low-mo
+      ]);
 
     file = { };
   };
