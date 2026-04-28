@@ -69,10 +69,51 @@ let
             return text
 
 
+        def save_history(text):
+            import json
+            from datetime import datetime, timezone
+            history_dir = os.path.join(
+                os.environ.get("XDG_DATA_HOME", os.path.expanduser("~/.local/share")),
+                "voxtype",
+            )
+            os.makedirs(history_dir, exist_ok=True)
+            path = os.path.join(history_dir, "history.jsonl")
+            with open(path, "a", encoding="utf-8") as f:
+                json.dump(
+                    {"ts": datetime.now(timezone.utc).isoformat(), "text": text},
+                    f,
+                    ensure_ascii=False,
+                )
+                f.write("\n")
+
+
         text = sys.stdin.read().strip()
         if text:
-            print(correct(text, load_dict()))
+            result = correct(text, load_dict())
+            save_history(result)
+            print(result)
       '';
+
+  # Copy latest (or pick from) voxtype transcription history
+  voxtype-history = pkgs.writeShellScriptBin "voxtype-history" ''
+    HISTORY="''${XDG_DATA_HOME:-$HOME/.local/share}/voxtype/history.jsonl"
+    if [ ! -f "$HISTORY" ]; then
+      ${pkgs.libnotify}/bin/notify-send "voxtype" "No history yet"
+      exit 0
+    fi
+    if [ "''${1:-}" = "--pick" ]; then
+      LINES=$(${pkgs.jq}/bin/jq -r '[.ts, (.text | .[0:80])] | join(" | ")' "$HISTORY")
+      SELECTED=$(echo "$LINES" | ${pkgs.fuzzel}/bin/fuzzel --dmenu --width 100 --lines 15 --prompt "voxtype> ")
+      [ -z "$SELECTED" ] && exit 0
+      TS=$(echo "$SELECTED" | ${pkgs.coreutils}/bin/cut -d'|' -f1 | xargs)
+      ${pkgs.jq}/bin/jq -r --arg ts "$TS" 'select(.ts == $ts) | .text' "$HISTORY" \
+        | ${pkgs.wl-clipboard}/bin/wl-copy
+    else
+      ${pkgs.jq}/bin/jq -r '.text' "$HISTORY" | ${pkgs.coreutils}/bin/tail -1 \
+        | ${pkgs.wl-clipboard}/bin/wl-copy
+      ${pkgs.libnotify}/bin/notify-send -t 2000 "voxtype" "Copied latest transcription"
+    fi
+  '';
 in
 {
   imports = [
@@ -756,6 +797,11 @@ in
         "voxtype"
         "record"
         "toggle"
+      ];
+      # Voxtype history: pick and copy from history
+      "Mod+Shift+B".action.spawn = [
+        "${voxtype-history}/bin/voxtype-history"
+        "--pick"
       ];
 
       # System controls (DMS handles launcher, notifications, lock, power menu)
