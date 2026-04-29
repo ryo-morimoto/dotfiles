@@ -1,0 +1,30 @@
+[package]
+name = "sandbox-broker"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+name = "sandbox_broker"
+path = "src/lib.rs"
+
+[[bin]]
+name = "sandbox-broker"
+path = "src/main.rs"
+
+[dependencies]
+axum = "0.8"
+glob-match = "0.2"
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["full"] }
+toml = "0.8"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+[dev-dependencies]
+http-body-util = "0.1"
+hyper = "1"
+hyper-util = { version = "0.1", features = ["tokio", "client-legacy"] }
+tempfile = "3"
+tower = "0.5"

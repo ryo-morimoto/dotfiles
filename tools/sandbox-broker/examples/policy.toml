@@ -1,0 +1,52 @@
+# .sandbox/policy.toml
+# Allow-only policy. Everything not listed here is denied.
+
+[filesystem]
+read = [
+    "./src/**",
+    "./tests/**",
+    "./package.json",
+    "./tsconfig.json",
+    "./README.md",
+    "./.sandbox/policy.toml",
+]
+write = [
+    "./src/**",
+    "./tests/**",
+]
+
+[network]
+connect = [
+    "localhost:*",
+    "registry.npmjs.org:443",
+    "api.github.com:443",
+    "github.com:443",
+]
+bind = [3000]
+
+[[commands]]
+pattern = ["npm", "install", "*"]
+scope = "dependencies"
+
+[[commands]]
+pattern = ["npm", "run", "*"]
+scope = "scripts"
+
+[[commands]]
+pattern = ["git", "add", "*"]
+scope = "vcs"
+
+[[commands]]
+pattern = ["git", "commit", "*"]
+scope = "vcs"
+
+[[commands]]
+pattern = ["git", "status"]
+scope = "vcs"
+
+[[commands]]
+pattern = ["git", "diff", "*"]
+scope = "vcs"
+
+[worktree]
+allow_siblings = true

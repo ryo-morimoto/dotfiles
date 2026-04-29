@@ -21,16 +21,19 @@ let
         type = "http";
         inherit (server) url;
       };
-  # Materialize each hook script body via writeShellApplication so jq is
-  # guaranteed on PATH regardless of the runtime shell environment.
-  mkHookScript =
+  # Resolve hook command: commandFn (deferred pkg ref), command (literal), or source (wrapped .sh).
+  resolveHookCommand =
     name: spec:
-    pkgs.writeShellApplication {
-      inherit name;
-      runtimeInputs = [ pkgs.jq ];
-      text = builtins.readFile spec.source;
-    };
-  claudeHookScripts = lib.mapAttrs mkHookScript sharedClaudeHookSources;
+    if spec ? commandFn then
+      spec.commandFn pkgs
+    else
+      spec.command or "${
+        pkgs.writeShellApplication {
+          inherit name;
+          runtimeInputs = [ pkgs.jq ];
+          text = builtins.readFile spec.source;
+        }
+      }/bin/${name}";
   # Group hooks by event (PostToolUse, PreToolUse, ...) into the shape
   # settings.hooks expects: { <event>: [ { matcher; hooks = [ {type;command} ]; } ]; }
   claudeHooksByEvent =
@@ -42,7 +45,7 @@ let
           hooks = [
             {
               type = "command";
-              command = "${claudeHookScripts.${entry.name}}/bin/${entry.name}";
+              command = resolveHookCommand entry.name entry;
             }
           ];
         }) entries

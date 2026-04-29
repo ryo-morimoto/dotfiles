@@ -306,6 +306,7 @@ in
         grepika
         portless
         k1low-mo
+        sandbox-broker
       ]);
 
     file = { };
