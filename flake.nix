@@ -156,6 +156,7 @@
           inherit starlintLinuxBin;
         };
         coderabbit = final.callPackage ./packages/coderabbit.nix { };
+        sandbox-broker = final.callPackage ./packages/sandbox-broker.nix { };
       };
     in
     {

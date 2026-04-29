@@ -219,6 +219,11 @@ let
       matcher = "mcp__linear-(personal|work)__(save_issue|save_project)";
       event = "PostToolUse";
     };
+    sandbox-broker-pretool = {
+      commandFn = pkgs: "${pkgs.sandbox-broker}/libexec/sandbox-broker/claude-code-hook.sh";
+      matcher = "(Read|Edit|Write|Bash)";
+      event = "PreToolUse";
+    };
   };
 in
 {

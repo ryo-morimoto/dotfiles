@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   mcpServers,
   ...
 }:
@@ -35,7 +36,10 @@ in
         request_permissions = false;
         mcp_elicitations = true;
       };
-      features.multi_agent = true;
+      features = {
+        multi_agent = true;
+        codex_hooks = true;
+      };
       otel.log_user_prompt = false;
       sandbox_workspace_write = {
         network_access = true;
@@ -58,6 +62,20 @@ in
           justification = "Require approval before publishing changes";
         }
       ];
+      hooks = {
+        PreToolUse = [
+          {
+            matcher = "^(Bash|read_file|apply_patch|list_dir)$";
+            hooks = [
+              {
+                type = "command";
+                command = "${pkgs.sandbox-broker}/libexec/sandbox-broker/codex-hook.sh";
+                timeout = 10;
+              }
+            ];
+          }
+        ];
+      };
       mcp_servers = lib.mapAttrs (_: mkCodexMcp) (
         lib.filterAttrs (_: server: builtins.elem "codex" server.clients) mcpServers
       );
