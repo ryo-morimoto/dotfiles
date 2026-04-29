@@ -62,6 +62,7 @@ let
     sandbox = {
       enabled = false;
     };
+    permissions.defaultMode = "bypassPermissions";
     inherit (sharedAgentPolicy.claude) autoUpdatesChannel minimumVersion outputStyle;
     inherit (sharedClaudeCode) enabledPlugins;
     hooks = claudeHooksByEvent;

@@ -118,7 +118,7 @@
 - [デスクトップ構成]: Niri + DankMaterialShell を継続し、置き換え済みの旧 desktop stack は repo に残さない
 - [ローカルWebツール運用]: `agent-browser` はブラウザ操作・観測、`portless` は stable な local URL と worktree 分離に使い分ける
 - [Codex運用]: alias 追加より skill 化を優先し、既定挙動は config.toml に寄せる（shell alias と config の二重管理を避ける）。`~/.codex/config.toml` は Codex 自身が更新できる mutable file を維持し、Home Manager では activation でデフォルトを書き込む。coding agent の隔離は workspace 設計側で改善する前提で、Codex は `approval_policy = "never"` + `sandbox_mode = "danger-full-access"` を標準にし、Codex 側の sandbox-broker hook / prefix approval rule / `sandbox_workspace_write` は既定では注入しない
-- [Claude Code承認運用]: Claude Code の `--dangerously-skip-permissions` は wrapper ではなく shell alias で付与する。sandbox は `settings.json` で常時有効化し、`failIfUnavailable = true` と `allowUnsandboxedCommands = false` を既定にする。Linux では `sandbox-runtime` の seccomp asset を `.claude/vendor/seccomp/<arch>/` に配布して `sandbox.seccomp.{bpfPath,applyPath}` を明示する
+- [Claude Code承認運用]: coding agent の隔離は workspace 設計側で改善する前提で、Claude Code は `permissions.defaultMode = "bypassPermissions"` + `sandbox.enabled = false` を標準にし、sandbox-broker hook は既定では注入しない。CLI 起動時の `--dangerously-skip-permissions` は wrapper ではなく shell alias で付与する
 - [Claude Codeモデル運用]: Claude Code の既定モデルは公式 docs の Claude API alias に合わせ、Opus 4.7 は `claude-opus-4-7` を使う
 - [Claude Code Codex連携]: Claude Code から Codex を使う入口は OpenAI の `codex-plugin-cc` marketplace を Home Manager で登録し、`codex@openai-codex` を既定で有効化する
 - [Claude Code plugin運用]: `semgrep@claude-plugins-official` は `semgrep mcp` hook を自動実行するため既定では無効化し、必要時だけ一時的に有効化する
