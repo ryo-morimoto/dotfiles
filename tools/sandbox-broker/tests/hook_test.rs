@@ -310,7 +310,7 @@ async fn hook_disabled_passes_through() {
 }
 
 #[tokio::test]
-async fn hook_no_socket_denies_via_exit2() {
+async fn hook_no_socket_passes_through() {
     let input = fixture("Read", serde_json::json!({"file_path": "./src/main.ts"}));
     let r = run_hook_with_env(
         vec![
@@ -320,8 +320,32 @@ async fn hook_no_socket_denies_via_exit2() {
         &input,
     )
     .await;
-    r.assert_exit2_deny();
-    assert!(r.stderr.contains("no socket"), "stderr: {}", r.stderr);
+    assert_eq!(r.exit_code, 0, "no socket should passthrough, stderr: {}", r.stderr);
+}
+
+#[tokio::test]
+async fn hook_broker_unreachable_passes_through() {
+    let tmp = TempDir::new().unwrap();
+    let sock_path = tmp.path().join("broker.sock");
+    {
+        let _l = std::os::unix::net::UnixListener::bind(&sock_path).unwrap();
+    }
+    assert!(sock_path.exists(), "socket file should remain after drop");
+
+    let input = fixture("Read", serde_json::json!({"file_path": "./src/main.ts"}));
+    let r = run_hook_with_env(
+        vec![
+            ("SANDBOX_BROKER_SOCK", sock_path.to_str().unwrap()),
+            ("SANDBOX_BROKER_ENABLED", "1"),
+        ],
+        &input,
+    )
+    .await;
+    assert_eq!(
+        r.exit_code, 0,
+        "unreachable broker should passthrough, stderr: {}",
+        r.stderr
+    );
 }
 
 // --- JSON output structure validation ---
