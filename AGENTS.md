@@ -46,6 +46,7 @@
 ## 管理・拡張ルール
 
 - 宣言的構成を優先し、設定は Nix か `config/` 配下で一元管理する
+- 既存設定の変更も source から行う。Home Manager / activation の出力先（例: `~/.claude/`, `~/.config/<app>/`, `~/.codex/`）は直接編集禁止で、対応する `home/<domain>/*.nix` か `config/<app>/` を更新する。出力先か source か判別できないときは `readlink` で symlink target を確認してから編集する
 - 既存責務を崩さない（host は `hosts/`、user は `home/`、package は `packages/`）
 - 新規 package は `packages/<name>.nix` を追加し、`flake.nix` の overlay に必ず登録する
 - 新規アプリ設定は `config/<app>/` に追加し、`home/default.nix` から参照する
