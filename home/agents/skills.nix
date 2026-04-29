@@ -22,8 +22,13 @@
         path = evolutionary-naming;
         subdir = "skills";
       };
-      mattpocock = {
+      mattpocock-engineering = {
         path = mattpocock-skills;
+        subdir = "skills/engineering";
+      };
+      mattpocock-productivity = {
+        path = mattpocock-skills;
+        subdir = "skills/productivity";
       };
       mizchi = {
         path = mizchi-skills;
@@ -42,10 +47,8 @@
         "context7-mcp"
         "context7-cli"
         "find-docs"
-        "design-an-interface"
         "grill-me"
         "improve-codebase-architecture"
-        "domain-model"
         "to-prd"
         "empirical-prompt-tuning"
         "skill-creator"
