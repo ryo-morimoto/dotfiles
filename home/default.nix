@@ -21,6 +21,10 @@ let
     usbutils
   ];
 
+  ctx7-cli = pkgs.writeShellScriptBin "ctx7" ''
+    exec ${pkgs.nodejs}/bin/npx -y ctx7@latest "$@"
+  '';
+
   katakana-en-dict = pkgs.fetchFromGitHub {
     owner = "KEINOS";
     repo = "google-ime-user-dictionary-ja-en";
@@ -242,6 +246,7 @@ in
         nodejs
         bun
         pnpm
+        ctx7-cli
         chromium
 
         # System/CLI development

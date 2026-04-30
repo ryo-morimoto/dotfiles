@@ -112,6 +112,9 @@
 - [エージェント共有定義]: multi-agent に配布する shared skill/plugin 定義は `home/agents/default.nix` に集約し、`home/agents/<agent>.nix` はそれを消費する構成を優先する
 - [エージェント設定変換]: shared policy data は `home/agents/default.nix` に集約し、Claude/Codex/OpenCode など各ツール固有フォーマットへの変換は消費側 module/host で行う
 - [エージェントMCP定義]: MCP server 定義は `home/agents/default.nix` に置き、`policy.nix` には混ぜない
+- [エージェントSkill運用]: Matt Pocock の skill は `productivity` を `enableAll` で追従し、`engineering` は `to-issues` / `to-prd` / `triage` を除く明示リストで管理する
+- [APM運用]: APM CLI は flake package として pin し、APM manifest は Home Manager で `~/.apm/apm.yml` に宣言配置し、Claude/Codex への導入は activation で `apm install -g` を実行する
+- [Skill改善運用]: skill 作成・改善の既定セットは `skill-creator` / `empirical-prompt-tuning` / `retrospective-codify` とし、作成後の検証改善と試行錯誤の知見化まで扱う
 - [Home Manager module構成]: 関連設定は一箇所で確認できる粒度で `home/<domain>/default.nix` に集約し、`home/default.nix` は import の集約に寄せる。過剰な submodule 分割は避ける
 - [tmux構成]: tmux 設定は `home/tmux/default.nix` の Home Manager module として管理し、status・binding・plugin 設定を同ファイル内で見通し良く保つ
 - [git worktree配置]: repo 内の `worktrees/` は持たず、各 worktree は `{project-parent}/{project}-wt/<name>` に配置して repo 隣接で管理する

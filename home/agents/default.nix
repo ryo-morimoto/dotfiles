@@ -220,9 +220,24 @@ let
       event = "PostToolUse";
     };
   };
+  sharedApm = {
+    enable = true;
+    targets = [
+      "claude"
+      "codex"
+    ];
+    manifest = {
+      name = "ryo-agent-packages";
+      version = "1.0.0";
+      dependencies.apm = [
+        "obra/superpowers#6efe32c9e2dd002d0c394e861e0529675d1ab32e"
+      ];
+    };
+  };
 in
 {
   imports = [
+    ./apm.nix
     ./claude-code.nix
     ./codex.nix
     ./skills.nix
@@ -233,6 +248,7 @@ in
       dangerousBashPatterns
       mcpServers
       secretPathRules
+      sharedApm
       sharedClaudeCode
       sharedClaudeHookSources
       sharedAgentPolicy
