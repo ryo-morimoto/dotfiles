@@ -1,0 +1,147 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 933.299 1024.3000000000002" width="933.299" height="1024.3000000000002" style="--bg:#ffffff;--fg:#1f2328;--line:#d1d9e0;--accent:#0969da;--muted:#59636e;background:var(--bg)">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap');
+  text { font-family: 'Inter', system-ui, sans-serif; }
+  svg {
+    /* Derived from --bg and --fg (overridable via --line, --accent, etc.) */
+    --_text:          var(--fg);
+    --_text-sec:      var(--muted, color-mix(in srgb, var(--fg) 60%, var(--bg)));
+    --_text-muted:    var(--muted, color-mix(in srgb, var(--fg) 40%, var(--bg)));
+    --_text-faint:    color-mix(in srgb, var(--fg) 25%, var(--bg));
+    --_line:          var(--line, color-mix(in srgb, var(--fg) 50%, var(--bg)));
+    --_arrow:         var(--accent, color-mix(in srgb, var(--fg) 85%, var(--bg)));
+    --_node-fill:     var(--surface, color-mix(in srgb, var(--fg) 3%, var(--bg)));
+    --_node-stroke:   var(--border, color-mix(in srgb, var(--fg) 20%, var(--bg)));
+    --_group-fill:    var(--bg);
+    --_group-hdr:     color-mix(in srgb, var(--fg) 5%, var(--bg));
+    --_inner-stroke:  color-mix(in srgb, var(--fg) 12%, var(--bg));
+    --_key-badge:     color-mix(in srgb, var(--fg) 10%, var(--bg));
+  }
+</style>
+<defs>
+  <marker id="arrowhead" markerWidth="8" markerHeight="5" refX="7" refY="2.5" orient="auto">
+    <polygon points="0 0, 8 2.5, 0 5" fill="var(--_arrow)" stroke="var(--_arrow)" stroke-width="0.75" stroke-linejoin="round" />
+  </marker>
+  <marker id="arrowhead-start" markerWidth="8" markerHeight="5" refX="1" refY="2.5" orient="auto-start-reverse">
+    <polygon points="8 0, 0 2.5, 8 5" fill="var(--_arrow)" stroke="var(--_arrow)" stroke-width="0.75" stroke-linejoin="round" />
+  </marker>
+</defs>
+<g class="subgraph" data-id="P1" data-label="Phase 1 — foundational rewrite">
+  <rect x="40" y="40" width="211.77599999999995" height="944.3000000000001" rx="0" ry="0" fill="var(--_group-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="40" y="40" width="211.77599999999995" height="28" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="52" y="54" font-size="12" font-weight="600" fill="var(--_text-sec)" dy="4.199999999999999">Phase 1 — foundational rewrite</text>
+</g>
+<g class="subgraph" data-id="P2" data-label="Phase 2 — observability + amendments">
+  <rect x="299.77599999999995" y="344.55" width="348.567" height="335.20000000000005" rx="0" ry="0" fill="var(--_group-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="299.77599999999995" y="344.55" width="348.567" height="28" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="311.77599999999995" y="358.55" font-size="12" font-weight="600" fill="var(--_text-sec)" dy="4.199999999999999">Phase 2 — observability + amendments</text>
+</g>
+<g class="subgraph" data-id="P3" data-label="Phase 3 — richer enforcement">
+  <rect x="696.343" y="327.65000000000003" width="196.95600000000002" height="369" rx="0" ry="0" fill="var(--_group-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="696.343" y="327.65000000000003" width="196.95600000000002" height="28" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="708.343" y="341.65000000000003" font-size="12" font-weight="600" fill="var(--_text-sec)" dy="4.199999999999999">Phase 3 — richer enforcement</text>
+</g>
+<polyline class="edge" data-from="P1" data-to="P2" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="251.77599999999995,512.1500000000001 299.77599999999995,512.1500000000001" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="P2" data-to="P3" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="648.343,512.1500000000001 696.343,512.1500000000001" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="S10" data-to="S11" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="147.36999999999998,154.7 147.36999999999998,202.7" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="S11" data-to="S12" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="144.40599999999998,273.4 144.40599999999998,321.4" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="S12" data-to="S13" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="141.44199999999998,409 141.44199999999998,457" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="S13" data-to="S14" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="144.40599999999998,561.5 144.40599999999998,609.5" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="S14" data-to="S15" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="145.88799999999998,697.1 145.88799999999998,745.1" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="S15" data-to="S16" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="148.85199999999998,849.6 148.85199999999998,897.6" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<g class="node" data-id="S10" data-label="1.0 scaffold
+module structure
+new Cargo deps" data-shape="rectangle">
+  <rect x="75.63649999999997" y="84" width="140.50300000000001" height="70.7" rx="0" ry="0" fill="#e7f3ff" stroke="#0d6efd" stroke-width="0.75" />
+  <text x="145.88799999999998" y="119.35" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="145.88799999999998" dy="-12.350000000000001">1.0 scaffold</tspan><tspan x="145.88799999999998" dy="16.900000000000002">module structure</tspan><tspan x="145.88799999999998" dy="16.900000000000002">new Cargo deps</tspan></text>
+</g>
+<g class="node" data-id="S11" data-label="1.1 policy / matcher
+TOML + extends
+parse-time validation" data-shape="rectangle">
+  <rect x="66.37399999999997" y="202.7" width="161.99200000000002" height="70.7" rx="0" ry="0" fill="#e7f3ff" stroke="#0d6efd" stroke-width="0.75" />
+  <text x="147.36999999999998" y="238.04999999999998" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="147.36999999999998" dy="-12.350000000000001">1.1 policy / matcher</tspan><tspan x="147.36999999999998" dy="16.900000000000002">TOML + extends</tspan><tspan x="147.36999999999998" dy="16.900000000000002">parse-time validation</tspan></text>
+</g>
+<g class="node" data-id="S12" data-label="1.2 evaluator
+7-stage chain
+mandatory_deny
+amendment_proposal" data-shape="rectangle">
+  <rect x="58.96399999999999" y="321.4" width="167.92" height="87.60000000000001" rx="0" ry="0" fill="#e7f3ff" stroke="#0d6efd" stroke-width="0.75" />
+  <text x="142.92399999999998" y="365.2" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="142.92399999999998" dy="-20.8">1.2 evaluator</tspan><tspan x="142.92399999999998" dy="16.900000000000002">7-stage chain</tspan><tspan x="142.92399999999998" dy="16.900000000000002">mandatory_deny</tspan><tspan x="142.92399999999998" dy="16.900000000000002">amendment_proposal</tspan></text>
+</g>
+<g class="node" data-id="S13" data-label="1.3 server / lifecycle
+axum UDS
+daemonize
+cleanup stack
+capability probe" data-shape="rectangle">
+  <rect x="66.37399999999997" y="457" width="156.06400000000002" height="104.50000000000001" rx="0" ry="0" fill="#e7f3ff" stroke="#0d6efd" stroke-width="0.75" />
+  <text x="144.40599999999998" y="509.25" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="144.40599999999998" dy="-29.250000000000004">1.3 server / lifecycle</tspan><tspan x="144.40599999999998" dy="16.900000000000002">axum UDS</tspan><tspan x="144.40599999999998" dy="16.900000000000002">daemonize</tspan><tspan x="144.40599999999998" dy="16.900000000000002">cleanup stack</tspan><tspan x="144.40599999999998" dy="16.900000000000002">capability probe</tspan></text>
+</g>
+<g class="node" data-id="S14" data-label="1.4 hook subcommands
+hook claude
+hook codex
+delete .sh adapters" data-shape="rectangle">
+  <rect x="58.964" y="609.5" width="173.84799999999996" height="87.60000000000001" rx="0" ry="0" fill="#e7f3ff" stroke="#0d6efd" stroke-width="0.75" />
+  <text x="145.88799999999998" y="653.3" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="145.88799999999998" dy="-20.8">1.4 hook subcommands</tspan><tspan x="145.88799999999998" dy="16.900000000000002">hook claude</tspan><tspan x="145.88799999999998" dy="16.900000000000002">hook codex</tspan><tspan x="145.88799999999998" dy="16.900000000000002">delete .sh adapters</tspan></text>
+</g>
+<g class="node" data-id="S15" data-label="1.5 templates / audit
+code, code-strict,
+git-readonly
+ring buffer + JSONL
+explain, log" data-shape="rectangle">
+  <rect x="66.74449999999999" y="745.1" width="158.28699999999998" height="104.50000000000001" rx="0" ry="0" fill="#e7f3ff" stroke="#0d6efd" stroke-width="0.75" />
+  <text x="145.88799999999998" y="797.35" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="145.88799999999998" dy="-29.250000000000004">1.5 templates / audit</tspan><tspan x="145.88799999999998" dy="16.900000000000002">code, code-strict,</tspan><tspan x="145.88799999999998" dy="16.900000000000002">git-readonly</tspan><tspan x="145.88799999999998" dy="16.900000000000002">ring buffer + JSONL</tspan><tspan x="145.88799999999998" dy="16.900000000000002">explain, log</tspan></text>
+</g>
+<g class="node" data-id="S16" data-label="1.6 Nix rewire
+home/agents/default.nix
+nixos-rebuild switch" data-shape="rectangle">
+  <rect x="58.96399999999999" y="897.6" width="179.77599999999995" height="70.7" rx="0" ry="0" fill="#e7f3ff" stroke="#0d6efd" stroke-width="0.75" />
+  <text x="148.85199999999998" y="932.95" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="148.85199999999998" dy="-12.350000000000001">1.6 Nix rewire</tspan><tspan x="148.85199999999998" dy="16.900000000000002">home/agents/default.nix</tspan><tspan x="148.85199999999998" dy="16.900000000000002">nixos-rebuild switch</tspan></text>
+</g>
+<g class="node" data-id="S20" data-label="path-based extends
+@base" data-shape="rectangle">
+  <rect x="315.77599999999995" y="462.35" width="157.546" height="53.800000000000004" rx="0" ry="0" fill="#fff3cd" stroke="#fd7e14" stroke-width="0.75" />
+  <text x="394.549" y="489.25" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="394.549" dy="-3.9000000000000012">path-based extends</tspan><tspan x="394.549" dy="16.900000000000002">@base</tspan></text>
+</g>
+<g class="node" data-id="S21" data-label="two-tier policy
+~/.config/global.toml" data-shape="rectangle">
+  <rect x="476.27899999999994" y="388.55" width="156.06400000000002" height="53.800000000000004" rx="0" ry="0" fill="#fff3cd" stroke="#fd7e14" stroke-width="0.75" />
+  <text x="554.3109999999999" y="415.45" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="554.3109999999999" dy="-3.9000000000000012">two-tier policy</tspan><tspan x="554.3109999999999" dy="16.900000000000002">~/.config/global.toml</tspan></text>
+</g>
+<g class="node" data-id="S22" data-label="audit log on disk
+--since / --source" data-shape="rectangle">
+  <rect x="315.77599999999995" y="388.55" width="140.503" height="53.800000000000004" rx="0" ry="0" fill="#fff3cd" stroke="#fd7e14" stroke-width="0.75" />
+  <text x="386.0274999999999" y="415.45" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="386.0274999999999" dy="-3.9000000000000012">audit log on disk</tspan><tspan x="386.0274999999999" dy="16.900000000000002">--since / --source</tspan></text>
+</g>
+<g class="node" data-id="S23" data-label="amendment apply
+policy amend interactive" data-shape="rectangle">
+  <rect x="315.77599999999995" y="536.1500000000001" width="182.73999999999998" height="53.800000000000004" rx="0" ry="0" fill="#fff3cd" stroke="#fd7e14" stroke-width="0.75" />
+  <text x="407.14599999999996" y="563.0500000000001" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="407.14599999999996" dy="-3.9000000000000012">amendment apply</tspan><tspan x="407.14599999999996" dy="16.900000000000002">policy amend interactive</tspan></text>
+</g>
+<g class="node" data-id="S24" data-label="hook-side mandatory_deny
+embedded bedrock" data-shape="rectangle">
+  <rect x="315.77599999999995" y="609.95" width="202.00599999999997" height="53.800000000000004" rx="0" ry="0" fill="#fff3cd" stroke="#fd7e14" stroke-width="0.75" />
+  <text x="416.77899999999994" y="636.85" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="416.77899999999994" dy="-3.9000000000000012">hook-side mandatory_deny</tspan><tspan x="416.77899999999994" dy="16.900000000000002">embedded bedrock</tspan></text>
+</g>
+<g class="node" data-id="S30" data-label="wrap_allowed_bash
+landrun rewrite" data-shape="rectangle">
+  <rect x="712.343" y="445.45000000000005" width="160.51" height="53.800000000000004" rx="0" ry="0" fill="#e5ffe5" stroke="#198754" stroke-width="0.75" />
+  <text x="792.598" y="472.35" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="792.598" dy="-3.9000000000000012">wrap_allowed_bash</tspan><tspan x="792.598" dy="16.900000000000002">landrun rewrite</tspan></text>
+</g>
+<g class="node" data-id="S31" data-label="egress proxy
+HTTP + SOCKS
+domain-level network" data-shape="rectangle">
+  <rect x="712.343" y="609.95" width="164.95600000000002" height="70.7" rx="0" ry="0" fill="#e5ffe5" stroke="#198754" stroke-width="0.75" />
+  <text x="794.8209999999999" y="645.3000000000001" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="794.8209999999999" dy="-12.350000000000001">egress proxy</tspan><tspan x="794.8209999999999" dy="16.900000000000002">HTTP + SOCKS</tspan><tspan x="794.8209999999999" dy="16.900000000000002">domain-level network</tspan></text>
+</g>
+<g class="node" data-id="S32" data-label="ELF deps walker
+--ldd auto allow-list" data-shape="rectangle">
+  <rect x="712.343" y="371.65000000000003" width="146.43099999999998" height="53.800000000000004" rx="0" ry="0" fill="#e5ffe5" stroke="#198754" stroke-width="0.75" />
+  <text x="785.5585" y="398.55" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="785.5585" dy="-3.9000000000000012">ELF deps walker</tspan><tspan x="785.5585" dy="16.900000000000002">--ldd auto allow-list</tspan></text>
+</g>
+<g class="node" data-id="S33" data-label="Codex
+permission_request
+pre-prompt hook" data-shape="rectangle">
+  <rect x="712.343" y="519.25" width="160.51" height="70.7" rx="0" ry="0" fill="#e5ffe5" stroke="#198754" stroke-width="0.75" />
+  <text x="792.598" y="554.6" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="792.598" dy="-12.350000000000001">Codex</tspan><tspan x="792.598" dy="16.900000000000002">permission_request</tspan><tspan x="792.598" dy="16.900000000000002">pre-prompt hook</tspan></text>
+</g>
+</svg>

@@ -1,0 +1,29 @@
+flowchart LR
+    Op["Operation"]
+
+    Op -->|"CommandExec { argv }"| PR["matcher::prefix_rule"]
+    Op -->|"FileRead/Write { path }"| PG["matcher::path_glob"]
+    Op -->|"Connect { host, port }"| DP["matcher::domain_pattern"]
+
+    PR --> PI["PrefixIndex<br/>(by_first: HashMap)"]
+    PI --> PM1["MatchResult"]
+
+    subgraph fs["path glob"]
+        FSR["check_read:<br/>allow → Allow<br/>deny → Deny<br/>else → Allow (default)"]
+        FSW["check_write:<br/>deny → Deny<br/>allow → Allow<br/>else → NoMatch"]
+    end
+
+    PG --> FSR
+    PG --> FSW
+    FSR --> PM2["MatchResult"]
+    FSW --> PM3["MatchResult"]
+
+    DP --> DC["canonicalize host<br/>(lowercase, IP decode,<br/>strip dots/brackets)"]
+    DC --> DM{"pattern match"}
+    DM -->|"loopback + allow_loopback"| AllowD["Allow"]
+    DM -->|"in deny_domains"| DenyD["Deny"]
+    DM -->|"in allow_domains"| AllowD2["Allow"]
+    DM -->|"none"| NoMatchD["NoMatch"]
+
+    classDef matcher fill:#e7f3ff,stroke:#0d6efd
+    class PR,PG,DP matcher

@@ -1,0 +1,12 @@
+{
+  "name": "sandbox-broker-designs",
+  "private": true,
+  "type": "module",
+  "description": "Tooling for rendering mermaid diagrams in sandbox-broker designs/",
+  "scripts": {
+    "render": "node render-diagrams.mjs"
+  },
+  "dependencies": {
+    "beautiful-mermaid": "^1.1.3"
+  }
+}

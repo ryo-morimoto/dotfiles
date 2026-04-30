@@ -1,0 +1,75 @@
+flowchart LR
+    subgraph cli["cli (clap)"]
+        Init["init"]
+        Start["start"]
+        Hook["hook claude / codex"]
+        Doctor["doctor"]
+        Explain["explain"]
+        Log["log"]
+    end
+
+    subgraph hooks["hook/"]
+        Shared["shared"]
+        Claude["claude"]
+        Codex["codex"]
+        Claude --> Shared
+        Codex --> Shared
+    end
+
+    subgraph policy["policy/"]
+        Parse["parse"]
+        Validate["validate"]
+        Merge["merge"]
+        Templates["templates"]
+    end
+
+    subgraph matcher["matcher/"]
+        Prefix["prefix_rule"]
+        Glob["path_glob"]
+        Domain["domain_pattern"]
+    end
+
+    subgraph eval["evaluator + chain"]
+        MD["mandatory_deny"]
+        Evaluator["evaluator"]
+    end
+
+    subgraph state["state"]
+        Session["session"]
+        Audit["audit (ring + jsonl)"]
+        Learning["learning"]
+    end
+
+    subgraph life["lifecycle/"]
+        Daemonize["daemonize"]
+        PID["pid_file"]
+        Cap["capability"]
+    end
+
+    Server["server (axum + UDS)"]
+    Cleanup["cleanup (LIFO + priority)"]
+
+    Init --> Templates
+    Start --> Daemonize
+    Start --> Cap
+    Start --> Server
+    Hook --> Shared
+    Shared -- "POST /evaluate" --> Server
+
+    Server --> Evaluator
+    Evaluator --> MD
+    Evaluator --> Prefix
+    Evaluator --> Glob
+    Evaluator --> Domain
+    Evaluator --> Session
+    Evaluator --> Audit
+
+    Parse --> Templates
+    Parse --> Validate
+    Parse --> Merge
+
+    Server --> Cleanup
+    Daemonize --> PID
+
+    classDef hot fill:#fff3cd,stroke:#d63384,stroke-width:2px
+    class Evaluator,Server,Shared hot

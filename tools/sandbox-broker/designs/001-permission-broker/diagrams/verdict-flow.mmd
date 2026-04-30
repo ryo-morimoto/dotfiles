@@ -1,0 +1,32 @@
+flowchart TD
+    Op["Operation<br/>(FileRead/Write/Delete, CommandExec, Connect)"]
+
+    Op --> S1{"1. mandatory_deny<br/>(bedrock + user_extra,<br/>write only)"}
+    S1 -- "match" --> DenyMD["Verdict::deny<br/>Source::MandatoryDeny<br/>(no amendment)"]
+    S1 -- "no match" --> S2{"2. policy.commands<br/>(prefix_rule)"}
+
+    S2 -- "match allow" --> AllowPM["Verdict::allow<br/>Source::PolicyMatch"]
+    S2 -- "match deny" --> DenyPM["Verdict::deny<br/>Source::PolicyMatch"]
+    S2 -- "match ask" --> EscPM["Verdict::escalate<br/>+ amendment_proposal"]
+    S2 -- "no match" --> S3{"3. policy.filesystem<br/>(read = allow-default;<br/>write = deny-default)"}
+
+    S3 -- "match" --> VPM3["Verdict::{allow,deny}<br/>Source::PolicyMatch"]
+    S3 -- "no match" --> S4{"4. policy.network<br/>(domain pattern)"}
+
+    S4 -- "match" --> VPM4["Verdict::{allow,deny}<br/>Source::PolicyMatch"]
+    S4 -- "no match" --> S5{"5. session<br/>(prior approvals)"}
+
+    S5 -- "match" --> AllowSM["Verdict::allow<br/>Source::SessionMatch"]
+    S5 -- "no match" --> S6{"6. programmatic<br/>(hidden file write,<br/>worktree siblings)"}
+
+    S6 -- "match" --> VPC["Verdict::{allow,deny,escalate}<br/>Source::ProgrammaticCheck"]
+    S6 -- "no match" --> S7["7. escalate<br/>Source::DefaultFallthrough<br/>+ amendment_proposal"]
+
+    classDef stage fill:#e7f3ff,stroke:#0d6efd
+    classDef deny fill:#ffe5e5,stroke:#dc3545
+    classDef allow fill:#e5ffe5,stroke:#198754
+    classDef escalate fill:#fff3cd,stroke:#fd7e14
+    class S1,S2,S3,S4,S5,S6,S7 stage
+    class DenyMD,DenyPM deny
+    class AllowPM,AllowSM allow
+    class EscPM,S7 escalate

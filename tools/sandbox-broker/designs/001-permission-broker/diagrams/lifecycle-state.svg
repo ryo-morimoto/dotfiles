@@ -1,0 +1,181 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 590.6804166666667 1525.3999999999999" width="590.6804166666667" height="1525.3999999999999" style="--bg:#ffffff;--fg:#1f2328;--line:#d1d9e0;--accent:#0969da;--muted:#59636e;background:var(--bg)">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap');
+  text { font-family: 'Inter', system-ui, sans-serif; }
+  svg {
+    /* Derived from --bg and --fg (overridable via --line, --accent, etc.) */
+    --_text:          var(--fg);
+    --_text-sec:      var(--muted, color-mix(in srgb, var(--fg) 60%, var(--bg)));
+    --_text-muted:    var(--muted, color-mix(in srgb, var(--fg) 40%, var(--bg)));
+    --_text-faint:    color-mix(in srgb, var(--fg) 25%, var(--bg));
+    --_line:          var(--line, color-mix(in srgb, var(--fg) 50%, var(--bg)));
+    --_arrow:         var(--accent, color-mix(in srgb, var(--fg) 85%, var(--bg)));
+    --_node-fill:     var(--surface, color-mix(in srgb, var(--fg) 3%, var(--bg)));
+    --_node-stroke:   var(--border, color-mix(in srgb, var(--fg) 20%, var(--bg)));
+    --_group-fill:    var(--bg);
+    --_group-hdr:     color-mix(in srgb, var(--fg) 5%, var(--bg));
+    --_inner-stroke:  color-mix(in srgb, var(--fg) 12%, var(--bg));
+    --_key-badge:     color-mix(in srgb, var(--fg) 10%, var(--bg));
+  }
+</style>
+<defs>
+  <marker id="arrowhead" markerWidth="8" markerHeight="5" refX="7" refY="2.5" orient="auto">
+    <polygon points="0 0, 8 2.5, 0 5" fill="var(--_arrow)" stroke="var(--_arrow)" stroke-width="0.75" stroke-linejoin="round" />
+  </marker>
+  <marker id="arrowhead-start" markerWidth="8" markerHeight="5" refX="1" refY="2.5" orient="auto-start-reverse">
+    <polygon points="8 0, 0 2.5, 8 5" fill="var(--_arrow)" stroke="var(--_arrow)" stroke-width="0.75" stroke-linejoin="round" />
+  </marker>
+</defs>
+<polyline class="edge" data-from="_start" data-to="Parsing" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="sandbox-broker start" points="326.45000000000005,68 326.45,184.3" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Parsing" data-to="Probing" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="policy ok" points="311.5543333333334,221.2 311.5543333333334,257.2 272.3565,257.2 272.35650000000004,337.5" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Parsing" data-to="Failed" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="invalid policy" points="341.34566666666666,221.2 341.34566666666666,499 490.7644166666667,499 490.7644166666667,683.6999999999999 456.0606666666667,683.6999999999999 456.0606666666667,695.6999999999999" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Probing" data-to="Forking" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="capability requirements met
+(or none required)" points="257.46083333333337,374.4 257.46083333333337,410.4 187.1279166666667,410.4 187.1279166666667,505" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Probing" data-to="Failed" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="require_landlock + no Landlock
+require_bwrap + no bwrap" points="287.25216666666665,374.4 287.25216666666665,531.3 399.15275,531.3 399.15275,683.6999999999999 429.7273333333333,683.6999999999999 429.7273333333333,695.6999999999999" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Forking" data-to="Foreground_Mode" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="--foreground flag
+or runtime.daemonize=false" points="172.23225000000002,541.9 172.23225000000002,731.0999999999999 109.5,731.0999999999999 109.5,813.6999999999999 161.24075000000005,813.6999999999999 161.24075000000005,837.3" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Forking" data-to="Daemon_Spawn" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="default (daemonize)" points="202.02358333333336,541.9 202.02358333333336,577.9 274.947,577.9 274.947,658.1999999999999" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Daemon_Spawn" data-to="Foreground_Mode" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="child enters here
+(parent writes PID, exits 0)" points="274.947,695.0999999999999 274.947,813.6999999999999 213.01508333333337,813.6999999999999 213.01508333333337,837.3" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Foreground_Mode" data-to="Serving" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="bind UDS
+install signal handlers
+register cleanup stack" points="187.1279166666667,874.1999999999999 187.1279166666667,971.4999999999999 316.4198,971.4999999999999 316.4198,983.4999999999999" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Serving" data-to="Reloading" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="SIGHUP" points="334.2946,983.4999999999999 334.2946,959.4999999999999 299.9176666666667,959.4999999999999 299.9176666666667,903.1999999999999 318.0969166666667,903.1999999999999 318.0969166666667,874.1999999999999" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Reloading" data-to="Serving" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="policy ok" points="343.4044166666667,874.1999999999999 343.4044166666667,903.1999999999999 361.58366666666666,903.1999999999999 361.58366666666666,971.4999999999999 352.1694,971.4999999999999 352.1694,983.4999999999999" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Reloading" data-to="Serving" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="policy invalid
+(log + keep running)" points="368.7119166666667,874.1999999999999 368.7119166666667,903.1999999999999 450.40766666666667,903.1999999999999 450.40766666666667,971.4999999999999 370.0442,971.4999999999999 370.0442,983.4999999999999" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Serving" data-to="Draining" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="SIGTERM / SIGINT" points="328.33633333333336,1020.3999999999999 328.33633333333336,1056.3999999999999 289.795,1056.3999999999999 289.795,1124.6999999999998 327.84233333333333,1124.6999999999998 327.84233333333333,1136.6999999999998" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Serving" data-to="Draining" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="stop subcommand" points="358.1276666666667,1020.3999999999999 358.1276666666667,1056.3999999999999 396.66900000000004,1056.3999999999999 396.66900000000004,1124.6999999999998 358.62166666666667,1124.6999999999998 358.62166666666667,1136.6999999999998" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Draining" data-to="Cleanup" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="drain timeout (2s)" points="343.232,1173.6 343.232,1289.8999999999999" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Cleanup" data-to="_end" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="priority: shutdown listener
+then LIFO: pid file → socket → log → audit" points="343.232,1326.8 343.232,1457.3999999999999" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Failed" data-to="_end2" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="exit 1" points="442.894,732.5999999999999 442.894,837.3" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<g class="edge-label" data-from="_start" data-to="Parsing" data-label="sandbox-broker start">
+  <rect x="266.95000000000005" y="111" width="118.63000000000001" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="326.26500000000004" y="126.15" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">sandbox-broker start</text>
+</g>
+<g class="edge-label" data-from="Parsing" data-to="Probing" data-label="policy ok">
+  <rect x="242.3565" y="264.2" width="59.824" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="272.2685" y="279.34999999999997" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">policy ok</text>
+</g>
+<g class="edge-label" data-from="Parsing" data-to="Failed" data-label="invalid policy">
+  <rect x="451.2644166666667" y="506" width="78.83200000000001" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="490.6804166666667" y="521.15" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">invalid policy</text>
+</g>
+<g class="edge-label" data-from="Probing" data-to="Forking" data-label="capability requirements met
+(or none required)">
+  <rect x="114.6279166666667" y="417.4" width="144.766" height="44.6" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="187.0109166666667" y="439.7" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)"><tspan x="187.0109166666667" dy="-3.3000000000000007">capability requirements met</tspan><tspan x="187.0109166666667" dy="14.3">(or none required)</tspan></text>
+</g>
+<g class="edge-label" data-from="Probing" data-to="Failed" data-label="require_landlock + no Landlock
+require_bwrap + no bwrap">
+  <rect x="315.15275" y="538.3" width="167.93200000000002" height="44.6" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="399.11875000000003" y="560.5999999999999" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)"><tspan x="399.11875000000003" dy="-3.3000000000000007">require_landlock + no Landlock</tspan><tspan x="399.11875000000003" dy="14.3">require_bwrap + no bwrap</tspan></text>
+</g>
+<g class="edge-label" data-from="Forking" data-to="Foreground_Mode" data-label="--foreground flag
+or runtime.daemonize=false">
+  <rect x="36" y="738.0999999999999" width="146.548" height="44.6" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="109.274" y="760.3999999999999" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)"><tspan x="109.274" dy="-3.3000000000000007">--foreground flag</tspan><tspan x="109.274" dy="14.3">or runtime.daemonize=false</tspan></text>
+</g>
+<g class="edge-label" data-from="Forking" data-to="Daemon_Spawn" data-label="default (daemonize)">
+  <rect x="220.94700000000003" y="584.9" width="107.34400000000001" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="274.619" y="600.05" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">default (daemonize)</text>
+</g>
+<g class="edge-label" data-from="Daemon_Spawn" data-to="Foreground_Mode" data-label="child enters here
+(parent writes PID, exits 0)">
+  <rect x="205.947" y="738.0999999999999" width="137.638" height="44.6" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="274.766" y="760.3999999999999" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)"><tspan x="274.766" dy="-3.3000000000000007">child enters here</tspan><tspan x="274.766" dy="14.3">(parent writes PID, exits 0)</tspan></text>
+</g>
+<g class="edge-label" data-from="Foreground_Mode" data-to="Serving" data-label="bind UDS
+install signal handlers
+register cleanup stack">
+  <rect x="125.12791666666669" y="905.5999999999999" width="123.38200000000002" height="58.900000000000006" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="186.8189166666667" y="935.05" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)"><tspan x="186.8189166666667" dy="-10.450000000000001">bind UDS</tspan><tspan x="186.8189166666667" dy="14.3">install signal handlers</tspan><tspan x="186.8189166666667" dy="14.3">register cleanup stack</tspan></text>
+</g>
+<g class="edge-label" data-from="Serving" data-to="Reloading" data-label="SIGHUP">
+  <rect x="271.9176666666667" y="910.1999999999999" width="55.666000000000004" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="299.75066666666675" y="925.3499999999999" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">SIGHUP</text>
+</g>
+<g class="edge-label" data-from="Reloading" data-to="Serving" data-label="policy ok">
+  <rect x="331.58366666666666" y="910.1999999999999" width="59.824" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="361.49566666666664" y="925.3499999999999" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">policy ok</text>
+</g>
+<g class="edge-label" data-from="Reloading" data-to="Serving" data-label="policy invalid
+(log + keep running)">
+  <rect x="395.40766666666667" y="919.8999999999999" width="109.72000000000003" height="44.6" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="450.2676666666667" y="942.1999999999998" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)"><tspan x="450.2676666666667" dy="-3.3000000000000007">policy invalid</tspan><tspan x="450.2676666666667" dy="14.3">(log + keep running)</tspan></text>
+</g>
+<g class="edge-label" data-from="Serving" data-to="Draining" data-label="SIGTERM / SIGINT">
+  <rect x="237.29500000000002" y="1063.3999999999999" width="104.37400000000001" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="289.482" y="1078.55" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">SIGTERM / SIGINT</text>
+</g>
+<g class="edge-label" data-from="Serving" data-to="Draining" data-label="stop subcommand">
+  <rect x="345.66900000000004" y="1063.3999999999999" width="101.404" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="396.37100000000004" y="1078.55" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">stop subcommand</text>
+</g>
+<g class="edge-label" data-from="Draining" data-to="Cleanup" data-label="drain timeout (2s)">
+  <rect x="294.732" y="1216.6" width="96.05800000000002" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="342.761" y="1231.75" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">drain timeout (2s)</text>
+</g>
+<g class="edge-label" data-from="Cleanup" data-to="_end" data-label="priority: shutdown listener
+then LIFO: pid file → socket → log → audit">
+  <rect x="245.73200000000006" y="1369.8" width="194.06800000000004" height="44.6" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="342.7660000000001" y="1392.1" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)"><tspan x="342.7660000000001" dy="-3.3000000000000007">priority: shutdown listener</tspan><tspan x="342.7660000000001" dy="14.3">then LIFO: pid file → socket → log → audit</tspan></text>
+</g>
+<g class="edge-label" data-from="Failed" data-to="_end2" data-label="exit 1">
+  <rect x="423.394" y="775.5999999999999" width="38.44" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="442.61400000000003" y="790.7499999999999" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">exit 1</text>
+</g>
+<g class="node" data-id="_start" data-label="" data-shape="state-start">
+  <circle cx="326.45000000000005" cy="54" r="12" fill="var(--_text)" stroke="none" />
+</g>
+<g class="node" data-id="Parsing" data-label="Parsing" data-shape="rounded">
+  <rect x="281.76300000000003" y="184.3" width="89.374" height="36.900000000000006" rx="6" ry="6" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="326.45000000000005" y="202.75" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Parsing</text>
+</g>
+<g class="node" data-id="Probing" data-label="Probing" data-shape="rounded">
+  <rect x="227.66950000000003" y="337.5" width="89.374" height="36.900000000000006" rx="6" ry="6" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="272.35650000000004" y="355.95" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Probing</text>
+</g>
+<g class="node" data-id="Failed" data-label="Failed" data-shape="rounded">
+  <rect x="403.394" y="695.6999999999999" width="79" height="36.900000000000006" rx="6" ry="6" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="442.894" y="714.15" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Failed</text>
+</g>
+<g class="node" data-id="Forking" data-label="Forking" data-shape="rounded">
+  <rect x="142.4409166666667" y="505" width="89.374" height="36.900000000000006" rx="6" ry="6" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="187.1279166666667" y="523.45" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Forking</text>
+</g>
+<g class="node" data-id="Foreground_Mode" data-label="Foreground_Mode" data-shape="rounded">
+  <rect x="109.46641666666672" y="837.3" width="155.32299999999998" height="36.900000000000006" rx="6" ry="6" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="187.1279166666667" y="855.75" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Foreground_Mode</text>
+</g>
+<g class="node" data-id="Daemon_Spawn" data-label="Daemon_Spawn" data-shape="rounded">
+  <rect x="206.548" y="658.1999999999999" width="136.798" height="36.900000000000006" rx="6" ry="6" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="274.947" y="676.65" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Daemon_Spawn</text>
+</g>
+<g class="node" data-id="Serving" data-label="Serving" data-shape="rounded">
+  <rect x="298.545" y="983.4999999999999" width="89.374" height="36.900000000000006" rx="6" ry="6" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="343.232" y="1001.9499999999999" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Serving</text>
+</g>
+<g class="node" data-id="Reloading" data-label="Reloading" data-shape="rounded">
+  <rect x="292.7894166666667" y="837.3" width="101.22999999999999" height="36.900000000000006" rx="6" ry="6" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="343.4044166666667" y="855.75" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Reloading</text>
+</g>
+<g class="node" data-id="Draining" data-label="Draining" data-shape="rounded">
+  <rect x="297.063" y="1136.6999999999998" width="92.338" height="36.900000000000006" rx="6" ry="6" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="343.23199999999997" y="1155.1499999999999" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Draining</text>
+</g>
+<g class="node" data-id="Cleanup" data-label="Cleanup" data-shape="rounded">
+  <rect x="297.80400000000003" y="1289.8999999999999" width="90.856" height="36.900000000000006" rx="6" ry="6" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="343.232" y="1308.35" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Cleanup</text>
+</g>
+<g class="node" data-id="_end" data-label="" data-shape="state-end">
+  <circle cx="343.232" cy="1471.3999999999999" r="12" fill="none" stroke="var(--_text)" stroke-width="1.5" />
+  <circle cx="343.232" cy="1471.3999999999999" r="8" fill="var(--_text)" stroke="none" />
+</g>
+<g class="node" data-id="_end2" data-label="" data-shape="state-end">
+  <circle cx="442.894" cy="851.3" r="12" fill="none" stroke="var(--_text)" stroke-width="1.5" />
+  <circle cx="442.894" cy="851.3" r="8" fill="var(--_text)" stroke="none" />
+</g>
+</svg>

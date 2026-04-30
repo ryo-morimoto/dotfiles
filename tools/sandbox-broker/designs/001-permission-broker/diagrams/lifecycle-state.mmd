@@ -1,0 +1,26 @@
+stateDiagram-v2
+    [*] --> Parsing: sandbox-broker start
+
+    Parsing --> Probing: policy ok
+    Parsing --> Failed: invalid policy
+
+    Probing --> Forking: capability requirements met<br/>(or none required)
+    Probing --> Failed: require_landlock + no Landlock<br/>require_bwrap + no bwrap
+
+    Forking --> Foreground_Mode: --foreground flag<br/>or runtime.daemonize=false
+    Forking --> Daemon_Spawn: default (daemonize)
+
+    Daemon_Spawn --> Foreground_Mode: child enters here<br/>(parent writes PID, exits 0)
+
+    Foreground_Mode --> Serving: bind UDS<br/>install signal handlers<br/>register cleanup stack
+
+    Serving --> Reloading: SIGHUP
+    Reloading --> Serving: policy ok
+    Reloading --> Serving: policy invalid<br/>(log + keep running)
+
+    Serving --> Draining: SIGTERM / SIGINT
+    Serving --> Draining: stop subcommand
+
+    Draining --> Cleanup: drain timeout (2s)
+    Cleanup --> [*]: priority: shutdown listener<br/>then LIFO: pid file → socket → log → audit
+    Failed --> [*]: exit 1
