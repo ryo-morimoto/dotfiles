@@ -1,0 +1,31 @@
+flowchart TB
+    subgraph L3["L3 — workspace VM / container"]
+        E2B["E2B (Firecracker)"]
+        Daytona["Daytona (OCI)"]
+        AgentInfra["agent-infra (Docker)"]
+        Windmill["Windmill (NSJail-per-job)"]
+    end
+
+    subgraph L2["L2 — in-process policy / hook engine"]
+        Broker["<b>sandbox-broker</b><br/>(this design)"]
+        Codex["Codex hook engine"]
+        Fence_Hook["Fence (hook mode)"]
+    end
+
+    subgraph L1["L1 — kernel sandbox primitive"]
+        Landrun["landrun (Landlock)"]
+        SRT["sandbox-runtime / srt"]
+        Fence_Wrap["Fence (wrap mode)"]
+    end
+
+    Agent["AI coding agent<br/>(Claude Code / Codex)"]
+
+    Agent -->|PreToolUse hook| Broker
+    Broker -->|"verdict<br/>(Phase 1)"| Agent
+    Broker -.->|"wrap allowed bash<br/>(Phase 3 opt-in)"| Landrun
+    L3 -.->|"agent runs inside"| Agent
+
+    classDef l2 fill:#fff3cd,stroke:#000,stroke-width:2px
+    classDef hilite fill:#fff3cd,stroke:#d63384,stroke-width:3px
+    class Broker hilite
+    class L2 l2

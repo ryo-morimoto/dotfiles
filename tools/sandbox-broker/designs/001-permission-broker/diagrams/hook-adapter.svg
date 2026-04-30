@@ -1,0 +1,162 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1069.9809999999998 1166" width="1069.9809999999998" height="1166" style="--bg:#ffffff;--fg:#1f2328;--line:#d1d9e0;--accent:#0969da;--muted:#59636e;background:var(--bg)">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap');
+  text { font-family: 'Inter', system-ui, sans-serif; }
+  svg {
+    /* Derived from --bg and --fg (overridable via --line, --accent, etc.) */
+    --_text:          var(--fg);
+    --_text-sec:      var(--muted, color-mix(in srgb, var(--fg) 60%, var(--bg)));
+    --_text-muted:    var(--muted, color-mix(in srgb, var(--fg) 40%, var(--bg)));
+    --_text-faint:    color-mix(in srgb, var(--fg) 25%, var(--bg));
+    --_line:          var(--line, color-mix(in srgb, var(--fg) 50%, var(--bg)));
+    --_arrow:         var(--accent, color-mix(in srgb, var(--fg) 85%, var(--bg)));
+    --_node-fill:     var(--surface, color-mix(in srgb, var(--fg) 3%, var(--bg)));
+    --_node-stroke:   var(--border, color-mix(in srgb, var(--fg) 20%, var(--bg)));
+    --_group-fill:    var(--bg);
+    --_group-hdr:     color-mix(in srgb, var(--fg) 5%, var(--bg));
+    --_inner-stroke:  color-mix(in srgb, var(--fg) 12%, var(--bg));
+    --_key-badge:     color-mix(in srgb, var(--fg) 10%, var(--bg));
+  }
+</style>
+<defs>
+  <marker id="seq-arrow" markerWidth="8" markerHeight="5" refX="8" refY="2.5" orient="auto-start-reverse">
+    <polygon points="0 0, 8 2.5, 0 5" fill="var(--_arrow)" />
+  </marker>
+  <marker id="seq-arrow-open" markerWidth="8" markerHeight="5" refX="8" refY="2.5" orient="auto-start-reverse">
+    <polyline points="0 0, 8 2.5, 0 5" fill="none" stroke="var(--_arrow)" stroke-width="1" />
+  </marker>
+</defs>
+<g class="block" data-type="alt" data-label="Allow">
+  <rect x="30" y="658" width="468.01899999999995" height="188" rx="0" ry="0" fill="none" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="30" y="658" width="65.83000000000001" height="18" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="36" y="667" font-size="11" font-weight="600" fill="var(--_text-sec)" dy="3.8499999999999996">alt [Allow]</text>
+  <line x1="30" y1="734" x2="498.01899999999995" y2="734" stroke="var(--_line)" stroke-width="0.75" stroke-dasharray="6 4" />
+  <text x="38" y="748" font-size="11" text-anchor="start" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">[Deny]</text>
+  <line x1="30" y1="798" x2="498.01899999999995" y2="798" stroke="var(--_line)" stroke-width="0.75" stroke-dasharray="6 4" />
+  <text x="38" y="812" font-size="11" text-anchor="start" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">[Escalate]</text>
+</g>
+<g class="block" data-type="alt" data-label="Claude">
+  <rect x="30" y="590" width="468.01899999999995" height="256" rx="0" ry="0" fill="none" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="30" y="590" width="75.07" height="18" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="36" y="599" font-size="11" font-weight="600" fill="var(--_text-sec)" dy="3.8499999999999996">alt [Claude]</text>
+  <line x1="30" y1="670" x2="498.01899999999995" y2="670" stroke="var(--_line)" stroke-width="0.75" stroke-dasharray="6 4" />
+  <text x="38" y="684" font-size="11" text-anchor="start" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">[Codex]</text>
+</g>
+<g class="block" data-type="alt" data-label="non-policy tool (Glob/Grep/Web/MCP)">
+  <rect x="30" y="188" width="1009.9809999999998" height="658" rx="0" ry="0" fill="none" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="30" y="188" width="230.82999999999998" height="18" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="36" y="197" font-size="11" font-weight="600" fill="var(--_text-sec)" dy="3.8499999999999996">alt [non-policy tool (Glob/Grep/Web/MCP)]</text>
+  <line x1="30" y1="264" x2="1039.9809999999998" y2="264" stroke="var(--_line)" stroke-width="0.75" stroke-dasharray="6 4" />
+  <text x="38" y="278" font-size="11" text-anchor="start" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">[policy tool (Read/Edit/Write/Bash)]</text>
+</g>
+<g class="block" data-type="alt" data-label="fail-open (default)">
+  <rect x="30" y="992" width="468.01899999999995" height="124" rx="0" ry="0" fill="none" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="30" y="992" width="125.23000000000003" height="18" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="36" y="1001" font-size="11" font-weight="600" fill="var(--_text-sec)" dy="3.8499999999999996">alt [fail-open (default)]</text>
+  <line x1="30" y1="1068" x2="498.01899999999995" y2="1068" stroke="var(--_line)" stroke-width="0.75" stroke-dasharray="6 4" />
+  <text x="38" y="1082" font-size="11" text-anchor="start" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">[fail-closed]</text>
+</g>
+<g class="block" data-type="alt" data-label="broker outage / timeout">
+  <rect x="30" y="854" width="620.515" height="262" rx="0" ry="0" fill="none" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="30" y="854" width="155.59000000000003" height="18" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="36" y="863" font-size="11" font-weight="600" fill="var(--_text-sec)" dy="3.8499999999999996">alt [broker outage / timeout]</text>
+</g>
+<line class="lifeline" data-actor="Agent" x1="117.737" y1="70" x2="117.737" y2="1136" stroke="var(--_line)" stroke-width="0.75" stroke-dasharray="6 4" />
+<line class="lifeline" data-actor="Hook" x1="361.74649999999997" y1="70" x2="361.74649999999997" y2="1136" stroke="var(--_line)" stroke-width="0.75" stroke-dasharray="6 4" />
+<line class="lifeline" data-actor="Shared" x1="584.2669999999999" y1="70" x2="584.2669999999999" y2="1136" stroke="var(--_line)" stroke-width="0.75" stroke-dasharray="6 4" />
+<line class="lifeline" data-actor="Daemon" x1="760.4749999999999" y1="70" x2="760.4749999999999" y2="1136" stroke="var(--_line)" stroke-width="0.75" stroke-dasharray="6 4" />
+<line class="lifeline" data-actor="Eval" x1="955.2079999999999" y1="70" x2="955.2079999999999" y2="1136" stroke="var(--_line)" stroke-width="0.75" stroke-dasharray="6 4" />
+<g class="message" data-from="Agent" data-to="Hook" data-label="spawn subprocess
+stdin: PreToolUseHookInput JSON" data-line-style="solid" data-arrow-head="filled" data-self="false">
+  <line x1="117.737" y1="90" x2="361.74649999999997" y2="90" stroke="var(--_line)" stroke-width="1" marker-end="url(#seq-arrow)" />
+  <text x="239.74174999999997" y="80" font-size="11" text-anchor="middle" font-weight="400" fill="var(--_text-muted)"><tspan x="239.74174999999997" dy="-3.3000000000000007">spawn subprocess</tspan><tspan x="239.74174999999997" dy="14.3">stdin: PreToolUseHookInput JSON</tspan></text>
+</g>
+<g class="message" data-from="Hook" data-to="Hook" data-label="classify tool_name" data-line-style="solid" data-arrow-head="filled" data-self="true">
+  <polyline points="361.74649999999997,130 391.74649999999997,130 391.74649999999997,150 361.74649999999997,150" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#seq-arrow)" />
+  <text x="399.74649999999997" y="140" font-size="11" text-anchor="start" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">classify tool_name</text>
+</g>
+<g class="message" data-from="Hook" data-to="Agent" data-label="short-circuit allow / silent" data-line-style="dashed" data-arrow-head="filled" data-self="false">
+  <line x1="361.74649999999997" y1="228" x2="117.737" y2="228" stroke="var(--_line)" stroke-width="1" stroke-dasharray="6 4" marker-end="url(#seq-arrow)" />
+  <text x="239.74174999999997" y="218" font-size="11" text-anchor="middle" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">short-circuit allow / silent</text>
+</g>
+<g class="message" data-from="Hook" data-to="Shared" data-label="translate(json) → Operation" data-line-style="solid" data-arrow-head="filled" data-self="false">
+  <line x1="361.74649999999997" y1="292" x2="584.2669999999999" y2="292" stroke="var(--_line)" stroke-width="1" marker-end="url(#seq-arrow)" />
+  <text x="473.00674999999995" y="282" font-size="11" text-anchor="middle" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">translate(json) → Operation</text>
+</g>
+<g class="message" data-from="Shared" data-to="Daemon" data-label="POST /evaluate { Operation }" data-line-style="solid" data-arrow-head="filled" data-self="false">
+  <line x1="584.2669999999999" y1="332" x2="760.4749999999999" y2="332" stroke="var(--_line)" stroke-width="1" marker-end="url(#seq-arrow)" />
+  <text x="672.3709999999999" y="322" font-size="11" text-anchor="middle" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">POST /evaluate { Operation }</text>
+</g>
+<g class="message" data-from="Daemon" data-to="Eval" data-label="evaluate(op)" data-line-style="solid" data-arrow-head="filled" data-self="false">
+  <line x1="760.4749999999999" y1="372" x2="955.2079999999999" y2="372" stroke="var(--_line)" stroke-width="1" marker-end="url(#seq-arrow)" />
+  <text x="857.8414999999999" y="362" font-size="11" text-anchor="middle" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">evaluate(op)</text>
+</g>
+<g class="message" data-from="Eval" data-to="Daemon" data-label="Verdict { outcome, source, rationale, amendment? }" data-line-style="dashed" data-arrow-head="filled" data-self="false">
+  <line x1="955.2079999999999" y1="412" x2="760.4749999999999" y2="412" stroke="var(--_line)" stroke-width="1" stroke-dasharray="6 4" marker-end="url(#seq-arrow)" />
+  <text x="857.8414999999999" y="402" font-size="11" text-anchor="middle" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">Verdict { outcome, source, rationale, amendment? }</text>
+</g>
+<g class="message" data-from="Daemon" data-to="Shared" data-label="Verdict JSON" data-line-style="dashed" data-arrow-head="filled" data-self="false">
+  <line x1="760.4749999999999" y1="452" x2="584.2669999999999" y2="452" stroke="var(--_line)" stroke-width="1" stroke-dasharray="6 4" marker-end="url(#seq-arrow)" />
+  <text x="672.3709999999999" y="442" font-size="11" text-anchor="middle" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">Verdict JSON</text>
+</g>
+<g class="message" data-from="Shared" data-to="Hook" data-label="Verdict" data-line-style="solid" data-arrow-head="filled" data-self="false">
+  <line x1="584.2669999999999" y1="492" x2="361.74649999999997" y2="492" stroke="var(--_line)" stroke-width="1" marker-end="url(#seq-arrow)" />
+  <text x="473.00674999999995" y="482" font-size="11" text-anchor="middle" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">Verdict</text>
+</g>
+<g class="message" data-from="Hook" data-to="Hook" data-label="format_response per agent shape" data-line-style="solid" data-arrow-head="filled" data-self="true">
+  <polyline points="361.74649999999997,532 391.74649999999997,532 391.74649999999997,552 361.74649999999997,552" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#seq-arrow)" />
+  <text x="399.74649999999997" y="542" font-size="11" text-anchor="start" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">format_response per agent shape</text>
+</g>
+<g class="message" data-from="Hook" data-to="Agent" data-label="stdout: { permissionDecision: allow/deny/ask }" data-line-style="dashed" data-arrow-head="filled" data-self="false">
+  <line x1="361.74649999999997" y1="630" x2="117.737" y2="630" stroke="var(--_line)" stroke-width="1" stroke-dasharray="6 4" marker-end="url(#seq-arrow)" />
+  <text x="239.74174999999997" y="620" font-size="11" text-anchor="middle" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">stdout: { permissionDecision: allow/deny/ask }</text>
+</g>
+<g class="message" data-from="Hook" data-to="Agent" data-label="silent exit 0" data-line-style="dashed" data-arrow-head="filled" data-self="false">
+  <line x1="361.74649999999997" y1="698" x2="117.737" y2="698" stroke="var(--_line)" stroke-width="1" stroke-dasharray="6 4" marker-end="url(#seq-arrow)" />
+  <text x="239.74174999999997" y="688" font-size="11" text-anchor="middle" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">silent exit 0</text>
+</g>
+<g class="message" data-from="Hook" data-to="Agent" data-label="stdout: { permissionDecision: deny }" data-line-style="dashed" data-arrow-head="filled" data-self="false">
+  <line x1="361.74649999999997" y1="762" x2="117.737" y2="762" stroke="var(--_line)" stroke-width="1" stroke-dasharray="6 4" marker-end="url(#seq-arrow)" />
+  <text x="239.74174999999997" y="752" font-size="11" text-anchor="middle" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">stdout: { permissionDecision: deny }</text>
+</g>
+<g class="message" data-from="Hook" data-to="Agent" data-label="stderr + exit 2" data-line-style="dashed" data-arrow-head="filled" data-self="false">
+  <line x1="361.74649999999997" y1="826" x2="117.737" y2="826" stroke="var(--_line)" stroke-width="1" stroke-dasharray="6 4" marker-end="url(#seq-arrow)" />
+  <text x="239.74174999999997" y="816" font-size="11" text-anchor="middle" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">stderr + exit 2</text>
+</g>
+<g class="message" data-from="Shared" data-to="Hook" data-label="Err" data-line-style="dashed" data-arrow-head="filled" data-self="false">
+  <line x1="584.2669999999999" y1="894" x2="361.74649999999997" y2="894" stroke="var(--_line)" stroke-width="1" stroke-dasharray="6 4" marker-end="url(#seq-arrow)" />
+  <text x="473.00674999999995" y="884" font-size="11" text-anchor="middle" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">Err</text>
+</g>
+<g class="message" data-from="Hook" data-to="Hook" data-label="fail_open_on_hook_error?" data-line-style="solid" data-arrow-head="filled" data-self="true">
+  <polyline points="361.74649999999997,934 391.74649999999997,934 391.74649999999997,954 361.74649999999997,954" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#seq-arrow)" />
+  <text x="399.74649999999997" y="944" font-size="11" text-anchor="start" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">fail_open_on_hook_error?</text>
+</g>
+<g class="message" data-from="Hook" data-to="Agent" data-label="allow / silent" data-line-style="dashed" data-arrow-head="filled" data-self="false">
+  <line x1="361.74649999999997" y1="1032" x2="117.737" y2="1032" stroke="var(--_line)" stroke-width="1" stroke-dasharray="6 4" marker-end="url(#seq-arrow)" />
+  <text x="239.74174999999997" y="1022" font-size="11" text-anchor="middle" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">allow / silent</text>
+</g>
+<g class="message" data-from="Hook" data-to="Agent" data-label="deny / stderr+exit 2" data-line-style="dashed" data-arrow-head="filled" data-self="false">
+  <line x1="361.74649999999997" y1="1096" x2="117.737" y2="1096" stroke="var(--_line)" stroke-width="1" stroke-dasharray="6 4" marker-end="url(#seq-arrow)" />
+  <text x="239.74174999999997" y="1086" font-size="11" text-anchor="middle" font-weight="400" fill="var(--_text-muted)" dy="3.8499999999999996">deny / stderr+exit 2</text>
+</g>
+<g class="actor" data-id="Agent" data-label="Claude Code / Codex" data-type="participant">
+  <rect x="40" y="30" width="155.474" height="40" rx="4" ry="4" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="117.737" y="50" font-size="13" text-anchor="middle" font-weight="500" fill="var(--_text)" dy="4.55">Claude Code / Codex</text>
+</g>
+<g class="actor" data-id="Hook" data-label="sandbox-broker hook {claude,codex}" data-type="participant">
+  <rect x="235.474" y="30" width="252.54499999999996" height="40" rx="4" ry="4" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="361.74649999999997" y="50" font-size="13" text-anchor="middle" font-weight="500" fill="var(--_text)" dy="4.55">sandbox-broker hook {claude,codex}</text>
+</g>
+<g class="actor" data-id="Shared" data-label="hook::shared" data-type="participant">
+  <rect x="528.0189999999999" y="30" width="112.49600000000001" height="40" rx="4" ry="4" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="584.2669999999999" y="50" font-size="13" text-anchor="middle" font-weight="500" fill="var(--_text)" dy="4.55">hook::shared</text>
+</g>
+<g class="actor" data-id="Daemon" data-label="broker daemon (UDS)" data-type="participant">
+  <rect x="680.5149999999999" y="30" width="159.91999999999996" height="40" rx="4" ry="4" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="760.4749999999999" y="50" font-size="13" text-anchor="middle" font-weight="500" fill="var(--_text)" dy="4.55">broker daemon (UDS)</text>
+</g>
+<g class="actor" data-id="Eval" data-label="evaluator (7 stages)" data-type="participant">
+  <rect x="880.4349999999998" y="30" width="149.546" height="40" rx="4" ry="4" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="955.2079999999999" y="50" font-size="13" text-anchor="middle" font-weight="500" fill="var(--_text)" dy="4.55">evaluator (7 stages)</text>
+</g>
+</svg>

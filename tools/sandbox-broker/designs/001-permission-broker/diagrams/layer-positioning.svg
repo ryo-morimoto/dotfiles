@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1798.351 451.29999999999995" width="1798.351" height="451.29999999999995" style="--bg:#ffffff;--fg:#1f2328;--line:#d1d9e0;--accent:#0969da;--muted:#59636e;background:var(--bg)">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap');
+  text { font-family: 'Inter', system-ui, sans-serif; }
+  svg {
+    /* Derived from --bg and --fg (overridable via --line, --accent, etc.) */
+    --_text:          var(--fg);
+    --_text-sec:      var(--muted, color-mix(in srgb, var(--fg) 60%, var(--bg)));
+    --_text-muted:    var(--muted, color-mix(in srgb, var(--fg) 40%, var(--bg)));
+    --_text-faint:    color-mix(in srgb, var(--fg) 25%, var(--bg));
+    --_line:          var(--line, color-mix(in srgb, var(--fg) 50%, var(--bg)));
+    --_arrow:         var(--accent, color-mix(in srgb, var(--fg) 85%, var(--bg)));
+    --_node-fill:     var(--surface, color-mix(in srgb, var(--fg) 3%, var(--bg)));
+    --_node-stroke:   var(--border, color-mix(in srgb, var(--fg) 20%, var(--bg)));
+    --_group-fill:    var(--bg);
+    --_group-hdr:     color-mix(in srgb, var(--fg) 5%, var(--bg));
+    --_inner-stroke:  color-mix(in srgb, var(--fg) 12%, var(--bg));
+    --_key-badge:     color-mix(in srgb, var(--fg) 10%, var(--bg));
+  }
+</style>
+<defs>
+  <marker id="arrowhead" markerWidth="8" markerHeight="5" refX="7" refY="2.5" orient="auto">
+    <polygon points="0 0, 8 2.5, 0 5" fill="var(--_arrow)" stroke="var(--_arrow)" stroke-width="0.75" stroke-linejoin="round" />
+  </marker>
+  <marker id="arrowhead-start" markerWidth="8" markerHeight="5" refX="1" refY="2.5" orient="auto-start-reverse">
+    <polygon points="8 0, 0 2.5, 8 5" fill="var(--_arrow)" stroke="var(--_arrow)" stroke-width="0.75" stroke-linejoin="round" />
+  </marker>
+</defs>
+<g class="subgraph" data-id="L3" data-label="L3 — workspace VM / container">
+  <rect x="40" y="119.19999999999999" width="731.364" height="96.9" rx="0" ry="0" fill="var(--_group-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="40" y="119.19999999999999" width="731.364" height="28" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="52" y="133.2" font-size="12" font-weight="600" fill="var(--_text-sec)" dy="4.199999999999999">L3 — workspace VM / container</text>
+</g>
+<g class="subgraph" data-id="L2" data-label="L2 — in-process policy / hook engine">
+  <rect x="799.364" y="58" width="534.703" height="113.80000000000001" rx="0" ry="0" fill="var(--_group-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="799.364" y="58" width="534.703" height="28" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="811.364" y="72" font-size="12" font-weight="600" fill="var(--_text-sec)" dy="4.199999999999999">L2 — in-process policy / hook engine</text>
+</g>
+<g class="subgraph" data-id="L1" data-label="L1 — kernel sandbox primitive">
+  <rect x="1198.4540000000002" y="314.4" width="559.897" height="96.9" rx="0" ry="0" fill="var(--_group-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="1198.4540000000002" y="314.4" width="559.897" height="28" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="1210.4540000000002" y="328.4" font-size="12" font-weight="600" fill="var(--_text-sec)" dy="4.199999999999999">L1 — kernel sandbox primitive</text>
+</g>
+<polyline class="edge" data-from="L3" data-to="Agent" data-style="dotted" data-arrow-start="false" data-arrow-end="true" data-label="agent runs inside" points="405.682,216.1 405.682,296.4 1022.6431666666667,296.4 1022.6431666666667,308.4" fill="none" stroke="var(--_line)" stroke-width="1" stroke-dasharray="4 4" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Agent" data-to="Broker" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="PreToolUse hook" points="1108.0851666666667,308.4 1108.0851666666667,296.4 1409.067,296.4 1409.067,40 1248.5565000000001,40 1248.5565000000001,106.225" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Broker" data-to="Agent" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="verdict
+(Phase 1)" points="1225.3863333333334,160.025 1225.3863333333334,213.8 1145.37525,213.8 1145.37525,284.4 1065.3641666666667,284.4 1065.3641666666667,308.4" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Broker" data-to="Landrun" data-style="dotted" data-arrow-start="false" data-arrow-end="true" data-label="wrap allowed bash
+(Phase 3 opt-in)" points="1271.7266666666667,160.025 1271.7266666666667,213.8 1291.3745,213.8 1291.3745000000001,358.4" fill="none" stroke="var(--_line)" stroke-width="1" stroke-dasharray="4 4" marker-end="url(#arrowhead)" />
+<g class="edge-label" data-from="L3" data-to="Agent" data-label="agent runs inside">
+  <rect x="356.182" y="259.1" width="98.43400000000003" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="405.399" y="274.25" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">agent runs inside</text>
+</g>
+<g class="edge-label" data-from="Agent" data-to="Broker" data-label="PreToolUse hook">
+  <rect x="1358.067" y="235.1" width="101.40400000000002" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="1408.769" y="250.25" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">PreToolUse hook</text>
+</g>
+<g class="edge-label" data-from="Broker" data-to="Agent" data-label="verdict
+(Phase 1)">
+  <rect x="1115.87525" y="220.8" width="58.636" height="44.6" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="1145.19325" y="243.10000000000002" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)"><tspan x="1145.19325" dy="-3.3000000000000007">verdict</tspan><tspan x="1145.19325" dy="14.3">(Phase 1)</tspan></text>
+</g>
+<g class="edge-label" data-from="Broker" data-to="Landrun" data-label="wrap allowed bash
+(Phase 3 opt-in)">
+  <rect x="1238.8745000000004" y="220.8" width="104.37400000000002" height="44.6" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="1291.0615000000003" y="243.10000000000002" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)"><tspan x="1291.0615000000003" dy="-3.3000000000000007">wrap allowed bash</tspan><tspan x="1291.0615000000003" dy="14.3">(Phase 3 opt-in)</tspan></text>
+</g>
+<g class="node" data-id="Agent" data-label="AI coding agent
+(Claude Code / Codex)" data-shape="rectangle">
+  <rect x="979.9221666666667" y="308.4" width="170.88399999999996" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1065.3641666666667" y="335.29999999999995" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="1065.3641666666667" dy="-3.9000000000000012">AI coding agent</tspan><tspan x="1065.3641666666667" dy="16.900000000000002">(Claude Code / Codex)</tspan></text>
+</g>
+<g class="node" data-id="E2B" data-label="E2B (Firecracker)" data-shape="rectangle">
+  <rect x="243.02800000000002" y="163.2" width="150.877" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="318.4665" y="181.64999999999998" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">E2B (Firecracker)</text>
+</g>
+<g class="node" data-id="Daytona" data-label="Daytona (OCI)" data-shape="rectangle">
+  <rect x="421.90500000000003" y="163.2" width="121.237" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="482.5235" y="181.64999999999998" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Daytona (OCI)</text>
+</g>
+<g class="node" data-id="AgentInfra" data-label="agent-infra (Docker)" data-shape="rectangle">
+  <rect x="56" y="163.2" width="159.028" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="135.514" y="181.64999999999998" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">agent-infra (Docker)</text>
+</g>
+<g class="node" data-id="Windmill" data-label="Windmill (NSJail-per-job)" data-shape="rectangle">
+  <rect x="571.142" y="163.2" width="184.22199999999998" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="663.253" y="181.64999999999998" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Windmill (NSJail-per-job)</text>
+</g>
+<g class="node" data-id="Broker" data-label="&lt;b&gt;sandbox-broker&lt;/b&gt;
+(this design)" data-shape="rectangle">
+  <rect x="1179.046" y="106.225" width="139.02100000000002" height="53.800000000000004" rx="0" ry="0" fill="#fff3cd" stroke="#d63384" stroke-width="3px" />
+  <text x="1248.5565000000001" y="133.125" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="1248.5565000000001" dy="-3.9000000000000012"><tspan font-weight="bold">sandbox-broker</tspan></tspan><tspan x="1248.5565000000001" dy="16.900000000000002">(this design)</tspan></text>
+</g>
+<g class="node" data-id="Codex" data-label="Codex hook engine" data-shape="rectangle">
+  <rect x="996.464" y="106.225" width="154.582" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1073.755" y="124.675" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Codex hook engine</text>
+</g>
+<g class="node" data-id="Fence_Hook" data-label="Fence (hook mode)" data-shape="rectangle">
+  <rect x="815.364" y="106.225" width="153.1" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="891.914" y="124.675" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Fence (hook mode)</text>
+</g>
+<g class="node" data-id="Landrun" data-label="landrun (Landlock)" data-shape="rectangle">
+  <rect x="1214.4540000000002" y="358.4" width="153.84099999999998" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1291.3745000000001" y="376.84999999999997" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">landrun (Landlock)</text>
+</g>
+<g class="node" data-id="SRT" data-label="sandbox-runtime / srt" data-shape="rectangle">
+  <rect x="1396.295" y="358.4" width="164.95600000000002" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1478.7730000000001" y="376.84999999999997" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">sandbox-runtime / srt</text>
+</g>
+<g class="node" data-id="Fence_Wrap" data-label="Fence (wrap mode)" data-shape="rectangle">
+  <rect x="1589.2510000000002" y="358.4" width="153.1" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1665.8010000000002" y="376.84999999999997" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Fence (wrap mode)</text>
+</g>
+</svg>

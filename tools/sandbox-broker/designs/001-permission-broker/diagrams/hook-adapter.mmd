@@ -1,0 +1,42 @@
+sequenceDiagram
+    autonumber
+    participant Agent as "Claude Code / Codex"
+    participant Hook as "sandbox-broker hook {claude,codex}"
+    participant Shared as "hook::shared"
+    participant Daemon as "broker daemon (UDS)"
+    participant Eval as "evaluator (7 stages)"
+
+    Agent->>Hook: spawn subprocess<br/>stdin: PreToolUseHookInput JSON
+    Hook->>Hook: classify tool_name
+    alt non-policy tool (Glob/Grep/Web/MCP)
+        Hook-->>Agent: short-circuit allow / silent
+    else policy tool (Read/Edit/Write/Bash)
+        Hook->>Shared: translate(json) → Operation
+        Shared->>Daemon: POST /evaluate { Operation }
+        Daemon->>Eval: evaluate(op)
+        Eval-->>Daemon: Verdict { outcome, source, rationale, amendment? }
+        Daemon-->>Shared: Verdict JSON
+        Shared->>Hook: Verdict
+        Hook->>Hook: format_response per agent shape
+        alt Claude
+            Hook-->>Agent: stdout: { permissionDecision: allow/deny/ask }
+        else Codex
+            alt Allow
+                Hook-->>Agent: silent exit 0
+            else Deny
+                Hook-->>Agent: stdout: { permissionDecision: deny }
+            else Escalate
+                Hook-->>Agent: stderr + exit 2
+            end
+        end
+    end
+
+    alt broker outage / timeout
+        Shared-->>Hook: Err
+        Hook->>Hook: fail_open_on_hook_error?
+        alt fail-open (default)
+            Hook-->>Agent: allow / silent
+        else fail-closed
+            Hook-->>Agent: deny / stderr+exit 2
+        end
+    end
