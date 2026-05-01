@@ -235,6 +235,7 @@ in
         ghq
         gh
         git-wt
+        worktrunk
         lazygit
         just
 
@@ -309,7 +310,14 @@ in
         sandbox-broker
       ]);
 
-    file = { };
+    file = {
+      ".agent-browser/config.json".text = builtins.toJSON {
+        executablePath = "/etc/profiles/per-user/ryo-morimoto/bin/chromium";
+      };
+      ".config/worktrunk/config.toml".text = ''
+        worktree-path = "{{ repo_path }}/../{{ repo }}-wt/{{ branch | sanitize }}"
+      '';
+    };
   };
 
   programs = {
@@ -399,8 +407,6 @@ in
             gco = "git checkout";
             gcb = "git checkout -b";
             lg = "lazygit";
-            wt = "git wt";
-            wtd = "git wt -d";
           };
           modern = {
             ls = "eza --icons";
@@ -447,6 +453,9 @@ in
 
         # Pencil MCP server path (discovered from AppImage cache)
         [[ -r "$HOME/.cache/pencil-mcp-path" ]] && export PENCIL_MCP_PATH="$(cat "$HOME/.cache/pencil-mcp-path")"
+
+        # Worktrunk shell integration for directory switching.
+        eval "$(wt config shell init zsh)"
 
         # Shell options
         setopt AUTO_CD              # cd by typing directory name
