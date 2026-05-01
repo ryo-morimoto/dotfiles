@@ -9,7 +9,8 @@
 }:
 
 let
-  apmDsl = import ../../packages/apm/dsl.nix { inherit lib; };
+  apm = import ../../packages/apm.nix { inherit lib; };
+  apmDsl = apm.dsl;
   apmLock = import ./apm-lock.nix;
   compoundEngineering = import ./compound-engineering.nix {
     inherit
@@ -249,7 +250,7 @@ let
 in
 {
   imports = [
-    ../../packages/apm/home.nix
+    apm.homeManagerModule
     ./claude-code.nix
     ./codex.nix
     ./skills.nix
