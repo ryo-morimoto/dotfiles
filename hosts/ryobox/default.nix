@@ -9,6 +9,7 @@ let
   homeDir = "/home/${username}";
   dotfilesDir = "${homeDir}/ghq/github.com/${username}/dotfiles";
   agentDefaults = import ../../home/agents/default.nix {
+    inherit lib;
     config = {
       home.homeDirectory = homeDir;
     };

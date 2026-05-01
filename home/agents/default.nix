@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   claude-plugins-official ? null,
   kuu-marketplace ? null,
   callstack-agent-skills ? null,
@@ -8,6 +9,14 @@
 }:
 
 let
+  apmDsl = import ../../packages/apm/dsl.nix { inherit lib; };
+  apmLock = import ./apm-lock.nix;
+  compoundEngineering = import ./compound-engineering.nix {
+    inherit
+      apmDsl
+      apmLock
+      ;
+  };
   homeDir = config.home.homeDirectory;
   ghqDir = "${homeDir}/ghq";
   trustedReadPaths = [
@@ -220,9 +229,27 @@ let
       event = "PostToolUse";
     };
   };
+  sharedApm = {
+    enable = true;
+    targets = [
+      "claude"
+      "codex"
+    ];
+    manifest = {
+      name = "ryo-agent-packages";
+      version = "1.0.0";
+      dependencies.apm = compoundEngineering.dependencies ++ [
+        (apmDsl.mkPinnedDependency {
+          lock = apmLock;
+          package = "superpowers";
+        })
+      ];
+    };
+  };
 in
 {
   imports = [
+    ./apm.nix
     ./claude-code.nix
     ./codex.nix
     ./skills.nix
@@ -233,6 +260,7 @@ in
       dangerousBashPatterns
       mcpServers
       secretPathRules
+      sharedApm
       sharedClaudeCode
       sharedClaudeHookSources
       sharedAgentPolicy

@@ -141,6 +141,7 @@
     }:
     let
       localOverlay = final: _prev: {
+        apm = final.callPackage ./packages/apm.nix { };
         cursor-agent = final.callPackage ./packages/cursor-agent.nix { };
         zen-browser = zen-browser.packages.${final.stdenv.hostPlatform.system}.default;
         seiren-mcp = seiren.packages.${final.stdenv.hostPlatform.system}.default;
