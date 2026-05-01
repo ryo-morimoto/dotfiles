@@ -249,7 +249,7 @@ let
 in
 {
   imports = [
-    ./apm.nix
+    ../../packages/apm/home.nix
     ./claude-code.nix
     ./codex.nix
     ./skills.nix
