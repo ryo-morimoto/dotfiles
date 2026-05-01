@@ -112,13 +112,17 @@
 - [エージェント共有定義]: multi-agent に配布する shared skill/plugin 定義は `home/agents/default.nix` に集約し、`home/agents/<agent>.nix` はそれを消費する構成を優先する
 - [エージェント設定変換]: shared policy data は `home/agents/default.nix` に集約し、Claude/Codex/OpenCode など各ツール固有フォーマットへの変換は消費側 module/host で行う
 - [エージェントMCP定義]: MCP server 定義は `home/agents/default.nix` に置き、`policy.nix` には混ぜない
+- [エージェントSkill運用]: Matt Pocock の skill は `productivity` を `enableAll` で追従し、`engineering` は `to-issues` / `to-prd` / `triage` を除く明示リストで管理する
 - [APM運用]: APM CLI は flake package として pin し、APM manifest は Home Manager で `~/.apm/apm.yml` に宣言配置し、Claude/Codex への導入は activation で `apm install -g` を実行する
 - [APM依存管理]: APM の skill / agent 選択内容は `home/agents/` で管理し、APM package / DSL / Home Manager module factory は `packages/apm.nix` に集約する
+- [AI CLI package運用]: `numtide/llm-agents.nix` を使うときは overlay 全体ではなく、必要な package だけを選択参照する
+- [Skill改善運用]: skill 作成・改善の既定セットは `skill-creator` / `empirical-prompt-tuning` / `retrospective-codify` とし、作成後の検証改善と試行錯誤の知見化まで扱う
 - [Home Manager module構成]: 関連設定は一箇所で確認できる粒度で `home/<domain>/default.nix` に集約し、`home/default.nix` は import の集約に寄せる。過剰な submodule 分割は避ける
 - [tmux構成]: tmux 設定は `home/tmux/default.nix` の Home Manager module として管理し、status・binding・plugin 設定を同ファイル内で見通し良く保つ
 - [git worktree配置]: repo 内の `worktrees/` は持たず、各 worktree は `{project-parent}/{project}-wt/<name>` に配置して repo 隣接で管理する
 - [デスクトップ構成]: Niri + DankMaterialShell を継続し、置き換え済みの旧 desktop stack は repo に残さない
 - [ローカルWebツール運用]: `agent-browser` はブラウザ操作・観測、`portless` は stable な local URL と worktree 分離に使い分ける
+- [portless運用]: root CA の信頼は `portless trust` ではなく NixOS の `security.pki.certificateFiles` で宣言管理し、秘密鍵は repo に入れない
 - [Codex運用]: alias 追加より skill 化を優先し、既定挙動は config.toml に寄せる（shell alias と config の二重管理を避ける）。`~/.codex/config.toml` は Codex 自身が更新できる mutable file を維持し、Home Manager では activation でデフォルトを書き込む。coding agent の隔離は workspace 設計側で改善する前提で、Codex は `approval_policy = "never"` + `sandbox_mode = "danger-full-access"` を標準にし、Codex 側の sandbox-broker hook / prefix approval rule / `sandbox_workspace_write` は既定では注入しない
 - [Claude Code承認運用]: coding agent の隔離は workspace 設計側で改善する前提で、Claude Code は `permissions.defaultMode = "bypassPermissions"` + `sandbox.enabled = false` を標準にし、sandbox-broker hook は既定では注入しない。CLI 起動時の `--dangerously-skip-permissions` は wrapper ではなく shell alias で付与する
 - [Claude Codeモデル運用]: Claude Code の既定モデルは公式 docs の Claude API alias に合わせ、Opus 4.7 は `claude-opus-4-7` を使う
