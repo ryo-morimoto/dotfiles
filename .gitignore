@@ -52,3 +52,7 @@ config/niri/config.kdl
 
 # DMS auto-generated config fragments
 config/niri/dms/
+
+
+# APM dependencies
+apm_modules/

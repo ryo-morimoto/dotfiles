@@ -112,7 +112,7 @@
 - [エージェント共有定義]: multi-agent に配布する shared skill/plugin 定義は `home/agents/default.nix` に集約し、`home/agents/<agent>.nix` はそれを消費する構成を優先する
 - [エージェント設定変換]: shared policy data は `home/agents/default.nix` に集約し、Claude/Codex/OpenCode など各ツール固有フォーマットへの変換は消費側 module/host で行う
 - [エージェントMCP定義]: MCP server 定義は `home/agents/default.nix` に置き、`policy.nix` には混ぜない
-- [エージェントSkill運用]: Matt Pocock の skill は `productivity` を `enableAll` で追従し、`engineering` は `to-issues` / `to-prd` / `triage` を除く明示リストで管理する
+- [エージェントSkill運用]: Matt Pocock の skill は APM で配布し、`productivity` を全件追従、`engineering` は `to-issues` / `to-prd` / `triage` を除く明示リストで管理する
 - [APM運用]: APM CLI は flake package として pin し、APM manifest は Home Manager で `~/.apm/apm.yml` に宣言配置し、Claude/Codex への導入は activation で `apm install -g` を実行する
 - [APM依存管理]: APM の skill / agent 選択内容は `home/agents/` で管理し、APM package / DSL / Home Manager module factory は `packages/apm.nix` に集約する
 - [AI CLI package運用]: `numtide/llm-agents.nix` を使うときは overlay 全体ではなく、必要な package だけを選択参照する
