@@ -14,7 +14,6 @@ let
     "ce-adversarial-reviewer"
     "ce-agent-native-reviewer"
     "ce-api-contract-reviewer"
-    "ce-cli-readiness-reviewer"
     "ce-correctness-reviewer"
     "ce-data-migrations-reviewer"
     "ce-deployment-verification-agent"

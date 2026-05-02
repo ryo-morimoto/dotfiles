@@ -64,13 +64,8 @@ let
     "commit-commands"
     "feature-dev"
     "pr-review-toolkit"
-    "typescript-lsp"
-    "pyright-lsp"
-    "lua-lsp"
     "code-simplifier"
     "claude-md-management"
-    "skill-creator"
-    "clangd-lsp"
   ];
 
   kuuPlugins = [
@@ -84,12 +79,43 @@ let
     (map (name: mkDependency "claude-plugins-official" "plugins/${name}") claudeOfficialPlugins)
     ++ (map (name: mkDependency "kuu-marketplace" name) kuuPlugins)
     ++ [
-      (mkPackage "coderabbit-claude-plugin")
-      (mkPackage "astronomer-agents")
       (mkPackage "callstack-agent-skills")
       (mkDependency "expo-plugins" "plugins/expo")
-      (toString ../../config/knowledge/know)
     ];
+
+  astronomerSkills = [
+    "airflow"
+    "airflow-hitl"
+    "airflow-plugins"
+    "analyzing-data"
+    "annotating-task-lineage"
+    "authoring-dags"
+    "blueprint"
+    "checking-freshness"
+    "cosmos-dbt-core"
+    "cosmos-dbt-fusion"
+    "creating-openlineage-extractors"
+    "dag-factory"
+    "debugging-dags"
+    "deploying-airflow"
+    "managing-astro-local-env"
+    "migrating-ai-sdk-to-common-ai"
+    "migrating-airflow-2-to-3"
+    "profiling-tables"
+    "setting-up-astro-project"
+    "testing-dags"
+    "tracing-downstream-lineage"
+    "tracing-upstream-lineage"
+    "warehouse-init"
+  ];
+
+  astronomerSkillDependencies = apmDsl.mkPrimitiveDependencies {
+    lock = apmLock;
+    package = "astronomer-agents";
+    selectedSkills = astronomerSkills;
+    skills = mkLeaves astronomerSkills;
+    skillPath = name: "skills/${name}";
+  };
 
   mattpocockProductivitySkills = [
     "caveman"
@@ -122,6 +148,31 @@ let
       skillPath = name: "skills/engineering/${name}";
     });
 
+  superpowersSkills = [
+    "brainstorming"
+    "dispatching-parallel-agents"
+    "executing-plans"
+    "finishing-a-development-branch"
+    "receiving-code-review"
+    "requesting-code-review"
+    "subagent-driven-development"
+    "systematic-debugging"
+    "test-driven-development"
+    "using-git-worktrees"
+    "using-superpowers"
+    "verification-before-completion"
+    "writing-plans"
+    "writing-skills"
+  ];
+
+  superpowersSkillDependencies = apmDsl.mkPrimitiveDependencies {
+    lock = apmLock;
+    package = "superpowers";
+    selectedSkills = superpowersSkills;
+    skills = mkLeaves superpowersSkills;
+    skillPath = name: "skills/${name}";
+  };
+
   apmTargets = [
     "claude"
     "codex"
@@ -137,10 +188,9 @@ let
       dependencies.apm =
         compoundEngineering.dependencies
         ++ mattpocockSkillDependencies
-        ++ claudePluginDependencies
-        ++ [
-          (mkPackage "superpowers")
-        ];
+        ++ astronomerSkillDependencies
+        ++ superpowersSkillDependencies
+        ++ claudePluginDependencies;
     };
   };
 in

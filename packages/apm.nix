@@ -174,6 +174,7 @@ let
       yaml = pkgs.formats.yaml { };
       apmManifestFile = yaml.generate "apm.yml" sharedApm.manifest;
       targetArg = lib.concatStringsSep "," sharedApm.targets;
+      updateArg = lib.optionalString (sharedApm.update or true) " --update";
     in
     {
       home = {
@@ -200,7 +201,7 @@ let
               }:$PATH"
 
               cd "$HOME/.apm"
-              ${pkgs.apm}/bin/apm install -g --target ${lib.escapeShellArg targetArg} --only=apm
+              ${pkgs.apm}/bin/apm install -g --target ${lib.escapeShellArg targetArg} --only=apm${updateArg}
             ''
         );
       };
