@@ -46,6 +46,22 @@
         "type": "github"
       }
     },
+    "astronomer-agents": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1777661189,
+        "narHash": "sha256-9dm4JRHhKfsQkY97B4vF4dDNuMPz7Fue8hpEXMnD4D4=",
+        "owner": "astronomer",
+        "repo": "agents",
+        "rev": "7cbaab4d43b6644c36d5ef335a759acf56f8ab1e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "astronomer",
+        "repo": "agents",
+        "type": "github"
+      }
+    },
     "banto": {
       "inputs": {
         "nixpkgs": [
@@ -98,6 +114,22 @@
         "type": "github"
       }
     },
+    "coderabbit-claude-plugin": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1776058097,
+        "narHash": "sha256-rfLJczlF+qB/qdJb7OhWmzhVmVdun58gsvw6Be6Pe/Q=",
+        "owner": "coderabbitai",
+        "repo": "claude-plugin",
+        "rev": "2d194b823b8466714992186e7d182acbbc6735f0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "coderabbitai",
+        "repo": "claude-plugin",
+        "type": "github"
+      }
+    },
     "codex-cli-nix": {
       "inputs": {
         "flake-utils": "flake-utils",
@@ -116,6 +148,22 @@
       "original": {
         "owner": "sadjow",
         "repo": "codex-cli-nix",
+        "type": "github"
+      }
+    },
+    "compound-engineering-plugin": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1777677492,
+        "narHash": "sha256-03VEWIjh7dAk59070h3ZP5Oev33jgnKOXUa4RyealqU=",
+        "owner": "EveryInc",
+        "repo": "compound-engineering-plugin",
+        "rev": "74624f8e7ffc74ba237a1fdd0c4efc7a4e0ea349",
+        "type": "github"
+      },
+      "original": {
+        "owner": "EveryInc",
+        "repo": "compound-engineering-plugin",
         "type": "github"
       }
     },
@@ -605,10 +653,13 @@
       "inputs": {
         "agenix": "agenix",
         "agent-skills-nix": "agent-skills-nix",
+        "astronomer-agents": "astronomer-agents",
         "banto": "banto",
         "callstack-agent-skills": "callstack-agent-skills",
         "claude-plugins-official": "claude-plugins-official",
+        "coderabbit-claude-plugin": "coderabbit-claude-plugin",
         "codex-cli-nix": "codex-cli-nix",
+        "compound-engineering-plugin": "compound-engineering-plugin",
         "context7-skills": "context7-skills",
         "dms": "dms",
         "evolutionary-naming": "evolutionary-naming",
@@ -627,6 +678,7 @@
         "seiren": "seiren",
         "soulforge": "soulforge",
         "starlintLinuxBin": "starlintLinuxBin",
+        "superpowers": "superpowers",
         "voxtype": "voxtype",
         "zen-browser": "zen-browser"
       }
@@ -701,6 +753,22 @@
       "original": {
         "type": "tarball",
         "url": "https://github.com/mizchi/starlint/releases/latest/download/starlint-linux-x64.tar.gz"
+      }
+    },
+    "superpowers": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1777583321,
+        "narHash": "sha256-8/M/S0BUYurZkFqe6LemVtBQnPSxBNfy1C7Q6f92hjE=",
+        "owner": "obra",
+        "repo": "superpowers",
+        "rev": "e7a2d16476bf042e9add4699c9d018a90f86e4a6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "obra",
+        "repo": "superpowers",
+        "type": "github"
       }
     },
     "systems": {

@@ -1,23 +1,9 @@
 {
   config,
-  lib,
-  claude-plugins-official ? null,
-  kuu-marketplace ? null,
-  callstack-agent-skills ? null,
-  expo-plugins ? null,
   ...
 }:
 
 let
-  apm = import ../../packages/apm.nix { inherit lib; };
-  apmDsl = apm.dsl;
-  apmLock = import ./apm-lock.nix;
-  compoundEngineering = import ./compound-engineering.nix {
-    inherit
-      apmDsl
-      apmLock
-      ;
-  };
   homeDir = config.home.homeDirectory;
   ghqDir = "${homeDir}/ghq";
   trustedReadPaths = [
@@ -175,54 +161,6 @@ let
       ];
     };
   };
-  sharedClaudeCode = {
-    enabledPlugins = {
-      "commit-commands@claude-plugins-official" = true;
-      "feature-dev@claude-plugins-official" = true;
-      "pr-review-toolkit@claude-plugins-official" = true;
-      "typescript-lsp@claude-plugins-official" = true;
-      "pyright-lsp@claude-plugins-official" = true;
-      "lua-lsp@claude-plugins-official" = true;
-      "code-simplifier@claude-plugins-official" = true;
-      "deslop@kuu-marketplace" = true;
-      "dig@kuu-marketplace" = true;
-      "fix-ci@kuu-marketplace" = true;
-      "decomposition@kuu-marketplace" = true;
-      "claude-md-management@claude-plugins-official" = true;
-      "skill-creator@claude-plugins-official" = true;
-      "coderabbit@claude-plugins-official" = true;
-      "data@claude-plugins-official" = true;
-      "clangd-lsp@claude-plugins-official" = true;
-      "know@know" = true;
-      "react-native-best-practices@callstack-agent-skills" = true;
-      "github@callstack-agent-skills" = true;
-      "github-actions@callstack-agent-skills" = true;
-      "upgrading-react-native@callstack-agent-skills" = true;
-      "react-native-brownfield-migration@callstack-agent-skills" = true;
-      "expo@expo-plugins" = true;
-      "superpowers@claude-plugins-official" = false;
-      "frontend-design@claude-plugins-official" = false;
-      "code-review@claude-plugins-official" = false;
-      "security-guidance@claude-plugins-official" = false;
-      "semgrep@claude-plugins-official" = false;
-      "ralph-loop@claude-plugins-official" = false;
-      "agent-sdk-dev@claude-plugins-official" = false;
-      "gopls-lsp@claude-plugins-official" = false;
-      "rust-analyzer-lsp@claude-plugins-official" = false;
-      "plugin-dev@claude-plugins-official" = false;
-      "autofix-bot@claude-plugins-official" = false;
-    };
-    plugins = [ ];
-    marketplaces = {
-      inherit
-        claude-plugins-official
-        kuu-marketplace
-        callstack-agent-skills
-        expo-plugins
-        ;
-      know = ../../config/knowledge/know;
-    };
-  };
   sharedClaudeHookSources = {
     linear-response-strip = {
       source = ./hooks/linear-response-strip.sh;
@@ -230,30 +168,12 @@ let
       event = "PostToolUse";
     };
   };
-  sharedApm = {
-    enable = true;
-    targets = [
-      "claude"
-      "codex"
-    ];
-    manifest = {
-      name = "ryo-agent-packages";
-      version = "1.0.0";
-      dependencies.apm = compoundEngineering.dependencies ++ [
-        (apmDsl.mkPinnedDependency {
-          lock = apmLock;
-          package = "superpowers";
-        })
-      ];
-    };
-  };
 in
 {
   imports = [
-    apm.homeManagerModule
     ./claude-code.nix
     ./codex.nix
-    ./skills.nix
+    ./apm.nix
   ];
 
   _module.args = {
@@ -261,8 +181,6 @@ in
       dangerousBashPatterns
       mcpServers
       secretPathRules
-      sharedApm
-      sharedClaudeCode
       sharedClaudeHookSources
       sharedAgentPolicy
       trustedHttpDomains

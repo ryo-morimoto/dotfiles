@@ -71,6 +71,18 @@
       url = "github:anthropics/claude-plugins-official";
       flake = false;
     };
+    astronomer-agents = {
+      url = "github:astronomer/agents";
+      flake = false;
+    };
+    compound-engineering-plugin = {
+      url = "github:EveryInc/compound-engineering-plugin";
+      flake = false;
+    };
+    coderabbit-claude-plugin = {
+      url = "github:coderabbitai/claude-plugin";
+      flake = false;
+    };
     codex-cli-nix = {
       url = "github:sadjow/codex-cli-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -99,6 +111,10 @@
       url = "github:mattpocock/skills";
       flake = false;
     };
+    superpowers = {
+      url = "github:obra/superpowers";
+      flake = false;
+    };
     mizchi-skills = {
       url = "github:mizchi/skills";
       flake = false;
@@ -110,7 +126,7 @@
   };
 
   outputs =
-    {
+    inputs@{
       nixpkgs,
       home-manager,
       dms,
@@ -211,6 +227,7 @@
                   mizchi-skills
                   mgechev-skills
                   ;
+                inherit inputs;
               };
             };
           }

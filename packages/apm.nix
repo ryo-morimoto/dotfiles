@@ -36,6 +36,39 @@ let
         in
         "${pin.source}${suffix}#${pin.rev}";
 
+      getInput =
+        inputs: input:
+        if builtins.hasAttr input inputs then inputs.${input} else fail "missing flake input '${input}'";
+
+      getInputRev =
+        inputName: input:
+        if builtins.hasAttr "rev" input then
+          input.rev
+        else
+          fail "flake input '${inputName}' does not expose a rev";
+
+      mkInputPin =
+        inputs: package: spec:
+        let
+          normalizedSpec = if builtins.isString spec then { source = spec; } else spec;
+          inputName = normalizedSpec.input or package;
+          input = getInput inputs inputName;
+          source = normalizedSpec.source or (fail "package '${package}' must declare an APM source");
+          sourcePath = normalizedSpec.path or null;
+          sourceSuffix = if sourcePath == null then "" else "/${sourcePath}";
+        in
+        {
+          source = "${source}${sourceSuffix}";
+          rev = normalizedSpec.rev or (getInputRev inputName input);
+        };
+
+      mkInputLock =
+        {
+          inputs,
+          packages,
+        }:
+        lib.mapAttrs (mkInputPin inputs) packages;
+
       normalizeRequires =
         node:
         let
@@ -64,7 +97,10 @@ let
           fail "agents must be dependency leaves, but these declare requires: ${formatList invalid}";
     in
     {
-      inherit mkPinnedDependency;
+      inherit
+        mkInputLock
+        mkPinnedDependency
+        ;
 
       mkPrimitiveDependencies =
         {
