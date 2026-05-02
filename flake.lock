@@ -49,11 +49,11 @@
     "astronomer-agents": {
       "flake": false,
       "locked": {
-        "lastModified": 1777661189,
-        "narHash": "sha256-9dm4JRHhKfsQkY97B4vF4dDNuMPz7Fue8hpEXMnD4D4=",
+        "lastModified": 1778267379,
+        "narHash": "sha256-yyOgFRGj/KAke4IzYzr8JDd/56UslYgepx7sDSSuKJ8=",
         "owner": "astronomer",
         "repo": "agents",
-        "rev": "7cbaab4d43b6644c36d5ef335a759acf56f8ab1e",
+        "rev": "535a040ca9e27aaed6da13f0f959625fb3294820",
         "type": "github"
       },
       "original": {
@@ -101,11 +101,11 @@
     "claude-plugins-official": {
       "flake": false,
       "locked": {
-        "lastModified": 1778521056,
-        "narHash": "sha256-2XTMLIMnOzzvQlC0O+Ude2JOG8fQp2iBLyFpbcArXCI=",
+        "lastModified": 1778530473,
+        "narHash": "sha256-xmcDiV66PH3l33OBReazrqmialAReco/SbmADoRHxxI=",
         "owner": "anthropics",
         "repo": "claude-plugins-official",
-        "rev": "6196a61bdeece7b9889ecda1e45bd7085788ae75",
+        "rev": "45896c8f2fe68e68ca2a8e3554d4441f48475431",
         "type": "github"
       },
       "original": {
@@ -154,11 +154,11 @@
     "compound-engineering-plugin": {
       "flake": false,
       "locked": {
-        "lastModified": 1777677492,
-        "narHash": "sha256-03VEWIjh7dAk59070h3ZP5Oev33jgnKOXUa4RyealqU=",
+        "lastModified": 1778526592,
+        "narHash": "sha256-zxlRT2BxNtr4ooXRkavc75fI1mMsMK1+G+cxwBoQX48=",
         "owner": "EveryInc",
         "repo": "compound-engineering-plugin",
-        "rev": "74624f8e7ffc74ba237a1fdd0c4efc7a4e0ea349",
+        "rev": "60c1c938d5bbf70abd0af08af3d2c9ede0d1b89d",
         "type": "github"
       },
       "original": {
@@ -170,11 +170,11 @@
     "context7-skills": {
       "flake": false,
       "locked": {
-        "lastModified": 1778521836,
-        "narHash": "sha256-VjHJvxCnUXCt95rAfKN0TTXfvSbkq4uPa/W7X8sIr2w=",
+        "lastModified": 1778529059,
+        "narHash": "sha256-ozUFnUFyxQ8M0W2e2Pr+uXrinI4LJoeSEQi3ZMPwPc4=",
         "owner": "upstash",
         "repo": "context7",
-        "rev": "187287c690a436f94c8e214c4206134d0e6c13be",
+        "rev": "13f3ef03d9956c2a43b3db43d46341f237732ca2",
         "type": "github"
       },
       "original": {
@@ -362,11 +362,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1778503501,
-        "narHash": "sha256-08L/X4/do7nET4rzidJ76eV/1r+mB7DchVpdPypsghc=",
+        "lastModified": 1778535464,
+        "narHash": "sha256-kkUQYSv70wynJ/DfnGals6r98I6bK3CVNVTN1zbAd7Y=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "85ba629c79449badf4338117c27f0ee92b4b9f1a",
+        "rev": "b659c7ffd40fc9e3bb60d420c79c67e769b9f4ab",
         "type": "github"
       },
       "original": {
@@ -758,11 +758,11 @@
     "superpowers": {
       "flake": false,
       "locked": {
-        "lastModified": 1777583321,
-        "narHash": "sha256-8/M/S0BUYurZkFqe6LemVtBQnPSxBNfy1C7Q6f92hjE=",
+        "lastModified": 1777932301,
+        "narHash": "sha256-3E3rO6hR87JUfS3XV1Eaoz6SDWOftleWvN9UPNFEMjw=",
         "owner": "obra",
         "repo": "superpowers",
-        "rev": "e7a2d16476bf042e9add4699c9d018a90f86e4a6",
+        "rev": "f2cbfbefebbfef77321e4c9abc9e949826bea9d7",
         "type": "github"
       },
       "original": {
@@ -860,11 +860,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1778510388,
-        "narHash": "sha256-Rtzgsq0PQSBxP6tMprfYMDeXtr21iMtZFZMY/UJIIAc=",
+        "lastModified": 1778537742,
+        "narHash": "sha256-FoMkVuux0ECJCWxEVZ8PLN31ADYv+v0wBjWqmSNr2DU=",
         "owner": "peteonrails",
         "repo": "voxtype",
-        "rev": "a06f82dd578eb82aeb37c1feac81f742d4bd4254",
+        "rev": "b3dd6a4e45dde2d9288829f95d15583060d8c229",
         "type": "github"
       },
       "original": {
