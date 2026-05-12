@@ -89,7 +89,7 @@ let
     ce-compound = {
       requires.skills = [
         "ce-compound-refresh"
-        "ce-session-inventory"
+        "ce-sessions"
       ];
       requires.agents = compoundAgents;
     };
@@ -116,7 +116,7 @@ let
 
     ce-proof = { };
 
-    ce-session-inventory = {
+    ce-sessions = {
       requires.agents = [
         "ce-session-historian"
       ];
