@@ -11,8 +11,6 @@ let
   apmLock = apmDsl.mkInputLock {
     inherit inputs;
     packages = {
-      astronomer-agents = "astronomer/agents";
-      callstack-agent-skills = "callstackincubator/agent-skills";
       claude-plugins-official = "anthropics/claude-plugins-official";
       coderabbit-claude-plugin = "coderabbitai/claude-plugin";
       compound-engineering = {
@@ -20,7 +18,6 @@ let
         source = "EveryInc/compound-engineering-plugin";
         path = "plugins/compound-engineering";
       };
-      expo-plugins = "expo/skills";
       kuu-marketplace = {
         input = "kuu-marketplace";
         source = "fumiya-kume/claude-code";
@@ -54,11 +51,6 @@ let
         path
         ;
     };
-  mkPackage =
-    package:
-    apmDsl.mkPinnedDependency {
-      inherit lock package;
-    };
 
   claudeOfficialPlugins = [
     "commit-commands"
@@ -77,45 +69,7 @@ let
 
   claudePluginDependencies =
     (map (name: mkDependency "claude-plugins-official" "plugins/${name}") claudeOfficialPlugins)
-    ++ (map (name: mkDependency "kuu-marketplace" name) kuuPlugins)
-    ++ [
-      (mkPackage "callstack-agent-skills")
-      (mkDependency "expo-plugins" "plugins/expo")
-    ];
-
-  astronomerSkills = [
-    "airflow"
-    "airflow-hitl"
-    "airflow-plugins"
-    "analyzing-data"
-    "annotating-task-lineage"
-    "authoring-dags"
-    "blueprint"
-    "checking-freshness"
-    "cosmos-dbt-core"
-    "cosmos-dbt-fusion"
-    "creating-openlineage-extractors"
-    "dag-factory"
-    "debugging-dags"
-    "deploying-airflow"
-    "managing-astro-local-env"
-    "migrating-ai-sdk-to-common-ai"
-    "migrating-airflow-2-to-3"
-    "profiling-tables"
-    "setting-up-astro-project"
-    "testing-dags"
-    "tracing-downstream-lineage"
-    "tracing-upstream-lineage"
-    "warehouse-init"
-  ];
-
-  astronomerSkillDependencies = apmDsl.mkPrimitiveDependencies {
-    lock = apmLock;
-    package = "astronomer-agents";
-    selectedSkills = astronomerSkills;
-    skills = mkLeaves astronomerSkills;
-    skillPath = name: "skills/${name}";
-  };
+    ++ (map (name: mkDependency "kuu-marketplace" name) kuuPlugins);
 
   mattpocockProductivitySkills = [
     "caveman"
@@ -188,7 +142,6 @@ let
       dependencies.apm =
         compoundEngineering.dependencies
         ++ mattpocockSkillDependencies
-        ++ astronomerSkillDependencies
         ++ superpowersSkillDependencies
         ++ claudePluginDependencies;
     };

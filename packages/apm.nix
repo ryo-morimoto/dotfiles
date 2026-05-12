@@ -202,6 +202,7 @@ let
 
               cd "$HOME/.apm"
               ${pkgs.apm}/bin/apm install -g --target ${lib.escapeShellArg targetArg} --only=apm${updateArg}
+              ${pkgs.apm}/bin/apm prune
             ''
         );
       };

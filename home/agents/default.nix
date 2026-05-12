@@ -16,7 +16,6 @@ let
   trustedHttpDomains = [
     "https://mcp.context7.com/*"
     "https://secretary.ryo-morimoto-dev.workers.dev/*"
-    "https://mcp.linear.app/*"
   ];
   safeBashPatterns = [
     "git status*"
@@ -144,30 +143,8 @@ let
         "codex"
       ];
     };
-    linear-work = {
-      transport = "http";
-      url = "https://mcp.linear.app/mcp";
-      clients = [
-        "claude"
-        "codex"
-      ];
-    };
-    linear-personal = {
-      transport = "http";
-      url = "https://mcp.linear.app/mcp";
-      clients = [
-        "claude"
-        "codex"
-      ];
-    };
   };
-  sharedClaudeHookSources = {
-    linear-response-strip = {
-      source = ./hooks/linear-response-strip.sh;
-      matcher = "mcp__linear-(personal|work)__(save_issue|save_project)";
-      event = "PostToolUse";
-    };
-  };
+  sharedClaudeHookSources = { };
 in
 {
   imports = [

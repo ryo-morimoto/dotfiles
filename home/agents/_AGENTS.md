@@ -80,13 +80,6 @@ Claude はオーケストレーター、Codex が実作業。
 
 **フォールバック:** Codex token 切れ時は Claude が直接実行。
 
-## Linear MCP Routing
-
-| パス | MCP |
-|---|---|
-| `~/ghq/github.com/ryo-morimoto/*` | `linear-personal` |
-| それ以外 | `linear-work` |
-
 ## Development Workflow
 
 非自明タスクの既定プロセス: **brainstorm → plan → work → review → compound**

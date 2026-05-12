@@ -46,22 +46,6 @@
         "type": "github"
       }
     },
-    "astronomer-agents": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1778267379,
-        "narHash": "sha256-yyOgFRGj/KAke4IzYzr8JDd/56UslYgepx7sDSSuKJ8=",
-        "owner": "astronomer",
-        "repo": "agents",
-        "rev": "535a040ca9e27aaed6da13f0f959625fb3294820",
-        "type": "github"
-      },
-      "original": {
-        "owner": "astronomer",
-        "repo": "agents",
-        "type": "github"
-      }
-    },
     "banto": {
       "inputs": {
         "nixpkgs": [
@@ -79,22 +63,6 @@
       "original": {
         "owner": "ryo-morimoto",
         "repo": "banto",
-        "type": "github"
-      }
-    },
-    "callstack-agent-skills": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1775720688,
-        "narHash": "sha256-E45LRwk/sv0Lsf7JtdFlKI5lo9DF0kS1hBXxzsAQlnY=",
-        "owner": "callstackincubator",
-        "repo": "agent-skills",
-        "rev": "ace14e40df8eebaeea4816c2a1da1f046676b37a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "callstackincubator",
-        "repo": "agent-skills",
         "type": "github"
       }
     },
@@ -240,22 +208,6 @@
       "original": {
         "owner": "kawasima",
         "repo": "evolutionary-naming",
-        "type": "github"
-      }
-    },
-    "expo-plugins": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1778245131,
-        "narHash": "sha256-LxSGdWI6JLi7AQ3SxOMaxAQ88FyI0N3DgmEnSu5g9PA=",
-        "owner": "expo",
-        "repo": "skills",
-        "rev": "47f0ef64821f10e42a600758b5087bfe89c09474",
-        "type": "github"
-      },
-      "original": {
-        "owner": "expo",
-        "repo": "skills",
         "type": "github"
       }
     },
@@ -653,9 +605,7 @@
       "inputs": {
         "agenix": "agenix",
         "agent-skills-nix": "agent-skills-nix",
-        "astronomer-agents": "astronomer-agents",
         "banto": "banto",
-        "callstack-agent-skills": "callstack-agent-skills",
         "claude-plugins-official": "claude-plugins-official",
         "coderabbit-claude-plugin": "coderabbit-claude-plugin",
         "codex-cli-nix": "codex-cli-nix",
@@ -663,7 +613,6 @@
         "context7-skills": "context7-skills",
         "dms": "dms",
         "evolutionary-naming": "evolutionary-naming",
-        "expo-plugins": "expo-plugins",
         "fenix": "fenix",
         "home-manager": "home-manager_2",
         "kuu-marketplace": "kuu-marketplace",

@@ -71,10 +71,6 @@
       url = "github:anthropics/claude-plugins-official";
       flake = false;
     };
-    astronomer-agents = {
-      url = "github:astronomer/agents";
-      flake = false;
-    };
     compound-engineering-plugin = {
       url = "github:EveryInc/compound-engineering-plugin";
       flake = false;
@@ -89,14 +85,6 @@
     };
     kuu-marketplace = {
       url = "github:fumiya-kume/claude-code";
-      flake = false;
-    };
-    callstack-agent-skills = {
-      url = "github:callstackincubator/agent-skills";
-      flake = false;
-    };
-    expo-plugins = {
-      url = "github:expo/skills";
       flake = false;
     };
     context7-skills = {
@@ -145,8 +133,6 @@
       claude-plugins-official,
       codex-cli-nix,
       kuu-marketplace,
-      callstack-agent-skills,
-      expo-plugins,
       context7-skills,
       evolutionary-naming,
       mattpocock-skills,
@@ -219,8 +205,6 @@
                   voxtype
                   claude-plugins-official
                   kuu-marketplace
-                  callstack-agent-skills
-                  expo-plugins
                   context7-skills
                   evolutionary-naming
                   mattpocock-skills

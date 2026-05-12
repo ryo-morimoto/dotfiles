@@ -3,13 +3,11 @@
   lib,
   pkgs,
   dms,
-  voxtype,
   ...
 }:
 
 let
   dotfilesPath = "${config.home.homeDirectory}/ghq/github.com/ryo-morimoto/dotfiles";
-  # Katakana → English technical term dictionary (KEINOS/google-ime-user-dictionary-ja-en)
   coreDevTools = with pkgs; [
     lsof
     openssl
@@ -20,111 +18,6 @@ let
     pciutils
     usbutils
   ];
-
-  katakana-en-dict = pkgs.fetchFromGitHub {
-    owner = "KEINOS";
-    repo = "google-ime-user-dictionary-ja-en";
-    rev = "7d241dafcf6ee1f9eafefc0ae7a929c095860246";
-    hash = "sha256-7ZhDWv+CN/kTqMhgcXXR120f8L2cWZZCC4VdH4N05aM=";
-  };
-
-  # Voxtype post-process: fuzzy-match katakana technical terms against distributed dictionary
-  voxtype-post-process =
-    pkgs.writers.writePython3Bin "voxtype-post-process"
-      { libraries = [ pkgs.python3Packages.rapidfuzz ]; }
-      ''
-        import csv
-        import os
-        import re
-        import sys
-
-        from rapidfuzz import fuzz, process
-
-        _BASE = "${katakana-en-dict}"
-        DICT_DIR = os.path.join(
-            _BASE, "Google-ime-カタカナ語英字辞典"
-        )
-        KATAKANA_RE = re.compile(r"[\u30A0-\u30FF]{3,}")
-
-
-        def load_dict():
-            """Load KEINOS TSV: @hiragana, english, pos, katakana"""
-            terms = {}
-            for fname in os.listdir(DICT_DIR):
-                if not fname.endswith(".txt"):
-                    continue
-                with open(os.path.join(DICT_DIR, fname), encoding="utf-8") as fh:
-                    for row in csv.reader(fh, delimiter="\t"):
-                        if len(row) >= 4:
-                            katakana, english = row[3], row[1]
-                            if katakana and english:
-                                terms[katakana] = english
-            return terms
-
-
-        def correct(text, terms):
-            keys = list(terms.keys())
-            offset = 0
-            for m in KATAKANA_RE.finditer(text):
-                start = m.start() + offset
-                end = m.end() + offset
-                kata = text[start:end]
-                hit = process.extractOne(
-                    kata, keys,
-                    scorer=fuzz.ratio, score_cutoff=80,
-                )
-                if hit:
-                    replacement = terms[hit[0]]
-                    text = text[:start] + replacement + text[end:]
-                    offset += len(replacement) - len(kata)
-            return text
-
-
-        def save_history(text):
-            import json
-            from datetime import datetime, timezone
-            history_dir = os.path.join(
-                os.environ.get("XDG_DATA_HOME", os.path.expanduser("~/.local/share")),
-                "voxtype",
-            )
-            os.makedirs(history_dir, exist_ok=True)
-            path = os.path.join(history_dir, "history.jsonl")
-            with open(path, "a", encoding="utf-8") as f:
-                json.dump(
-                    {"ts": datetime.now(timezone.utc).isoformat(), "text": text},
-                    f,
-                    ensure_ascii=False,
-                )
-                f.write("\n")
-
-
-        text = sys.stdin.read().strip()
-        if text:
-            result = correct(text, load_dict())
-            save_history(result)
-            print(result)
-      '';
-
-  # Copy latest (or pick from) voxtype transcription history
-  voxtype-history = pkgs.writeShellScriptBin "voxtype-history" ''
-    HISTORY="''${XDG_DATA_HOME:-$HOME/.local/share}/voxtype/history.jsonl"
-    if [ ! -f "$HISTORY" ]; then
-      ${pkgs.libnotify}/bin/notify-send "voxtype" "No history yet"
-      exit 0
-    fi
-    if [ "''${1:-}" = "--pick" ]; then
-      LINES=$(${pkgs.jq}/bin/jq -r '[.ts, (.text | .[0:80])] | join(" | ")' "$HISTORY")
-      SELECTED=$(echo "$LINES" | ${pkgs.fuzzel}/bin/fuzzel --dmenu --width 100 --lines 15 --prompt "voxtype> ")
-      [ -z "$SELECTED" ] && exit 0
-      TS=$(echo "$SELECTED" | ${pkgs.coreutils}/bin/cut -d'|' -f1 | xargs)
-      ${pkgs.jq}/bin/jq -r --arg ts "$TS" 'select(.ts == $ts) | .text' "$HISTORY" \
-        | ${pkgs.wl-clipboard}/bin/wl-copy
-    else
-      ${pkgs.jq}/bin/jq -r '.text' "$HISTORY" | ${pkgs.coreutils}/bin/tail -1 \
-        | ${pkgs.wl-clipboard}/bin/wl-copy
-      ${pkgs.libnotify}/bin/notify-send -t 2000 "voxtype" "Copied latest transcription"
-    fi
-  '';
 in
 {
   imports = [
@@ -671,58 +564,9 @@ in
     };
   };
 
-  # Voxtype voice input (whisper.cpp, Vulkan GPU acceleration)
+  # Voxtype is temporarily disabled while the upstream Vulkan package fails its checkPhase.
   programs.voxtype = {
-    enable = true;
-    engine = "whisper";
-    package = voxtype.packages.${pkgs.stdenv.hostPlatform.system}.vulkan;
-    model.name = "large-v3-turbo";
-    service.enable = true;
-    settings = {
-      state_file = "auto";
-      hotkey = {
-        enabled = true;
-        key = "RIGHTCTRL";
-        modifiers = [ ];
-        mode = "toggle";
-      };
-      audio = {
-        device = "default";
-        sample_rate = 16000;
-        max_duration_secs = 300;
-        feedback = {
-          enabled = true;
-          theme = "default";
-          volume = 0.7;
-        };
-      };
-      whisper = {
-        mode = "local";
-        model = "large-v3-turbo";
-        language = "ja";
-        translate = false;
-        on_demand_loading = false;
-        gpu_isolation = false;
-        context_window_optimization = false;
-      };
-      output = {
-        mode = "type";
-        fallback_to_clipboard = true;
-        type_delay_ms = 0;
-        pre_type_delay_ms = 0;
-        auto_submit = false;
-        paste_keys = "ctrl+v";
-        notification = {
-          on_recording_start = true;
-          on_recording_stop = true;
-          on_transcription = true;
-        };
-        post_process = {
-          command = "${voxtype-post-process}/bin/voxtype-post-process";
-          timeout_ms = 5000;
-        };
-      };
-    };
+    enable = false;
   };
 
   # Niri compositor (managed by niri-flake, DMS merges keybinds/spawn into settings)
@@ -814,18 +658,6 @@ in
 
       # Applications
       "Mod+T".action.spawn = "ghostty";
-
-      # Voice input toggle (voxtype)
-      "Mod+Shift+V".action.spawn = [
-        "voxtype"
-        "record"
-        "toggle"
-      ];
-      # Voxtype history: pick and copy from history
-      "Mod+Shift+B".action.spawn = [
-        "${voxtype-history}/bin/voxtype-history"
-        "--pick"
-      ];
 
       # System controls (DMS handles launcher, notifications, lock, power menu)
       "Mod+A".action.spawn = "pavucontrol";
