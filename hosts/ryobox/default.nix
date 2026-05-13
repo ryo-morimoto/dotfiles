@@ -51,6 +51,7 @@ in
     firewall.interfaces.tailscale0.allowedTCPPorts = [
       80
       443
+      9119
     ];
   };
 
@@ -181,6 +182,21 @@ in
     };
   };
   systemd.services = {
+    "hermes-agent-dashboard" = {
+      description = "Hermes Agent Web UI dashboard";
+      wantedBy = [ "multi-user.target" ];
+      requires = [ "hermes-agent.service" ];
+      bindsTo = [ "hermes-agent.service" ];
+      after = [ "hermes-agent.service" ];
+
+      serviceConfig = {
+        Type = "simple";
+        ExecStart = "${pkgs.podman}/bin/podman exec --user hermes hermes-agent /data/current-package/bin/hermes dashboard --host 0.0.0.0 --port 9119 --no-open --insecure --tui --skip-build";
+        Restart = "always";
+        RestartSec = 5;
+      };
+    };
+
     "dotfiles-pull" = {
       description = "Pull latest dotfiles from GitHub";
       serviceConfig = {
