@@ -24,6 +24,7 @@
 ## Defaults
 
 - Prefer TypeScript for frontend/API work and Rust for backend/systems work when the repo does not already decide.
+- Answer in Japanese by default unless the user explicitly asks for another language.
 - Use Conventional Commits by default: `fix:`, `feat:`, `chore:`, `docs:`, `refactor:`, `test:`.
 - When asked for planning, organization, or next steps, answer first from known context in a structured list or table
   before doing extra file reads.
