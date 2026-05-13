@@ -3,7 +3,6 @@
   lib,
   pkgs,
   dms,
-  voxtype,
   ...
 }:
 
@@ -567,7 +566,7 @@ in
 
   programs.voxtype = {
     enable = true;
-    package = voxtype.packages.${pkgs.stdenv.hostPlatform.system}.default;
+    package = pkgs.voxtype;
     engine = "whisper";
     model.name = "large-v3-turbo";
     service.enable = true;
