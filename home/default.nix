@@ -3,6 +3,7 @@
   lib,
   pkgs,
   dms,
+  voxtype,
   ...
 }:
 
@@ -564,9 +565,27 @@ in
     };
   };
 
-  # Voxtype is temporarily disabled while the upstream Vulkan package fails its checkPhase.
   programs.voxtype = {
-    enable = false;
+    enable = true;
+    package = voxtype.packages.${pkgs.stdenv.hostPlatform.system}.default;
+    engine = "whisper";
+    model.name = "large-v3-turbo";
+    service.enable = true;
+    settings = {
+      hotkey = {
+        enabled = true;
+        key = "RIGHTALT";
+        mode = "push_to_talk";
+      };
+      whisper = {
+        language = "ja";
+        translate = false;
+      };
+      output = {
+        mode = "type";
+        fallback_to_clipboard = true;
+      };
+    };
   };
 
   # Niri compositor (managed by niri-flake, DMS merges keybinds/spawn into settings)
