@@ -8,6 +8,32 @@ let
   username = "ryo-morimoto";
   homeDir = "/home/${username}";
   dotfilesDir = "${homeDir}/ghq/github.com/${username}/dotfiles";
+  hermesStateDir = "/var/lib/hermes";
+  hermesContainerName = "hermes-agent";
+  hermesContainerHermesBin = "/data/current-package/bin/hermes";
+  hermesGatewayProfiles = {
+    personal = {
+      description = "Hermes Agent Gateway - personal Discord profile";
+    };
+    work = {
+      description = "Hermes Agent Gateway - work Discord profile";
+    };
+  };
+  mkHermesProfileGatewayService = profileName: profileConfig: {
+    inherit (profileConfig) description;
+    wantedBy = [ "multi-user.target" ];
+    requires = [ "hermes-agent.service" ];
+    bindsTo = [ "hermes-agent.service" ];
+    after = [ "hermes-agent.service" ];
+    unitConfig.ConditionPathExists = "${hermesStateDir}/.hermes/profiles/${profileName}/.env";
+
+    serviceConfig = {
+      Type = "simple";
+      ExecStart = "${pkgs.podman}/bin/podman exec --user hermes ${hermesContainerName} ${hermesContainerHermesBin} --profile ${profileName} gateway run --replace";
+      Restart = "always";
+      RestartSec = 5;
+    };
+  };
   agentDefaults = import ../../home/agents/default.nix {
     inherit lib;
     config = {
@@ -51,7 +77,6 @@ in
     firewall.interfaces.tailscale0.allowedTCPPorts = [
       80
       443
-      9119
     ];
   };
 
@@ -181,36 +206,28 @@ in
       };
     };
   };
-  systemd.services = {
-    "hermes-agent-dashboard" = {
-      description = "Hermes Agent Web UI dashboard";
-      wantedBy = [ "multi-user.target" ];
-      requires = [ "hermes-agent.service" ];
-      bindsTo = [ "hermes-agent.service" ];
-      after = [ "hermes-agent.service" ];
-
-      serviceConfig = {
-        Type = "simple";
-        ExecStart = "${pkgs.podman}/bin/podman exec --user hermes hermes-agent /data/current-package/bin/hermes dashboard --host 0.0.0.0 --port 9119 --no-open --insecure --tui --skip-build";
-        Restart = "always";
-        RestartSec = 5;
+  systemd.services =
+    lib.mapAttrs' (
+      profileName: profileConfig:
+      lib.nameValuePair "hermes-gateway-${profileName}" (
+        mkHermesProfileGatewayService profileName profileConfig
+      )
+    ) hermesGatewayProfiles
+    // {
+      "dotfiles-pull" = {
+        description = "Pull latest dotfiles from GitHub";
+        serviceConfig = {
+          Type = "oneshot";
+          User = username;
+          WorkingDirectory = dotfilesDir;
+          ExecStart = "${pkgs.git}/bin/git pull --ff-only";
+        };
+      };
+      "nixos-upgrade" = {
+        after = [ "dotfiles-pull.service" ];
+        wants = [ "dotfiles-pull.service" ];
       };
     };
-
-    "dotfiles-pull" = {
-      description = "Pull latest dotfiles from GitHub";
-      serviceConfig = {
-        Type = "oneshot";
-        User = username;
-        WorkingDirectory = dotfilesDir;
-        ExecStart = "${pkgs.git}/bin/git pull --ff-only";
-      };
-    };
-    "nixos-upgrade" = {
-      after = [ "dotfiles-pull.service" ];
-      wants = [ "dotfiles-pull.service" ];
-    };
-  };
 
   # Bluetooth
   hardware.bluetooth = {
