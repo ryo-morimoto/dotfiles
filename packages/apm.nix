@@ -223,11 +223,11 @@ let
 
   package = stdenvNoCC.mkDerivation rec {
     pname = "apm";
-    version = "0.11.0";
+    version = "0.13.0";
 
     src = fetchurl {
       url = "https://github.com/microsoft/apm/releases/download/v${version}/apm-linux-x86_64.tar.gz";
-      hash = "sha256-Fw8K16ucCK4ViALcs5VWpLbIb8uLLB56JckLwHeopuA=";
+      hash = "sha256-7QKxED70vElVmoH34Qm0JKSdlc+XhRWtIk5e63AbH4o=";
     };
 
     nativeBuildInputs = [
