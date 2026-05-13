@@ -1,153 +1,57 @@
+## Intent-First Work
 
-## Intent-First Principles
+- Ask only when intent, risk, or contract boundary is unclear. If context gives the goal and constraints, proceed.
+- Execute obvious direct instructions without approval. Ask before non-obvious design decisions,
+  API/schema/interface changes, destructive actions, or publishing.
+- For non-obvious choices, state the chosen option, rejected option, and trade-off briefly.
+- After the user answers a blocking question, continue with the next action without re-confirming the same decision.
 
-**意図を重視、自明は即実行、非自明は聞く。** このセクションが他のすべてに優先する。
+## Human Understanding
 
-### 意図の確認
+- Do not let the human approve unread non-obvious plans, generated code, risky fixes, merges, pushes, or distribution
+  steps.
+- When the request signals blind delegation, give the core implication in one line and ask for a simple preference or
+  confirmation.
+- Ask probes that are easy to answer from intuition; do not require analysis unless analysis is the task.
 
-- **意図が不明瞭な場合のみ聞く。** context から目的・背景が読み取れれば確認せず進める。
-- **曖昧な質問には意図整理で返す。** 明確な質問（API の使い方、既知の手順）には直接答える。
+## Source-First Decisions
 
-### 判断の共有
+- Read the relevant source before making implementation or design claims.
+- Prefer sources in this order: code, official docs, then community material.
+- Cite the concrete source when the decision depends on it. If no source is available, say that the statement is an
+  inference.
 
-- **非自明な選択は採用案・却下案・トレードオフを合わせて共有する。** 自明な選択には付けない。
+## Defaults
 
-### 行動の境界
+- Prefer TypeScript for frontend/API work and Rust for backend/systems work when the repo does not already decide.
+- Use Conventional Commits by default: `fix:`, `feat:`, `chore:`, `docs:`, `refactor:`, `test:`.
+- When asked for planning, organization, or next steps, answer first from known context in a structured list or table
+  before doing extra file reads.
 
-- **自明な指示・作業は承認を求めず即実行する。** ユーザー直接指示は承認不要。assistant 生成計画で指示範囲を超える場合のみ承認を求める。
-- **非自明な設計/実装、API・スキーマ・インターフェース境界の変更は AskUserQuestion で確認する。** 質問はまとめて投げる。
+## Tools And Context
 
-### Comprehension Retention（理解の保持）
+- Prefer precise project-aware tools for search, reading, and edits when available; otherwise use fast local commands
+  and small, targeted reads.
+- Keep tool output out of the conversation unless it matters. For write/create/update calls, mention only success and
+  stable identifiers such as path, id, or url.
+- Avoid duplicate tool calls with the same arguments. If a call fails or output is surprising, analyze it before
+  retrying.
+- Serialize calls to the same remote or MCP server when parallelism mainly duplicates network and context cost.
 
-**人間側が設計・実装の理解を放棄する操作は制限する。** ユーザーが内容を読まないまま委任する状態にしない。
+## Editing And Retry Discipline
 
-以下のシグナルでは即実行せず、要点を 1 行で提示してから判断を仰ぐ:
-- assistant 生成の非自明な計画・設計・長文への、内容未読の短承諾
-- エラー出力や該当コードを共有しない「とりあえず直して」型依頼
-- diff を見ずに merge / push / 配布しようとする指示
-- 自動生成コードを読まずに反映する指示
+- Read the current content before editing it.
+- Anchor edits with enough unique surrounding context to avoid touching the wrong block.
+- Batch related edits when that reduces partial-state risk.
+- After two failed edit attempts, re-read and switch approach instead of repeating the same operation.
+- Do not repeat the same shell command unchanged unless the previous output explains why that is useful.
 
-除外: 自明な短指示、合意済み計画の継続承諾、ユーザー既読の context への追認。
+## Reviews
 
-### プローブの形式
+- In reviews, lead with findings. Judge impact through severity, efficiency, reuse, and quality.
+- If there are no findings, say so and name any residual verification risk.
 
-AskUserQuestion は直感を引き出す形式に。分析を強制しない。
+## Knowledge
 
-```
-✓ 「A と B どちらが好み?（理由不要）」
-✗ 「A と B のどちらが要件を満たしていますか?」
-```
-
-## Source-First Decision Making
-
-実装・設計の判断は必ず一次ソースを読んでから行う。推論だけで済ませない。
-
-**優先順位:** コード > 公式ドキュメント > コミュニティ（issue, discussion, blog）
-
-**手順:**
-1. 判断に関わるコードを Read/Grep/Glob で実際に読む
-2. コードで判断できない場合、Context7 MCP または WebFetch で公式ドキュメントを取得
-3. 公式ドキュメントにない場合のみ、GitHub issue/discussion 等を検索
-4. 参照ソースを回答に明示する（ファイルパス:行番号、URL、issue 番号）
-
-**禁止:** 推測に基づく「おそらく〜」「一般的には〜」、トレーニングデータだけでの設計判断、ソース未読での断定。
-
-ソースが見つからない場合は、その旨と推測であることを明示する。
-
-## Flow Control
-
-AskUserQuestion の回答を受けたら、要約・確認・停止せず、次アクションを即実行する。
-
-## Language & Stack
-
-TypeScript（frontend/API）、Rust（backend/systems）を既定とする。
-
-## Git
-
-Conventional Commits: `fix:`, `feat:`, `chore:`, `docs:`, `refactor:`, `test:`
-
-## Agent Role Division
-
-Claude はオーケストレーター、Codex が実作業。
-
-- **Claude:** 対話、オーケストレーション、タスク分解、複雑な情報収集
-- **Codex:** 明確なクエリの調査、詳細設計、コードレビュー、実装
-
-**命名（混同注意）:**
-- `codex:rescue` = Skill（`/codex:rescue` または `Skill` tool）
-- `codex:codex-rescue` = Agent subagent_type
-- 単独の `codex-rescue` は存在しない
-
-**フォールバック:** Codex token 切れ時は Claude が直接実行。
-
-## Development Workflow
-
-非自明タスクの既定プロセス: **brainstorm → plan → work → review → compound**
-
-- 設計・計画 80% / 実装 20%
-- 3 ファイル以上の変更は `/workflows:plan` 必須
-- 問題解決後は `/workflows:compound` で即ドキュメント化
-
-## Planning & Organization
-
-「計画・整理・次ステップ」を求められたら、追加ファイルを読む前に既知情報で構造化回答（番号付きリスト or 表）を返す。
-
-## Tool Usage
-
-### Dedicated tool 優先
-
-- File search: **Glob**（not find/fd）
-- Content search: **Grep**（not grep/rg）
-- Read: **Read**（not cat/bat/head/tail）
-- Edit: **Edit**（not sed/sd/awk）
-- Write: **Write**（not echo > / cat <<EOF）
-
-### 並列 Bash の制限
-
-hook-blocked コマンド（find, ls, cat, grep, sed）は他コマンドと並列バッチに混ぜない。1 つの block でバッチ全体が cancel される（601 件実績）。単独呼び出しか dedicated tool を使う。
-
-### Subagent トリガー
-
-- best practice 調査 → `compound-engineering:research:best-practices-researcher`
-- PR review thread 一括解決 → `compound-engineering:workflow:pr-comment-resolver`
-- framework docs 横断 → `compound-engineering:research:framework-docs-researcher`
-
-### Code Review の 4 軸
-
-Severity / Efficiency / Reuse / Quality
-
-### MCP Tool Call Economy
-
-MCP tool の response は context に積み上がり、後続 turn で cache read/create を増やす。
-
-- **書き込み系** (`save_*`, `create_*`, `update_*`): id / url と成否のみ確認する。description echo, timestamps, 内部 ID 群などの他フィールドは言及しない
-- **読み出し系** (`list_*`, `get_*`): 必要な field のみ参照する。full payload を thinking や assistant text に転写しない
-- response の大部分が args の echo や metadata (SLA, createdBy, `*Id` 類) のときは読み返さない — cache 汚染になる
-
-### 重複呼び出しを避ける
-
-- 同一 args で同じ tool を 30 秒以内に再発射しない。前回 response を信じる
-- 確認が必要なら別 tool (`get_*`) を 1 回だけ使う
-- 並列 worktree / session が同じ MCP server に同時発火すると、network 往復と context 再キャッシュの両方が倍増する。並列化する前に serialize 可能な部分を serialize する
-
-## Edit & Retry Discipline
-
-- 編集前に Read で現在の内容を確認する
-- `old_string` は 3 行以上の周辺コンテキストでユニーク化
-  - Nix: 囲んでいる attribute path ブロックのヘッダを含める
-  - TSX/TS: 関数名・コンポーネント名行をアンカーに含める
-- 複数箇所の変更は 1 回の edit にまとめる
-- 同一操作が 2 回失敗したら Re-Read → 別アプローチ。3 回目は試さず Write など別手段に切り替える
-- 同じ Bash コマンドを 2 回以上同形で retry しない。出力を分析してから再試行
-
-## Knowledge Management (Obsidian)
-
-`~/obsidian/` vault にナレッジを蓄積・検索する。
-
-### know（記録）
-
-`/know` で非自明な知見（ハマりどころ、設計理由、deep dive、best practice）を発見次第記録。公式ドキュメントで足りる内容は記録しない。
-
-### know:search（検索）
-
-ユーザーが明示的に vault 検索を指示したときのみ起動（「vault 検索して」「過去の知見ある?」等）。「調査して」「調べて」では自動起動しない — web search のほうが妥当な事例が多く、手動 override 実績があるため。
+- Record non-obvious, reusable learnings in the knowledge system when they are not already covered by official docs.
+- Search the personal vault only when explicitly asked or when the user asks whether prior knowledge exists.
