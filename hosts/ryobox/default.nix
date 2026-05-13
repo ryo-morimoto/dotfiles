@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   pkgs,
   ...
@@ -11,21 +12,65 @@ let
   hermesStateDir = "/var/lib/hermes";
   hermesContainerName = "hermes-agent";
   hermesContainerHermesBin = "/data/current-package/bin/hermes";
+  hermesProfileSubdirs = [
+    "memories"
+    "sessions"
+    "skills"
+    "skins"
+    "logs"
+    "plans"
+    "workspace"
+    "cron"
+    "home"
+  ];
   hermesGatewayProfiles = {
     personal = {
       description = "Hermes Agent Gateway - personal Discord profile";
+      secretFile = ../../secrets/hermes-discord-personal-env.age;
+      authSecretFile = ../../secrets/hermes-codex-personal-auth.age;
+      settings = {
+        model.provider = "openai-codex";
+        platforms.discord = {
+          enabled = true;
+          extra.channel_prompts = { };
+        };
+      };
     };
     work = {
       description = "Hermes Agent Gateway - work Discord profile";
+      secretFile = ../../secrets/hermes-discord-work-env.age;
+      authSecretFile = ../../secrets/hermes-codex-work-auth.age;
+      settings = {
+        model.provider = "openai-codex";
+        platforms.discord = {
+          enabled = true;
+          extra.channel_prompts = { };
+        };
+      };
     };
   };
+  hermesProfileConfigFiles = lib.mapAttrs (
+    profileName: profileConfig:
+    (pkgs.formats.yaml { }).generate "hermes-${profileName}-config.yaml" profileConfig.settings
+  ) hermesGatewayProfiles;
+  hermesProfilesWithSecrets = lib.filterAttrs (
+    _: profileConfig: builtins.pathExists profileConfig.secretFile
+  ) (lib.mapAttrs (_: profileConfig: { inherit (profileConfig) secretFile; }) hermesGatewayProfiles);
+  hermesProfilesWithAuthSecrets =
+    lib.filterAttrs (_: profileConfig: builtins.pathExists profileConfig.authSecretFile)
+      (
+        lib.mapAttrs (_: profileConfig: { inherit (profileConfig) authSecretFile; }) hermesGatewayProfiles
+      );
   mkHermesProfileGatewayService = profileName: profileConfig: {
     inherit (profileConfig) description;
     wantedBy = [ "multi-user.target" ];
     requires = [ "hermes-agent.service" ];
     bindsTo = [ "hermes-agent.service" ];
     after = [ "hermes-agent.service" ];
-    unitConfig.ConditionPathExists = "${hermesStateDir}/.hermes/profiles/${profileName}/.env";
+    unitConfig.ConditionPathExists = [
+      "${hermesStateDir}/.hermes/profiles/${profileName}/.env"
+      "${hermesStateDir}/.hermes/profiles/${profileName}/auth.json"
+    ];
 
     serviceConfig = {
       Type = "simple";
@@ -204,8 +249,71 @@ in
         owner = username;
         mode = "0400";
       };
-    };
+    }
+    // lib.mapAttrs' (
+      profileName: profileConfig:
+      lib.nameValuePair "hermes-discord-${profileName}-env" {
+        file = profileConfig.secretFile;
+        owner = "hermes";
+        group = "hermes";
+        mode = "0400";
+      }
+    ) hermesProfilesWithSecrets
+    // lib.mapAttrs' (
+      profileName: profileConfig:
+      lib.nameValuePair "hermes-codex-${profileName}-auth" {
+        file = profileConfig.authSecretFile;
+        owner = "hermes";
+        group = "hermes";
+        mode = "0400";
+      }
+    ) hermesProfilesWithAuthSecrets;
   };
+  system.activationScripts."hermes-discord-profiles" =
+    lib.stringAfter
+      (
+        [
+          "users"
+          "hermes-agent-setup"
+        ]
+        ++ lib.optional (config.system.activationScripts ? setupSecrets) "setupSecrets"
+      )
+      (
+        lib.concatStringsSep "\n" (
+          lib.mapAttrsToList (
+            profileName: _profileConfig:
+            let
+              profileDir = "${hermesStateDir}/.hermes/profiles/${profileName}";
+              profileSecretName = "hermes-discord-${profileName}-env";
+              profileAuthSecretName = "hermes-codex-${profileName}-auth";
+              hasSecret = builtins.hasAttr profileName hermesProfilesWithSecrets;
+              hasAuthSecret = builtins.hasAttr profileName hermesProfilesWithAuthSecrets;
+            in
+            ''
+              install -d -o hermes -g hermes -m 2770 ${profileDir}
+              ${lib.concatMapStringsSep "\n" (subdir: ''
+                install -d -o hermes -g hermes -m 2770 ${profileDir}/${subdir}
+              '') hermesProfileSubdirs}
+              install -o hermes -g hermes -m 0640 ${
+                hermesProfileConfigFiles.${profileName}
+              } ${profileDir}/config.yaml
+              touch ${profileDir}/.managed
+              chown hermes:hermes ${profileDir}/.managed
+              chmod 0644 ${profileDir}/.managed
+              ${lib.optionalString hasSecret ''
+                install -o hermes -g hermes -m 0400 ${
+                  config.age.secrets.${profileSecretName}.path
+                } ${profileDir}/.env
+              ''}
+              ${lib.optionalString hasAuthSecret ''
+                install -o hermes -g hermes -m 0400 ${
+                  config.age.secrets.${profileAuthSecretName}.path
+                } ${profileDir}/auth.json
+              ''}
+            ''
+          ) hermesGatewayProfiles
+        )
+      );
   systemd.services =
     lib.mapAttrs' (
       profileName: profileConfig:

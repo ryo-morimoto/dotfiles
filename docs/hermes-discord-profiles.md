@@ -20,27 +20,42 @@ Profile state lives outside the repository:
 - `/var/lib/hermes/.hermes/profiles/personal`
 - `/var/lib/hermes/.hermes/profiles/work`
 
-Discord bot tokens and Codex OAuth credentials are runtime secrets and must not be committed.
+Discord bot tokens and Codex OAuth state are agenix-managed runtime secrets and must not be committed in plaintext.
+
+Create these encrypted env files when the Discord bot tokens and channel IDs are ready:
+
+- `secrets/hermes-discord-personal-env.age`
+- `secrets/hermes-discord-work-env.age`
+- `secrets/hermes-codex-personal-auth.age`
+- `secrets/hermes-codex-work-auth.age`
+
+Each decrypted file must use `.env` syntax:
+
+```dotenv
+DISCORD_BOT_TOKEN=replace-with-bot-token
+DISCORD_ALLOWED_USERS=replace-with-your-discord-user-id
+DISCORD_HOME_CHANNEL=replace-with-briefing-or-nudge-text-channel-id
+```
+
+The NixOS activation script creates profile directories and profile `config.yaml` files. It copies each secret to the
+matching profile `.env` or `auth.json` only when the encrypted secret file exists.
 
 ## Setup Commands
 
-Create and configure the personal profile:
+After creating the encrypted env files, apply the NixOS configuration:
 
 ```bash
-sudo podman exec --env HERMES_MANAGED= --user hermes -it hermes-agent /data/current-package/bin/hermes profile create personal
-sudo podman exec --env HERMES_MANAGED= --user hermes -it hermes-agent /data/current-package/bin/hermes --profile personal login --provider openai-codex
-sudo podman exec --env HERMES_MANAGED= --user hermes -it hermes-agent /data/current-package/bin/hermes --profile personal gateway setup
-sudo systemctl start hermes-gateway-personal.service
+sudo nixos-rebuild switch --flake .
 ```
 
-Create and configure the work profile:
+Start the gateways:
 
 ```bash
-sudo podman exec --env HERMES_MANAGED= --user hermes -it hermes-agent /data/current-package/bin/hermes profile create work
-sudo podman exec --env HERMES_MANAGED= --user hermes -it hermes-agent /data/current-package/bin/hermes --profile work login --provider openai-codex
-sudo podman exec --env HERMES_MANAGED= --user hermes -it hermes-agent /data/current-package/bin/hermes --profile work gateway setup
+sudo systemctl start hermes-gateway-personal.service
 sudo systemctl start hermes-gateway-work.service
 ```
+
+The services are skipped until their profile `.env` and `auth.json` files exist.
 
 ## Checks
 
