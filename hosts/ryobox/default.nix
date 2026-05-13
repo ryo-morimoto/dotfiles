@@ -133,6 +133,17 @@ in
     };
     gnome.gnome-keyring.enable = true;
 
+    hermes-agent = {
+      enable = true;
+      addToSystemPackages = true;
+      settings.model.provider = "openai-codex";
+      container = {
+        enable = true;
+        backend = "podman";
+        hostUsers = [ username ];
+      };
+    };
+
     # Tailscale VPN with SSH
     tailscale = {
       enable = true;
@@ -231,8 +242,15 @@ in
     polkit.enable = true;
   };
 
-  # Docker
-  virtualisation.docker.enable = true;
+  # Containers
+  virtualisation = {
+    containers.enable = true;
+    docker.enable = true;
+    podman = {
+      enable = true;
+      defaultNetwork.settings.dns_enabled = true;
+    };
+  };
 
   # Programs
   programs = {
