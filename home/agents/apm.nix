@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   inputs ? { },
   ...
@@ -7,32 +8,25 @@
 let
   apm = import ../../packages/apm.nix { inherit lib; };
   apmDsl = apm.dsl;
+  localSkillsRoot = "${config.home.homeDirectory}/ghq/github.com/ryo-morimoto/dotfiles/skills";
 
   apmLock = apmDsl.mkInputLock {
     inherit inputs;
     packages = {
-      claude-plugins-official = "anthropics/claude-plugins-official";
-      coderabbit-claude-plugin = "coderabbitai/claude-plugin";
       compound-engineering = {
         input = "compound-engineering-plugin";
         source = "EveryInc/compound-engineering-plugin";
         path = "plugins/compound-engineering";
       };
-      kuu-marketplace = {
-        input = "kuu-marketplace";
-        source = "fumiya-kume/claude-code";
-      };
+      context7-skills = "upstash/context7";
+      evolutionary-naming = "kawasima/evolutionary-naming";
       mattpocock-skills = "mattpocock/skills";
+      mgechev-skills = "mgechev/skills-best-practices";
+      mizchi-skills = "mizchi/skills";
       superpowers = "obra/superpowers";
     };
   };
 
-  compoundEngineering = import ./compound-engineering.nix {
-    inherit
-      apmDsl
-      apmLock
-      ;
-  };
   lock = apmLock;
   mkLeaves =
     names:
@@ -42,34 +36,60 @@ let
         value = { };
       }) names
     );
-  mkDependency =
-    package: path:
-    apmDsl.mkPinnedDependency {
+  mkPackageDependency =
+    package:
+    apmDsl.mkPackageDependency {
       inherit
         lock
         package
-        path
         ;
     };
 
-  claudeOfficialPlugins = [
-    "commit-commands"
-    "feature-dev"
-    "pr-review-toolkit"
-    "code-simplifier"
-    "claude-md-management"
+  compoundEngineeringDependency = mkPackageDependency "compound-engineering";
+  superpowersDependency = mkPackageDependency "superpowers";
+
+  personalSkillDependencies = [
+    "${localSkillsRoot}/fp-typescript"
+    "${localSkillsRoot}/repo-doctor"
   ];
 
-  kuuPlugins = [
-    "deslop"
-    "dig"
-    "fix-ci"
-    "decomposition"
+  context7Skills = [
+    "context7-cli"
+    "context7-mcp"
+    "find-docs"
   ];
 
-  claudePluginDependencies =
-    (map (name: mkDependency "claude-plugins-official" "plugins/${name}") claudeOfficialPlugins)
-    ++ (map (name: mkDependency "kuu-marketplace" name) kuuPlugins);
+  context7SkillDependencies = apmDsl.mkPrimitiveDependencies {
+    lock = apmLock;
+    package = "context7-skills";
+    selectedSkills = context7Skills;
+    skills = mkLeaves context7Skills;
+    skillPath = name: "skills/${name}";
+  };
+
+  evolutionaryNamingSkillDependencies = apmDsl.mkPrimitiveDependencies {
+    lock = apmLock;
+    package = "evolutionary-naming";
+    selectedSkills = [ "evolutionary-naming" ];
+    skills = mkLeaves [ "evolutionary-naming" ];
+    skillPath = name: "skills/${name}";
+  };
+
+  mizchiSkillDependencies = apmDsl.mkPrimitiveDependencies {
+    lock = apmLock;
+    package = "mizchi-skills";
+    selectedSkills = [ "empirical-prompt-tuning" ];
+    skills = mkLeaves [ "empirical-prompt-tuning" ];
+    skillPath = name: name;
+  };
+
+  mgechevSkillDependencies = apmDsl.mkPrimitiveDependencies {
+    lock = apmLock;
+    package = "mgechev-skills";
+    selectedSkills = [ "skill-creator" ];
+    skills = mkLeaves [ "skill-creator" ];
+    skillPath = _name: "skill";
+  };
 
   mattpocockProductivitySkills = [
     "caveman"
@@ -102,31 +122,6 @@ let
       skillPath = name: "skills/engineering/${name}";
     });
 
-  superpowersSkills = [
-    "brainstorming"
-    "dispatching-parallel-agents"
-    "executing-plans"
-    "finishing-a-development-branch"
-    "receiving-code-review"
-    "requesting-code-review"
-    "subagent-driven-development"
-    "systematic-debugging"
-    "test-driven-development"
-    "using-git-worktrees"
-    "using-superpowers"
-    "verification-before-completion"
-    "writing-plans"
-    "writing-skills"
-  ];
-
-  superpowersSkillDependencies = apmDsl.mkPrimitiveDependencies {
-    lock = apmLock;
-    package = "superpowers";
-    selectedSkills = superpowersSkills;
-    skills = mkLeaves superpowersSkills;
-    skillPath = name: "skills/${name}";
-  };
-
   apmTargets = [
     "claude"
     "codex"
@@ -139,11 +134,16 @@ let
       name = "ryo-agent-packages";
       version = "1.0.0";
       target = apmTargets;
-      dependencies.apm =
-        compoundEngineering.dependencies
-        ++ mattpocockSkillDependencies
-        ++ superpowersSkillDependencies
-        ++ claudePluginDependencies;
+      dependencies.apm = [
+        compoundEngineeringDependency
+        superpowersDependency
+      ]
+      ++ personalSkillDependencies
+      ++ context7SkillDependencies
+      ++ evolutionaryNamingSkillDependencies
+      ++ mizchiSkillDependencies
+      ++ mgechevSkillDependencies
+      ++ mattpocockSkillDependencies;
     };
   };
 in
@@ -154,49 +154,5 @@ in
 
   _module.args = {
     inherit sharedApm;
-  };
-
-  programs.agent-skills = {
-    enable = true;
-
-    sources = {
-      personal = {
-        path = ../../skills;
-      };
-      context7 = {
-        input = "context7-skills";
-        subdir = "skills";
-      };
-      evolutionary-naming = {
-        input = "evolutionary-naming";
-        subdir = "skills";
-      };
-      mizchi = {
-        input = "mizchi-skills";
-      };
-      skill-creator = {
-        input = "mgechev-skills";
-        subdir = "skill";
-      };
-    };
-
-    skills = {
-      enable = [
-        "fp-typescript"
-        "repo-doctor"
-        "evolutionary-naming"
-        "context7-mcp"
-        "context7-cli"
-        "find-docs"
-        "empirical-prompt-tuning"
-        "skill-creator"
-      ];
-    };
-
-    targets = {
-      claude.enable = true;
-      codex.enable = true;
-      agents.enable = true;
-    };
   };
 }

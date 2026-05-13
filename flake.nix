@@ -57,35 +57,18 @@
       url = "github:aster-void/nix-hazkey";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    agent-skills-nix = {
-      url = "github:Kyure-A/agent-skills-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "home-manager";
-    };
     nix-claude-code = {
       # pinned to 2.1.119 — 2.1.120 has session bug, rollback to url once upstream publishes fix
       url = "github:ryoppippi/nix-claude-code/59bb590492ee6af9eeb0d8e9e8f6a73140aec761";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    claude-plugins-official = {
-      url = "github:anthropics/claude-plugins-official";
-      flake = false;
-    };
     compound-engineering-plugin = {
       url = "github:EveryInc/compound-engineering-plugin";
-      flake = false;
-    };
-    coderabbit-claude-plugin = {
-      url = "github:coderabbitai/claude-plugin";
       flake = false;
     };
     codex-cli-nix = {
       url = "github:sadjow/codex-cli-nix";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-    kuu-marketplace = {
-      url = "github:fumiya-kume/claude-code";
-      flake = false;
     };
     context7-skills = {
       url = "github:upstash/context7";
@@ -128,11 +111,8 @@
       seiren,
       soulforge,
       nix-hazkey,
-      agent-skills-nix,
       nix-claude-code,
-      claude-plugins-official,
       codex-cli-nix,
-      kuu-marketplace,
       context7-skills,
       evolutionary-naming,
       mattpocock-skills,
@@ -194,7 +174,6 @@
                   dms.homeModules.dank-material-shell
                   dms.homeModules.niri
                   voxtype.homeManagerModules.default
-                  agent-skills-nix.homeManagerModules.default
                   zen-browser.homeModules.beta
                   ./home
                 ];
@@ -203,8 +182,6 @@
                 inherit
                   dms
                   voxtype
-                  claude-plugins-official
-                  kuu-marketplace
                   context7-skills
                   evolutionary-naming
                   mattpocock-skills

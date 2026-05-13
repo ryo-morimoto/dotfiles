@@ -28,7 +28,7 @@ in
       approval_policy = "never";
       features = {
         multi_agent = true;
-        codex_hooks = true;
+        hooks = true;
       };
       otel.log_user_prompt = false;
       mcp_servers = lib.mapAttrs (_: mkCodexMcp) (
