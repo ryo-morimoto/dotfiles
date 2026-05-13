@@ -23,29 +23,6 @@
         "type": "github"
       }
     },
-    "agent-skills-nix": {
-      "inputs": {
-        "home-manager": [
-          "home-manager"
-        ],
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1777875835,
-        "narHash": "sha256-+ghBYIh477YxDPd0sKeD4AwnKJSOXKT0nHuAAGHL1cQ=",
-        "owner": "Kyure-A",
-        "repo": "agent-skills-nix",
-        "rev": "c6cb03f84cda0dc3f5daa05bf4d49f56c182f690",
-        "type": "github"
-      },
-      "original": {
-        "owner": "Kyure-A",
-        "repo": "agent-skills-nix",
-        "type": "github"
-      }
-    },
     "banto": {
       "inputs": {
         "nixpkgs": [
@@ -63,38 +40,6 @@
       "original": {
         "owner": "ryo-morimoto",
         "repo": "banto",
-        "type": "github"
-      }
-    },
-    "claude-plugins-official": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1778605545,
-        "narHash": "sha256-GsQD5qQERWUIb9HPltwucHYOZTYj3uYS+xkKx2uY5dw=",
-        "owner": "anthropics",
-        "repo": "claude-plugins-official",
-        "rev": "1cf022eba106dce65cd2ce28a42d34d1b2874acf",
-        "type": "github"
-      },
-      "original": {
-        "owner": "anthropics",
-        "repo": "claude-plugins-official",
-        "type": "github"
-      }
-    },
-    "coderabbit-claude-plugin": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1776058097,
-        "narHash": "sha256-rfLJczlF+qB/qdJb7OhWmzhVmVdun58gsvw6Be6Pe/Q=",
-        "owner": "coderabbitai",
-        "repo": "claude-plugin",
-        "rev": "2d194b823b8466714992186e7d182acbbc6735f0",
-        "type": "github"
-      },
-      "original": {
-        "owner": "coderabbitai",
-        "repo": "claude-plugin",
         "type": "github"
       }
     },
@@ -348,22 +293,6 @@
         "type": "github"
       }
     },
-    "kuu-marketplace": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1777219976,
-        "narHash": "sha256-2bT+vLmabola3kPoUFsk/1KCNRTp4/W9XE700oy4oBA=",
-        "owner": "fumiya-kume",
-        "repo": "claude-code",
-        "rev": "3b26ae129057cfa5ebffdc907977d75c207d0e75",
-        "type": "github"
-      },
-      "original": {
-        "owner": "fumiya-kume",
-        "repo": "claude-code",
-        "type": "github"
-      }
-    },
     "mattpocock-skills": {
       "flake": false,
       "locked": {
@@ -604,10 +533,7 @@
     "root": {
       "inputs": {
         "agenix": "agenix",
-        "agent-skills-nix": "agent-skills-nix",
         "banto": "banto",
-        "claude-plugins-official": "claude-plugins-official",
-        "coderabbit-claude-plugin": "coderabbit-claude-plugin",
         "codex-cli-nix": "codex-cli-nix",
         "compound-engineering-plugin": "compound-engineering-plugin",
         "context7-skills": "context7-skills",
@@ -615,7 +541,6 @@
         "evolutionary-naming": "evolutionary-naming",
         "fenix": "fenix",
         "home-manager": "home-manager_2",
-        "kuu-marketplace": "kuu-marketplace",
         "mattpocock-skills": "mattpocock-skills",
         "mgechev-skills": "mgechev-skills",
         "mizchi-skills": "mizchi-skills",

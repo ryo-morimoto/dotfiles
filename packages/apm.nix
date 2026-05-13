@@ -102,6 +102,20 @@ let
         mkPinnedDependency
         ;
 
+      mkPackageDependency =
+        {
+          lock,
+          package,
+          path ? null,
+        }:
+        mkPinnedDependency {
+          inherit
+            lock
+            package
+            path
+            ;
+        };
+
       mkPrimitiveDependencies =
         {
           lock,
@@ -187,7 +201,6 @@ let
         activation.apmInstallAgentPackages = lib.mkIf sharedApm.enable (
           lib.hm.dag.entryAfter
             [
-              "agent-skills"
               "claudeCodeSettings"
               "linkGeneration"
             ]
