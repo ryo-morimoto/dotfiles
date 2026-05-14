@@ -1,4 +1,5 @@
 {
+  agenix,
   config,
   lib,
   pkgs,
@@ -9,6 +10,7 @@ let
   username = "ryo-morimoto";
   homeDir = "/home/${username}";
   dotfilesDir = "${homeDir}/ghq/github.com/${username}/dotfiles";
+  system = pkgs.stdenv.hostPlatform.system;
   hermesStateDir = "/var/lib/hermes";
   hermesContainerName = "hermes-agent";
   hermesContainerHermesBin = "/data/current-package/bin/hermes";
@@ -362,6 +364,7 @@ in
     awww
 
     # Utilities
+    agenix.packages.${system}.default
     wl-clipboard
     pavucontrol
     playerctl

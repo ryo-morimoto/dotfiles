@@ -149,6 +149,9 @@
     in
     {
       nixosConfigurations.ryobox = nixpkgs.lib.nixosSystem {
+        specialArgs = {
+          inherit agenix;
+        };
         modules = [
           ./hosts/ryobox
           agenix.nixosModules.default
