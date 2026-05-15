@@ -16,6 +16,7 @@ let
   containerImage = "ubuntu:24.04";
   containerConfigVersion = 2;
   containerPath = "/tools/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
+  caBundle = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
 
   hermesRuntimePackage = config.services.hermes-agent.package.override {
     extraDependencyGroups = [
@@ -63,6 +64,11 @@ let
     export XDG_DATA_HOME="$HOME/.local/share"
     export XDG_CACHE_HOME="/cache/xdg"
     export MESSAGING_CWD="/workspace"
+    export SSL_CERT_FILE="${caBundle}"
+    export NIX_SSL_CERT_FILE="${caBundle}"
+    export REQUESTS_CA_BUNDLE="${caBundle}"
+    export CURL_CA_BUNDLE="${caBundle}"
+    export GIT_SSL_CAINFO="${caBundle}"
 
     if ! getent group "${hermesGid}" >/dev/null; then
       groupadd -g "${hermesGid}" ${hermesUser}
@@ -316,6 +322,7 @@ let
           hermesGid
           containerConfigVersion
           containerPath
+          caBundle
           ;
         tools = "${hermesRuntimeTools}";
         entrypoint = "${hermesContainerEntrypoint}";
@@ -418,6 +425,11 @@ let
             --env XDG_CACHE_HOME=/cache/xdg \
             --env PATH=${containerPath} \
             --env MESSAGING_CWD=/workspace \
+            --env SSL_CERT_FILE=${caBundle} \
+            --env NIX_SSL_CERT_FILE=${caBundle} \
+            --env REQUESTS_CA_BUNDLE=${caBundle} \
+            --env CURL_CA_BUNDLE=${caBundle} \
+            --env GIT_SSL_CAINFO=${caBundle} \
             --env HONCHO_WORKSPACE=${profileConfig.honchoWorkspace} \
             --env HONCHO_AI_PEER=${profileConfig.honchoAiPeer} \
             --env HERMES_UID=${hermesUid} \
