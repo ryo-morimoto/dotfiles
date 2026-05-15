@@ -14,6 +14,13 @@
   confirmation.
 - Ask probes that are easy to answer from intuition; do not require analysis unless analysis is the task.
 
+## Output Density
+
+- State obvious conclusions directly; do not explain familiar concepts unless local context changes their meaning.
+- For non-obvious claims, include only the context needed to judge or act: usually why, when, where, or how.
+- Delete sentences that do not change what the reader understands, decides, verifies, or does.
+- Add context when a recommendation would otherwise look arbitrary, conditional, risky, or hard to execute.
+
 ## Source-First Decisions
 
 - Read the relevant source before making implementation or design claims.
@@ -38,6 +45,14 @@
 - Avoid duplicate tool calls with the same arguments. If a call fails or output is surprising, analyze it before
   retrying.
 - Serialize calls to the same remote or MCP server when parallelism mainly duplicates network and context cost.
+
+## Worktree Workflow
+
+- Use `wt` for worktree lifecycle operations so configured hooks run; raw `git worktree` is only for low-level
+  Git-native operations, such as `git worktree list --porcelain -z`, `git worktree prune -n -v`,
+  `git worktree repair`, and `git worktree lock` / `git worktree unlock`.
+- In non-interactive agent tools, do not assume a directory switch persists across tool calls. After `wt switch`, run
+  subsequent commands with the target worktree path as the explicit working directory.
 
 ## Editing And Retry Discipline
 
