@@ -63,7 +63,6 @@ let
     export XDG_CONFIG_HOME="$HOME/.config"
     export XDG_DATA_HOME="$HOME/.local/share"
     export XDG_CACHE_HOME="/cache/xdg"
-    export MESSAGING_CWD="/workspace"
     export SSL_CERT_FILE="${caBundle}"
     export NIX_SSL_CERT_FILE="${caBundle}"
     export REQUESTS_CA_BUNDLE="${caBundle}"
@@ -96,7 +95,7 @@ let
       "$XDG_CONFIG_HOME" \
       "$XDG_DATA_HOME" \
       "$XDG_CACHE_HOME" \
-      "$MESSAGING_CWD" \
+      /workspace \
       /cache
 
     chown -R "${hermesUid}:${hermesGid}" /data /workspace /cache
@@ -203,6 +202,7 @@ let
         workspace = profileConfig.honchoWorkspace;
         aiPeer = profileConfig.honchoAiPeer;
       };
+      terminal.cwd = "/workspace";
     };
 
   mkSoulSeed =
@@ -305,7 +305,6 @@ let
       HERMES_PROFILE=${profileName}
       HERMES_HOME=/data/.hermes
       HOME=/data/home
-      MESSAGING_CWD=/workspace
       HONCHO_WORKSPACE=${profileConfig.honchoWorkspace}
       HONCHO_AI_PEER=${profileConfig.honchoAiPeer}
     '';
@@ -424,7 +423,6 @@ let
             --env XDG_DATA_HOME=/data/home/.local/share \
             --env XDG_CACHE_HOME=/cache/xdg \
             --env PATH=${containerPath} \
-            --env MESSAGING_CWD=/workspace \
             --env SSL_CERT_FILE=${caBundle} \
             --env NIX_SSL_CERT_FILE=${caBundle} \
             --env REQUESTS_CA_BUNDLE=${caBundle} \
