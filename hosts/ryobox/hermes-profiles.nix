@@ -59,16 +59,16 @@ let
     export HOME="/data/home"
     export MESSAGING_CWD="/workspace"
 
-    if ! getent group ${hermesUser} >/dev/null; then
+    if ! getent group "${hermesGid}" >/dev/null; then
       groupadd -g "${hermesGid}" ${hermesUser}
     fi
 
-    if ! id -u ${hermesUser} >/dev/null 2>&1; then
+    if ! getent passwd "${hermesUid}" >/dev/null; then
       useradd \
         -u "${hermesUid}" \
         -g "${hermesGid}" \
         -d "$HOME" \
-        -s /tools/bin/bash \
+        -s /bin/bash \
         ${hermesUser}
     fi
 
@@ -90,7 +90,7 @@ let
     exec setpriv \
       --reuid "${hermesUid}" \
       --regid "${hermesGid}" \
-      --init-groups \
+      --clear-groups \
       "$@"
   '';
 
@@ -339,7 +339,7 @@ let
           "${mkWaitForContainer profileName}"
           "${pkgs.gnugrep}/bin/grep -Eq '^DISCORD_BOT_TOKEN=.+' ${paths.hermesHome}/.env"
         ];
-        ExecStart = "${pkgs.podman}/bin/podman exec --user ${hermesUser} ${paths.containerName} /tools/bin/hermes gateway run --replace";
+        ExecStart = "${pkgs.podman}/bin/podman exec --user ${hermesUid}:${hermesGid} ${paths.containerName} /tools/bin/hermes gateway run --replace";
         Restart = "always";
         RestartSec = 5;
       };
@@ -361,7 +361,7 @@ let
       serviceConfig = {
         Type = "simple";
         ExecStartPre = "${mkWaitForContainer profileName}";
-        ExecStart = "${pkgs.podman}/bin/podman exec --user ${hermesUser} ${paths.containerName} /tools/bin/hermes dashboard --host 0.0.0.0 --port ${toString profileConfig.dashboardPort} --no-open --tui --insecure";
+        ExecStart = "${pkgs.podman}/bin/podman exec --user ${hermesUid}:${hermesGid} ${paths.containerName} /tools/bin/hermes dashboard --host 0.0.0.0 --port ${toString profileConfig.dashboardPort} --no-open --tui --insecure";
         Restart = "always";
         RestartSec = 5;
       };
