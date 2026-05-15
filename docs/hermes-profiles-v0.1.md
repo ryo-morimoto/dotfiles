@@ -1,0 +1,214 @@
+# Hermes Profiles v0.1
+
+## Profiles
+
+- `dionysus`: personal/hobby
+- `apollon`: work
+
+## Model
+
+Profile = dedicated Podman container
+Project = remote repo, lazy cloned on demand
+Session = Hermes-managed
+
+The container is a credential/state/workspace boundary. It is not a strong sandbox for malicious repo code.
+
+## Runtime Layout
+
+Host:
+
+```text
+/var/lib/hermes-profiles/dionysus/
+  data/.hermes/
+  data/home/
+  workspace/
+
+/var/lib/hermes-profiles/apollon/
+  data/.hermes/
+  data/home/
+  workspace/
+```
+
+Container:
+
+```text
+/data/.hermes
+/data/home
+/workspace
+/cache
+/tools/bin
+```
+
+## Secret Files
+
+v0.1 intentionally reuses existing encrypted files:
+
+| Profile | Secret file |
+|---|---|
+| dionysus | `secrets/hermes-discord-personal-env.age` |
+| apollon | `secrets/hermes-discord-work-env.age` |
+
+The new Nix module exposes them as:
+
+| Profile | agenix attribute |
+|---|---|
+| dionysus | `hermes-dionysus-env` |
+| apollon | `hermes-apollon-env` |
+
+Do not copy tokens between profiles.
+
+## Ports
+
+| Profile | Dashboard | Preview Range |
+|---|---:|---:|
+| dionysus | `127.0.0.1:9120` | `127.0.0.1:9200-9299` |
+| apollon | `127.0.0.1:9130` | `127.0.0.1:9300-9399` |
+
+Dashboard is started with Hermes `--insecure`, so v0.1 binds host ports to loopback only.
+
+Tailnet access must use an explicit tunnel or reverse proxy with ACLs.
+
+## Staged Rollout
+
+Phase A:
+
+1. Add new `hermes-dionysus` and `hermes-apollon` containers.
+2. Keep old `hermes-agent`, `personal`, `work`, and `9119` dashboard services active.
+3. Run smoke checks against new containers.
+
+Phase B:
+
+1. Remove old shared gateway services and path units.
+2. Disable old upstream `services.hermes-agent`.
+3. Remove old `9119` firewall port.
+
+Rollback:
+
+```bash
+sudo systemctl stop hermes-container-dionysus.service hermes-container-apollon.service || true
+sudo podman rm -f hermes-dionysus hermes-apollon || true
+sudo nixos-rebuild switch --rollback
+```
+
+## v0.1 Scope
+
+Included:
+
+- separate runtime containers
+- separate secrets/auth state
+- separate Honcho workspaces
+- separate workspaces
+- `gh` CLI based repo discovery
+- lazy clone into `/workspace/repos/<owner>/<repo>`
+- shared development core
+- service account boundary policy
+
+Excluded:
+
+- project registry
+- global worktree manager
+- custom session DB
+- session-based branch naming
+- full Slack/Gateway setup beyond profile env injection
+- automatic skill package sync
+- repo-specific worktree setup in profile config
+
+## Lazy Repo Workflow
+
+Discover:
+
+```bash
+gh repo view OWNER/REPO --json nameWithOwner,sshUrl,defaultBranchRef,viewerPermission
+gh repo list OWNER --limit 100 --json nameWithOwner,sshUrl,visibility,isPrivate
+```
+
+Clone:
+
+```bash
+mkdir -p /workspace/repos/OWNER
+gh repo clone OWNER/REPO /workspace/repos/OWNER/REPO
+```
+
+Existing checkout:
+
+```bash
+cd /workspace/repos/OWNER/REPO
+git status
+git fetch --prune
+```
+
+Do not overwrite dirty work.
+
+## Branch Naming
+
+Branch names follow repo convention and describe the change.
+
+Good:
+
+- `fix/login-error`
+- `feat/oauth-refresh`
+- `chore/update-ci`
+- `fix/123-login-error`
+
+Avoid:
+
+- session IDs
+- Hermes profile names
+- agent-specific internal names
+
+## Repo Setup
+
+If `AGENTS.md` exists, follow it.
+
+If `AGENTS.md` does not exist:
+
+1. Read `README.md`.
+2. Inspect build files.
+3. Infer setup/check commands.
+4. State assumptions explicitly.
+
+Do not create `AGENTS.md` unless asked.
+
+## Operation Safety
+
+Allowed automatically:
+
+- read files
+- search files
+- `gh repo view/list`
+- `gh issue/pr view/list`
+- clone
+- fetch
+- run non-destructive checks
+
+Allowed when the task clearly implies coding:
+
+- create branch
+- edit files
+- run tests
+- commit locally
+
+Requires explicit user intent or confirmation:
+
+- push branch
+- create PR
+- comment on issue/PR
+- update Linear/Notion/Slack
+- delete remote branch
+- delete workspace with dirty or unpushed changes
+
+## Checks
+
+```bash
+systemctl is-active hermes-container-dionysus.service hermes-container-apollon.service
+systemctl is-active hermes-dashboard-dionysus.service hermes-dashboard-apollon.service
+systemctl is-active hermes-gateway-dionysus.service hermes-gateway-apollon.service
+
+sudo podman exec hermes-dionysus printenv HERMES_PROFILE
+sudo podman exec hermes-apollon printenv HERMES_PROFILE
+
+curl -I http://127.0.0.1:9120/
+curl -I http://127.0.0.1:9130/
+
+ss -ltnp | rg '127\.0\.0\.1:(9120|9130)'
+```
