@@ -17,7 +17,7 @@ let
   hermesGid = "1000";
   dashboardHost = "0.0.0.0";
   containerImage = "ubuntu:24.04";
-  containerConfigVersion = 3;
+  containerConfigVersion = 4;
   containerPath = "/tools/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
   caBundle = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
 
@@ -381,6 +381,17 @@ let
         install -d -m 0755 -o ${hermesUid} -g ${hermesGid} ${paths.profileConfigDir}
         install -d -m 0755 -o ${hermesUid} -g ${hermesGid} ${paths.profileConfigDir}/skills
 
+        if [ -d ${paths.homeDir}/.hermes ] && [ ! -L ${paths.homeDir}/.hermes ]; then
+          if [ -n "$(${pkgs.findutils}/bin/find ${paths.homeDir}/.hermes -mindepth 1 -print -quit)" ]; then
+            ${pkgs.coreutils}/bin/cp -a ${paths.homeDir}/.hermes/. ${paths.hermesHome}/
+          fi
+          rm -rf ${paths.homeDir}/.hermes.before-profile-home
+          mv ${paths.homeDir}/.hermes ${paths.homeDir}/.hermes.before-profile-home
+        elif [ -e ${paths.homeDir}/.hermes ] && [ ! -L ${paths.homeDir}/.hermes ]; then
+          rm -f ${paths.homeDir}/.hermes
+        fi
+        ln -sfn ${paths.hermesHome} ${paths.homeDir}/.hermes
+
         install -m 0640 -o ${hermesUid} -g ${hermesGid} ${mkProfileConfig profileName profileConfig} ${paths.hermesHome}/config.yaml
         if [ ! -e ${paths.profileConfigDir}/SOUL.md ]; then
           if [ -f ${paths.workspaceDir}/SOUL.md ] && [ ! -L ${paths.workspaceDir}/SOUL.md ]; then
@@ -443,6 +454,7 @@ let
             --volume /nix/store:/nix/store:ro \
             --volume ${hermesRuntimeTools}:/tools:ro \
             --volume ${paths.dataDir}:/data:rw \
+            --volume ${paths.hermesHome}:/root/.hermes:rw \
             --volume ${paths.workspaceDir}:/workspace:rw \
             --volume ${paths.cacheDir}:/cache:rw \
             --volume ${paths.profileConfigDir}:${profileConfigContainerPath}:rw \
