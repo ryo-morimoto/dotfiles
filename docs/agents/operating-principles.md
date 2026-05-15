@@ -71,7 +71,7 @@
 - `semgrep` CLI は Home Manager に常設せず、必要時だけ一時導入または個別環境で使う。
 - Neovim の日本語 Markdown では spell を無効化せず、`spelllang=en,cjk` で英単語チェックを残す。
 - Repo 内に `worktrees/` は持たず、worktree は project 隣接の `{project}-wt/<name>` に置く。
-- Hermes Agent は dashboard を常駐公開せず、Discord profile gateway を primary UI とする。Runtime service は managed mode を維持し、profile directory / config / Discord env / Codex auth は Nix activation と agenix secret で宣言管理する。
+- Hermes Agent は Discord profile gateway を primary remote UI とし、dashboard は `tailscale0` 限定公開の補助 UI として運用する。Runtime service は managed mode を維持し、profile directory / config は Nix activation、Discord env は agenix、Codex auth は profile runtime state として管理する。
 
 ## 未確定ドメイン
 

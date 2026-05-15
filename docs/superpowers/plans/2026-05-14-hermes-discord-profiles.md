@@ -4,7 +4,7 @@
 
 **Goal:** Run two isolated Hermes Discord-facing profiles, `personal` and `work`, mapped to Dionysos and Apollo Discord bots.
 
-**Architecture:** Keep the upstream `services.hermes-agent` container module as the Podman container anchor, then add two explicit profile gateway services. Nix activation creates each Hermes profile directory and profile `config.yaml`; agenix provides each profile `.env` and `auth.json` when the encrypted secret files exist.
+**Architecture:** Keep the upstream `services.hermes-agent` container module as the Podman container anchor, then add two explicit profile gateway services. Nix activation creates each Hermes profile directory and profile `config.yaml`; agenix provides each profile Discord `.env` when the encrypted secret files exist. Codex OAuth remains per-profile runtime state created with `hermes auth add`.
 
 **Tech Stack:** NixOS module config in `hosts/ryobox/default.nix`, upstream Hermes Agent, Podman, systemd, agenix, Discord bot gateway integration.
 
@@ -15,7 +15,7 @@
 - Modify `hosts/ryobox/default.nix`
   - Add `hermesGatewayProfiles`, profile config generation, and profile bootstrap activation.
   - Add `hermes-gateway-personal` and `hermes-gateway-work` systemd services.
-  - Conditionally register agenix secrets when the Discord env or Codex auth secret files exist.
+  - Conditionally register agenix secrets when the Discord env secret files exist.
 - Modify `docs/hermes-discord-profiles.md`
   - Document encrypted env file shape and runtime checks.
 - Modify `docs/agents/operating-principles.md`
@@ -37,7 +37,7 @@ podman exec --user hermes hermes-agent /data/current-package/bin/hermes --profil
 ```
 
 - The services keep managed mode. Do not clear `HERMES_MANAGED` for runtime services.
-- The services use `ConditionPathExists` for `/var/lib/hermes/.hermes/profiles/<profile>/.env` and `/var/lib/hermes/.hermes/profiles/<profile>/auth.json`, so they skip startup until the matching agenix secrets exist.
+- The services use `ConditionPathExists` for `/var/lib/hermes/.hermes/profiles/<profile>/.env`, so they skip startup until the matching Discord agenix secret exists. A matching `.path` unit starts the gateway automatically when the `.env` appears later.
 
 ## Task 1: Nix Profile Gateways
 
@@ -50,11 +50,11 @@ Add `hermesStateDir`, `hermesContainerName`, `hermesContainerHermesBin`, `hermes
 
 - [x] **Step 2: Add optional agenix secrets**
 
-Register `hermes-discord-personal-env`, `hermes-discord-work-env`, `hermes-codex-personal-auth`, and `hermes-codex-work-auth` only when the corresponding encrypted file exists.
+Register `hermes-discord-personal-env` and `hermes-discord-work-env` only when the corresponding encrypted file exists.
 
 - [x] **Step 3: Add activation bootstrap**
 
-Create `/var/lib/hermes/.hermes/profiles/{personal,work}`, profile subdirectories, `config.yaml`, `.managed`, and profile `.env` / `auth.json` when the age secrets exist.
+Create `/var/lib/hermes/.hermes/profiles/{personal,work}`, profile subdirectories, `config.yaml`, `.managed`, and profile `.env` when the age secrets exist.
 
 - [x] **Step 4: Add systemd units**
 
@@ -117,8 +117,6 @@ Expected: `all checks passed!`
 **Files:**
 - Create later: `secrets/hermes-discord-personal-env.age`
 - Create later: `secrets/hermes-discord-work-env.age`
-- Create later: `secrets/hermes-codex-personal-auth.age`
-- Create later: `secrets/hermes-codex-work-auth.age`
 
 - [ ] **Step 1: Create Discord env secrets**
 
@@ -130,9 +128,9 @@ DISCORD_ALLOWED_USERS=replace-with-your-discord-user-id
 DISCORD_HOME_CHANNEL=replace-with-briefing-or-nudge-text-channel-id
 ```
 
-- [ ] **Step 2: Create Codex auth secrets**
+- [ ] **Step 2: Log in to Codex per profile**
 
-Each decrypted auth file must be a Hermes `auth.json` containing the `providers.openai-codex.tokens` state for that profile.
+Each profile must run `hermes --profile <profile> auth add openai-codex --type oauth` inside the Hermes container. The resulting auth state stays in `/var/lib/hermes/.hermes/profiles/<profile>` as runtime state.
 
 - [ ] **Step 3: Apply NixOS config**
 
@@ -142,7 +140,7 @@ Run:
 sudo nixos-rebuild switch --flake .
 ```
 
-Expected: activation creates profile directories and copies existing profile env/auth secrets.
+Expected: activation creates profile directories and copies existing profile env secrets.
 
 - [ ] **Step 4: Start services**
 
@@ -153,10 +151,10 @@ sudo systemctl start hermes-gateway-personal.service
 sudo systemctl start hermes-gateway-work.service
 ```
 
-Expected: services start when their `.env` and `auth.json` files exist; otherwise systemd skips them due to `ConditionPathExists`.
+Expected: services start when their `.env` files exist; otherwise systemd skips them due to `ConditionPathExists`. After `.env` files appear, `hermes-gateway-<profile>-env.path` starts the matching gateway automatically.
 
 ## Self-Review
 
-- Spec coverage: Two profile gateways, managed runtime, Nix-created profile config, and agenix-managed Discord env / Codex auth are covered.
+- Spec coverage: Two profile gateways, managed runtime, Nix-created profile config, agenix-managed Discord env, and runtime Codex auth are covered.
 - Placeholder scan: Replacement strings appear only inside documented `.env` examples and are not committed secrets.
 - Type consistency: Nix names are consistent across code and docs.
