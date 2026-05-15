@@ -1,6 +1,5 @@
 {
   agenix,
-  config,
   lib,
   pkgs,
   ...
@@ -11,80 +10,6 @@ let
   homeDir = "/home/${username}";
   dotfilesDir = "${homeDir}/ghq/github.com/${username}/dotfiles";
   system = pkgs.stdenv.hostPlatform.system;
-  hermesStateDir = "/var/lib/hermes";
-  hermesContainerName = "hermes-agent";
-  hermesContainerHermesBin = "/data/current-package/bin/hermes";
-  hermesProfileSubdirs = [
-    "memories"
-    "sessions"
-    "skills"
-    "skins"
-    "logs"
-    "plans"
-    "workspace"
-    "cron"
-    "home"
-  ];
-  hermesGatewayProfiles = {
-    personal = {
-      description = "Hermes Agent Gateway - personal Discord profile";
-      secretFile = ../../secrets/hermes-discord-personal-env.age;
-      settings = {
-        model.provider = "openai-codex";
-        platforms.discord = {
-          enabled = true;
-          extra.channel_prompts = { };
-        };
-      };
-    };
-    work = {
-      description = "Hermes Agent Gateway - work Discord profile";
-      secretFile = ../../secrets/hermes-discord-work-env.age;
-      settings = {
-        model.provider = "openai-codex";
-        platforms.discord = {
-          enabled = true;
-          extra.channel_prompts = { };
-        };
-      };
-    };
-  };
-  hermesProfileConfigFiles = lib.mapAttrs (
-    profileName: profileConfig:
-    (pkgs.formats.yaml { }).generate "hermes-${profileName}-config.yaml" profileConfig.settings
-  ) hermesGatewayProfiles;
-  hermesProfilesWithSecrets = lib.filterAttrs (
-    _: profileConfig: builtins.pathExists profileConfig.secretFile
-  ) (lib.mapAttrs (_: profileConfig: { inherit (profileConfig) secretFile; }) hermesGatewayProfiles);
-  mkHermesProfileGatewayService = profileName: profileConfig: {
-    inherit (profileConfig) description;
-    wantedBy = [
-      "multi-user.target"
-      "hermes-agent.service"
-    ];
-    requires = [ "hermes-agent.service" ];
-    bindsTo = [ "hermes-agent.service" ];
-    partOf = [ "hermes-agent.service" ];
-    after = [ "hermes-agent.service" ];
-    unitConfig.ConditionPathExists = "${hermesStateDir}/.hermes/profiles/${profileName}/.env";
-
-    serviceConfig = {
-      Type = "simple";
-      ExecStart = "${pkgs.podman}/bin/podman exec --user hermes ${hermesContainerName} ${hermesContainerHermesBin} --profile ${profileName} gateway run --replace";
-      Restart = "always";
-      RestartSec = 5;
-    };
-  };
-  mkHermesProfileGatewayPath = profileName: profileConfig: {
-    description = "${profileConfig.description} env watcher";
-    wantedBy = [ "multi-user.target" ];
-    wants = [ "hermes-agent.service" ];
-    after = [ "hermes-agent.service" ];
-    pathConfig = {
-      PathExists = "${hermesStateDir}/.hermes/profiles/${profileName}/.env";
-      Unit = "hermes-gateway-${profileName}.service";
-    };
-  };
   agentDefaults = import ../../home/agents/default.nix {
     inherit lib;
     config = {
@@ -131,7 +56,6 @@ in
     firewall.interfaces.tailscale0.allowedTCPPorts = [
       80
       443
-      9119
     ];
   };
 
@@ -215,19 +139,8 @@ in
     gnome.gnome-keyring.enable = true;
 
     hermes-agent = {
-      enable = true;
-      addToSystemPackages = true;
-      extraDependencyGroups = [
-        "messaging"
-        "web"
-        "pty"
-      ];
-      settings.model.provider = "openai-codex";
-      container = {
-        enable = true;
-        backend = "podman";
-        hostUsers = [ username ];
-      };
+      enable = false;
+      addToSystemPackages = false;
     };
 
     # Tailscale VPN with SSH
@@ -264,99 +177,24 @@ in
         owner = username;
         mode = "0400";
       };
-    }
-    // lib.mapAttrs' (
-      profileName: profileConfig:
-      lib.nameValuePair "hermes-discord-${profileName}-env" {
-        file = profileConfig.secretFile;
-        owner = "hermes";
-        group = "hermes";
-        mode = "0400";
-      }
-    ) hermesProfilesWithSecrets;
+    };
   };
-  system.activationScripts."hermes-discord-profiles" =
-    lib.stringAfter
-      (
-        [
-          "users"
-          "hermes-agent-setup"
-        ]
-        ++ lib.optional (config.system.activationScripts ? setupSecrets) "setupSecrets"
-      )
-      (
-        lib.concatStringsSep "\n" (
-          lib.mapAttrsToList (
-            profileName: _profileConfig:
-            let
-              profileDir = "${hermesStateDir}/.hermes/profiles/${profileName}";
-              profileSecretName = "hermes-discord-${profileName}-env";
-              hasSecret = builtins.hasAttr profileName hermesProfilesWithSecrets;
-            in
-            ''
-              install -d -o hermes -g hermes -m 2770 ${profileDir}
-              ${lib.concatMapStringsSep "\n" (subdir: ''
-                install -d -o hermes -g hermes -m 2770 ${profileDir}/${subdir}
-              '') hermesProfileSubdirs}
-              install -o hermes -g hermes -m 0640 ${
-                hermesProfileConfigFiles.${profileName}
-              } ${profileDir}/config.yaml
-              touch ${profileDir}/.managed
-              chown hermes:hermes ${profileDir}/.managed
-              chmod 0644 ${profileDir}/.managed
-              ${lib.optionalString hasSecret ''
-                install -o hermes -g hermes -m 0400 ${
-                  config.age.secrets.${profileSecretName}.path
-                } ${profileDir}/.env
-              ''}
-            ''
-          ) hermesGatewayProfiles
-        )
-      );
-  systemd.services =
-    lib.mapAttrs' (
-      profileName: profileConfig:
-      lib.nameValuePair "hermes-gateway-${profileName}" (
-        mkHermesProfileGatewayService profileName profileConfig
-      )
-    ) hermesGatewayProfiles
-    // {
-      "hermes-agent-dashboard" = {
-        description = "Hermes Agent Dashboard";
-        wantedBy = [ "multi-user.target" ];
-        requires = [ "hermes-agent.service" ];
-        bindsTo = [ "hermes-agent.service" ];
-        partOf = [ "hermes-agent.service" ];
-        after = [ "hermes-agent.service" ];
-
-        serviceConfig = {
-          Type = "simple";
-          ExecStart = "${pkgs.podman}/bin/podman exec --user hermes ${hermesContainerName} ${hermesContainerHermesBin} dashboard --host 0.0.0.0 --port 9119 --no-open --tui --insecure";
-          Restart = "always";
-          RestartSec = 5;
-        };
-      };
-
-      "dotfiles-pull" = {
-        description = "Pull latest dotfiles from GitHub";
-        serviceConfig = {
-          Type = "oneshot";
-          User = username;
-          WorkingDirectory = dotfilesDir;
-          ExecStart = "${pkgs.git}/bin/git pull --ff-only";
-        };
-      };
-      "nixos-upgrade" = {
-        after = [ "dotfiles-pull.service" ];
-        wants = [ "dotfiles-pull.service" ];
+  systemd.services = {
+    "dotfiles-pull" = {
+      description = "Pull latest dotfiles from GitHub";
+      serviceConfig = {
+        Type = "oneshot";
+        User = username;
+        WorkingDirectory = dotfilesDir;
+        ExecStart = "${pkgs.git}/bin/git pull --ff-only";
       };
     };
-  systemd.paths = lib.mapAttrs' (
-    profileName: profileConfig:
-    lib.nameValuePair "hermes-gateway-${profileName}-env" (
-      mkHermesProfileGatewayPath profileName profileConfig
-    )
-  ) hermesGatewayProfiles;
+
+    "nixos-upgrade" = {
+      after = [ "dotfiles-pull.service" ];
+      wants = [ "dotfiles-pull.service" ];
+    };
+  };
 
   # Bluetooth
   hardware.bluetooth = {
