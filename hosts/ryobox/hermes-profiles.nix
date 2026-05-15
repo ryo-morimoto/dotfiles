@@ -8,13 +8,16 @@
 let
   profileRoot = "/var/lib/hermes-profiles";
   profileCacheRoot = "/var/cache/hermes-profiles";
+  dotfilesRoot = "${config.users.users.ryo-morimoto.home}/ghq/github.com/ryo-morimoto/dotfiles";
+  profileConfigRoot = "${dotfilesRoot}/config/hermes/profiles";
+  profileConfigContainerPath = "/profile-config";
 
   hermesUser = "hermes";
   hermesUid = "1000";
   hermesGid = "1000";
   dashboardHost = "0.0.0.0";
   containerImage = "ubuntu:24.04";
-  containerConfigVersion = 2;
+  containerConfigVersion = 3;
   containerPath = "/tools/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
   caBundle = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
 
@@ -187,6 +190,7 @@ let
       homeDir = "${stateDir}/data/home";
       workspaceDir = "${stateDir}/workspace";
       cacheDir = "${profileCacheRoot}/${profileName}";
+      profileConfigDir = "${profileConfigRoot}/${profileName}";
       containerName = "hermes-${profileName}";
     };
 
@@ -320,6 +324,7 @@ let
           hermesUid
           hermesGid
           containerConfigVersion
+          profileConfigContainerPath
           containerPath
           caBundle
           ;
@@ -373,11 +378,37 @@ let
         install -d -m 0750 -o ${hermesUid} -g ${hermesGid} ${paths.homeDir}
         install -d -m 0750 -o ${hermesUid} -g ${hermesGid} ${paths.workspaceDir}
         install -d -m 0750 -o ${hermesUid} -g ${hermesGid} ${paths.cacheDir}
+        install -d -m 0755 -o ${hermesUid} -g ${hermesGid} ${paths.profileConfigDir}
+        install -d -m 0755 -o ${hermesUid} -g ${hermesGid} ${paths.profileConfigDir}/skills
 
         install -m 0640 -o ${hermesUid} -g ${hermesGid} ${mkProfileConfig profileName profileConfig} ${paths.hermesHome}/config.yaml
-        if [ ! -e ${paths.workspaceDir}/SOUL.md ]; then
-          install -m 0640 -o ${hermesUid} -g ${hermesGid} ${mkSoulSeed profileName profileConfig} ${paths.workspaceDir}/SOUL.md
+        if [ ! -e ${paths.profileConfigDir}/SOUL.md ]; then
+          if [ -f ${paths.workspaceDir}/SOUL.md ] && [ ! -L ${paths.workspaceDir}/SOUL.md ]; then
+            install -m 0640 -o ${hermesUid} -g ${hermesGid} ${paths.workspaceDir}/SOUL.md ${paths.profileConfigDir}/SOUL.md
+          else
+            install -m 0640 -o ${hermesUid} -g ${hermesGid} ${mkSoulSeed profileName profileConfig} ${paths.profileConfigDir}/SOUL.md
+          fi
         fi
+
+        if [ -e ${paths.workspaceDir}/SOUL.md ] && [ ! -L ${paths.workspaceDir}/SOUL.md ]; then
+          if ! ${pkgs.diffutils}/bin/cmp -s ${paths.workspaceDir}/SOUL.md ${paths.profileConfigDir}/SOUL.md; then
+            install -m 0640 -o ${hermesUid} -g ${hermesGid} ${paths.workspaceDir}/SOUL.md ${paths.workspaceDir}/SOUL.md.before-profile-config
+          fi
+          rm -f ${paths.workspaceDir}/SOUL.md
+        fi
+        ln -sfn ${profileConfigContainerPath}/SOUL.md ${paths.workspaceDir}/SOUL.md
+
+        if [ -d ${paths.hermesHome}/skills ] && [ ! -L ${paths.hermesHome}/skills ]; then
+          if [ -n "$(${pkgs.findutils}/bin/find ${paths.hermesHome}/skills -mindepth 1 -print -quit)" ]; then
+            ${pkgs.coreutils}/bin/cp -a ${paths.hermesHome}/skills/. ${paths.profileConfigDir}/skills/
+          fi
+          rm -rf ${paths.hermesHome}/skills.before-profile-config
+          mv ${paths.hermesHome}/skills ${paths.hermesHome}/skills.before-profile-config
+        elif [ -e ${paths.hermesHome}/skills ] && [ ! -L ${paths.hermesHome}/skills ]; then
+          rm -f ${paths.hermesHome}/skills
+        fi
+        ln -sfn ${profileConfigContainerPath}/skills ${paths.hermesHome}/skills
+
         install -m 0600 -o ${hermesUid} -g ${hermesGid} ${runtimeEnv} ${paths.hermesHome}/.env
         cat ${config.age.secrets.${profileConfig.envSecretName}.path} >> ${paths.hermesHome}/.env
         chown ${hermesUid}:${hermesGid} ${paths.hermesHome}/.env
@@ -414,6 +445,7 @@ let
             --volume ${paths.dataDir}:/data:rw \
             --volume ${paths.workspaceDir}:/workspace:rw \
             --volume ${paths.cacheDir}:/cache:rw \
+            --volume ${paths.profileConfigDir}:${profileConfigContainerPath}:rw \
             --publish ${dashboardHost}:${toString profileConfig.dashboardPort}:${toString profileConfig.dashboardPort} \
             --publish 127.0.0.1:${toString profileConfig.previewPortStart}-${toString profileConfig.previewPortEnd}:${toString profileConfig.previewPortStart}-${toString profileConfig.previewPortEnd} \
             --env HERMES_PROFILE=${profileName} \
