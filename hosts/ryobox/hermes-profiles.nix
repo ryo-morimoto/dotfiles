@@ -424,9 +424,6 @@ let
           install -d -m 0750 -o ${hermesUid} -g ${hermesGid} ${paths.hermesHome}/skills
         fi
 
-        if [ -d ${paths.profileConfigDir}/skills ] && [ -n "$(${pkgs.findutils}/bin/find ${paths.profileConfigDir}/skills -mindepth 1 ! -name .gitkeep -print -quit)" ]; then
-          ${pkgs.coreutils}/bin/cp -a ${paths.profileConfigDir}/skills/. ${paths.hermesHome}/skills/
-        fi
         chown -R ${hermesUid}:${hermesGid} ${paths.hermesHome}/skills
 
         install -m 0600 -o ${hermesUid} -g ${hermesGid} ${runtimeEnv} ${paths.hermesHome}/.env
