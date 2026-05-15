@@ -42,6 +42,9 @@
 .env
 .env.*
 !.env.example
+config/hermes/profiles/*/skills/**
+!config/hermes/profiles/*/skills/
+!config/hermes/profiles/*/skills/.gitkeep
 auth.json
 honcho.json
 state.db

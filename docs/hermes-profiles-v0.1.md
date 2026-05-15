@@ -130,13 +130,11 @@ skillset.yaml
 
 ## Mutable Profile Config
 
-`SOUL.md` and profile-local skills are Hermes-managed mutable config, stored in dotfiles:
+`SOUL.md` is Hermes-managed mutable config, stored in dotfiles:
 
 ```text
 config/hermes/profiles/dionysus/SOUL.md
-config/hermes/profiles/dionysus/skills/
 config/hermes/profiles/apollon/SOUL.md
-config/hermes/profiles/apollon/skills/
 ```
 
 Each profile container receives only its matching config directory:
@@ -144,11 +142,13 @@ Each profile container receives only its matching config directory:
 ```text
 config/hermes/profiles/<profile> -> /profile-config
 /workspace/SOUL.md -> /profile-config/SOUL.md
-$HERMES_HOME/skills -> /profile-config/skills
 ```
 
-Nix manages the mount and symlink wiring, but it does not rewrite `SOUL.md` or skills after bootstrap.
-Hermes may create and edit those files; review and commit intentional changes from `config/hermes/profiles/`.
+Nix manages the mount and symlink wiring, but it does not rewrite `SOUL.md` after bootstrap.
+Hermes may create and edit that file; review and commit intentional changes from `config/hermes/profiles/`.
+
+Profile-local skills are runtime state under `$HERMES_HOME/skills`.
+Do not commit generated bundled skills into dotfiles; keep only the tracked `.gitkeep` placeholders.
 
 ## Lazy Repo Workflow
 

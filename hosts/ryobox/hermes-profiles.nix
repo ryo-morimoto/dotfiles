@@ -17,7 +17,7 @@ let
   hermesGid = "1000";
   dashboardHost = "0.0.0.0";
   containerImage = "ubuntu:24.04";
-  containerConfigVersion = 4;
+  containerConfigVersion = 5;
   containerPath = "/tools/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
   caBundle = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
 
@@ -379,7 +379,6 @@ let
         install -d -m 0750 -o ${hermesUid} -g ${hermesGid} ${paths.workspaceDir}
         install -d -m 0750 -o ${hermesUid} -g ${hermesGid} ${paths.cacheDir}
         install -d -m 0755 -o ${hermesUid} -g ${hermesGid} ${paths.profileConfigDir}
-        install -d -m 0755 -o ${hermesUid} -g ${hermesGid} ${paths.profileConfigDir}/skills
 
         if [ -d ${paths.homeDir}/.hermes ] && [ ! -L ${paths.homeDir}/.hermes ]; then
           if [ -n "$(${pkgs.findutils}/bin/find ${paths.homeDir}/.hermes -mindepth 1 -print -quit)" ]; then
@@ -409,16 +408,26 @@ let
         fi
         ln -sfn ${profileConfigContainerPath}/SOUL.md ${paths.workspaceDir}/SOUL.md
 
-        if [ -d ${paths.hermesHome}/skills ] && [ ! -L ${paths.hermesHome}/skills ]; then
-          if [ -n "$(${pkgs.findutils}/bin/find ${paths.hermesHome}/skills -mindepth 1 -print -quit)" ]; then
-            ${pkgs.coreutils}/bin/cp -a ${paths.hermesHome}/skills/. ${paths.profileConfigDir}/skills/
-          fi
-          rm -rf ${paths.hermesHome}/skills.before-profile-config
-          mv ${paths.hermesHome}/skills ${paths.hermesHome}/skills.before-profile-config
-        elif [ -e ${paths.hermesHome}/skills ] && [ ! -L ${paths.hermesHome}/skills ]; then
+        if [ -L ${paths.hermesHome}/skills ]; then
           rm -f ${paths.hermesHome}/skills
+          if [ -d ${paths.hermesHome}/skills.before-profile-config ]; then
+            mv ${paths.hermesHome}/skills.before-profile-config ${paths.hermesHome}/skills
+          else
+            install -d -m 0750 -o ${hermesUid} -g ${hermesGid} ${paths.hermesHome}/skills
+          fi
+        elif [ -e ${paths.hermesHome}/skills ] && [ ! -L ${paths.hermesHome}/skills ]; then
+          if [ ! -d ${paths.hermesHome}/skills ]; then
+            rm -f ${paths.hermesHome}/skills
+            install -d -m 0750 -o ${hermesUid} -g ${hermesGid} ${paths.hermesHome}/skills
+          fi
+        else
+          install -d -m 0750 -o ${hermesUid} -g ${hermesGid} ${paths.hermesHome}/skills
         fi
-        ln -sfn ${profileConfigContainerPath}/skills ${paths.hermesHome}/skills
+
+        if [ -d ${paths.profileConfigDir}/skills ] && [ -n "$(${pkgs.findutils}/bin/find ${paths.profileConfigDir}/skills -mindepth 1 ! -name .gitkeep -print -quit)" ]; then
+          ${pkgs.coreutils}/bin/cp -a ${paths.profileConfigDir}/skills/. ${paths.hermesHome}/skills/
+        fi
+        chown -R ${hermesUid}:${hermesGid} ${paths.hermesHome}/skills
 
         install -m 0600 -o ${hermesUid} -g ${hermesGid} ${runtimeEnv} ${paths.hermesHome}/.env
         cat ${config.age.secrets.${profileConfig.envSecretName}.path} >> ${paths.hermesHome}/.env
