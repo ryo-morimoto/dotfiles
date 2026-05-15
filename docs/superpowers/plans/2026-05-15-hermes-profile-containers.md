@@ -4,7 +4,7 @@
 
 **Goal:** Run `dionysus` and `apollon` as separate Hermes runtime containers with separated profile state, workspaces, service-account boundaries, and dashboard/preview port ranges.
 
-**Architecture:** Add two profile-specific Podman containers beside the existing shared Hermes runtime first, verify them with `nixos-rebuild test`, then retire the old `hermes-agent` runtime in a second phase. Reuse the existing personal/work agenix secret files for v0.1 to avoid a risky secret rename during the runtime migration. Dashboard ports bind only to host loopback; Tailnet access, if needed, should go through Tailscale SSH/tunnel/serve with explicit ACLs.
+**Architecture:** Add two profile-specific Podman containers beside the existing shared Hermes runtime first, verify them with `nixos-rebuild test`, then retire the old `hermes-agent` runtime in a second phase. Reuse the existing personal/work agenix secret files for v0.1 to avoid a risky secret rename during the runtime migration. Dashboard ports are host-published and firewall-open only on `lo` and `tailscale0`; preview ranges stay loopback-only.
 
 **Tech Stack:** NixOS modules, Podman, systemd, agenix, Hermes Agent, `nixfmt`, `nix eval --apply`, `nix build --dry-run`.
 
@@ -26,8 +26,8 @@ This plan incorporates the document-review findings:
 - Reuse existing `hermes-discord-personal-env.age` and `hermes-discord-work-env.age` in v0.1.
 - Fail Nix evaluation if those secret files are missing.
 - Do not use `--env-file` on `podman create`; only non-secret profile metadata goes into the container environment.
-- Bind dashboard host ports to `127.0.0.1`.
-- Open dashboard ports and preview ranges only on the NixOS `lo` firewall interface.
+- Publish dashboard host ports and open them only on NixOS `lo` and `tailscale0` firewall interfaces.
+- Keep preview ranges bound to `127.0.0.1` and open them only on the NixOS `lo` firewall interface.
 - Recreate managed containers when image, tools, entrypoint, port mapping, or UID/GID identity changes.
 - Run Hermes processes as a non-root `hermes` user inside the container.
 - Remove old `systemd.paths` when retiring legacy gateway helpers.
@@ -38,8 +38,8 @@ This plan incorporates the document-review findings:
 | Purpose | Port(s) | Exposure |
 |---|---:|---|
 | legacy shared dashboard | 9119 | kept during Phase A, removed in Phase B |
-| dionysus dashboard | 9120 | host loopback only, `127.0.0.1:9120` |
-| apollon dashboard | 9130 | host loopback only, `127.0.0.1:9130` |
+| dionysus dashboard | 9120 | host port, firewall-open only on `lo` and `tailscale0` |
+| apollon dashboard | 9130 | host port, firewall-open only on `lo` and `tailscale0` |
 | dionysus app previews | 9200-9299 | host loopback only |
 | apollon app previews | 9300-9399 | host loopback only |
 
@@ -79,7 +79,7 @@ let
   hermesUser = "hermes";
   hermesUid = "1000";
   hermesGid = "1000";
-  dashboardHost = "127.0.0.1";
+  dashboardHost = "0.0.0.0";
   containerImage = "ubuntu:24.04";
 
   hermesRuntimePackage = config.services.hermes-agent.package.override {
@@ -458,6 +458,8 @@ in
       to = profileConfig.previewPortEnd;
     }
   ) profileDefinitions;
+  networking.firewall.interfaces.tailscale0.allowedTCPPorts =
+    lib.mapAttrsToList (_profileName: profileConfig: profileConfig.dashboardPort) profileDefinitions;
 
   systemd.services =
     (lib.mapAttrs' (
@@ -564,16 +566,18 @@ Expected output for every command:
 true
 ```
 
-- [ ] **Step 6: Verify dashboard ports are loopback-published in service text**
+- [ ] **Step 6: Verify dashboard ports are host-published and preview ranges are loopback-published in service text**
 
 Run:
 
 ```bash
-nix eval --raw '.#nixosConfigurations.ryobox.config.systemd.services."hermes-container-dionysus".preStart' | rg -- '--publish 127\\.0\\.0\\.1:9120:9120'
-nix eval --raw '.#nixosConfigurations.ryobox.config.systemd.services."hermes-container-apollon".preStart' | rg -- '--publish 127\\.0\\.0\\.1:9130:9130'
+nix eval --raw '.#nixosConfigurations.ryobox.config.systemd.services."hermes-container-dionysus".preStart' | rg -- '--publish 0\\.0\\.0\\.0:9120:9120'
+nix eval --raw '.#nixosConfigurations.ryobox.config.systemd.services."hermes-container-apollon".preStart' | rg -- '--publish 0\\.0\\.0\\.0:9130:9130'
+nix eval --raw '.#nixosConfigurations.ryobox.config.systemd.services."hermes-container-dionysus".preStart' | rg -- '--publish 127\\.0\\.0\\.1:9200-9299:9200-9299'
+nix eval --raw '.#nixosConfigurations.ryobox.config.systemd.services."hermes-container-apollon".preStart' | rg -- '--publish 127\\.0\\.0\\.1:9300-9399:9300-9399'
 ```
 
-Expected: both commands find the loopback publish flags.
+Expected: commands find host dashboard publish flags and loopback preview publish flags.
 
 - [ ] **Step 7: Commit**
 
@@ -660,19 +664,23 @@ curl -I http://127.0.0.1:9130/
 
 Expected: each command returns an HTTP response.
 
-- [ ] **Step 6: Check host listeners are loopback-bound**
+- [ ] **Step 6: Check host listeners and firewall boundaries**
 
 Run:
 
 ```bash
-ss -ltnp | rg '127\\.0\\.0\\.1:(9120|9130)'
-ss -ltnp | rg '0\\.0\\.0\\.0:(9120|9130)|\\[::\\]:(9120|9130)' && exit 1 || true
+ss -ltnp | rg '0\\.0\\.0\\.0:(9120|9130)'
+nix eval --json '.#nixosConfigurations.ryobox.config.networking.firewall.interfaces.lo.allowedTCPPorts'
+nix eval --json '.#nixosConfigurations.ryobox.config.networking.firewall.interfaces.tailscale0.allowedTCPPorts'
+nix eval --json '.#nixosConfigurations.ryobox.config.networking.firewall.interfaces.lo.allowedTCPPortRanges'
 ```
 
 Expected:
 
-- first command finds `127.0.0.1:9120` and `127.0.0.1:9130`
-- second command exits 0 because no wildcard listener exists for those ports
+- `ss` finds dashboard listeners on `0.0.0.0:9120` and `0.0.0.0:9130`
+- `lo.allowedTCPPorts` includes `9120` and `9130`
+- `tailscale0.allowedTCPPorts` includes `9120` and `9130`
+- `lo.allowedTCPPortRanges` includes `9200-9299` and `9300-9399`
 
 - [ ] **Step 7: Check gateway services only after Discord tokens are present**
 
@@ -811,7 +819,7 @@ firewall.interfaces.tailscale0.allowedTCPPorts = [
 ];
 ```
 
-New dashboard ports do not need firewall openings because they are host-loopback only.
+Dashboard ports are opened on `lo` and `tailscale0` by `hosts/ryobox/hermes-profiles.nix`.
 
 - [ ] **Step 8: Format modified Nix files**
 
@@ -862,7 +870,7 @@ Run:
 nix eval --json '.#nixosConfigurations.ryobox.config.networking.firewall.interfaces.tailscale0.allowedTCPPorts'
 ```
 
-Expected output includes `80` and `443`, and does not include `9119`, `9120`, or `9130`.
+Expected output includes `80`, `443`, `9120`, and `9130`, and does not include `9119`.
 
 - [ ] **Step 12: Commit**
 
@@ -945,13 +953,13 @@ Do not copy tokens between profiles.
 
 | Profile | Dashboard | Preview Range |
 |---|---:|---:|
-| dionysus | `127.0.0.1:9120` | `127.0.0.1:9200-9299` |
-| apollon | `127.0.0.1:9130` | `127.0.0.1:9300-9399` |
+| dionysus | `9120` on host, firewall-open only on `lo` and `tailscale0` | `127.0.0.1:9200-9299` |
+| apollon | `9130` on host, firewall-open only on `lo` and `tailscale0` | `127.0.0.1:9300-9399` |
 
-Dashboard is started with Hermes `--insecure`, so v0.1 binds host ports to loopback only.
-NixOS firewall opens dashboard ports and preview ranges only on the `lo` interface.
+Dashboard is started with Hermes `--insecure`, so v0.1 relies on the NixOS firewall to expose dashboard ports only on `lo` and `tailscale0`.
+Preview ranges remain loopback-only and are opened only on the `lo` interface.
 
-Tailnet access must use an explicit tunnel or reverse proxy with ACLs.
+Use Tailscale ACLs to limit which Tailnet identities can reach `9120` and `9130`.
 
 ## Staged Rollout
 
@@ -1096,6 +1104,7 @@ curl -I http://127.0.0.1:9120/
 curl -I http://127.0.0.1:9130/
 
 ss -ltnp | rg '127\.0\.0\.1:(9120|9130)'
+ss -ltnp | rg '0\.0\.0\.0:(9120|9130)'
 ```
 ````
 
@@ -1224,7 +1233,7 @@ Prepare this table in the final response:
 | apollon container service exists | `nix eval --apply ... hermes-container-apollon` | verified/unverified |
 | old shared dashboard removed after Phase B | `nix eval --apply ... hermes-agent-dashboard` | verified/unverified |
 | old gateway path units removed after Phase B | `nix eval --apply ... hermes-gateway-*-env` | verified/unverified |
-| dashboard and preview ports bind loopback | `ss -ltnp`, container `--publish 127.0.0.1` eval, and `lo` firewall eval | verified/unverified |
+| dashboard ports are Tailnet reachable and previews stay loopback | `ss -ltnp`, publish eval, `lo` firewall eval, and `tailscale0` firewall eval | verified/unverified |
 | docs describe v0.1 scope | `docs/hermes-profiles-v0.1.md` review | verified/unverified |
 | rollback path exists | Task 3 Step 9 and docs review | verified/unverified |
 
@@ -1235,7 +1244,7 @@ Prepare this table in the final response:
 - Separate `dionysus` / `apollon` containers: Task 1, Task 2, Task 3.
 - Separate secret/auth state: Task 1 reuses existing separated personal/work secret files with new profile-specific agenix attributes.
 - Honcho workspace separation: Task 1 config and Task 5 docs.
-- Port range safety: Task 1 loopback publish, Task 3 listener checks, Task 5 docs.
+- Port range safety: Task 1 dashboard Tailnet publish, preview loopback publish, Task 3 listener checks, Task 5 docs.
 - Lazy repo workflow: Task 5 docs.
 - No project registry/global worktree manager/session branch naming: Task 5 docs.
 - Staged migration and rollback: Task 3 and Task 4.

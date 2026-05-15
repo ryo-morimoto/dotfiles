@@ -61,13 +61,13 @@ Do not copy tokens between profiles.
 
 | Profile | Dashboard | Preview Range |
 |---|---:|---:|
-| dionysus | `127.0.0.1:9120` | `127.0.0.1:9200-9299` |
-| apollon | `127.0.0.1:9130` | `127.0.0.1:9300-9399` |
+| dionysus | `9120` on host, firewall-open only on `lo` and `tailscale0` | `127.0.0.1:9200-9299` |
+| apollon | `9130` on host, firewall-open only on `lo` and `tailscale0` | `127.0.0.1:9300-9399` |
 
-Dashboard is started with Hermes `--insecure`, so v0.1 binds host ports to loopback only.
-NixOS firewall opens dashboard ports and preview ranges only on the `lo` interface.
+Dashboard is started with Hermes `--insecure`, so v0.1 relies on the NixOS firewall to expose dashboard ports only on `lo` and `tailscale0`.
+Preview ranges remain loopback-only and are opened only on the `lo` interface.
 
-Tailnet access must use an explicit tunnel or reverse proxy with ACLs.
+Use Tailscale ACLs to limit which Tailnet identities can reach `9120` and `9130`.
 
 ## Staged Rollout
 
@@ -212,4 +212,5 @@ curl -I http://127.0.0.1:9120/
 curl -I http://127.0.0.1:9130/
 
 ss -ltnp | rg '127\.0\.0\.1:(9120|9130)'
+ss -ltnp | rg '0\.0\.0\.0:(9120|9130)'
 ```

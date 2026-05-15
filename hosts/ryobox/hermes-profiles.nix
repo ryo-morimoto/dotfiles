@@ -12,7 +12,7 @@ let
   hermesUser = "hermes";
   hermesUid = "1000";
   hermesGid = "1000";
-  dashboardHost = "127.0.0.1";
+  dashboardHost = "0.0.0.0";
   containerImage = "ubuntu:24.04";
 
   hermesRuntimePackage = config.services.hermes-agent.package.override {
@@ -385,14 +385,21 @@ in
 
   environment.systemPackages = [ hermesRuntimePackage ];
 
-  networking.firewall.interfaces.lo.allowedTCPPorts = lib.mapAttrsToList (
-    _profileName: profileConfig: profileConfig.dashboardPort
-  ) profileDefinitions;
-  networking.firewall.interfaces.lo.allowedTCPPortRanges = lib.mapAttrsToList (
-    _profileName: profileConfig: {
-      from = profileConfig.previewPortStart;
-      to = profileConfig.previewPortEnd;
-    }) profileDefinitions;
+  networking.firewall.interfaces = {
+    lo = {
+      allowedTCPPorts = lib.mapAttrsToList (
+        _profileName: profileConfig: profileConfig.dashboardPort
+      ) profileDefinitions;
+      allowedTCPPortRanges = lib.mapAttrsToList (_profileName: profileConfig: {
+        from = profileConfig.previewPortStart;
+        to = profileConfig.previewPortEnd;
+      }) profileDefinitions;
+    };
+
+    tailscale0.allowedTCPPorts = lib.mapAttrsToList (
+      _profileName: profileConfig: profileConfig.dashboardPort
+    ) profileDefinitions;
+  };
 
   systemd.services =
     (lib.mapAttrs' (
