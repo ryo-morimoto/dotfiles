@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Run two isolated Hermes Discord-facing profiles, `personal` and `work`, mapped to Dionysos and Apollo Discord bots.
+**Goal:** Run two isolated Hermes Discord-facing profiles, `personal` and `work`, mapped to Dionysus and Apollo Discord bots.
 
 **Architecture:** Keep the upstream `services.hermes-agent` container module as the Podman container anchor, then add two explicit profile gateway services. Nix activation creates each Hermes profile directory and profile `config.yaml`; agenix provides each profile Discord `.env` when the encrypted secret files exist. Codex OAuth remains per-profile runtime state created with `hermes auth add`.
 

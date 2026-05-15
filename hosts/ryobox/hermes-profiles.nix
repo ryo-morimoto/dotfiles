@@ -95,15 +95,15 @@ let
   '';
 
   profileDefinitions = {
-    dionysos = {
-      description = "Hermes Dionysos personal/hobby profile";
-      envSecretName = "hermes-dionysos-env";
+    dionysus = {
+      description = "Hermes Dionysus personal/hobby profile";
+      envSecretName = "hermes-dionysus-env";
       envSecretFile = ../../secrets/hermes-discord-personal-env.age;
       dashboardPort = 9120;
       previewPortStart = 9200;
       previewPortEnd = 9299;
       honchoWorkspace = "moriryo-personal";
-      honchoAiPeer = "dionysos";
+      honchoAiPeer = "dionysus";
       serviceBoundary = "personal/hobby";
     };
 

@@ -2,7 +2,7 @@
 
 This machine runs two Discord-facing Hermes profiles:
 
-- `personal`: Dionysos bot, visible only in the Discord `personal` category.
+- `personal`: Dionysus bot, visible only in the Discord `personal` category.
 - `work`: Apollo bot, visible only in the Discord `work` category.
 
 The NixOS system creates these services:
