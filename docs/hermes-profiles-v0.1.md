@@ -128,9 +128,27 @@ docs/hermes/profiles/apollon/apollon-personality-policy.md
 skillset.yaml
 ```
 
-Nix seeds runtime `SOUL.md` only when a profile workspace does not already have one.
-After bootstrap, `SOUL.md` and profile skills are Hermes-managed mutable state, not files
-that Nix rewrites on every switch.
+## Mutable Profile Config
+
+`SOUL.md` and profile-local skills are Hermes-managed mutable config, stored in dotfiles:
+
+```text
+config/hermes/profiles/dionysus/SOUL.md
+config/hermes/profiles/dionysus/skills/
+config/hermes/profiles/apollon/SOUL.md
+config/hermes/profiles/apollon/skills/
+```
+
+Each profile container receives only its matching config directory:
+
+```text
+config/hermes/profiles/<profile> -> /profile-config
+/workspace/SOUL.md -> /profile-config/SOUL.md
+$HERMES_HOME/skills -> /profile-config/skills
+```
+
+Nix manages the mount and symlink wiring, but it does not rewrite `SOUL.md` or skills after bootstrap.
+Hermes may create and edit those files; review and commit intentional changes from `config/hermes/profiles/`.
 
 ## Lazy Repo Workflow
 
@@ -251,10 +269,25 @@ systemctl is-active hermes-gateway-dionysus.service hermes-gateway-apollon.servi
 
 sudo podman exec hermes-dionysus printenv HERMES_PROFILE
 sudo podman exec hermes-apollon printenv HERMES_PROFILE
+sudo podman exec hermes-dionysus readlink /workspace/SOUL.md
+sudo podman exec hermes-apollon readlink /workspace/SOUL.md
+sudo podman exec hermes-dionysus readlink /data/.hermes/skills
+sudo podman exec hermes-apollon readlink /data/.hermes/skills
+sudo podman exec hermes-dionysus test -w /profile-config/SOUL.md
+sudo podman exec hermes-apollon test -w /profile-config/SOUL.md
 
 curl -I http://127.0.0.1:9120/
 curl -I http://127.0.0.1:9130/
 
 ss -ltnp | rg '127\.0\.0\.1:(9120|9130)'
 ss -ltnp | rg '0\.0\.0\.0:(9120|9130)'
+```
+
+The `readlink` checks should print:
+
+```text
+/profile-config/SOUL.md
+/profile-config/SOUL.md
+/profile-config/skills
+/profile-config/skills
 ```
