@@ -385,6 +385,15 @@ in
 
   environment.systemPackages = [ hermesRuntimePackage ];
 
+  networking.firewall.interfaces.lo.allowedTCPPorts = lib.mapAttrsToList (
+    _profileName: profileConfig: profileConfig.dashboardPort
+  ) profileDefinitions;
+  networking.firewall.interfaces.lo.allowedTCPPortRanges = lib.mapAttrsToList (
+    _profileName: profileConfig: {
+      from = profileConfig.previewPortStart;
+      to = profileConfig.previewPortEnd;
+    }) profileDefinitions;
+
   systemd.services =
     (lib.mapAttrs' (
       profileName: profileConfig:

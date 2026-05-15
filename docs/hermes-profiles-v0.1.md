@@ -65,6 +65,7 @@ Do not copy tokens between profiles.
 | apollon | `127.0.0.1:9130` | `127.0.0.1:9300-9399` |
 
 Dashboard is started with Hermes `--insecure`, so v0.1 binds host ports to loopback only.
+NixOS firewall opens dashboard ports and preview ranges only on the `lo` interface.
 
 Tailnet access must use an explicit tunnel or reverse proxy with ACLs.
 

@@ -27,6 +27,7 @@ This plan incorporates the document-review findings:
 - Fail Nix evaluation if those secret files are missing.
 - Do not use `--env-file` on `podman create`; only non-secret profile metadata goes into the container environment.
 - Bind dashboard host ports to `127.0.0.1`.
+- Open dashboard ports and preview ranges only on the NixOS `lo` firewall interface.
 - Recreate managed containers when image, tools, entrypoint, port mapping, or UID/GID identity changes.
 - Run Hermes processes as a non-root `hermes` user inside the container.
 - Remove old `systemd.paths` when retiring legacy gateway helpers.
@@ -448,6 +449,15 @@ in
   ) profileDefinitions;
 
   environment.systemPackages = [ hermesRuntimePackage ];
+
+  networking.firewall.interfaces.lo.allowedTCPPorts =
+    lib.mapAttrsToList (_profileName: profileConfig: profileConfig.dashboardPort) profileDefinitions;
+  networking.firewall.interfaces.lo.allowedTCPPortRanges = lib.mapAttrsToList (
+    _profileName: profileConfig: {
+      from = profileConfig.previewPortStart;
+      to = profileConfig.previewPortEnd;
+    }
+  ) profileDefinitions;
 
   systemd.services =
     (lib.mapAttrs' (
@@ -939,6 +949,7 @@ Do not copy tokens between profiles.
 | apollon | `127.0.0.1:9130` | `127.0.0.1:9300-9399` |
 
 Dashboard is started with Hermes `--insecure`, so v0.1 binds host ports to loopback only.
+NixOS firewall opens dashboard ports and preview ranges only on the `lo` interface.
 
 Tailnet access must use an explicit tunnel or reverse proxy with ACLs.
 
@@ -1213,7 +1224,7 @@ Prepare this table in the final response:
 | apollon container service exists | `nix eval --apply ... hermes-container-apollon` | verified/unverified |
 | old shared dashboard removed after Phase B | `nix eval --apply ... hermes-agent-dashboard` | verified/unverified |
 | old gateway path units removed after Phase B | `nix eval --apply ... hermes-gateway-*-env` | verified/unverified |
-| dashboard ports bind loopback | `ss -ltnp` and container `--publish 127.0.0.1` eval | verified/unverified |
+| dashboard and preview ports bind loopback | `ss -ltnp`, container `--publish 127.0.0.1` eval, and `lo` firewall eval | verified/unverified |
 | docs describe v0.1 scope | `docs/hermes-profiles-v0.1.md` review | verified/unverified |
 | rollback path exists | Task 3 Step 9 and docs review | verified/unverified |
 
