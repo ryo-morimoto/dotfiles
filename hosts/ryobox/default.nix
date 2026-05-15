@@ -113,7 +113,10 @@ let
   );
 in
 {
-  imports = [ ./hardware-configuration.nix ];
+  imports = [
+    ./hardware-configuration.nix
+    ./hermes-profiles.nix
+  ];
 
   # Bootloader
   boot.loader = {
