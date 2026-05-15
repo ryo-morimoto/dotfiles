@@ -116,6 +116,32 @@ Excluded:
 
 ## Lazy Repo Workflow
 
+Open a development shell:
+
+```bash
+sudo podman exec -it --workdir /workspace hermes-dionysus /tools/bin/bash
+sudo podman exec -it --workdir /workspace hermes-apollon /tools/bin/bash
+```
+
+Each container sets:
+
+```text
+HOME=/data/home
+XDG_CONFIG_HOME=/data/home/.config
+XDG_DATA_HOME=/data/home/.local/share
+XDG_CACHE_HOME=/cache/xdg
+PATH=/tools/bin:...
+```
+
+GitHub CLI auth is profile-local:
+
+```bash
+gh auth login
+gh auth status
+```
+
+`gh` stores auth under the active container's `/data/home/.config/gh`, so `dionysus` and `apollon` do not share GitHub auth state.
+
 Discover:
 
 ```bash

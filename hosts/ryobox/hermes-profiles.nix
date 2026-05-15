@@ -14,6 +14,8 @@ let
   hermesGid = "1000";
   dashboardHost = "0.0.0.0";
   containerImage = "ubuntu:24.04";
+  containerConfigVersion = 2;
+  containerPath = "/tools/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
 
   hermesRuntimePackage = config.services.hermes-agent.package.override {
     extraDependencyGroups = [
@@ -54,9 +56,12 @@ let
   hermesContainerEntrypoint = pkgs.writeShellScript "hermes-profile-container-entrypoint" ''
     set -eu
 
-    export PATH="/tools/bin:$PATH"
+    export PATH="${containerPath}"
     export HERMES_HOME="/data/.hermes"
     export HOME="/data/home"
+    export XDG_CONFIG_HOME="$HOME/.config"
+    export XDG_DATA_HOME="$HOME/.local/share"
+    export XDG_CACHE_HOME="/cache/xdg"
     export MESSAGING_CWD="/workspace"
 
     if ! getent group "${hermesGid}" >/dev/null; then
@@ -82,6 +87,9 @@ let
       "$HERMES_HOME/plans" \
       "$HERMES_HOME/cron" \
       "$HOME" \
+      "$XDG_CONFIG_HOME" \
+      "$XDG_DATA_HOME" \
+      "$XDG_CACHE_HOME" \
       "$MESSAGING_CWD" \
       /cache
 
@@ -198,6 +206,8 @@ let
           dashboardHost
           hermesUid
           hermesGid
+          containerConfigVersion
+          containerPath
           ;
         tools = "${hermesRuntimeTools}";
         entrypoint = "${hermesContainerEntrypoint}";
@@ -293,6 +303,10 @@ let
             --env HERMES_PROFILE=${profileName} \
             --env HERMES_HOME=/data/.hermes \
             --env HOME=/data/home \
+            --env XDG_CONFIG_HOME=/data/home/.config \
+            --env XDG_DATA_HOME=/data/home/.local/share \
+            --env XDG_CACHE_HOME=/cache/xdg \
+            --env PATH=${containerPath} \
             --env MESSAGING_CWD=/workspace \
             --env HONCHO_WORKSPACE=${profileConfig.honchoWorkspace} \
             --env HONCHO_AI_PEER=${profileConfig.honchoAiPeer} \
