@@ -1,0 +1,28 @@
+common:
+  required:
+    - systematic-debugging
+    - writing-plans
+    - requesting-code-review
+  optional:
+    - test-driven-development
+    - codebase-inspection
+    - github-code-review
+    - github-pr-workflow
+
+apollon:
+  required:
+    - linear
+    - notion
+    - github-auth
+  optional:
+    - google-workspace
+
+dionysus:
+  optional:
+    - ideation
+    - humanizer
+    - youtube-content
+
+policy:
+  - Do not create a custom skill when a maintained upstream skill exists.
+  - Use wrapper policy for context injection.

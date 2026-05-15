@@ -38,6 +38,23 @@
 .codex
 .pi-lens/
 
+# Hermes profile runtime data
+.env
+.env.*
+!.env.example
+auth.json
+honcho.json
+state.db
+state.db-*
+sessions/
+logs/
+workspace/
+.cache/
+local/
+/workspace/
+/repos/
+/worktrees/
+
 # Nix build output
 result
 

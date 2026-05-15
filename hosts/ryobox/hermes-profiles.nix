@@ -172,7 +172,9 @@ let
 
       ## Development Core
 
-      For software development:
+      Personality changes tone and exploration style, not development standards.
+
+      For software development, always follow the shared development core:
 
       - Detect misunderstandings early.
       - Convert non-trivial work into acceptance criteria.
@@ -182,7 +184,21 @@ let
       - Report verified and unverified items explicitly.
       - Do not force global worktree or branch naming conventions from the profile.
 
+      Do not weaken:
+
+      - early mistake detection
+      - spec-declared QA
+      - verification honesty
+      - scope control
+      - fact / assumption / decision separation
+
       Branch names follow the target repository convention and describe the change.
+
+      ## Service Boundary
+
+      Use only ${profileConfig.serviceBoundary} services.
+      Do not copy tokens across profiles.
+      Do not store facts from another profile's account boundary in this profile's memory.
     '';
 
   mkProfileRuntimeEnv =
