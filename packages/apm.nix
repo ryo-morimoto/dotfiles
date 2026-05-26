@@ -194,6 +194,7 @@ let
       codexSettingsFile = (pkgs.formats.toml { }).generate "codex-settings.toml" codexSettings;
       installsCodex = builtins.elem "codex" sharedApm.targets;
       shouldMergeCodexSettings = installsCodex && codexSettings != { };
+      codexConfigStash = "$HOME/.cache/apm/codex-config-before-home-manager.toml";
     in
     {
       home = {
@@ -202,6 +203,19 @@ let
         ];
 
         file.".apm/apm.yml".source = apmManifestFile;
+
+        activation.apmStashCodexConfig = lib.mkIf shouldMergeCodexSettings (
+          lib.hm.dag.entryBefore [ "checkLinkTargets" ] ''
+            codex_config="$HOME/.codex/config.toml"
+            codex_config_stash="${codexConfigStash}"
+
+            if [ -f "$codex_config" ] && [ ! -L "$codex_config" ]; then
+              mkdir -p "$(dirname "$codex_config_stash")"
+              install -m 0600 "$codex_config" "$codex_config_stash"
+              rm "$codex_config"
+            fi
+          ''
+        );
 
         activation.apmInstallAgentPackages = lib.mkIf sharedApm.enable (
           lib.hm.dag.entryAfter
@@ -242,7 +256,11 @@ let
                 }
                 trap cleanup_codex_settings_merge EXIT
 
-                if [ -e "$codex_config" ]; then
+                codex_config_stash="${codexConfigStash}"
+                if [ -e "$codex_config_stash" ]; then
+                  ${lib.getExe pkgs.remarshal} -f toml -t json "$codex_config_stash" "$current_json"
+                  rm "$codex_config_stash"
+                elif [ -e "$codex_config" ]; then
                   ${lib.getExe pkgs.remarshal} -f toml -t json "$codex_config" "$current_json"
                 else
                   printf '{}\n' > "$current_json"
