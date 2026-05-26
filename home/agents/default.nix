@@ -143,6 +143,14 @@ let
         "codex"
       ];
     };
+    figma = {
+      transport = "http";
+      url = "https://mcp.figma.com/mcp";
+      clients = [
+        "claude"
+        "codex"
+      ];
+    };
   };
   sharedClaudeHookSources = { };
 in

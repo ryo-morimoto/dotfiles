@@ -134,22 +134,16 @@ let
       name = "ryo-agent-packages";
       version = "1.0.0";
       target = apmTargets;
-      dependencies = {
-        apm = [
-          compoundEngineeringDependency
-          superpowersDependency
-        ]
-        ++ personalSkillDependencies
-        ++ context7SkillDependencies
-        ++ evolutionaryNamingSkillDependencies
-        ++ mizchiSkillDependencies
-        ++ mgechevSkillDependencies
-        ++ mattpocockSkillDependencies;
-
-        mcp = [
-          "com.figma.mcp/mcp"
-        ];
-      };
+      dependencies.apm = [
+        compoundEngineeringDependency
+        superpowersDependency
+      ]
+      ++ personalSkillDependencies
+      ++ context7SkillDependencies
+      ++ evolutionaryNamingSkillDependencies
+      ++ mizchiSkillDependencies
+      ++ mgechevSkillDependencies
+      ++ mattpocockSkillDependencies;
     };
   };
 in
