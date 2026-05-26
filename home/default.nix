@@ -930,12 +930,13 @@ in
         text = lib.generators.toINI { } {
           "Hotkey/TriggerKeys" = {
             "0" = "Control+space";
+            "1" = "Zenkaku_Hankaku";
           };
           "Hotkey/ActivateKeys" = {
-            "0" = "Hangul";
+            "0" = "Hiragana_Katakana";
           };
           "Hotkey/DeactivateKeys" = {
-            "0" = "Hangul_Hanja";
+            "0" = "Eisu_toggle";
           };
         };
       };
