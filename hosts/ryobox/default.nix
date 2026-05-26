@@ -79,6 +79,7 @@ in
             };
             "Hotkey/DeactivateKeys" = {
               "0" = "Eisu_toggle";
+              "1" = "Muhenkan";
             };
           };
           inputMethod = {
