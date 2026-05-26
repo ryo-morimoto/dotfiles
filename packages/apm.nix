@@ -178,6 +178,7 @@ let
 
   homeManagerModule =
     {
+      config,
       lib,
       pkgs,
       sharedApm,
@@ -189,6 +190,10 @@ let
       apmManifestFile = yaml.generate "apm.yml" sharedApm.manifest;
       targetArg = lib.concatStringsSep "," sharedApm.targets;
       updateArg = lib.optionalString (sharedApm.update or true) " --update";
+      codexSettings = config.programs.codex.settings or { };
+      codexSettingsFile = (pkgs.formats.toml { }).generate "codex-settings.toml" codexSettings;
+      installsCodex = builtins.elem "codex" sharedApm.targets;
+      shouldMergeCodexSettings = installsCodex && codexSettings != { };
     in
     {
       home = {
@@ -224,6 +229,31 @@ let
               cd "$HOME/.apm"
               ${pkgs.apm}/bin/apm install -g --target ${lib.escapeShellArg targetArg}${updateArg}
               ${pkgs.apm}/bin/apm prune
+
+              ${lib.optionalString shouldMergeCodexSettings ''
+                mkdir -p "$HOME/.codex"
+
+                current_json="$(mktemp)"
+                codex_settings_json="$(mktemp)"
+                merged_json="$(mktemp)"
+                merged_toml="$(mktemp)"
+                cleanup_codex_settings_merge() {
+                  rm -f "$current_json" "$codex_settings_json" "$merged_json" "$merged_toml"
+                }
+                trap cleanup_codex_settings_merge EXIT
+
+                if [ -e "$codex_config" ]; then
+                  ${lib.getExe pkgs.remarshal} -f toml -t json "$codex_config" "$current_json"
+                else
+                  printf '{}\n' > "$current_json"
+                fi
+
+                ${lib.getExe pkgs.remarshal} -f toml -t json "${codexSettingsFile}" "$codex_settings_json"
+                ${lib.getExe pkgs.jq} -s '.[0] * .[1]' "$current_json" "$codex_settings_json" > "$merged_json"
+                ${lib.getExe pkgs.remarshal} -f json -t toml "$merged_json" "$merged_toml"
+
+                install -m 0600 "$merged_toml" "$codex_config"
+              ''}
             ''
         );
       };
