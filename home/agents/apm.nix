@@ -145,6 +145,28 @@ let
       ++ mgechevSkillDependencies
       ++ mattpocockSkillDependencies;
       dependencies.mcp = [
+        {
+          name = "context7";
+          registry = false;
+          transport = "http";
+          url = "https://mcp.context7.com/mcp";
+        }
+        {
+          name = "exa";
+          registry = false;
+          transport = "stdio";
+          command = "npx";
+          args = [
+            "-y"
+            "exa-mcp-server"
+          ];
+        }
+        {
+          name = "secretary";
+          registry = false;
+          transport = "http";
+          url = "https://secretary.ryo-morimoto-dev.workers.dev/mcp";
+        }
         "com.figma.mcp/mcp"
       ];
     };

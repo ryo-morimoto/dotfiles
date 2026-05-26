@@ -114,36 +114,7 @@ let
       outputStyle = "default";
     };
   };
-  mcpServers = {
-    exa = {
-      transport = "stdio";
-      command = "npx";
-      args = [
-        "-y"
-        "exa-mcp-server"
-      ];
-      clients = [
-        "claude"
-        "codex"
-      ];
-    };
-    secretary = {
-      transport = "http";
-      url = "https://secretary.ryo-morimoto-dev.workers.dev/mcp";
-      clients = [
-        "claude"
-        "codex"
-      ];
-    };
-    context7 = {
-      transport = "http";
-      url = "https://mcp.context7.com/mcp";
-      clients = [
-        "claude"
-        "codex"
-      ];
-    };
-  };
+  mcpServers = { };
   sharedClaudeHookSources = { };
 in
 {

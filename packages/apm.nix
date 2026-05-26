@@ -213,6 +213,14 @@ let
                 ]
               }:$PATH"
 
+              codex_config="$HOME/.codex/config.toml"
+              if [ -L "$codex_config" ]; then
+                codex_config_target="$(readlink "$codex_config")"
+                case "$codex_config_target" in
+                  /nix/store/*) rm "$codex_config" ;;
+                esac
+              fi
+
               cd "$HOME/.apm"
               ${pkgs.apm}/bin/apm install -g --target ${lib.escapeShellArg targetArg}${updateArg}
               ${pkgs.apm}/bin/apm prune
