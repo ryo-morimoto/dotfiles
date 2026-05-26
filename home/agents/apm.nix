@@ -144,6 +144,9 @@ let
       ++ mizchiSkillDependencies
       ++ mgechevSkillDependencies
       ++ mattpocockSkillDependencies;
+      dependencies.mcp = [
+        "com.figma.mcp/mcp"
+      ];
     };
   };
 in

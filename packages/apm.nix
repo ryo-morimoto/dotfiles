@@ -214,7 +214,7 @@ let
               }:$PATH"
 
               cd "$HOME/.apm"
-              ${pkgs.apm}/bin/apm install -g --target ${lib.escapeShellArg targetArg} --only=apm${updateArg}
+              ${pkgs.apm}/bin/apm install -g --target ${lib.escapeShellArg targetArg}${updateArg}
               ${pkgs.apm}/bin/apm prune
             ''
         );
@@ -223,11 +223,11 @@ let
 
   package = stdenvNoCC.mkDerivation rec {
     pname = "apm";
-    version = "0.13.0";
+    version = "0.14.2";
 
     src = fetchurl {
       url = "https://github.com/microsoft/apm/releases/download/v${version}/apm-linux-x86_64.tar.gz";
-      hash = "sha256-7QKxED70vElVmoH34Qm0JKSdlc+XhRWtIk5e63AbH4o=";
+      hash = "sha256-mAt7AeQ7xpu+NJs+AbddSDdBKwJ7/RGK5ubKRnuAEog=";
     };
 
     nativeBuildInputs = [
