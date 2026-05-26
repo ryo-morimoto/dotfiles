@@ -162,6 +162,8 @@ in
     # };
   };
 
+  systemd.user.services.hazkey-server.serviceConfig.WorkingDirectory = "%t";
+
   # agenix: use host SSH key for decryption (openssh is disabled; Tailscale SSH is used instead)
   age = {
     identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
