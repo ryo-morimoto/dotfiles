@@ -167,7 +167,12 @@ let
           transport = "http";
           url = "https://secretary.ryo-morimoto-dev.workers.dev/mcp";
         }
-        "com.figma.mcp/mcp"
+        {
+          name = "figma";
+          registry = false;
+          transport = "http";
+          url = "https://mcp.figma.com/mcp";
+        }
       ];
     };
   };
