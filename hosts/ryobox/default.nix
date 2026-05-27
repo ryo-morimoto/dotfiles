@@ -80,6 +80,7 @@ in
             "Hotkey/DeactivateKeys" = {
               "0" = "Eisu_toggle";
               "1" = "Muhenkan";
+              "2" = "Hangul_Hanja";
             };
           };
           inputMethod = {
