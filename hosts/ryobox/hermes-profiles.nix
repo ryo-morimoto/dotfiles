@@ -1,5 +1,6 @@
 {
   config,
+  hermesAgentSource,
   lib,
   pkgs,
   ...
@@ -469,6 +470,7 @@ let
             --env HERMES_PROFILE=${profileName} \
             --env HERMES_HOME=/data/.hermes \
             --env HOME=/data/home \
+            --env PYTHONPATH=${hermesAgentSource} \
             --env XDG_CONFIG_HOME=/data/home/.config \
             --env XDG_DATA_HOME=/data/home/.local/share \
             --env XDG_CACHE_HOME=/cache/xdg \

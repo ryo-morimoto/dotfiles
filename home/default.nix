@@ -53,7 +53,7 @@ in
         # Editor
         neovim
         code-cursor
-        zed-editor
+        zed-preview
 
         # LSP servers (for Neovim)
         typescript-language-server

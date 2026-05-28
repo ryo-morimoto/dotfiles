@@ -80,7 +80,7 @@ let
     package = "mizchi-skills";
     selectedSkills = [ "empirical-prompt-tuning" ];
     skills = mkLeaves [ "empirical-prompt-tuning" ];
-    skillPath = name: name;
+    skillPath = name: "meta/${name}";
   };
 
   mgechevSkillDependencies = apmDsl.mkPrimitiveDependencies {

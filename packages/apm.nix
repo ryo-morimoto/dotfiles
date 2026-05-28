@@ -193,8 +193,10 @@ let
       codexSettings = config.programs.codex.settings or { };
       codexSettingsFile = (pkgs.formats.toml { }).generate "codex-settings.toml" codexSettings;
       installsCodex = builtins.elem "codex" sharedApm.targets;
+      installsClaude = builtins.elem "claude" sharedApm.targets;
       shouldMergeCodexSettings = installsCodex && codexSettings != { };
       codexConfigStash = "$HOME/.cache/apm/codex-config-before-home-manager.toml";
+      claudeSettingsStash = "$HOME/.cache/apm/claude-settings-before-home-manager.json";
     in
     {
       home = {
@@ -204,76 +206,128 @@ let
 
         file.".apm/apm.yml".source = apmManifestFile;
 
-        activation.apmStashCodexConfig = lib.mkIf shouldMergeCodexSettings (
-          lib.hm.dag.entryBefore [ "checkLinkTargets" ] ''
-            codex_config="$HOME/.codex/config.toml"
-            codex_config_stash="${codexConfigStash}"
-
-            if [ -f "$codex_config" ] && [ ! -L "$codex_config" ]; then
-              mkdir -p "$(dirname "$codex_config_stash")"
-              install -m 0600 "$codex_config" "$codex_config_stash"
-              rm "$codex_config"
-            fi
-          ''
-        );
-
-        activation.apmInstallAgentPackages = lib.mkIf sharedApm.enable (
-          lib.hm.dag.entryAfter
-            [
-              "claudeCodeSettings"
-              "linkGeneration"
-            ]
-            ''
-              export PATH="${
-                lib.makeBinPath [
-                  pkgs.coreutils
-                  pkgs.git
-                  pkgs.openssh
-                ]
-              }:$PATH"
-
+        activation = {
+          apmStashCodexConfig = lib.mkIf shouldMergeCodexSettings (
+            lib.hm.dag.entryBefore [ "checkLinkTargets" ] ''
               codex_config="$HOME/.codex/config.toml"
-              if [ -L "$codex_config" ]; then
-                codex_config_target="$(readlink "$codex_config")"
-                case "$codex_config_target" in
-                  /nix/store/*) rm "$codex_config" ;;
-                esac
+              codex_config_stash="${codexConfigStash}"
+
+              if [ -f "$codex_config" ] && [ ! -L "$codex_config" ]; then
+                mkdir -p "$(dirname "$codex_config_stash")"
+                install -m 0600 "$codex_config" "$codex_config_stash"
+                rm "$codex_config"
               fi
+            ''
+          );
 
-              cd "$HOME/.apm"
-              ${pkgs.apm}/bin/apm install -g --target ${lib.escapeShellArg targetArg}${updateArg}
-              ${pkgs.apm}/bin/apm prune
+          apmStashClaudeSettings = lib.mkIf installsClaude (
+            lib.hm.dag.entryBefore [ "checkLinkTargets" ] ''
+              claude_settings="$HOME/.claude/settings.json"
+              claude_settings_stash="${claudeSettingsStash}"
 
-              ${lib.optionalString shouldMergeCodexSettings ''
-                mkdir -p "$HOME/.codex"
+              if [ -f "$claude_settings" ] && [ ! -L "$claude_settings" ]; then
+                mkdir -p "$(dirname "$claude_settings_stash")"
+                install -m 0600 "$claude_settings" "$claude_settings_stash"
+                rm "$claude_settings"
+              fi
+            ''
+          );
 
-                current_json="$(mktemp)"
-                codex_settings_json="$(mktemp)"
-                merged_json="$(mktemp)"
-                merged_toml="$(mktemp)"
-                cleanup_codex_settings_merge() {
-                  rm -f "$current_json" "$codex_settings_json" "$merged_json" "$merged_toml"
-                }
-                trap cleanup_codex_settings_merge EXIT
+          apmInstallAgentPackages = lib.mkIf sharedApm.enable (
+            lib.hm.dag.entryAfter
+              [
+                "claudeCodeSettings"
+                "linkGeneration"
+              ]
+              ''
+                export PATH="${
+                  lib.makeBinPath [
+                    pkgs.coreutils
+                    pkgs.git
+                    pkgs.openssh
+                  ]
+                }:$PATH"
 
-                codex_config_stash="${codexConfigStash}"
-                if [ -e "$codex_config_stash" ]; then
-                  ${lib.getExe pkgs.remarshal} -f toml -t json "$codex_config_stash" "$current_json"
-                  rm "$codex_config_stash"
-                elif [ -e "$codex_config" ]; then
-                  ${lib.getExe pkgs.remarshal} -f toml -t json "$codex_config" "$current_json"
-                else
-                  printf '{}\n' > "$current_json"
+                codex_config="$HOME/.codex/config.toml"
+                if [ -L "$codex_config" ]; then
+                  codex_config_target="$(readlink "$codex_config")"
+                  case "$codex_config_target" in
+                    /nix/store/*) rm "$codex_config" ;;
+                  esac
                 fi
 
-                ${lib.getExe pkgs.remarshal} -f toml -t json "${codexSettingsFile}" "$codex_settings_json"
-                ${lib.getExe pkgs.jq} -s '.[0] * .[1]' "$current_json" "$codex_settings_json" > "$merged_json"
-                ${lib.getExe pkgs.remarshal} -f json -t toml "$merged_json" "$merged_toml"
+                ${lib.optionalString installsClaude ''
+                  claude_settings="$HOME/.claude/settings.json"
+                  claude_settings_stash="${claudeSettingsStash}"
+                  if [ -L "$claude_settings" ]; then
+                    claude_settings_target="$(readlink "$claude_settings")"
+                    case "$claude_settings_target" in
+                      /nix/store/*)
+                        rm "$claude_settings"
+                        install -m 0600 "$claude_settings_target" "$claude_settings"
+                        ;;
+                    esac
+                  fi
 
-                install -m 0600 "$merged_toml" "$codex_config"
-              ''}
-            ''
-        );
+                  if [ -f "$claude_settings_stash" ]; then
+                    current_claude_json="$(mktemp)"
+                    hm_claude_json="$(mktemp)"
+                    merged_claude_json="$(mktemp)"
+                    cleanup_claude_settings_merge() {
+                      rm -f "$current_claude_json" "$hm_claude_json" "$merged_claude_json"
+                    }
+                    trap cleanup_claude_settings_merge EXIT
+
+                    cp "$claude_settings_stash" "$current_claude_json"
+                    cp "$claude_settings" "$hm_claude_json"
+                    ${lib.getExe pkgs.jq} -s '.[0] * .[1]' "$current_claude_json" "$hm_claude_json" > "$merged_claude_json"
+                    install -m 0600 "$merged_claude_json" "$claude_settings"
+                    rm "$claude_settings_stash"
+                  fi
+
+                  if [ -d "$HOME/.claude/skills" ]; then
+                    ${pkgs.findutils}/bin/find "$HOME/.claude/skills" -mindepth 1 -maxdepth 1 -type l -delete
+                  fi
+                  if [ -d "$HOME/.agents/skills" ]; then
+                    ${pkgs.findutils}/bin/find "$HOME/.agents/skills" -mindepth 1 -maxdepth 1 -type l -delete
+                  fi
+                ''}
+
+                cd "$HOME/.apm"
+                ${pkgs.apm}/bin/apm install -g --target ${lib.escapeShellArg targetArg}${updateArg}
+                ${pkgs.apm}/bin/apm prune
+
+                ${lib.optionalString shouldMergeCodexSettings ''
+                  mkdir -p "$HOME/.codex"
+
+                  current_json="$(mktemp)"
+                  codex_settings_json="$(mktemp)"
+                  merged_json="$(mktemp)"
+                  merged_toml="$(mktemp)"
+                  cleanup_codex_settings_merge() {
+                    rm -f "$current_json" "$codex_settings_json" "$merged_json" "$merged_toml"
+                  }
+                  trap cleanup_codex_settings_merge EXIT
+
+                  codex_config_stash="${codexConfigStash}"
+                  if [ -e "$codex_config_stash" ]; then
+                    ${lib.getExe pkgs.remarshal} -f toml -t json "$codex_config_stash" "$current_json"
+                    rm "$codex_config_stash"
+                  elif [ -e "$codex_config" ]; then
+                    ${lib.getExe pkgs.remarshal} -f toml -t json "$codex_config" "$current_json"
+                  else
+                    printf '{}\n' > "$current_json"
+                  fi
+
+                  ${lib.getExe pkgs.remarshal} -f toml -t json "${codexSettingsFile}" "$codex_settings_json"
+                  ${lib.getExe pkgs.jq} -s '.[0] * .[1]' "$current_json" "$codex_settings_json" > "$merged_json"
+                  ${lib.getExe pkgs.remarshal} -f json -t toml "$merged_json" "$merged_toml"
+
+                  install -m 0600 "$merged_toml" "$codex_config"
+                ''}
+              ''
+          );
+        };
       };
     };
 
