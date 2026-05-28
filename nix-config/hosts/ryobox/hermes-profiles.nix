@@ -325,6 +325,7 @@ let
           hermesUid
           hermesGid
           containerConfigVersion
+          profileConfigRoot
           profileConfigContainerPath
           containerPath
           caBundle
