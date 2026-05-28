@@ -20,6 +20,7 @@ jobs:
           pr-title: "chore: update flake.lock"
           pr-labels: dependencies
           commit-msg: "chore: update flake.lock"
+          path-to-flake-dir: ./nix-config
       - name: Enable auto-merge
         if: steps.update.outputs.pull-request-number != ''
         run: gh pr merge --auto --rebase "${{ steps.update.outputs.pull-request-number }}"

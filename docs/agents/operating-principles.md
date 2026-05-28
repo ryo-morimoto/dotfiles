@@ -21,8 +21,8 @@
 
 ### Configuration Shape
 
-- 関連設定は、一箇所で読める粒度の `home/<domain>/default.nix` に集約する。
-- `home/default.nix` は import の集約に寄せ、過剰な submodule 分割は避ける。
+- 関連設定は、一箇所で読める粒度の `nix-config/home/<domain>/default.nix` か `dot-config/config/<app>/` に集約する。
+- `nix-config/home/default.nix` は import の集約に寄せ、過剰な submodule 分割は避ける。
 - package 定義や app 設定は、既存の責務境界に合わせて置く。境界をまたぐ場合は先に構造を確認する。
 
 ### Agent Instructions
@@ -47,10 +47,10 @@
 
 ### Agent Toolchain
 
-- Shared skill / plugin / MCP 定義は `home/agents/default.nix` に集約し、各 agent module はそれを消費する。
-- Tool 固有フォーマットへの変換は消費側 module/host で行う。
-- APM の package、DSL、Home Manager module factory は `packages/apm.nix` に寄せる。
-- Alias 追加より skill 化や config 化を優先し、shell alias と tool config の二重管理を避ける。
+- Codex、Claude Code、APM、MCP、skills、hooks、plugins は mutable runtime config を既定にする。
+- Nix は agent tool の stable runtime prerequisite を導入してよいが、live `~/.codex`、`~/.claude`、`~/.apm` config は生成しない。
+- Disposable AI tools は Nix の外に置く。1ヶ月以上繰り返し使い、rebuild-time 管理に見合うものだけ `nix-config/packages/` に昇格する。
+- Agent operation notes と reviewed examples は `dot-config/agents/` に置き、tool-owned runtime files を live source of truth とする。
 
 ### Review And Planning
 

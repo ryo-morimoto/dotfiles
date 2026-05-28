@@ -5,7 +5,8 @@
 }:
 
 let
-  dotfilesPath = "${config.home.homeDirectory}/ghq/github.com/ryo-morimoto/dotfiles";
+  dotfilesRoot = "${config.home.homeDirectory}/ghq/github.com/ryo-morimoto/dotfiles";
+  dotConfigRoot = "${dotfilesRoot}/dot-config";
 in
 {
   programs.obsidian = {
@@ -82,11 +83,11 @@ in
 
   home.file = {
     "obsidian/Templates/daily.md".source =
-      config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/knowledge/obsidian/templates/daily.md";
+      config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/knowledge/obsidian/templates/daily.md";
     "obsidian/Templates/note.md".source =
-      config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/knowledge/obsidian/templates/note.md";
+      config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/knowledge/obsidian/templates/note.md";
     "obsidian/AGENTS.md".source =
-      config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/knowledge/obsidian/AGENTS.md";
+      config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/knowledge/obsidian/AGENTS.md";
   };
 
   home.activation.initObsidianVault = lib.hm.dag.entryAfter [ "writeBoundary" ] ''

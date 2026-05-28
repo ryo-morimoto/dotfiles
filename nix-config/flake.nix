@@ -62,10 +62,6 @@
       url = "github:ryoppippi/nix-claude-code/59bb590492ee6af9eeb0d8e9e8f6a73140aec761";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    compound-engineering-plugin = {
-      url = "github:EveryInc/compound-engineering-plugin";
-      flake = false;
-    };
     codex-cli-nix = {
       url = "github:sadjow/codex-cli-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -73,30 +69,6 @@
     hermes-agent = {
       url = "github:NousResearch/hermes-agent";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-    context7-skills = {
-      url = "github:upstash/context7";
-      flake = false;
-    };
-    evolutionary-naming = {
-      url = "github:kawasima/evolutionary-naming";
-      flake = false;
-    };
-    mattpocock-skills = {
-      url = "github:mattpocock/skills";
-      flake = false;
-    };
-    superpowers = {
-      url = "github:obra/superpowers";
-      flake = false;
-    };
-    mizchi-skills = {
-      url = "github:mizchi/skills";
-      flake = false;
-    };
-    mgechev-skills = {
-      url = "github:mgechev/skills-best-practices";
-      flake = false;
     };
   };
 
@@ -118,17 +90,11 @@
       nix-claude-code,
       codex-cli-nix,
       hermes-agent,
-      context7-skills,
-      evolutionary-naming,
-      mattpocock-skills,
-      mizchi-skills,
-      mgechev-skills,
       starlintLinuxBin,
       ...
     }:
     let
       localOverlay = final: _prev: {
-        apm = final.callPackage ./packages/apm.nix { };
         cursor-agent = final.callPackage ./packages/cursor-agent.nix { };
         zen-browser = zen-browser.packages.${final.stdenv.hostPlatform.system}.default;
         seiren-mcp = seiren.packages.${final.stdenv.hostPlatform.system}.default;
@@ -193,11 +159,6 @@
                 inherit
                   dms
                   voxtype
-                  context7-skills
-                  evolutionary-naming
-                  mattpocock-skills
-                  mizchi-skills
-                  mgechev-skills
                   ;
                 inherit inputs;
               };

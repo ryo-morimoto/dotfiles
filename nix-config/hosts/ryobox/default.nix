@@ -10,32 +10,6 @@ let
   homeDir = "/home/${username}";
   dotfilesDir = "${homeDir}/ghq/github.com/${username}/dotfiles";
   system = pkgs.stdenv.hostPlatform.system;
-  agentDefaults = import ../../home/agents/default.nix {
-    inherit lib;
-    config = {
-      home.homeDirectory = homeDir;
-    };
-  };
-  sharedMcpServers = agentDefaults._module.args.mcpServers;
-  mkClaudeMcp =
-    server:
-    if server.transport == "stdio" then
-      {
-        type = "stdio";
-        inherit (server) command args;
-      }
-    else
-      {
-        type = "http";
-        inherit (server) url;
-      };
-  claudeManagedMcpFile = pkgs.writeText "claude-managed-mcp.json" (
-    builtins.toJSON {
-      mcpServers = lib.mapAttrs (_: mkClaudeMcp) (
-        lib.filterAttrs (_: server: builtins.elem "claude" server.clients) sharedMcpServers
-      );
-    }
-  );
 in
 {
   imports = [
@@ -233,10 +207,6 @@ in
     brightnessctl
   ];
 
-  environment.etc = {
-    "claude-code/managed-mcp.json".source = claudeManagedMcpFile;
-  };
-
   # XDG Portal
   xdg.portal = {
     enable = true;
@@ -329,7 +299,7 @@ in
     # Automatic system upgrade from local repo (git pull → rebuild)
     autoUpgrade = {
       enable = true;
-      flake = "${dotfilesDir}#ryobox";
+      flake = "${dotfilesDir}/nix-config#ryobox";
       dates = "05:00";
       randomizedDelaySec = "45min";
       allowReboot = false;

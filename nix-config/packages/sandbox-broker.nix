@@ -13,7 +13,7 @@ rustPlatform.buildRustPackage {
   pname = "sandbox-broker";
   version = "0.1.0";
 
-  src = ../tools/sandbox-broker;
+  src = ../../tools/sandbox-broker;
 
   cargoHash = "sha256-9utXKXG47O6za4xo8uSMZU1v0OJCMokCUz0aXK5Vqms=";
 

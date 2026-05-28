@@ -33,7 +33,7 @@ repos:
 
       - id: flake-checker
         name: flake-checker
-        entry: flake-checker --no-telemetry
+        entry: flake-checker --no-telemetry nix-config/flake.lock
         language: system
         pass_filenames: false
         files: 'flake\.lock$'
@@ -72,7 +72,7 @@ repos:
       # Build (priority 10: run after lint)
       - id: nix-build
         name: nix build
-        entry: nix build .#nixosConfigurations.ryobox.config.system.build.toplevel --no-link
+        entry: nix build ./nix-config#nixosConfigurations.ryobox.config.system.build.toplevel --no-link
         language: system
         files: '\.nix$'
         pass_filenames: false

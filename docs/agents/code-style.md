@@ -29,7 +29,7 @@
 - Functions: `camelCase`.
 - Options: `camelCase`, for example `programs.zsh.enable`.
 - Packages: `kebab-case`.
-- Package files: `packages/<name>.nix`.
+- Package files: `nix-config/packages/<name>.nix`.
 - Module files: `default.nix`.
 
 ## Types And Assertions
@@ -50,11 +50,11 @@ lib.mkIf (cfg.enable && cfg.disable) (lib.warn "矛盾した設定" null)
 
 ## Organization
 
-- One package per file under `packages/`.
-- Host-specific config belongs in `hosts/<hostname>/`.
-- User environment config belongs in `home/`.
-- Keep `flake.nix` minimal and delegate details to modules.
-- Secret management goes through agenix under `secrets/`.
+- One package per file under `nix-config/packages/`.
+- Host-specific config belongs in `nix-config/hosts/<hostname>/`.
+- User environment config belongs in `nix-config/home/`.
+- Keep `nix-config/flake.nix` minimal and delegate details to modules.
+- Secret management goes through agenix under `nix-config/secrets/`.
 
 ## Git Commit Style
 

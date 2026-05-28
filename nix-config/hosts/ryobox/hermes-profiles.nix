@@ -10,7 +10,7 @@ let
   profileRoot = "/var/lib/hermes-profiles";
   profileCacheRoot = "/var/cache/hermes-profiles";
   dotfilesRoot = "${config.users.users.ryo-morimoto.home}/ghq/github.com/ryo-morimoto/dotfiles";
-  profileConfigRoot = "${dotfilesRoot}/config/hermes/profiles";
+  profileConfigRoot = "${dotfilesRoot}/dot-config/config/hermes/profiles";
   profileConfigContainerPath = "/profile-config";
 
   hermesUser = "hermes";

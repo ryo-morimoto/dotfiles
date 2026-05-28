@@ -64,38 +64,6 @@
         "type": "github"
       }
     },
-    "compound-engineering-plugin": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1779996232,
-        "narHash": "sha256-FwxbWgLIM4Gt3Zmk/2YkIcp5Y8YAfVq8mev/L2rAldE=",
-        "owner": "EveryInc",
-        "repo": "compound-engineering-plugin",
-        "rev": "85987d496fdfdc8a18faf592fd53329e23266537",
-        "type": "github"
-      },
-      "original": {
-        "owner": "EveryInc",
-        "repo": "compound-engineering-plugin",
-        "type": "github"
-      }
-    },
-    "context7-skills": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1779712330,
-        "narHash": "sha256-O6NVWqwA//cw7nS89FntED++nqJyuCz9y0FOfTPQrDM=",
-        "owner": "upstash",
-        "repo": "context7",
-        "rev": "7e956e594584db4b1b66a3a4a07781e92b4d7e45",
-        "type": "github"
-      },
-      "original": {
-        "owner": "upstash",
-        "repo": "context7",
-        "type": "github"
-      }
-    },
     "darwin": {
       "inputs": {
         "nixpkgs": [
@@ -137,22 +105,6 @@
         "owner": "AvengeMedia",
         "ref": "stable",
         "repo": "DankMaterialShell",
-        "type": "github"
-      }
-    },
-    "evolutionary-naming": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1776310353,
-        "narHash": "sha256-sVQvR6OOzmWYl7iA0tiYUVeqPRYjhtCI+UGdLvtusAc=",
-        "owner": "kawasima",
-        "repo": "evolutionary-naming",
-        "rev": "9ff0280833cc781018618d5294b52cbeced0d409",
-        "type": "github"
-      },
-      "original": {
-        "owner": "kawasima",
-        "repo": "evolutionary-naming",
         "type": "github"
       }
     },
@@ -336,54 +288,6 @@
       "original": {
         "owner": "nix-community",
         "repo": "home-manager",
-        "type": "github"
-      }
-    },
-    "mattpocock-skills": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1779983310,
-        "narHash": "sha256-RRVV4V4h/9GkwnHU4G4PLQtwdU1Lm4istvGncwmQ9dg=",
-        "owner": "mattpocock",
-        "repo": "skills",
-        "rev": "e3b90b5238f38cdea5996e16861dcae28ef52eda",
-        "type": "github"
-      },
-      "original": {
-        "owner": "mattpocock",
-        "repo": "skills",
-        "type": "github"
-      }
-    },
-    "mgechev-skills": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1777392507,
-        "narHash": "sha256-xSelTVSxvO13H9EqJ9ygtffV12f0BURqZhMs0b+YT2c=",
-        "owner": "mgechev",
-        "repo": "skills-best-practices",
-        "rev": "979bd0360c82064ee8cf1ca9a0a0ff5335bae2ee",
-        "type": "github"
-      },
-      "original": {
-        "owner": "mgechev",
-        "repo": "skills-best-practices",
-        "type": "github"
-      }
-    },
-    "mizchi-skills": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1779868051,
-        "narHash": "sha256-Sm+ql5/hqeMPD2QdWugVFnw7ml98HJAuNTXCJ1O4Ckw=",
-        "owner": "mizchi",
-        "repo": "skills",
-        "rev": "2de9c04734c79574d5ebcc64be5b3685f575af59",
-        "type": "github"
-      },
-      "original": {
-        "owner": "mizchi",
-        "repo": "skills",
         "type": "github"
       }
     },
@@ -690,16 +594,10 @@
         "agenix": "agenix",
         "banto": "banto",
         "codex-cli-nix": "codex-cli-nix",
-        "compound-engineering-plugin": "compound-engineering-plugin",
-        "context7-skills": "context7-skills",
         "dms": "dms",
-        "evolutionary-naming": "evolutionary-naming",
         "fenix": "fenix",
         "hermes-agent": "hermes-agent",
         "home-manager": "home-manager_2",
-        "mattpocock-skills": "mattpocock-skills",
-        "mgechev-skills": "mgechev-skills",
-        "mizchi-skills": "mizchi-skills",
         "moonbit-overlay": "moonbit-overlay",
         "niri-flake": "niri-flake",
         "nix-claude-code": "nix-claude-code",
@@ -708,7 +606,6 @@
         "seiren": "seiren",
         "soulforge": "soulforge",
         "starlintLinuxBin": "starlintLinuxBin",
-        "superpowers": "superpowers",
         "voxtype": "voxtype",
         "zen-browser": "zen-browser"
       }
@@ -783,22 +680,6 @@
       "original": {
         "type": "tarball",
         "url": "https://github.com/mizchi/starlint/releases/latest/download/starlint-linux-x64.tar.gz"
-      }
-    },
-    "superpowers": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1777932301,
-        "narHash": "sha256-3E3rO6hR87JUfS3XV1Eaoz6SDWOftleWvN9UPNFEMjw=",
-        "owner": "obra",
-        "repo": "superpowers",
-        "rev": "f2cbfbefebbfef77321e4c9abc9e949826bea9d7",
-        "type": "github"
-      },
-      "original": {
-        "owner": "obra",
-        "repo": "superpowers",
-        "type": "github"
       }
     },
     "systems": {

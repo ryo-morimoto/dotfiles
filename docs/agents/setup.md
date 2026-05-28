@@ -6,24 +6,16 @@
 
 ```text
 .
-|-- flake.nix
-|-- flake.lock
-|-- hosts/
-|   `-- ryobox/
-|       |-- default.nix
-|       `-- hardware-configuration.nix
-|-- home/
-|   |-- default.nix
-|   |-- agents/default.nix
-|   |-- knowledge/default.nix
-|   `-- <domain>/default.nix
-|-- packages/
-|   `-- *.nix
-|-- config/
-|   `-- <tool>/...
-|-- secrets/
-|   |-- secrets.nix
-|   `-- *.age
+|-- nix-config/
+|   |-- flake.nix
+|   |-- flake.lock
+|   |-- hosts/
+|   |-- home/
+|   |-- packages/
+|   `-- secrets/
+|-- dot-config/
+|   |-- config/
+|   `-- agents/
 |-- tools/
 |   `-- <tool>/...
 |-- skills/
@@ -33,23 +25,21 @@
 `-- .github/workflows/
 ```
 
-- `flake.nix` / `flake.lock`: 依存と出力定義の入口。
-- `hosts/`: ホスト固有の NixOS 構成。`hardware-configuration.nix` は自動生成扱い。
-- `home/`: Home Manager のユーザー環境定義。関連設定は `home/<domain>/default.nix` に集約する。
-- `packages/`: ローカル package 定義。新規 package は `flake.nix` の overlay に登録する。
-- `config/`: アプリ設定の source。Out-of-store symlink の実体。
-- `secrets/`: agenix 管理の暗号化シークレット。
+- `nix-config/`: Nix flake、NixOS modules、Home Manager baseline、stable package 定義、agenix secrets。
+- `dot-config/config/`: Home Manager から `~/.config` に symlink する mutable app config。
+- `dot-config/agents/`: AI tool runtime notes と reviewed examples。Nix は live Codex、Claude、APM、MCP、skill、hook config を生成しない。
 - `tools/`: 補助ツール。
 - `docs/plans/`: 設計メモ・実装計画。
 
 ## Source Of Truth
 
-- 宣言的構成を優先し、設定は Nix か `config/` 配下で一元管理する。
-- Home Manager / activation の出力先は直接編集しない。対応する `home/<domain>/*.nix` か `config/<app>/` を更新する。
+- 再現したい基盤は `nix-config/`、運用しながら変える設定は `dot-config/` に置く。
+- Home Manager / activation の出力先は直接編集しない。対応する `nix-config/home/<domain>/*.nix` か `dot-config/config/<app>/` を更新する。
 - 出力先か source か判別できないときは `readlink` で symlink target を確認してから編集する。
-- 既存責務を崩さない。host は `hosts/`、user は `home/`、package は `packages/`。
-- 新規アプリ設定は `config/<app>/` に追加し、Home Manager から参照する。
-- 新規シークレットは平文で置かず、`secrets/*.age` と `secrets/secrets.nix` で管理する。
+- 既存責務を崩さない。host は `nix-config/hosts/`、user は `nix-config/home/`、package は `nix-config/packages/`。
+- 新規アプリ設定は `dot-config/config/<app>/` に追加し、Home Manager から参照する。
+- 新規シークレットは平文で置かず、`nix-config/secrets/*.age` と `nix-config/secrets/secrets.nix` で管理する。
+- AI tool runtime config、MCP、skills、hooks、plugins は原則 Nix で生成しない。
 - 生成物や host-local state は原則コミットしない。必要なら `.gitignore` で吸収する。
 
 ## Goal Handling
@@ -85,30 +75,30 @@ HitL は次の場合だけ挟む。
 
 ```bash
 # Format all .nix files
-nixfmt .
+fd -e nix . nix-config -x nixfmt {}
 
 # Lint/validate flake
-nix flake check
+nix flake check ./nix-config
 
 # Dry-run build NixOS configuration
-nix build .#nixosConfigurations.ryobox.config.system.build.toplevel --dry-run
+nix build ./nix-config#nixosConfigurations.ryobox.config.system.build.toplevel --dry-run
 
 # Build full NixOS configuration
-sudo nixos-rebuild switch --flake .
+sudo nixos-rebuild switch --flake ./nix-config#ryobox
 
 # Build a single package
-nix build .#showboat
+nix build ./nix-config#showboat
 
 # Enter development shell if available
-nix develop
+nix develop ./nix-config
 
 # Evaluate a specific attribute
-nix eval .#nixosConfigurations.ryobox.config.system.build.toplevel
+nix eval ./nix-config#nixosConfigurations.ryobox.config.system.build.toplevel
 ```
 
 ## Verification Rules
 
 - `.nix` を編集したら `nixfmt` を実行する。
-- `flake.nix` / `flake.lock` を編集したら `nix flake check` を実行する。
+- `nix-config/flake.nix` / `nix-config/flake.lock` を編集したら `nix flake check ./nix-config` を実行する。
 - Markdown-only 変更では `git diff --check -- <paths>` で空白エラーを確認する。
 - 検証できなかった場合は、未検証の範囲と理由を明記する。

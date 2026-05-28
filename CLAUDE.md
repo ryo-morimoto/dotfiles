@@ -10,13 +10,13 @@ NixOS dotfiles repository using **Nix Flakes** with **Home Manager** (integrated
 
 ```bash
 # Apply both system and user configuration (Home Manager is integrated)
-sudo nixos-rebuild switch --flake .#ryobox
+sudo nixos-rebuild switch --flake ./nix-config#ryobox
 
 # Update flake inputs (nixpkgs, home-manager, etc.)
-nix flake update
+nix flake update ./nix-config
 
 # Check flake syntax without building
-nix flake check
+nix flake check ./nix-config
 
 # Nix code quality (installed tools)
 nixfmt            # Format Nix files
@@ -31,26 +31,28 @@ prek install -t pre-commit -t pre-push
 
 ### Nix Structure
 
-- **`flake.nix`** - Entry point. Defines inputs (nixpkgs, home-manager, llm-agents, etc.) and integrates Home Manager as NixOS module
-- **`home/default.nix`** - User environment: packages, programs (git, zsh, starship, fzf, etc.), shell aliases, XDG config symlinks
-- **`hosts/ryobox/default.nix`** - System config: bootloader, networking, locale (ja_JP), Niri compositor, audio (PipeWire), fonts
-- **`hosts/ryobox/hardware-configuration.nix`** - Auto-generated hardware config (do not edit manually)
+- **`nix-config/flake.nix`** - Entry point. Defines inputs (nixpkgs, home-manager, etc.) and integrates Home Manager as NixOS module
+- **`nix-config/home/default.nix`** - User environment: packages, programs (git, zsh, starship, fzf, etc.), shell aliases, XDG config symlinks
+- **`nix-config/hosts/ryobox/default.nix`** - System config: bootloader, networking, locale (ja_JP), Niri compositor, audio (PipeWire), fonts
+- **`nix-config/hosts/ryobox/hardware-configuration.nix`** - Auto-generated hardware config (do not edit manually)
 
 ### Config Files
 
-Application configs in `config/` are symlinked via `mkOutOfStoreSymlink` for instant changes without rebuild:
+Application configs in `dot-config/config/` are symlinked via `mkOutOfStoreSymlink` for instant changes without rebuild:
 
-- `config/ghostty/` - Ghostty terminal
-- `config/niri/` - Niri compositor (primary WM)
-- `config/hypr/` - Hyprland (alternative WM)
+- `dot-config/config/ghostty/` - Ghostty terminal
+- `dot-config/config/niri/` - Niri compositor (primary WM)
+- `dot-config/config/lazygit/` - Lazygit
+
+AI tool runtime config lives outside Nix management. Use `dot-config/agents/` for notes and reviewed examples; live `~/.codex`, `~/.claude`, and `~/.apm` files are owned by the tools.
 
 ### Where to Add Packages
 
-- **System packages**: `hosts/ryobox/default.nix` → `environment.systemPackages`
-- **User packages**: `home/default.nix` → `home.packages`
-- **Programs with config**: Use Home Manager modules in `home/default.nix` (e.g., `programs.git`, `programs.zsh`)
+- **System packages**: `nix-config/hosts/ryobox/default.nix` → `environment.systemPackages`
+- **User packages**: `nix-config/home/default.nix` → `home.packages`
+- **Programs with config**: Use Home Manager modules in `nix-config/home/default.nix` for stable config only
 
-### Shell Aliases (defined in home/default.nix)
+### Shell Aliases (defined in nix-config/home/default.nix)
 
 Git: `g`, `gs`, `gd`, `ga`, `gc`, `gp`, `gl`
 Modern CLI: `ls`→eza, `cat`→bat, `grep`→rg, `find`→fd

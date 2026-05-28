@@ -7,7 +7,8 @@
 }:
 
 let
-  dotfilesPath = "${config.home.homeDirectory}/ghq/github.com/ryo-morimoto/dotfiles";
+  dotfilesRoot = "${config.home.homeDirectory}/ghq/github.com/ryo-morimoto/dotfiles";
+  dotConfigRoot = "${dotfilesRoot}/dot-config";
   coreDevTools = with pkgs; [
     lsof
     openssl
@@ -900,10 +901,10 @@ in
     # Dotfiles (mkOutOfStoreSymlink for instant updates)
     configFile = {
       "mimeapps.list".force = true;
-      "nvim".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/nvim";
-      "ghostty".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/ghostty";
-      "zsh".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/zsh";
-      "lazygit".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/config/lazygit";
+      "nvim".source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/nvim";
+      "ghostty".source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/ghostty";
+      "zsh".source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/zsh";
+      "lazygit".source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/lazygit";
 
     };
   };
