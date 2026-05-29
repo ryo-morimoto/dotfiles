@@ -1,0 +1,25 @@
+{
+  "servers": {
+    "codedb": {
+      "command": "REPLACE_WITH_CODEDB_COMMAND",
+      "args": []
+    },
+    "lsmcp": {
+      "command": "REPLACE_WITH_LSMCP_COMMAND",
+      "args": []
+    },
+    "memory": {
+      "command": "REPLACE_WITH_MEMORY_MCP_COMMAND",
+      "args": []
+    }
+  },
+  "codeMode": {
+    "filesystem": "deny",
+    "environment": "deny",
+    "network": {
+      "allowHosts": []
+    },
+    "secrets": "neverExpose"
+  }
+}
+

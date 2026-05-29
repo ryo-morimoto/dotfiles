@@ -1,0 +1,16 @@
+{
+  "agentServers": {
+    "pi": {
+      "command": "acp-adapter",
+      "args": [
+        "--adapter",
+        "pi",
+        "--pi-provider",
+        "openai-codex",
+        "--pi-model",
+        "REPLACE_WITH_MODEL"
+      ]
+    }
+  }
+}
+

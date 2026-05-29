@@ -1,0 +1,29 @@
+{
+  "mcpServers": {
+    "codedb": {
+      "command": "REPLACE_WITH_CODEDB_COMMAND",
+      "args": [
+        "--root",
+        "REPLACE_WITH_PROJECT_ROOT"
+      ]
+    },
+    "lsmcp": {
+      "command": "REPLACE_WITH_LSMCP_COMMAND",
+      "args": [
+        "--workspace",
+        "REPLACE_WITH_PROJECT_ROOT"
+      ]
+    },
+    "ai-sessions": {
+      "command": "REPLACE_WITH_AI_SESSIONS_MCP_COMMAND",
+      "args": [
+        "--readonly"
+      ]
+    },
+    "engram": {
+      "command": "REPLACE_WITH_ENGRAM_MCP_COMMAND",
+      "args": []
+    }
+  }
+}
+

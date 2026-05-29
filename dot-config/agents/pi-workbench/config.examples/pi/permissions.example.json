@@ -1,0 +1,53 @@
+{
+  "bash": {
+    "allow": [
+      "pwd",
+      "ls *",
+      "rg *",
+      "git status *",
+      "npm test",
+      "nix flake check ./nix-config"
+    ],
+    "ask": [
+      "git checkout *",
+      "git merge *",
+      "git branch *",
+      "rm *",
+      "mv *"
+    ],
+    "deny": [
+      "git push *",
+      "env",
+      "printenv",
+      "cat ~/.ssh/*",
+      "cat ~/.config/*",
+      "curl * | sh",
+      "wget * | sh"
+    ]
+  },
+  "tools": {
+    "read": "allow",
+    "search": "allow",
+    "test": "allow",
+    "edit": "ask",
+    "write": "ask",
+    "deploy": "deny",
+    "publish": "deny"
+  },
+  "mcp": {
+    "codedb": {
+      "*": "allow"
+    },
+    "lsmcp": {
+      "diagnostics": "allow",
+      "references": "allow",
+      "rename": "ask"
+    },
+    "memory": {
+      "search": "allow",
+      "checkpoint": "ask",
+      "promote": "ask"
+    }
+  }
+}
+

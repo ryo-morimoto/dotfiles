@@ -1,0 +1,37 @@
+name: pi-agent-workbench
+version: 0.1.0
+description: Reuse-first Pi agent workbench evaluation manifest.
+targets:
+  - codex
+dependencies:
+  apm: []
+  mcp:
+    - name: codedb
+      registry: false
+      transport: stdio
+      command: codedb
+      args:
+        - REPLACE_WITH_PROJECT_ROOT
+        - mcp
+    - name: lsmcp
+      registry: false
+      transport: stdio
+      command: npx
+      args:
+        - -y
+        - "@mizchi/lsmcp"
+        - -p
+        - tsgo
+    - name: ai-sessions
+      registry: false
+      transport: stdio
+      command: REPLACE_WITH_AI_SESSIONS_MCP_COMMAND
+    - name: engram
+      registry: false
+      transport: stdio
+      command: engram
+      args:
+        - mcp
+        - --tools=agent
+includes: auto
+scripts: {}
