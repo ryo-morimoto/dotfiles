@@ -492,15 +492,15 @@ in
     ssh = {
       enable = true;
       enableDefaultConfig = false;
-      matchBlocks = {
+      settings = {
         "*" = {
-          setEnv = {
+          SetEnv = {
             TERM = "xterm-256color";
           };
         };
         "moon-peak" = {
-          hostname = "moon-peak.exe.xyz";
-          user = "user";
+          HostName = "moon-peak.exe.xyz";
+          User = "user";
         };
       };
     };
