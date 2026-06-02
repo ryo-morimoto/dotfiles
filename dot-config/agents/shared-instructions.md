@@ -38,6 +38,7 @@
 
 ## Tools And Context
 
+- When investigating Markdown (`*.md`) files, start with `qmd search <query>` to find relevant sections.
 - Prefer precise project-aware tools for search, reading, and edits when available; otherwise use fast local commands
   and small, targeted reads.
 - Keep tool output out of the conversation unless it matters. For write/create/update calls, mention only success and
