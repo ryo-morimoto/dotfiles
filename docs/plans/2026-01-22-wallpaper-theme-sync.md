@@ -1,7 +1,5 @@
 # Wallpaper Theme Sync Implementation Plan
 
-> **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
-
 **Goal:** Select wallpaper from GUI picker and automatically sync colors across all apps (ghostty, waybar, mako, fuzzel, swaylock, niri).
 
 **Architecture:** waypaper (GUI picker) → swww (wallpaper) → wallust (color extraction) → templates → reload apps

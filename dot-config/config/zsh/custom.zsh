@@ -3,6 +3,8 @@ bindkey -e
 bindkey '^[[A' history-search-backward
 bindkey '^[[B' history-search-forward
 
+alias apm='uvx --from apm-cli apm'
+
 # OSC 7: notify tmux of CWD for pane splitting
 _osc7_precmd() {
   printf '\e]7;file://%s%s\e\\' "${HOST}" "${PWD}"

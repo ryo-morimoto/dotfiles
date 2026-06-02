@@ -1,7 +1,5 @@
 # Add Hermes Agent Gateway Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
-
 **Goal:** Add Nous Research Hermes Agent as a `ryobox` NixOS gateway service using the upstream NixOS module, Podman container backend, and OpenAI Codex OAuth provider.
 
 **Architecture:** Hermes is integrated as a host-level NixOS service through the upstream `hermes-agent` flake module. Podman is enabled explicitly for the service container runtime, while OAuth credentials stay out of the repo and are persisted by Hermes under `/var/lib/hermes/.hermes` after `hermes model`.
@@ -12,7 +10,6 @@
 
 ## Source Spec
 
-- Approved design: `docs/superpowers/specs/2026-05-13-hermes-agent-gateway-design.md`
 - Upstream Hermes repo: <https://github.com/NousResearch/hermes-agent>
 - Upstream NixOS module: <https://raw.githubusercontent.com/NousResearch/hermes-agent/main/nix/nixosModules.nix>
 

@@ -1,7 +1,5 @@
 # Nix Dot Config Split Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
-
 **Goal:** Split stable Nix-managed system configuration from mutable dot/agent configuration so the repo can support three months of fast AI-tool experimentation without rebuild friction.
 
 **Architecture:** Move the flake-centered configuration into `nix-config/` and move user-editable app configuration into `dot-config/`. Nix keeps the stable runtime and symlink wiring, while AI tool runtime settings, MCP definitions, skills, and disposable tools leave Nix management. The root repo remains the operational workspace; commands that evaluate Nix point at `./nix-config`.
@@ -49,7 +47,7 @@ Responsibilities:
 Non-goals:
 
 - Do not split into two GitHub repositories in this pass.
-- Do not rewrite old historical plan docs under `docs/plans/` and `docs/superpowers/`; they can keep past paths.
+- Do not rewrite old historical plan docs under `docs/plans/`; they can keep past paths.
 - Do not package new experimental tools in Nix during this migration.
 
 ## Task 1: Move Nix-owned paths under `nix-config/`
@@ -506,7 +504,7 @@ Run:
 rg -n "nix flake check$|--flake \\.#|\\.\\/home|\\.\\/hosts|\\.\\/packages|\\.\\/secrets|/config/(nvim|ghostty|zsh|lazygit|knowledge|hermes)" AGENTS.md CLAUDE.md docs .github nix-config
 ```
 
-Expected: no stale active references. Historical references inside old plan files may remain and should be ignored only if they are under `docs/plans/` or `docs/superpowers/`.
+Expected: no stale active references. Historical references inside old plan files may remain and should be ignored only if they are under `docs/plans/`.
 
 - [ ] **Step 5: Inspect status for unintended deletes**
 

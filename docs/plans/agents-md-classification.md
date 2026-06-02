@@ -255,7 +255,7 @@
 | 移行対象 | 移行先 | 作業 |
 | --- | --- | --- |
 | `_AGENTS.md` の cross-project 原則 | `home/agents/_AGENTS.md` | 上記 draft へ置換する。 |
-| workflow 詳細 | APM 管理の skill / workflow docs | `ce-*` / superpowers / Matt Pocock skills に寄せ、常時文書には routing だけ残す。 |
+| workflow 詳細 | APM 管理の skill / workflow docs | `ce-*` / Matt Pocock skills に寄せ、常時文書には routing だけ残す。 |
 | repo 固有 Nix edit anchor、nixfmt、flake check | root `AGENTS.md` | 既存の dotfiles ルールへ集約する。 |
 | Claude-only 設定 | `home/agents/claude-code.nix` または Claude settings | model、permission、hook、Claude 固有 memory 方針へ寄せる。 |
 | Codex-only 設定 | `home/agents/codex.nix` または Codex config | sandbox、approval、Codex-specific features へ寄せる。 |
@@ -272,7 +272,7 @@
 | R1 | Claude は orchestrator、Codex が実作業。 | 消す。 | 移行しない。履歴はこの計画文書に残す。 | 現在の実行環境では agent 役割は user request と tool availability で決まる。常時指示すると他 agent や単独 Codex 実行で誤誘導になる。 |
 | R2 | `codex:rescue` / `codex:codex-rescue` 命名注意。 | 消す。 | 移行しない。再発するなら該当 skill/plugin の README か troubleshooting docs。 | 過去の命名事故対策で、普遍的な行動原則ではない。常時ロードするより、該当機能の近くに置くべき。 |
 | R3 | Codex token 切れ時は Claude が直接実行。 | 消す。 | 移行しない。 | 特定 orchestration 前提で、Codex/Claude どちらにも一般化できない。現在の session では user が明示的に切り替える方が正しい。 |
-| W1 | 非自明 task は brainstorm -> plan -> work -> review -> compound。 | 一般化して残し、詳細は移す。 | `_AGENTS.md` には「非自明 task は right-sized plan/work/review」。詳細は `ce-*` / superpowers / Matt Pocock skills。 | flow 自体は有用だが、固定 sequence は task によって重すぎる。 |
+| W1 | 非自明 task は brainstorm -> plan -> work -> review -> compound。 | 一般化して残し、詳細は移す。 | `_AGENTS.md` には「非自明 task は right-sized plan/work/review」。詳細は `ce-*` / Matt Pocock skills。 | flow 自体は有用だが、固定 sequence は task によって重すぎる。 |
 | W2 | 設計・計画 80% / 実装 20%。 | 消す。 | 移行しない。 | 比率は slogan で、行動可能な判定基準にならない。必要なら「非自明な設計は先に根拠と trade-off を出す」で代替する。 |
 | W3 | 3 ファイル以上は `/workflows:plan` 必須。 | 消す。 | hard gate は移行しない。計画推奨は workflow skill へ。 | ファイル数は複雑さの proxy として粗い。小さな 3 ファイル変更も、大きな 1 ファイル変更もある。tool-specific slash command でもある。 |
 | W4 | 問題解決後は `/workflows:compound`。 | 一般化して残し、詳細は移す。 | `_AGENTS.md` には「非自明知見を記録」。具体操作は knowledge/compound skill。 | knowledge capture は有用だが、slash command を常時文書に固定しない。 |
