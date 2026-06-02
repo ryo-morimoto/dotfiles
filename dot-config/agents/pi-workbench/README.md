@@ -4,6 +4,10 @@ This directory stores reviewed notes, config examples, and verification checklis
 It is intentionally documentation-first: do not add a local workbench runtime until an existing project fails a written
 contract and the failure cannot be fixed upstream quickly.
 
+The dotfiles repo root should not own live `.pi/settings.json` as the default source of truth. Keep reusable Pi setup in
+`config.examples/`, use `~/.pi/agent/settings.json` for personal defaults, and add project `.pi/settings.json` only when a
+repo has a real repo-specific contract.
+
 ## Scope
 
 - Reuse `acp-adapter` for Zed ACP to Pi.
