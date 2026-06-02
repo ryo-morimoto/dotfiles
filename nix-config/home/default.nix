@@ -199,6 +199,14 @@ in
       ".claude/CLAUDE.md".source =
         config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/agents/AGENTS.md";
     };
+
+    activation.installMiseTools = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      if [ -r "$HOME/.config/mise/config.toml" ]; then
+        echo "Installing mise tools from ~/.config/mise/config.toml"
+        ${lib.getExe pkgs.mise} install --yes || \
+          echo "warning: mise install failed; retry with: mise install" >&2
+      fi
+    '';
   };
 
   programs = {
