@@ -1,6 +1,20 @@
 # Smoke Checklist
 
-Run these in disposable profiles first. Do not mutate live agent config during first validation.
+Start with the automated runner. It covers the non-interactive package, CLI, build, and dry-run checks with disposable Pi
+directories:
+
+```sh
+tools/pi-workbench-smoke/pi-workbench-smoke
+```
+
+Use the quick mode when you only need install/CLI checks:
+
+```sh
+tools/pi-workbench-smoke/pi-workbench-smoke --quick
+```
+
+The manual checklist below is only for live checks the runner cannot prove because they require Zed UI, credentials, MCP
+client state, or local model endpoints. Do not mutate live agent config during first validation.
 
 ## 1. Environment
 
@@ -97,4 +111,3 @@ Observed result:
 Pass / fail:
 Follow-up:
 ```
-

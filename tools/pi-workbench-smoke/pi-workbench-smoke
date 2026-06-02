@@ -1,0 +1,239 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(git rev-parse --show-toplevel)"
+RECEIPTS_DIR="$ROOT/dot-config/agents/pi-workbench/verification/receipts"
+DATE="$(date +%Y-%m-%d)"
+RECEIPT="$RECEIPTS_DIR/${DATE}-auto-smoke.md"
+TMP_DIR=""
+KEEP_TEMP=0
+QUICK=0
+
+usage() {
+	cat <<'EOF'
+Usage: tools/pi-workbench-smoke/pi-workbench-smoke [options]
+
+Options:
+  --quick              Skip clone/build/test checks.
+  --keep-temp          Keep the disposable temp directory.
+  --receipt <path>     Write receipt to this path.
+  -h, --help           Show this help.
+EOF
+}
+
+while [ "$#" -gt 0 ]; do
+	case "$1" in
+	--quick)
+		QUICK=1
+		shift
+		;;
+	--keep-temp)
+		KEEP_TEMP=1
+		shift
+		;;
+	--receipt)
+		RECEIPT="$2"
+		shift 2
+		;;
+	-h | --help)
+		usage
+		exit 0
+		;;
+	*)
+		echo "unknown option: $1" >&2
+		usage >&2
+		exit 2
+		;;
+	esac
+done
+
+TMP_DIR="$(mktemp -d)"
+PI_HOME="$TMP_DIR/home"
+PI_AGENT="$TMP_DIR/pi-agent"
+PI_PACKAGES="$TMP_DIR/pi-packages"
+mkdir -p "$PI_HOME" "$PI_AGENT" "$PI_PACKAGES" "$(dirname "$RECEIPT")"
+printf '{"type":"module","dependencies":{}}\n' >"$PI_PACKAGES/package.json"
+
+cleanup() {
+	if [ "$KEEP_TEMP" -eq 0 ] && [ -n "$TMP_DIR" ]; then
+		rm -rf "$TMP_DIR"
+	else
+		echo "kept temp dir: $TMP_DIR" >&2
+	fi
+}
+trap cleanup EXIT
+
+section() {
+	printf '\n## %s\n\n' "$1" >>"$RECEIPT"
+}
+
+record_cmd() {
+	local label="$1"
+	shift
+	section "$label"
+	{
+		printf 'Command:\n\n```sh\n'
+		printf '%q ' "$@"
+		# shellcheck disable=SC2016
+		printf '\n```\n\nOutput:\n\n```text\n'
+	} >>"$RECEIPT"
+
+	if "$@" >>"$RECEIPT" 2>&1; then
+		printf '```\n\nResult: pass\n' >>"$RECEIPT"
+	else
+		local status=$?
+		printf '```\n\nResult: fail (exit %s)\n' "$status" >>"$RECEIPT"
+		return "$status"
+	fi
+}
+
+record_shell() {
+	local label="$1"
+	local script="$2"
+	section "$label"
+	{
+		# shellcheck disable=SC2016
+		printf 'Command:\n\n```sh\n%s\n```\n\nOutput:\n\n```text\n' "$script"
+	} >>"$RECEIPT"
+
+	if bash -lc "$script" >>"$RECEIPT" 2>&1; then
+		printf '```\n\nResult: pass\n' >>"$RECEIPT"
+	else
+		local status=$?
+		printf '```\n\nResult: fail (exit %s)\n' "$status" >>"$RECEIPT"
+		return "$status"
+	fi
+}
+
+append_blocked() {
+	section "Blocked Live Checks"
+	cat >>"$RECEIPT" <<'EOF'
+These checks still require interactive UI, credentials, live runtime state, or local model endpoints:
+
+- Zed starts a Pi-backed ACP session and streams a real prompt.
+- ACP session new/list/load works through Zed.
+- ACP permission prompts are visible in Zed.
+- `pi-permission-system` allow/ask/deny enforcement in a live Pi session.
+- MCP server/tool permission enforcement in a live Pi session.
+- `engram setup pi` plus MCP `mem_*` calls from Pi.
+- Magic Context and Engram duplicate-write/conflict behavior.
+- `ai-sessions-mcp` search over real Codex/Claude/Pi session data.
+- Pi session search adapter/importer decision.
+- `pctx` Code Mode execution against configured upstream MCPs.
+- `mcpc connect` -> `tools-list` -> `tools-call` against a configured MCP server.
+- `pi-subagent` `spawn` / `fork` and permission forwarding.
+- Local/open-weight model summarization and read-only review.
+EOF
+}
+
+cat >"$RECEIPT" <<EOF
+# Pi Workbench Auto Smoke Receipt
+
+Date: $DATE
+Repo: $ROOT
+Branch: $(git -C "$ROOT" branch --show-current)
+Quick mode: $QUICK
+Disposable Pi agent dir: $PI_AGENT
+Disposable Pi package dir: $PI_PACKAGES
+
+EOF
+
+record_shell "Environment" '
+set -e
+node --version
+npm --version
+npx --version
+if command -v zed >/dev/null 2>&1; then zed --version; else echo "zed: missing"; fi
+if command -v pi >/dev/null 2>&1; then pi --version; else echo "pi: missing on PATH"; fi
+npx @earendil-works/pi-coding-agent --version
+'
+
+record_shell "Pi Package Install" "
+set -e
+export HOME='$PI_HOME'
+export PI_CODING_AGENT_DIR='$PI_AGENT'
+export PI_PACKAGE_DIR='$PI_PACKAGES'
+for pkg in \
+  @spences10/pi-mcp \
+  @spences10/pi-lsp \
+  @spences10/pi-context \
+  @spences10/pi-recall \
+  @spences10/pi-telemetry \
+  @spences10/pi-redact \
+  @spences10/pi-skills \
+  pi-permission-system \
+  @mjakl/pi-subagent \
+  @spences10/pi-team-mode
+do
+  npx @earendil-works/pi-coding-agent install \"npm:\$pkg\"
+done
+npx @earendil-works/pi-coding-agent list
+"
+
+record_shell "codedb CLI" "
+set -e
+cd '$ROOT'
+CODEDB_NO_TELEMETRY=1 codedb . tree >/tmp/pi-workbench-codedb-tree.txt
+CODEDB_NO_TELEMETRY=1 codedb . search 'pi agent workbench'
+CODEDB_NO_TELEMETRY=1 codedb . outline dot-config/agents/pi-workbench/README.md
+"
+
+record_shell "Published CLI Checks" '
+set -e
+npm view @mizchi/lsmcp version bin engines --json
+npx -y @mizchi/lsmcp --help | sed -n "1,80p"
+npm view @portofcontext/pctx version bin engines --json
+npx -y @portofcontext/pctx --help | sed -n "1,80p"
+npm view @cortexkit/magic-context version bin engines --json
+npm view @cortexkit/pi-magic-context version peerDependencies engines --json
+npx -y @cortexkit/magic-context --version
+npx @apify/mcpc --json
+'
+
+record_shell "APM Dry Run" "
+set -e
+cd '$ROOT/dot-config/agents/pi-workbench/config.examples/apm'
+uvx --from apm-cli apm audit
+uvx --from apm-cli apm install --dry-run --target codex
+"
+
+if [ "$QUICK" -eq 0 ]; then
+	record_shell "acp-adapter Build" "
+  set -e
+  repo='$TMP_DIR/acp-adapter'
+  git clone --depth 1 https://github.com/beyond5959/acp-adapter.git \"\$repo\"
+  cd \"\$repo\"
+  go test ./cmd/... ./internal/... ./pkg/...
+  go build -o '$TMP_DIR/acp-adapter-bin' ./cmd/acp
+  '$TMP_DIR/acp-adapter-bin' --help | sed -n '1,120p'
+  "
+
+	record_shell "Engram Build" "
+  set -e
+  repo='$TMP_DIR/engram'
+  git clone --depth 1 https://github.com/Gentleman-Programming/engram.git \"\$repo\"
+  cd \"\$repo\"
+  go test ./...
+  go build -o '$TMP_DIR/engram-bin' ./cmd/engram
+  ENGRAM_DATA_DIR='$TMP_DIR/engram-data' '$TMP_DIR/engram-bin' --help | sed -n '1,120p'
+  "
+
+	record_shell "ai-sessions-mcp Build" "
+  set -e
+  repo='$TMP_DIR/ai-sessions-mcp'
+  git clone --depth 1 https://github.com/yoavf/ai-sessions-mcp.git \"\$repo\"
+  cd \"\$repo\"
+  go test ./...
+  go build -o '$TMP_DIR/aisessions' ./cmd/ai-sessions
+  '$TMP_DIR/aisessions' --help | sed -n '1,120p'
+  if find adapters -maxdepth 1 -type f -name '*pi*' | grep -q .; then
+    echo 'Pi adapter: present'
+  else
+    echo 'Pi adapter: missing'
+  fi
+  "
+fi
+
+append_blocked
+
+echo "wrote receipt: $RECEIPT"

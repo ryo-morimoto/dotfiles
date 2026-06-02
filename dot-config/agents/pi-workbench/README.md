@@ -30,8 +30,24 @@ contract and the failure cannot be fixed upstream quickly.
 - `config.examples/`: non-live examples for Pi, Zed, MCP, APM, Code Mode, and local models.
 - `verification/`: acceptance matrix and smoke checklist.
 
+## Smoke Runner
+
+Run the automated non-interactive checks first:
+
+```sh
+tools/pi-workbench-smoke/pi-workbench-smoke
+```
+
+For a faster install/CLI-only pass:
+
+```sh
+tools/pi-workbench-smoke/pi-workbench-smoke --quick
+```
+
+The runner uses disposable Pi directories and writes a receipt under `verification/receipts/`. Live checks that need Zed
+UI, credentials, MCP client state, or model endpoints still need manual confirmation.
+
 ## Operating Rule
 
 Use hooks for automatic capture, restore, reminders, and guardrails. Use tools for intentional search, checkpoint,
 correction, and recovery. Keep the system prompt small.
-
