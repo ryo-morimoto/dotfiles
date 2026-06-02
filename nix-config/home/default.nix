@@ -207,6 +207,23 @@ in
           echo "warning: mise install failed; retry with: mise install" >&2
       fi
     '';
+
+    activation.installApmConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      if [ -r "$HOME/.apm/apm.yml" ]; then
+        echo "Installing APM config from ~/.apm/apm.yml"
+        PATH="${
+          lib.makeBinPath [
+            pkgs.coreutils
+            pkgs.git
+            pkgs.nodejs
+            pkgs.uv
+          ]
+        }:$PATH" \
+        UV_NO_PROGRESS=1 \
+        ${pkgs.uv}/bin/uvx --from apm-cli apm install --global || \
+          echo "warning: apm install failed; retry with: uvx --from apm-cli apm install --global" >&2
+      fi
+    '';
   };
 
   programs = {
