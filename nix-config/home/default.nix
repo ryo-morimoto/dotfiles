@@ -45,6 +45,7 @@ in
     sessionPath = [
       "$HOME/.local/bin"
       "$HOME/.moon/bin"
+      "$HOME/.local/share/mise/shims"
       "$HOME/.bun/bin"
     ];
 
