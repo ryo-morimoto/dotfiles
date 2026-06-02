@@ -22,7 +22,6 @@ let
 in
 {
   imports = [
-    ./agents
     ./knowledge
     ./tmux
   ];
@@ -208,10 +207,16 @@ in
     file = {
       ".agent-browser/config.json".source =
         config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/agent-browser/config.json";
+      ".codex/AGENTS.md".source =
+        config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/agents/shared-instructions.md";
+      ".claude/CLAUDE.md".source =
+        config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/agents/shared-instructions.md";
     };
   };
 
   programs = {
+    claude-code.enable = true;
+    codex.enable = true;
     home-manager.enable = true;
 
     git = {
