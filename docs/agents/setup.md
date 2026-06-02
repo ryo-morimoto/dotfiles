@@ -25,7 +25,7 @@
 `-- .github/workflows/
 ```
 
-- `nix-config/`: Nix flake、NixOS modules、Home Manager baseline、stable package 定義、agenix secrets。
+- `nix-config/`: Nix flake、NixOS modules、Home Manager baseline、nixpkgs/community package wiring、agenix secrets。
 - `dot-config/config/`: Home Manager から `~/.config` に symlink する mutable app config。
 - `dot-config/agents/`: AI tool runtime notes と reviewed examples。Nix は live Codex、Claude、APM、MCP、skill、hook config を生成しない。
 - `tools/`: 補助ツール。
@@ -36,7 +36,7 @@
 - 再現したい基盤は `nix-config/`、運用しながら変える設定は `dot-config/` に置く。
 - Home Manager / activation の出力先は直接編集しない。対応する `nix-config/home/<domain>/*.nix` か `dot-config/config/<app>/` を更新する。
 - 出力先か source か判別できないときは `readlink` で symlink target を確認してから編集する。
-- 既存責務を崩さない。host は `nix-config/hosts/`、user は `nix-config/home/`、package は `nix-config/packages/`。
+- 既存責務を崩さない。host は `nix-config/hosts/`、user は `nix-config/home/`、Nix 外の experimental tool は `dot-config/config/mise/`。
 - 新規アプリ設定は `dot-config/config/<app>/` に追加し、Home Manager から参照する。
 - 新規シークレットは平文で置かず、`nix-config/secrets/*.age` と `nix-config/secrets/secrets.nix` で管理する。
 - AI tool runtime config、MCP、skills、hooks、plugins は原則 Nix で生成しない。
@@ -85,9 +85,6 @@ nix build ./nix-config#nixosConfigurations.ryobox.config.system.build.toplevel -
 
 # Build full NixOS configuration
 sudo nixos-rebuild switch --flake ./nix-config#ryobox
-
-# Build a single package
-nix build ./nix-config#showboat
 
 # Enter development shell if available
 nix develop ./nix-config

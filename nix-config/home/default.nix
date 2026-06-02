@@ -43,6 +43,7 @@ in
     };
 
     sessionPath = [
+      "$HOME/.local/bin"
       "$HOME/.moon/bin"
       "$HOME/.bun/bin"
     ];
@@ -53,7 +54,6 @@ in
         # Editor
         neovim
         code-cursor
-        zed-preview
 
         # LSP servers (for Neovim)
         typescript-language-server
@@ -74,7 +74,6 @@ in
         # Linters (for Neovim)
         eslint
         ruff
-        starlint
 
         # Nix static analysis
         nixf
@@ -122,9 +121,6 @@ in
         prek
         gitleaks
 
-        # Code review
-        coderabbit
-
         # Development
         ghq
         gh
@@ -132,6 +128,7 @@ in
         worktrunk
         lazygit
         just
+        mise
 
         # Web development
         nodejs
@@ -191,17 +188,8 @@ in
         libnotify
 
         # AI tools
-        codedb
         soulforge
-        cursor-agent
         seiren-mcp
-        showboat
-        rodney
-        agent-browser
-        grepika
-        portless
-        k1low-mo
-        sandbox-broker
       ]);
 
     file = {
@@ -352,6 +340,9 @@ in
 
         # Worktrunk shell integration for directory switching.
         eval "$(wt config shell init zsh)"
+
+        # Mise tool shims for non-Nix experimental tools.
+        eval "$(mise activate zsh)"
 
         # Shell options
         setopt AUTO_CD              # cd by typing directory name
@@ -906,6 +897,7 @@ in
       "ghostty".source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/ghostty";
       "zsh".source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/zsh";
       "lazygit".source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/lazygit";
+      "mise".source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/mise";
       "worktrunk".source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/worktrunk";
 
     };

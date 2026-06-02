@@ -41,10 +41,6 @@
       url = "github:moonbit-community/moonbit-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    starlintLinuxBin = {
-      url = "https://github.com/mizchi/starlint/releases/latest/download/starlint-linux-x64.tar.gz";
-      flake = false;
-    };
     seiren = {
       url = "github:ryo-morimoto/seiren/nix-pkgs";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -90,28 +86,13 @@
       nix-claude-code,
       codex-cli-nix,
       hermes-agent,
-      starlintLinuxBin,
       ...
     }:
     let
-      localOverlay = final: _prev: {
-        cursor-agent = final.callPackage ./packages/cursor-agent.nix { };
+      communityOverlay = final: _prev: {
         zen-browser = zen-browser.packages.${final.stdenv.hostPlatform.system}.default;
         seiren-mcp = seiren.packages.${final.stdenv.hostPlatform.system}.default;
-        showboat = final.callPackage ./packages/showboat.nix { };
-        rodney = final.callPackage ./packages/rodney.nix { };
-        agent-browser = final.callPackage ./packages/agent-browser.nix { };
-        grepika = final.callPackage ./packages/grepika.nix { };
-        portless = final.callPackage ./packages/portless.nix { };
-        k1low-mo = final.callPackage ./packages/mo.nix { };
-        codedb = final.callPackage ./packages/codedb.nix { };
         soulforge = soulforge.packages.${final.stdenv.hostPlatform.system}.default;
-        starlint = final.callPackage ./packages/starlint.nix {
-          inherit starlintLinuxBin;
-        };
-        coderabbit = final.callPackage ./packages/coderabbit.nix { };
-        sandbox-broker = final.callPackage ./packages/sandbox-broker.nix { };
-        zed-preview = final.callPackage ./packages/zed-preview.nix { };
       };
     in
     {
@@ -139,7 +120,7 @@
               moonbit-overlay.overlays.default
               nix-claude-code.overlays.default
               codex-cli-nix.overlays.default
-              localOverlay
+              communityOverlay
             ];
             home-manager = {
               backupFileExtension = "hm-bak";

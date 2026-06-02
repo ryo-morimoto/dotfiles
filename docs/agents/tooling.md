@@ -53,7 +53,7 @@ grepika --root . search "authentication" -l 20
 grepika --root . search "error handling" -m fts
 
 # シンボル参照一覧
-grepika --root . refs "localOverlay"
+grepika --root . refs "home.packages"
 
 # ファイル構造抽出
 grepika --root . outline src/main.rs

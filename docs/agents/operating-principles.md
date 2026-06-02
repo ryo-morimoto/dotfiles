@@ -49,7 +49,7 @@
 
 - Codex、Claude Code、APM、MCP、skills、hooks、plugins は mutable runtime config を既定にする。
 - Nix は agent tool の stable runtime prerequisite を導入してよいが、live `~/.codex`、`~/.claude`、`~/.apm` config は生成しない。
-- Disposable AI tools は Nix の外に置く。1ヶ月以上繰り返し使い、rebuild-time 管理に見合うものだけ `nix-config/packages/` に昇格する。
+- Disposable AI tools は Nix の外に置く。1ヶ月以上繰り返し使い、rebuild-time 管理に見合うものだけ nixpkgs か maintained community package に昇格する。
 - Agent operation notes と reviewed examples は `dot-config/agents/` に置き、tool-owned runtime files を live source of truth とする。
 
 ### Review And Planning
