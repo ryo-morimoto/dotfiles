@@ -206,12 +206,8 @@ in
       ]);
 
     file = {
-      ".agent-browser/config.json".text = builtins.toJSON {
-        executablePath = "/etc/profiles/per-user/ryo-morimoto/bin/chromium";
-      };
-      ".config/worktrunk/config.toml".text = ''
-        worktree-path = "{{ repo_path }}/../{{ repo }}-wt/{{ branch | sanitize }}"
-      '';
+      ".agent-browser/config.json".source =
+        config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/agent-browser/config.json";
     };
   };
 
@@ -905,6 +901,7 @@ in
       "ghostty".source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/ghostty";
       "zsh".source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/zsh";
       "lazygit".source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/lazygit";
+      "worktrunk".source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/worktrunk";
 
     };
   };
