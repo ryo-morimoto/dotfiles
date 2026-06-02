@@ -195,10 +195,9 @@ in
     file = {
       ".agent-browser/config.json".source =
         config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/agent-browser/config.json";
-      ".codex/AGENTS.md".source =
-        config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/agents/shared-instructions.md";
+      ".codex/AGENTS.md".source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/agents/AGENTS.md";
       ".claude/CLAUDE.md".source =
-        config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/agents/shared-instructions.md";
+        config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/agents/AGENTS.md";
     };
   };
 
