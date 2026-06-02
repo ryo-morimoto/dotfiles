@@ -255,7 +255,7 @@ Risk:
 
 Decision:
 
-- Prefer selected `pi install npm:@spences10/...` packages.
+- Prefer selected `npm:@spences10/...` packages declared in Pi settings.
 - Do not create a local Pi package unless a selected package cannot be configured or upstream-patched.
 
 ## Phase 3: Permissions And Scoped Capabilities

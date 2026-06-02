@@ -24,10 +24,12 @@ Secondary candidates:
 git clone https://github.com/mjakl/pi-subagent /tmp/pi-subagent
 ```
 
-Use the published package:
+Use the published package through Pi settings:
 
-```sh
-pi install npm:@mjakl/pi-subagent
+```json
+{
+  "packages": ["npm:@mjakl/pi-subagent"]
+}
 ```
 
 ## Minimal Config To Try
@@ -45,12 +47,12 @@ fork role=tester task="run read-only checks"
 
 ## Observed Behavior
 
-The primary source repository exists at the checked HEAD. npm package `@mjakl/pi-subagent@2.1.0` exists. Disposable Pi
+The primary source repository exists at the checked HEAD. npm package `@mjakl/pi-subagent@2.1.0` exists. User profile
 install/list smoke passed for `npm:@mjakl/pi-subagent`.
 
 Spawn/fork behavior was not exercised because it requires an authenticated live Pi run.
 
-Receipt: `verification/receipts/2026-05-29-local-smoke.md`.
+Evidence: current live check output from `pi list`, package help, build output, or candidate notes.
 
 ## Disposition
 

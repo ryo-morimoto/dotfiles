@@ -24,23 +24,30 @@ Date checked: 2026-05-29
 - Telemetry and context data are local and inspectable.
 - Redaction runs before logs, memory writes, and session export.
 
-## Install Command To Try
+## Config To Try
 
-```sh
-pi install npm:@spences10/pi-mcp
-pi install npm:@spences10/pi-lsp
-pi install npm:@spences10/pi-context
-pi install npm:@spences10/pi-recall
-pi install npm:@spences10/pi-telemetry
-pi install npm:@spences10/pi-redact
-pi install npm:@spences10/pi-skills
+Declare the package set in Pi settings:
+
+```json
+{
+  "packages": [
+    "npm:@spences10/pi-mcp",
+    "npm:@spences10/pi-lsp",
+    "npm:@spences10/pi-context",
+    "npm:@spences10/pi-recall",
+    "npm:@spences10/pi-telemetry",
+    "npm:@spences10/pi-redact",
+    "npm:@spences10/pi-skills"
+  ]
+}
 ```
 
 Evaluate `@spences10/pi-team-mode` only after the minimal subagent path is checked.
 
-## Minimal Config To Try
+## Minimal Profile To Try
 
-Use a disposable Pi config/profile and enable one package at a time. Do not mutate live `~/.config` while evaluating.
+Use global `~/.pi/agent/settings.json` for personal defaults. Use project-local `.pi/settings.json` only when a project
+needs a distinct package set or team contract.
 
 ## Smoke Command
 
@@ -62,12 +69,12 @@ disposable install/list smoke also passed for `@spences10/pi-team-mode`.
 
 `PI_PACKAGE_DIR` must contain a `package.json`; pointing it at an empty directory fails with `ENOENT`.
 
-Receipt: `verification/receipts/2026-05-29-local-smoke.md`.
+Receipt was removed with the throwaway smoke runner; use `pi list` output for the current install state.
 
 ## Disposition
 
-Adopt selected packages. The dotfiles repo may add Node runtime prerequisites if needed, but should not generate live Pi
-runtime config.
+Adopt selected packages through Pi settings. The dotfiles repo may add Node runtime prerequisites if needed, but should
+not generate live Pi runtime config.
 
 ## Local Adapter Justified?
 

@@ -1,29 +1,23 @@
 # Smoke Checklist
 
-Start with the automated runner. It covers the non-interactive package, CLI, build, and dry-run checks with disposable Pi
-directories:
+Start with direct config-based checks:
 
 ```sh
-tools/pi-workbench-smoke/pi-workbench-smoke
+npx @earendil-works/pi-coding-agent list
+npx @earendil-works/pi-coding-agent --no-tools --no-session -p 'Reply with exactly: OK'
 ```
 
-Use the quick mode when you only need install/CLI checks:
-
-```sh
-tools/pi-workbench-smoke/pi-workbench-smoke --quick
-```
-
-The manual checklist below is only for live checks the runner cannot prove because they require Zed UI, credentials, MCP
-client state, or local model endpoints. Do not mutate live agent config during first validation.
+The checklist below covers live checks that require Zed UI, credentials, MCP client state, or local model endpoints. Do
+not mutate live agent config during first validation.
 
 ## 1. Environment
 
 - [ ] `node --version` is `>=24.15.0` for selected Pi packages.
 - [ ] `pi --version` is recorded.
-- [ ] Disposable Pi config/profile path is recorded.
+- [ ] Pi agent config path is recorded.
 - [ ] Redaction package/policy is enabled before memory or telemetry checks.
-- [ ] `.pi/settings.json` is copied from `config.examples/pi/settings.example.json` or equivalent.
-- [ ] `pi-permissions.jsonc` is copied from `config.examples/pi/pi-permissions.example.jsonc` or equivalent.
+- [ ] `~/.pi/agent/settings.json` matches `config.examples/pi/settings.example.json` or an equivalent personal profile.
+- [ ] `~/.pi/agent/pi-permissions.jsonc` matches `config.examples/pi/pi-permissions.example.jsonc` or an equivalent policy.
 
 ## 2. ACP
 
@@ -35,14 +29,14 @@ client state, or local model endpoints. Do not mutate live agent config during f
 
 ## 3. Pi Packages
 
-- [ ] Install `@spences10/pi-mcp`.
-- [ ] Install `@spences10/pi-lsp`.
-- [ ] Install `@spences10/pi-context`.
-- [ ] Install `@spences10/pi-recall`.
-- [ ] Install `@spences10/pi-telemetry`.
-- [ ] Install `@spences10/pi-redact`.
-- [ ] Install `@spences10/pi-skills`.
-- [ ] Confirm each package registers expected commands/tools.
+- [ ] `settings.json` declares `@spences10/pi-mcp`.
+- [ ] `settings.json` declares `@spences10/pi-lsp`.
+- [ ] `settings.json` declares `@spences10/pi-context`.
+- [ ] `settings.json` declares `@spences10/pi-recall`.
+- [ ] `settings.json` declares `@spences10/pi-telemetry`.
+- [ ] `settings.json` declares `@spences10/pi-redact`.
+- [ ] `settings.json` declares `@spences10/pi-skills`.
+- [ ] `pi list` shows the declared packages installed in the user Pi profile.
 
 ## 4. Permissions
 

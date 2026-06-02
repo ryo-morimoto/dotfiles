@@ -46,7 +46,7 @@ and `--pi-disable-gate`.
 Full `go test ./...` failed in `test/integration` at `TestE2EACPPlanUpdateMappedFromTurnPlanUpdated` with one missing
 plan update. Zed ACP interactive session smoke was not run from this non-interactive harness.
 
-Receipt: `verification/receipts/2026-05-29-local-smoke.md`.
+Evidence: current live check output from `pi list`, package help, build output, or candidate notes.
 
 ## Disposition
 

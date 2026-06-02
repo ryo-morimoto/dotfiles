@@ -43,7 +43,7 @@ Initial dry-run against `config.examples/apm/apm.yml` failed because the example
 After correcting the manifest to APM's `dependencies.mcp` shape, `apm install --dry-run --target codex` passed and
 reported four MCP dependencies: `codedb`, `lsmcp`, `ai-sessions`, and `engram`.
 
-Receipt: `verification/receipts/2026-05-29-local-smoke.md`.
+Evidence: current live check output from `pi list`, package help, build output, or candidate notes.
 
 ## Disposition
 

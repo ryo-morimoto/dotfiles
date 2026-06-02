@@ -39,7 +39,7 @@ Local `codedb` CLI exists on PATH. `CODEDB_NO_TELEMETRY=1 codedb . tree`, `coded
 
 The source repository exists at the checked HEAD; npm install by package name is not a valid path.
 
-Receipt: `verification/receipts/2026-05-29-local-smoke.md`.
+Evidence: current live check output from `pi list`, package help, build output, or candidate notes.
 
 ## Disposition
 

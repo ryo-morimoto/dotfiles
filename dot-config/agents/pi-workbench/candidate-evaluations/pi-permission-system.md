@@ -12,10 +12,14 @@ Source checked: GitHub HEAD `ccebbf4afce3910f3724829b425093e79b006d3d`
 - MCP permissions can be restricted by server and tool.
 - Subagent permission prompts forward to the interactive parent.
 
-## Install Command To Try
+## Config To Try
 
-```sh
-pi install npm:pi-permission-system
+Declare the extension in Pi settings:
+
+```json
+{
+  "packages": ["npm:pi-permission-system"]
+}
 ```
 
 The GitHub source is still useful for audits and tests.
@@ -25,9 +29,18 @@ The GitHub source is still useful for audits and tests.
 ```json
 {
   "bash": {
-    "allow": ["pwd", "ls *", "rg *", "git status *", "npm test"],
-    "ask": ["git checkout *", "git merge *", "rm *"],
-    "deny": ["git push *", "env", "printenv", "cat ~/.ssh/*"]
+    "pwd": "allow",
+    "ls *": "allow",
+    "rg *": "allow",
+    "git status *": "allow",
+    "npm test": "allow",
+    "git checkout *": "ask",
+    "git merge *": "ask",
+    "rm *": "ask",
+    "git push *": "deny",
+    "env": "deny",
+    "printenv": "deny",
+    "cat ~/.ssh/*": "deny"
   },
   "tools": {
     "read": "allow",
@@ -53,7 +66,7 @@ smoke passed for `npm:pi-permission-system`.
 
 Runtime allow/ask/deny enforcement was not exercised because it requires an interactive live Pi session.
 
-Receipt: `verification/receipts/2026-05-29-local-smoke.md`.
+Receipt was removed with the throwaway smoke runner; use `pi list` output for the current install state.
 
 ## Disposition
 

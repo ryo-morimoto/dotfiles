@@ -41,7 +41,7 @@ Source smoke passed: `go test ./...`, `go build ./cmd/ai-sessions`, and CLI help
 README lists Claude Code, Gemini CLI, OpenAI Codex, and opencode. Source adapters include Claude, Codex, Copilot,
 Cursor, Gemini, Mistral, and opencode. No Pi adapter was present.
 
-Receipt: `verification/receipts/2026-05-29-local-smoke.md`.
+Evidence: current live check output from `pi list`, package help, build output, or candidate notes.
 
 ## Disposition
 

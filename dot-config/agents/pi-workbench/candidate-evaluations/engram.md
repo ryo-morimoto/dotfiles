@@ -45,7 +45,7 @@ The built binary reports `engram v1.16.0` and help lists `setup [agent]`, includ
 
 Pi setup and MCP `mem_*` tool calls were not run because they need a live Pi/MCP client profile.
 
-Receipt: `verification/receipts/2026-05-29-local-smoke.md`.
+Evidence: current live check output from `pi list`, package help, build output, or candidate notes.
 
 ## Disposition
 

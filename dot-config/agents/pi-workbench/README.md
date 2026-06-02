@@ -34,22 +34,18 @@ repo has a real repo-specific contract.
 - `config.examples/`: non-live examples for Pi, Zed, MCP, APM, Code Mode, and local models.
 - `verification/`: acceptance matrix and smoke checklist.
 
-## Smoke Runner
+## Smoke Checks
 
-Run the automated non-interactive checks first:
-
-```sh
-tools/pi-workbench-smoke/pi-workbench-smoke
-```
-
-For a faster install/CLI-only pass:
+Use the config examples to validate Pi directly:
 
 ```sh
-tools/pi-workbench-smoke/pi-workbench-smoke --quick
+cp config.examples/pi/settings.example.json ~/.pi/agent/settings.json
+cp config.examples/pi/pi-permissions.example.jsonc ~/.pi/agent/pi-permissions.jsonc
+npx @earendil-works/pi-coding-agent list
+npx @earendil-works/pi-coding-agent --no-tools --no-session -p 'Reply with exactly: OK'
 ```
 
-The runner uses disposable Pi directories and writes a receipt under `verification/receipts/`. Live checks that need Zed
-UI, credentials, MCP client state, or model endpoints still need manual confirmation.
+Zed ACP, credentials, MCP client state, and local model endpoints still need live confirmation.
 
 ## Operating Rule
 

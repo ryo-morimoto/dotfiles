@@ -46,7 +46,7 @@ and `npx -y @mizchi/lsmcp --help` passed. Help lists `init`, `index`, `doctor`, 
 
 Project LSP MCP tool calls were not exercised.
 
-Receipt: `verification/receipts/2026-05-29-local-smoke.md`.
+Evidence: current live check output from `pi list`, package help, build output, or candidate notes.
 
 ## Disposition
 

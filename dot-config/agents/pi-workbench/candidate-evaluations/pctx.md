@@ -43,7 +43,7 @@ Candidate exists at the checked GitHub HEAD. npm package `@portofcontext/pctx@0.
 
 Sandbox and upstream MCP execution were not exercised.
 
-Receipt: `verification/receipts/2026-05-29-local-smoke.md`.
+Evidence: current live check output from `pi list`, package help, build output, or candidate notes.
 
 ## Disposition
 

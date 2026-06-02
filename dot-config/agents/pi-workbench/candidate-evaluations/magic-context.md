@@ -22,13 +22,20 @@ Use the published packages:
 
 ```sh
 npx -y @cortexkit/magic-context setup --harness pi
-pi install npm:@cortexkit/pi-magic-context
+```
+
+Declare the Pi package through Pi settings:
+
+```json
+{
+  "packages": ["npm:@cortexkit/pi-magic-context"]
+}
 ```
 
 ## Minimal Config To Try
 
-Evaluate in a separate disposable Pi profile. Disable Engram passive writes during this test unless explicitly testing
-conflicts.
+Evaluate in a separate Pi user profile or with Magic Context disabled from the normal profile after the test. Disable
+Engram passive writes during this test unless explicitly testing conflicts.
 
 ## Smoke Commands
 
@@ -46,7 +53,7 @@ Candidate exists at the checked GitHub HEAD. npm packages exist as `@cortexkit/m
 
 Engram conflict/duplicate-write behavior was not exercised.
 
-Receipt: `verification/receipts/2026-05-29-local-smoke.md`.
+Evidence: current live check output from `pi list`, package help, build output, or candidate notes.
 
 ## Disposition
 
