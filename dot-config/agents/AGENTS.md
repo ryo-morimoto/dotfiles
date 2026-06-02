@@ -28,6 +28,27 @@
 - Cite the concrete source when the decision depends on it. If no source is available, say that the statement is an
   inference.
 
+## Codebase Investigation
+
+- Work in this order for code changes: explore/investigate, then plan, then execute.
+- Start codebase understanding with `grepika`, not `rg`:
+  - `grepika --root . stats`
+  - `grepika --root . search "<goal-related terms>" -l 20`
+- Prefer `grepika` for repo-wide and design-context discovery:
+  - `grepika --root . search "<topic>" -l 20`
+  - `grepika --root . context <path> <line>`
+  - `grepika --root . get <path>`
+  - `grepika --root . outline <path>`
+- Use `codedb` for exact identifier, type, function, and config-name tracing:
+  - `CODEDB_NO_TELEMETRY=1 codedb . word <identifier>`
+  - `CODEDB_NO_TELEMETRY=1 codedb . find <symbol>`
+  - `CODEDB_NO_TELEMETRY=1 codedb . outline <path>`
+- Treat `codedb` results as leads because it may include ignored, runtime, or bundled files. Treat `grepika` refs and
+  outlines as approximate, not LSP-accurate.
+- Use `rg` for final confirmation and literal matches after `grepika` / `codedb`, not as the first exploration tool.
+- Before implementing, briefly state the purpose, change targets, non-targets, risks, and verification method. Ask only
+  before non-obvious interface, schema, API, or permission-boundary changes.
+
 ## Defaults
 
 - Prefer TypeScript for frontend/API work and Rust for backend/systems work when the repo does not already decide.
