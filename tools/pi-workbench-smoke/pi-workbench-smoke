@@ -153,6 +153,11 @@ set -e
 export HOME='$PI_HOME'
 export PI_CODING_AGENT_DIR='$PI_AGENT'
 export PI_PACKAGE_DIR='$PI_PACKAGES'
+mkdir -p '$TMP_DIR/project/.pi'
+cp '$ROOT/dot-config/agents/pi-workbench/config.examples/pi/settings.example.json' '$TMP_DIR/project/.pi/settings.json'
+cp '$ROOT/dot-config/agents/pi-workbench/config.examples/pi/pi-permissions.example.jsonc' '$PI_AGENT/pi-permissions.jsonc'
+sed -n '1,220p' '$TMP_DIR/project/.pi/settings.json'
+sed -n '1,220p' '$PI_AGENT/pi-permissions.jsonc'
 for pkg in \
   @spences10/pi-mcp \
   @spences10/pi-lsp \

@@ -8,7 +8,7 @@ Date: 2026-05-29
 | ACP sessions | Pi session new/list/load works through ACP bridge. | `acp-adapter` | Blocked on live Pi ACP run | `candidate-evaluations/acp-adapter.md` |
 | Runtime packages | Selected Pi packages install in a disposable profile. | `spences10/my-pi` | Passed install/list smoke | `verification/receipts/2026-05-29-local-smoke.md` |
 | Permissions | Safe commands allow, risky commands ask, denied commands block. | `pi-permission-system` | Install/list passed; blocked on live Pi runtime policy execution | `candidate-evaluations/pi-permission-system.md` |
-| Permissions | MCP tool restrictions work by server/tool. | `pi-permission-system` | Blocked on live Pi runtime policy execution | `config.examples/pi/permissions.example.json` |
+| Permissions | MCP tool restrictions work by server/tool. | `pi-permission-system` | Blocked on live Pi runtime policy execution | `config.examples/pi/pi-permissions.example.jsonc` |
 | Code context | Dependency neighborhood is available for changed files. | `codedb` | Passed CLI tree/search/outline; MCP tool surface not exercised | `verification/receipts/2026-05-29-local-smoke.md` |
 | LSP context | Overview, symbols, diagnostics, and references work. | `lsmcp` | Package/help verified; project LSP tool calls not exercised | `verification/receipts/2026-05-29-local-smoke.md` |
 | Memory | Engram exposes project, context, prompt, passive capture, and session lifecycle tools. | Engram | Build/test/help verified; MCP `mem_*` calls blocked on live Pi/MCP client | `verification/receipts/2026-05-29-local-smoke.md` |

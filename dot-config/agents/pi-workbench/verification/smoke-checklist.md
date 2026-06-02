@@ -22,6 +22,8 @@ client state, or local model endpoints. Do not mutate live agent config during f
 - [ ] `pi --version` is recorded.
 - [ ] Disposable Pi config/profile path is recorded.
 - [ ] Redaction package/policy is enabled before memory or telemetry checks.
+- [ ] `.pi/settings.json` is copied from `config.examples/pi/settings.example.json` or equivalent.
+- [ ] `pi-permissions.jsonc` is copied from `config.examples/pi/pi-permissions.example.jsonc` or equivalent.
 
 ## 2. ACP
 

@@ -1,0 +1,53 @@
+{
+  "$schema": "https://pi-coding-agent.local/schemas/permissions.schema.json",
+  "defaultPolicy": {
+    "tools": "ask",
+    "bash": "ask",
+    "mcp": "ask",
+    "skills": "ask",
+    "special": "ask"
+  },
+  "tools": {
+    "read": "allow",
+    "grep": "allow",
+    "find": "allow",
+    "ls": "allow",
+    "edit": "ask",
+    "write": "ask",
+    "bash": "ask",
+    "mcp": "ask",
+    "deploy": "deny",
+    "publish": "deny"
+  },
+  "bash": {
+    "pwd": "allow",
+    "ls *": "allow",
+    "rg *": "allow",
+    "git status*": "allow",
+    "npm test": "allow",
+    "nix flake check ./nix-config": "allow",
+    "git push *": "deny",
+    "env": "deny",
+    "printenv": "deny",
+    "cat ~/.ssh/*": "deny",
+    "cat ~/.config/*": "deny",
+    "curl * | sh": "deny",
+    "wget * | sh": "deny",
+    "git *": "ask",
+    "rm *": "ask",
+    "mv *": "ask"
+  },
+  "mcp": {
+    "codedb*": "allow",
+    "lsmcp*": "allow",
+    "memory*": "ask",
+    "*": "ask"
+  },
+  "skills": {
+    "*": "ask"
+  },
+  "special": {
+    "doom_loop": "deny",
+    "external_directory": "ask"
+  }
+}
