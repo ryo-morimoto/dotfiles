@@ -1,0 +1,19 @@
+{
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-5.4-mini",
+  "defaultThinkingLevel": "medium",
+  "sessionDir": ".pi/sessions",
+  "enableInstallTelemetry": false,
+  "packages": [
+    "npm:@spences10/pi-mcp",
+    "npm:@spences10/pi-lsp",
+    "npm:@spences10/pi-context",
+    "npm:@spences10/pi-recall",
+    "npm:@spences10/pi-telemetry",
+    "npm:@spences10/pi-redact",
+    "npm:@spences10/pi-skills",
+    "npm:pi-permission-system",
+    "npm:@mjakl/pi-subagent"
+  ],
+  "enableSkillCommands": true
+}

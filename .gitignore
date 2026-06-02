@@ -37,6 +37,10 @@
 # Local agent/runtime markers
 .codex
 .pi-lens/
+.pi/bin/
+.pi/npm/
+.pi/sessions/
+.pi/settings.local.json
 
 # Hermes profile runtime data
 .env
