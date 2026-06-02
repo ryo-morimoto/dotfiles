@@ -42,10 +42,6 @@ asset_pattern = "zed-linux-x86_64.tar.gz"
 bin_path = "bin"
 filter_bins = "zed"
 
-[tasks.install-sandbox-broker]
-description = "Install local sandbox-broker outside Nix"
-run = "cargo install --locked --path /home/ryo-morimoto/ghq/github.com/ryo-morimoto/dotfiles/tools/sandbox-broker --root ~/.local"
-
 [tasks.install-cursor-agent]
 description = "Install Cursor Agent CLI outside Nix"
 run = "curl https://cursor.com/install -fsS | bash"
