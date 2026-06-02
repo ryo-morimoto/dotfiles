@@ -62,10 +62,6 @@
       url = "github:sadjow/codex-cli-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    hermes-agent = {
-      url = "github:NousResearch/hermes-agent";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs =
@@ -85,7 +81,6 @@
       nix-hazkey,
       nix-claude-code,
       codex-cli-nix,
-      hermes-agent,
       ...
     }:
     let
@@ -99,13 +94,11 @@
       nixosConfigurations.ryobox = nixpkgs.lib.nixosSystem {
         specialArgs = {
           inherit agenix;
-          hermesAgentSource = hermes-agent;
         };
         modules = [
           ./hosts/ryobox
           agenix.nixosModules.default
           banto.nixosModules.default
-          hermes-agent.nixosModules.default
           nix-hazkey.nixosModules.hazkey
           {
             services.hazkey.server.package = nix-hazkey.packages.x86_64-linux.hazkey-server.override {

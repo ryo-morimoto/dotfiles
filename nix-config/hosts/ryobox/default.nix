@@ -14,7 +14,6 @@ in
 {
   imports = [
     ./hardware-configuration.nix
-    ./hermes-profiles.nix
   ];
 
   # Bootloader
@@ -114,11 +113,6 @@ in
       };
     };
     gnome.gnome-keyring.enable = true;
-
-    hermes-agent = {
-      enable = false;
-      addToSystemPackages = false;
-    };
 
     # Tailscale VPN with SSH
     tailscale = {

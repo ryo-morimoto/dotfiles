@@ -165,7 +165,6 @@ dot-config/agents/apm/.gitkeep
 - Modify: `nix-config/home/knowledge/obsidian.nix`
 - Modify: `nix-config/home/agents/apm.nix`
 - Modify: `nix-config/hosts/ryobox/default.nix`
-- Modify: `nix-config/hosts/ryobox/hermes-profiles.nix`
 
 - [ ] **Step 1: Rename root path locals**
 
@@ -256,22 +255,6 @@ Then update auto-upgrade:
 ```
 
 Expected: automatic rebuilds evaluate the moved flake.
-
-- [ ] **Step 6: Update Hermes profile config path**
-
-In `nix-config/hosts/ryobox/hermes-profiles.nix`, replace:
-
-```nix
-  profileConfigRoot = "${dotfilesRoot}/config/hermes/profiles";
-```
-
-with:
-
-```nix
-  profileConfigRoot = "${dotfilesRoot}/dot-config/config/hermes/profiles";
-```
-
-Expected: mutable Hermes profile config remains outside `/nix/store` and under `dot-config`.
 
 ## Task 4: Stop generating AI runtime config from Nix
 
@@ -501,7 +484,7 @@ Expected: command exits 0.
 Run:
 
 ```bash
-rg -n "nix flake check$|--flake \\.#|\\.\\/home|\\.\\/hosts|\\.\\/packages|\\.\\/secrets|/config/(nvim|ghostty|zsh|lazygit|knowledge|hermes)" AGENTS.md CLAUDE.md docs .github nix-config
+rg -n "nix flake check$|--flake \\.#|\\.\\/home|\\.\\/hosts|\\.\\/packages|\\.\\/secrets|/config/(nvim|ghostty|zsh|lazygit|knowledge)" AGENTS.md CLAUDE.md docs .github nix-config
 ```
 
 Expected: no stale active references. Historical references inside old plan files may remain and should be ignored only if they are under `docs/plans/`.
@@ -534,6 +517,6 @@ Expected: commit contains the directory move, path rewiring, docs, and CI change
 
 - [ ] **Step 2: Keep unrelated existing work separate**
 
-If pre-existing changes such as `zed-preview` or Hermes PYTHONPATH changes are present, do not squash them into this commit unless they were already part of moved files and cannot be separated without losing user work.
+If pre-existing changes such as `zed-preview` are present, do not squash them into this commit unless they were already part of moved files and cannot be separated without losing user work.
 
 Expected: user work is preserved; no revert is performed.

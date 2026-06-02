@@ -5,6 +5,4 @@ in
   "caddy-cloudflare.age".publicKeys = [ ryobox ];
   "context7-api-key.age".publicKeys = [ ryobox ];
   "exa-api-key.age".publicKeys = [ ryobox ];
-  "hermes-discord-personal-env.age".publicKeys = [ ryobox ];
-  "hermes-discord-work-env.age".publicKeys = [ ryobox ];
 }

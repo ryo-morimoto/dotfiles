@@ -42,13 +42,10 @@
 .pi/sessions/
 .pi/settings.local.json
 
-# Hermes profile runtime data
+# Local env/runtime data
 .env
 .env.*
 !.env.example
-dot-config/config/hermes/profiles/*/skills/**
-!dot-config/config/hermes/profiles/*/skills/
-!dot-config/config/hermes/profiles/*/skills/.gitkeep
 auth.json
 honcho.json
 state.db
