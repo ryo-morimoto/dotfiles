@@ -100,6 +100,8 @@ in
         fd
         jq
         ast-grep
+        vhs
+        silicon
 
         # Modern CLI replacements
         btop
