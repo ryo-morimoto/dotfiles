@@ -40,6 +40,8 @@ in
       CHROME_PATH = lib.getExe pkgs.chromium;
       CLAUDE_CODE_NO_FLICKER = "1";
       CLAUDE_CODE_DISABLE_MOUSE = "1";
+      # Required so mise-installed zed (bundled libxkbcommon) finds keymap data on NixOS
+      XKB_CONFIG_ROOT = "${pkgs.xkeyboard_config}/share/X11/xkb";
     };
 
     sessionPath = [
