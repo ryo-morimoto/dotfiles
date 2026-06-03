@@ -4,12 +4,8 @@ experimental = true
 [tools]
 aqua = "latest"
 portless = "latest"
+"npm:agent-browser" = "latest"
 "npm:@tobilu/qmd" = { version = "2.5.3", npm_args = "--ignore-scripts=false" }
-
-[tools."github:vercel-labs/agent-browser"]
-version = "latest"
-asset_pattern = "agent-browser-linux-x64"
-bin = "agent-browser"
 
 [tools."github:justrach/codedb"]
 version = "latest"
