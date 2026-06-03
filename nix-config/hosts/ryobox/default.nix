@@ -280,8 +280,18 @@ in
       "soulforge"
     ];
 
-  # Allow running dynamically linked binaries (for uv, etc.)
-  programs.nix-ld.enable = true;
+  # Allow running dynamically linked binaries (for uv, mise-installed zed, etc.)
+  programs.nix-ld = {
+    enable = true;
+    libraries = with pkgs; [
+      alsa-lib
+      libGL
+      vulkan-loader
+      fontconfig
+      wayland
+      libxkbcommon
+    ];
+  };
 
   system = {
     # /bin/bash symlink (for scripts with #!/bin/bash shebang)
