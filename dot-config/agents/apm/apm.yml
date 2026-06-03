@@ -29,6 +29,7 @@ dependencies:
     - mizchi/skills/meta/optimizing-descriptions#89c1b34018ba0d85a770c065ba22f83a8d004d34
     - mizchi/skills/meta/retrospective-codify#89c1b34018ba0d85a770c065ba22f83a8d004d34
     - mizchi/skills/meta/tech-article-reproducibility#89c1b34018ba0d85a770c065ba22f83a8d004d34
+    # mizchi/skills/frontend/*
     - mizchi/skills/frontend/review-ci#89c1b34018ba0d85a770c065ba22f83a8d004d34
     - mizchi/skills/frontend/review-deps#89c1b34018ba0d85a770c065ba22f83a8d004d34
     - mizchi/skills/frontend/review-hygiene#89c1b34018ba0d85a770c065ba22f83a8d004d34
@@ -43,6 +44,7 @@ dependencies:
     - mizchi/skills/frontend/review-perspectives/performance-expert#89c1b34018ba0d85a770c065ba22f83a8d004d34
     - mizchi/skills/frontend/review-perspectives/react-expert#89c1b34018ba0d85a770c065ba22f83a8d004d34
     - mizchi/skills/frontend/review-perspectives/security-expert#89c1b34018ba0d85a770c065ba22f83a8d004d34
+    # mizchi/skills/devops/*
     - mizchi/skills/devops/actions-ci-tuning#89c1b34018ba0d85a770c065ba22f83a8d004d34
     - mizchi/skills/devops/flaker-storage-cache-on-ci#89c1b34018ba0d85a770c065ba22f83a8d004d34
     - mizchi/skills/devops/gh-fix-ci#89c1b34018ba0d85a770c065ba22f83a8d004d34
