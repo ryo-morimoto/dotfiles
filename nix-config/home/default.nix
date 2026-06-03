@@ -99,6 +99,7 @@ in
         ripgrep
         fd
         jq
+        yq-go
         ast-grep
         vhs
         silicon
