@@ -31,21 +31,20 @@
 ## Codebase Investigation
 
 - Work in this order for code changes: explore/investigate, then plan, then execute.
-- Start codebase understanding with `grepika`, not `rg`:
+- Use tools in this order for codebase investigation: `codedb`, then `grepika`, then `rg`.
+- Start codebase understanding with `codedb`, not `rg`:
+  - `CODEDB_NO_TELEMETRY=1 codedb . word <identifier>`
+  - `CODEDB_NO_TELEMETRY=1 codedb . find <symbol>`
+  - `CODEDB_NO_TELEMETRY=1 codedb . outline <path>`
+- Use `grepika` after `codedb` for repo-wide and design-context discovery:
   - `grepika --root . stats`
-  - `grepika --root . search "<goal-related terms>" -l 20`
-- Prefer `grepika` for repo-wide and design-context discovery:
   - `grepika --root . search "<topic>" -l 20`
   - `grepika --root . context <path> <line>`
   - `grepika --root . get <path>`
   - `grepika --root . outline <path>`
-- Use `codedb` for exact identifier, type, function, and config-name tracing:
-  - `CODEDB_NO_TELEMETRY=1 codedb . word <identifier>`
-  - `CODEDB_NO_TELEMETRY=1 codedb . find <symbol>`
-  - `CODEDB_NO_TELEMETRY=1 codedb . outline <path>`
 - Treat `codedb` results as leads because it may include ignored, runtime, or bundled files. Treat `grepika` refs and
   outlines as approximate, not LSP-accurate.
-- Use `rg` for final confirmation and literal matches after `grepika` / `codedb`, not as the first exploration tool.
+- Use `rg` for final confirmation and literal matches after `codedb` / `grepika`, not as the first exploration tool.
 - Before implementing, briefly state the purpose, change targets, non-targets, risks, and verification method. Ask only
   before non-obvious interface, schema, API, or permission-boundary changes.
 
