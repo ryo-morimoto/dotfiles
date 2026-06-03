@@ -196,6 +196,18 @@ in
     file = {
       ".agent-browser/config.json".source =
         config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/agent-browser/config.json";
+      ".apm/apm.yml" = {
+        force = true;
+        source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/agents/apm/apm.yml";
+      };
+      ".apm/config.json" = {
+        force = true;
+        source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/agents/apm/config.json";
+      };
+      ".apm/marketplaces.json" = {
+        force = true;
+        source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/agents/apm/marketplaces.json";
+      };
       ".codex/AGENTS.md".source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/agents/AGENTS.md";
       ".claude/CLAUDE.md".source =
         config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/agents/AGENTS.md";
@@ -209,20 +221,19 @@ in
       fi
     '';
 
-    activation.installApmConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    activation.installApmConfig = lib.hm.dag.entryAfter [ "installMiseTools" ] ''
       if [ -r "$HOME/.apm/apm.yml" ]; then
-        echo "Installing APM config from ~/.apm/apm.yml"
+        echo "Installing APM config from ~/.apm/apm.yml via mise-managed apm"
         PATH="${
           lib.makeBinPath [
             pkgs.coreutils
             pkgs.git
+            pkgs.mise
             pkgs.nodejs
-            pkgs.uv
           ]
-        }:$PATH" \
-        UV_NO_PROGRESS=1 \
-        ${pkgs.uv}/bin/uvx --from apm-cli apm install --global || \
-          echo "warning: apm install failed; retry with: uvx --from apm-cli apm install --global" >&2
+        }:$HOME/.local/share/mise/shims:$PATH" \
+        ${lib.getExe pkgs.mise} exec -- apm install --global || \
+          echo "warning: apm install failed; retry with: mise install && mise exec -- apm install --global" >&2
       fi
     '';
   };

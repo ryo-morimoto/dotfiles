@@ -1,0 +1,10 @@
+{
+  "marketplaces": [
+    {
+      "name": "compound-engineering-plugin",
+      "owner": "EveryInc",
+      "repo": "compound-engineering-plugin",
+      "path": ".claude-plugin/marketplace.json"
+    }
+  ]
+}
