@@ -5,6 +5,7 @@ targets:
   - agent-skills
 dependencies:
   apm:
+    - ast-grep/agent-skill/ast-grep#577f4d4507678f2c8cee150fae25e6ce309f70b1
     - EveryInc/compound-engineering-plugin/plugins/compound-engineering#85987d496fdfdc8a18faf592fd53329e23266537
     - /home/ryo-morimoto/ghq/github.com/ryo-morimoto/dotfiles/skills/fp-typescript
     - /home/ryo-morimoto/ghq/github.com/ryo-morimoto/dotfiles/skills/repo-doctor
