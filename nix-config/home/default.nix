@@ -927,10 +927,10 @@ in
         name = "Zed";
         genericName = "Text Editor";
         comment = "A high-performance, multiplayer code editor.";
-        exec = "zed %U";
+        exec = "${config.home.homeDirectory}/.local/share/mise/shims/zed %U";
         terminal = false;
         startupNotify = true;
-        settings.TryExec = "zed";
+        settings.TryExec = "${config.home.homeDirectory}/.local/share/mise/shims/zed";
         icon = "${config.home.homeDirectory}/.local/share/mise/installs/github-zed-industries-zed/latest/zed.app/share/icons/hicolor/512x512/apps/zed.png";
         categories = [
           "Utility"
@@ -946,7 +946,7 @@ in
         actions = {
           "NewWorkspace" = {
             name = "Open a new workspace";
-            exec = "zed --new %U";
+            exec = "${config.home.homeDirectory}/.local/share/mise/shims/zed --new %U";
           };
         };
       };
