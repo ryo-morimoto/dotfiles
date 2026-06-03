@@ -62,6 +62,10 @@
       url = "github:sadjow/codex-cli-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    zed = {
+      url = "github:zed-industries/zed";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -81,6 +85,7 @@
       nix-hazkey,
       nix-claude-code,
       codex-cli-nix,
+      zed,
       ...
     }:
     let
@@ -88,6 +93,7 @@
         zen-browser = zen-browser.packages.${final.stdenv.hostPlatform.system}.default;
         seiren-mcp = seiren.packages.${final.stdenv.hostPlatform.system}.default;
         soulforge = soulforge.packages.${final.stdenv.hostPlatform.system}.default;
+        zed-editor = zed.packages.${final.stdenv.hostPlatform.system}.default;
       };
     in
     {
