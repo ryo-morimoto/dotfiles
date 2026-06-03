@@ -922,6 +922,34 @@ in
           "Development"
         ];
       };
+
+      "zed" = {
+        name = "Zed";
+        genericName = "Text Editor";
+        comment = "A high-performance, multiplayer code editor.";
+        exec = "zed %U";
+        terminal = false;
+        startupNotify = true;
+        settings.TryExec = "zed";
+        icon = "${config.home.homeDirectory}/.local/share/mise/installs/github-zed-industries-zed/latest/zed.app/share/icons/hicolor/512x512/apps/zed.png";
+        categories = [
+          "Utility"
+          "TextEditor"
+          "Development"
+          "IDE"
+        ];
+        mimeType = [
+          "text/plain"
+          "application/x-zerosize"
+          "x-scheme-handler/zed"
+        ];
+        actions = {
+          "NewWorkspace" = {
+            name = "Open a new workspace";
+            exec = "zed --new %U";
+          };
+        };
+      };
     };
 
     mimeApps.enable = true;

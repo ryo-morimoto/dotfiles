@@ -36,7 +36,7 @@ rename_exe = "coderabbit"
 [tools."github:zed-industries/zed"]
 version = "latest"
 asset_pattern = "zed-linux-x86_64.tar.gz"
-bin_path = "bin"
+bin_path = "zed.app/bin"
 filter_bins = "zed"
 
 [tasks.install-cursor-agent]
