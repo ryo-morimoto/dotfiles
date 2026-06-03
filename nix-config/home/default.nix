@@ -55,7 +55,6 @@ in
         # Editor
         neovim
         code-cursor
-        zed-editor
 
         # LSP servers (for Neovim)
         typescript-language-server
@@ -924,6 +923,33 @@ in
         ];
       };
 
+      "zed" = {
+        name = "Zed";
+        genericName = "Text Editor";
+        comment = "A high-performance, multiplayer code editor.";
+        exec = "${config.home.homeDirectory}/.local/share/mise/shims/zed %U";
+        terminal = false;
+        startupNotify = true;
+        settings.TryExec = "${config.home.homeDirectory}/.local/share/mise/shims/zed";
+        icon = "${config.home.homeDirectory}/.local/share/mise/installs/github-zed-industries-zed/latest/zed.app/share/icons/hicolor/512x512/apps/zed.png";
+        categories = [
+          "Utility"
+          "TextEditor"
+          "Development"
+          "IDE"
+        ];
+        mimeType = [
+          "text/plain"
+          "application/x-zerosize"
+          "x-scheme-handler/zed"
+        ];
+        actions = {
+          "NewWorkspace" = {
+            name = "Open a new workspace";
+            exec = "${config.home.homeDirectory}/.local/share/mise/shims/zed --new %U";
+          };
+        };
+      };
     };
 
     mimeApps.enable = true;

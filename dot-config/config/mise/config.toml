@@ -33,6 +33,12 @@ version = "0.4.0"
 url = "https://cli.coderabbit.ai/releases/{{version}}/coderabbit-linux-x64.zip"
 rename_exe = "coderabbit"
 
+[tools."github:zed-industries/zed"]
+version = "latest"
+asset_pattern = "zed-linux-x86_64.tar.gz"
+bin_path = "zed.app/bin"
+filter_bins = "zed"
+
 [tasks.install-cursor-agent]
 description = "Install Cursor Agent CLI outside Nix"
 run = "curl https://cursor.com/install -fsS | bash"
