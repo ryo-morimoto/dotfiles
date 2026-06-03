@@ -255,12 +255,10 @@ in
       extra-substituters = [
         "https://cache.numtide.com"
         "https://codex-cli.cachix.org"
-        "https://zed.cachix.org"
       ];
       extra-trusted-public-keys = [
         "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
         "codex-cli.cachix.org-1:1Br3H1hHoRYG22n//cGKJOk3cQXgYobUel6O8DgSing="
-        "zed.cachix.org-1:/pHQ6dpMsAZk2DiP4WCL0p9YDNKWj2Q5FL20bNmw1cU="
       ];
     };
 
