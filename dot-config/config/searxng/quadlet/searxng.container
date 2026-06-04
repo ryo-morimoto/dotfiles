@@ -1,0 +1,21 @@
+[Unit]
+Description=Local SearXNG search service
+Documentation=https://docs.searxng.org/admin/installation-docker
+
+[Container]
+Image=docker.io/searxng/searxng:latest
+ContainerName=searxng
+AutoUpdate=registry
+Environment=FORCE_OWNERSHIP=false
+EnvironmentFile=%h/.local/state/searxng/searxng.env
+PublishPort=127.0.0.1:8888:8080
+Volume=%h/ghq/github.com/ryo-morimoto/dotfiles/dot-config/config/searxng/etc:/etc/searxng:ro
+Volume=searxng-cache.volume:/var/cache/searxng
+
+[Service]
+Restart=on-failure
+TimeoutStartSec=900
+
+[Install]
+WantedBy=default.target
+

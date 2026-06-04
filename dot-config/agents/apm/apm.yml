@@ -68,6 +68,15 @@ dependencies:
       args:
         - -y
         - exa-mcp-server
+    - name: searxng
+      transport: stdio
+      registry: false
+      command: npx
+      args:
+        - -y
+        - mcp-searxng
+      env:
+        SEARXNG_URL: http://127.0.0.1:8888
     - name: figma
       transport: http
       registry: false
