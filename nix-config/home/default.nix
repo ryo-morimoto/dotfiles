@@ -89,6 +89,9 @@ in
         vesktop
         slack
 
+        # Design
+        penpot-desktop
+
         # AppImage
         appimage-run
 
@@ -579,6 +582,19 @@ in
     defaultCacheTtl = 86400;
     maxCacheTtl = 86400;
     pinentry.package = pkgs.pinentry-curses;
+  };
+
+  systemd.user.services.penpot-mcp = {
+    Unit = {
+      Description = "Penpot MCP server";
+      After = [ "network.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.nodejs}/bin/npx -y @penpot/mcp@stable";
+      Restart = "on-failure";
+      RestartSec = 5;
+    };
+    Install.WantedBy = [ "default.target" ];
   };
 
   # GTK theme (Catppuccin Mocha)

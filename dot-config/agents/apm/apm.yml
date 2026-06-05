@@ -81,6 +81,10 @@ dependencies:
       transport: http
       registry: false
       url: https://mcp.figma.com/mcp
+    - name: penpot
+      transport: http
+      registry: false
+      url: http://localhost:4401/mcp
     - name: notion
       transport: http
       registry: false
