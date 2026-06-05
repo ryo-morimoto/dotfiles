@@ -29,6 +29,7 @@ in
     firewall.interfaces.tailscale0.allowedTCPPorts = [
       80
       443
+      5757
     ];
   };
 
