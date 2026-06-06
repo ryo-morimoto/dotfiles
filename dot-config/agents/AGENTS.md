@@ -59,6 +59,9 @@
 ## Tools And Context
 
 - When investigating Markdown (`*.md`) files, start with `qmd search <query>` to find relevant sections.
+- For web or external-topic research, use local SearXNG first: `curl 'http://127.0.0.1:8888/search?q=<query>&format=json'`.
+  If SearXNG is unavailable or has no useful results, state that and then fall back to another available web search
+  tool.
 - Prefer precise project-aware tools for search, reading, and edits when available; otherwise use fast local commands
   and small, targeted reads.
 - Keep tool output out of the conversation unless it matters. For write/create/update calls, mention only success and
