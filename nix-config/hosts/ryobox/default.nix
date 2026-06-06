@@ -1,5 +1,6 @@
 {
   agenix,
+  config,
   lib,
   pkgs,
   ...
@@ -117,20 +118,31 @@ in
     };
     gnome.gnome-keyring.enable = true;
 
-    # Local reverse proxy. Tailscale Serve terminates HTTPS on the ryobox node
-    # and forwards tailnet traffic to this localhost listener.
+    # Tailnet-only reverse proxy. ryobox.xyz records point at the ryobox
+    # Tailscale IP, and Caddy gets public certificates through Cloudflare DNS-01.
     caddy = {
       enable = true;
+      package = pkgs.caddy.withPlugins {
+        plugins = [ "github.com/caddy-dns/cloudflare@v0.2.2" ];
+        hash = "sha256-qEA6058svI8Q6yE97OkfnGWC8ayI3x8y2iU7PGkJ3Do=";
+      };
       virtualHosts = {
-        "http://127.0.0.1:8081" = {
+        "plane.ryobox.xyz" = {
           extraConfig = ''
-            handle /git* {
-              reverse_proxy 127.0.0.1:3000
+            tls {
+              dns cloudflare {env.CLOUDFLARE_API_TOKEN}
             }
 
-            handle {
-              reverse_proxy 127.0.0.1:8090
+            reverse_proxy 127.0.0.1:8090
+          '';
+        };
+        "git.ryobox.xyz" = {
+          extraConfig = ''
+            tls {
+              dns cloudflare {env.CLOUDFLARE_API_TOKEN}
             }
+
+            reverse_proxy 127.0.0.1:3000
           '';
         };
       };
@@ -160,6 +172,13 @@ in
   age = {
     identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
     secrets = {
+      # Caddy: Cloudflare API token for DNS-01 certificate challenges.
+      caddy-cloudflare = {
+        file = ../../secrets/caddy-cloudflare.age;
+        owner = "caddy";
+        group = "caddy";
+        mode = "0400";
+      };
       # Context7 API key for documentation search
       context7-api-key = {
         file = ../../secrets/context7-api-key.age;
@@ -175,25 +194,21 @@ in
     };
   };
   systemd.services = {
-    tailscale-serve-caddy = {
-      description = "Expose local Caddy through Tailscale Serve";
-      wantedBy = [ "multi-user.target" ];
-      after = [
-        "caddy.service"
-        "tailscaled.service"
-      ];
-      requires = [
-        "caddy.service"
-        "tailscaled.service"
-      ];
+    caddy = {
+      after = [ "tailscale-serve-reset.service" ];
+      requires = [ "tailscale-serve-reset.service" ];
+      serviceConfig.EnvironmentFile = config.age.secrets.caddy-cloudflare.path;
+    };
+
+    tailscale-serve-reset = {
+      description = "Clear Tailscale Serve before Caddy binds HTTPS";
+      before = [ "caddy.service" ];
+      after = [ "tailscaled.service" ];
+      requires = [ "tailscaled.service" ];
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
-        ExecStart = pkgs.writeShellScript "tailscale-serve-caddy" ''
-          set -euo pipefail
-          ${pkgs.tailscale}/bin/tailscale serve reset
-          ${pkgs.tailscale}/bin/tailscale serve --bg --yes http://127.0.0.1:8081
-        '';
+        ExecStart = "${pkgs.tailscale}/bin/tailscale serve reset";
       };
     };
 

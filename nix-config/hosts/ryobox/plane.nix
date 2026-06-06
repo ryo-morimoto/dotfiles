@@ -4,6 +4,7 @@ let
   planeTag = "v1.3.0";
   listenHttpPort = 8090;
   minioAccessKey = "plane-minio";
+  planeFqdn = "plane.ryobox.xyz";
 
   composeYml = pkgs.fetchurl {
     url = "https://raw.githubusercontent.com/makeplane/plane/${planeTag}/deployments/cli/community/docker-compose.yml";
@@ -26,9 +27,6 @@ let
   planeStartPre = pkgs.writeShellScript "plane-start-pre" ''
     set -euo pipefail
 
-    # shellcheck disable=SC1091
-    . /run/plane-tailnet.env
-
     secret_key=$(cat "${config.age.secrets.plane-secret-key.path}")
     pg_pass=$(cat "${config.age.secrets.plane-postgres-password.path}")
     pg_pass_url=$(printf '%s' "$pg_pass" | ${pkgs.jq}/bin/jq -sRr @uri)
@@ -37,9 +35,9 @@ let
     umask 077
     cat > /run/plane/.env <<EOF
     APP_RELEASE=${planeTag}
-    APP_DOMAIN=$PLANE_FQDN
-    WEB_URL=https://$PLANE_FQDN
-    CORS_ALLOWED_ORIGINS=https://$PLANE_FQDN
+    APP_DOMAIN=${planeFqdn}
+    WEB_URL=https://${planeFqdn}
+    CORS_ALLOWED_ORIGINS=https://${planeFqdn}
 
     SECRET_KEY=$secret_key
     LIVE_SERVER_SECRET_KEY=$secret_key
@@ -90,44 +88,14 @@ in
   };
 
   systemd.services = {
-    plane-tailnet-env = {
-      description = "Resolve tailnet FQDN for Plane";
-      wantedBy = [ "plane.service" ];
-      before = [ "plane.service" ];
-      after = [ "tailscaled.service" ];
-      requires = [ "tailscaled.service" ];
-      serviceConfig = {
-        Type = "oneshot";
-        RemainAfterExit = true;
-        ExecStart = pkgs.writeShellScript "plane-tailnet-env" ''
-          set -euo pipefail
-          suffix=""
-          for _ in $(seq 1 30); do
-            suffix=$(${pkgs.tailscale}/bin/tailscale status --json 2>/dev/null \
-              | ${pkgs.jq}/bin/jq -r '.CurrentTailnet.MagicDNSSuffix // empty') || true
-            if [ -n "$suffix" ]; then break; fi
-            sleep 2
-          done
-          if [ -z "$suffix" ]; then
-            echo "tailnet not ready after 60s (is tailscaled logged in?)" >&2
-            exit 1
-          fi
-          install -m 0644 -o root -g root /dev/null /run/plane-tailnet.env
-          echo "PLANE_FQDN=ryobox.$suffix" > /run/plane-tailnet.env
-        '';
-      };
-    };
-
     plane = {
       description = "Plane self-host via docker compose (pinned ${planeTag})";
       wantedBy = [ "multi-user.target" ];
       after = [
         "docker.service"
-        "plane-tailnet-env.service"
       ];
       requires = [
         "docker.service"
-        "plane-tailnet-env.service"
       ];
       path = [ pkgs.docker ];
       serviceConfig = {
