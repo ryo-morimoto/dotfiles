@@ -113,7 +113,7 @@ in
             exit 1
           fi
           install -m 0644 -o root -g root /dev/null /run/plane-tailnet.env
-          echo "PLANE_FQDN=plane.$suffix" > /run/plane-tailnet.env
+          echo "PLANE_FQDN=ryobox.$suffix" > /run/plane-tailnet.env
         '';
       };
     };

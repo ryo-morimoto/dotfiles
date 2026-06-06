@@ -66,11 +66,11 @@
             echo "tailnet not ready after 60s (is tailscaled logged in?)" >&2
             exit 1
           fi
-          fqdn="git.$suffix"
+          fqdn="ryobox.$suffix"
           install -m 0640 -o forgejo -g forgejo /dev/null /run/forgejo.env
           {
             echo "FORGEJO__SERVER__DOMAIN=$fqdn"
-            echo "FORGEJO__SERVER__ROOT_URL=https://$fqdn/"
+            echo "FORGEJO__SERVER__ROOT_URL=https://$fqdn/git/"
             echo "FORGEJO__SERVER__SSH_DOMAIN=$fqdn"
           } > /run/forgejo.env
         '';

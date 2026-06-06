@@ -3,7 +3,6 @@ let
 in
 {
   "caddy-cloudflare.age".publicKeys = [ ryobox ];
-  "caddy-tailscale-oauth.age".publicKeys = [ ryobox ];
   "context7-api-key.age".publicKeys = [ ryobox ];
   "exa-api-key.age".publicKeys = [ ryobox ];
   "plane-secret-key.age".publicKeys = [ ryobox ];
