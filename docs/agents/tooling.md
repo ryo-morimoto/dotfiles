@@ -108,3 +108,11 @@ grepika --root . search "test.*<symbol>"
 - Import aliases are not resolved.
 - Dependency chains are not followed automatically.
 - Use LSP when exact symbol resolution matters.
+
+## Zellij
+
+Zellij is installed for manual evaluation. tmux remains available as fallback.
+
+- Runtime config: `dot-config/config/zellij/`
+- Manual main session command: `zmain`
+- tmux fallback command: `tm`

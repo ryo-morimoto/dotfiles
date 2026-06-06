@@ -59,8 +59,3 @@ keybind = ctrl+shift+enter=new_split:right
 keybind = ctrl+shift+backslash=new_split:down
 keybind = ctrl+shift+up=jump_to_prompt:-1
 keybind = ctrl+shift+down=jump_to_prompt:1
-
-# =============================================================================
-# Command
-# =============================================================================
-command = tmux attach || tmux new-session

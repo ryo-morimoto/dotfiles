@@ -4,8 +4,11 @@ bindkey '^[[A' history-search-backward
 bindkey '^[[B' history-search-forward
 
 alias apm='uvx --from apm-cli apm'
+alias za='zellij attach --create'
+alias zmain='zellij attach --create main'
+alias tm='tmux attach || tmux new-session'
 
-# OSC 7: notify tmux of CWD for pane splitting
+# OSC 7: notify terminal multiplexers of CWD for pane splitting
 _osc7_precmd() {
   printf '\e]7;file://%s%s\e\\' "${HOST}" "${PWD}"
 }

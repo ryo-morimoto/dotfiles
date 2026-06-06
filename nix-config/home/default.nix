@@ -24,6 +24,7 @@ in
   imports = [
     ./knowledge
     ./tmux
+    ./zellij
   ];
   home = {
     username = "ryo-morimoto";
