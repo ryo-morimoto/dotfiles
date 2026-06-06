@@ -1,5 +1,6 @@
 {
   agenix,
+  config,
   lib,
   pkgs,
   ...
@@ -14,6 +15,8 @@ in
 {
   imports = [
     ./hardware-configuration.nix
+    ./forgejo.nix
+    ./plane.nix
   ];
 
   # Bootloader
@@ -115,6 +118,47 @@ in
     };
     gnome.gnome-keyring.enable = true;
 
+    # Caddy reverse proxy (tailnet-only via caddy-tailscale; TLS via Tailscale cert)
+    caddy = {
+      enable = true;
+      package = pkgs.caddy.withPlugins {
+        plugins = [
+          "github.com/caddy-dns/cloudflare@v0.2.2"
+          "github.com/tailscale/caddy-tailscale@v0.0.0-20260106222316-bb080c4414ac"
+        ];
+        hash = "sha256-Rf7afAqQUYHTkB3TH9yly7eMaScc15fmg+6FcajLR8A=";
+      };
+      globalConfig = ''
+        tailscale {
+          auth_key {env.TS_AUTHKEY}
+          default {
+            state_dir /var/lib/caddy/tsnet
+            tags tag:caddy
+          }
+          git {
+            hostname git
+          }
+          plane {
+            hostname plane
+          }
+        }
+      '';
+      virtualHosts = {
+        "https://git.tail9f641.ts.net" = {
+          extraConfig = ''
+            bind tailscale/git
+            reverse_proxy 127.0.0.1:3000
+          '';
+        };
+        "https://plane.tail9f641.ts.net" = {
+          extraConfig = ''
+            bind tailscale/plane
+            reverse_proxy 127.0.0.1:8090
+          '';
+        };
+      };
+    };
+
     # Tailscale VPN with SSH
     tailscale = {
       enable = true;
@@ -139,6 +183,20 @@ in
   age = {
     identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
     secrets = {
+      # Caddy: load Cloudflare API token
+      caddy-cloudflare = {
+        file = ../../secrets/caddy-cloudflare.age;
+        owner = "caddy";
+        group = "caddy";
+        mode = "0400";
+      };
+      # Caddy: Tailscale OAuth client secret for caddy-tailscale plugin tsnet nodes
+      caddy-tailscale-oauth = {
+        file = ../../secrets/caddy-tailscale-oauth.age;
+        owner = "caddy";
+        group = "caddy";
+        mode = "0400";
+      };
       # Context7 API key for documentation search
       context7-api-key = {
         file = ../../secrets/context7-api-key.age;
@@ -154,6 +212,11 @@ in
     };
   };
   systemd.services = {
+    caddy.serviceConfig.EnvironmentFile = [
+      config.age.secrets.caddy-cloudflare.path
+      config.age.secrets.caddy-tailscale-oauth.path
+    ];
+
     "dotfiles-pull" = {
       description = "Pull latest dotfiles from GitHub";
       serviceConfig = {
