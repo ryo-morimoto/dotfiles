@@ -258,6 +258,7 @@ in
       installApmConfig = lib.hm.dag.entryAfter [ "installMiseTools" ] ''
         if [ -r "$HOME/.apm/apm.yml" ]; then
           echo "Installing APM config from ~/.apm/apm.yml via mise-managed apm"
+          cd "$HOME/.apm"
           PATH="${
             lib.makeBinPath [
               pkgs.coreutils
@@ -591,6 +592,7 @@ in
       After = [ "network.target" ];
     };
     Service = {
+      Environment = "PNPM_CONFIG_DANGEROUSLY_ALLOW_ALL_BUILDS=true";
       ExecStart = "${pkgs.nodejs}/bin/npx -y @penpot/mcp@stable";
       Restart = "on-failure";
       RestartSec = 5;

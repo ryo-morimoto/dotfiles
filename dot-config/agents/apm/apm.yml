@@ -77,19 +77,7 @@ dependencies:
         - mcp-searxng
       env:
         SEARXNG_URL: http://127.0.0.1:8888
-    - name: figma
-      transport: http
-      registry: false
-      url: https://mcp.figma.com/mcp
     - name: penpot
       transport: http
       registry: false
       url: http://localhost:4401/mcp
-    - name: notion
-      transport: http
-      registry: false
-      url: https://mcp.notion.com/mcp
-    - name: secretary
-      transport: http
-      registry: false
-      url: https://secretary.ryo-morimoto-dev.workers.dev/mcp
