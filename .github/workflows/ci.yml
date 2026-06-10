@@ -25,6 +25,6 @@ jobs:
       - name: Semgrep (nix)
         run: |
           nix profile install nixpkgs#semgrep
-          semgrep scan --config .semgrep/ --error --severity ERROR --severity WARNING --no-git-ignore -j 1
+          semgrep scan --config .semgrep/ --error --severity ERROR --severity WARNING --include '*.nix' --no-git-ignore -j 1 .
       - name: Build NixOS configuration
         run: nix build ./nix-config#nixosConfigurations.ryobox.config.system.build.toplevel --dry-run
