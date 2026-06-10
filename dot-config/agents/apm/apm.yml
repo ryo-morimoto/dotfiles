@@ -7,6 +7,7 @@ dependencies:
   apm:
     - ast-grep/agent-skill/ast-grep#577f4d4507678f2c8cee150fae25e6ce309f70b1
     - EveryInc/compound-engineering-plugin/plugins/compound-engineering#85987d496fdfdc8a18faf592fd53329e23266537
+    - ryo-morimoto/skills/orient#45da7bf1a3bfc2560c1cf0f70e1d94c402c5820a
     - /home/ryo-morimoto/ghq/github.com/ryo-morimoto/dotfiles/skills/fp-typescript
     - /home/ryo-morimoto/ghq/github.com/ryo-morimoto/dotfiles/skills/repo-doctor
     - kawasima/evolutionary-naming/skills/evolutionary-naming#9ff0280833cc781018618d5294b52cbeced0d409
