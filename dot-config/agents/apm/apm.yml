@@ -62,6 +62,10 @@ dependencies:
       transport: http
       registry: false
       url: https://mcp.context7.com/mcp
+    - name: linear
+      transport: http
+      registry: false
+      url: https://mcp.linear.app/mcp
     - name: exa
       transport: stdio
       registry: false
