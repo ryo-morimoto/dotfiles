@@ -145,6 +145,15 @@ in
             reverse_proxy 127.0.0.1:3000
           '';
         };
+        "hermes.ryobox.xyz" = {
+          extraConfig = ''
+            tls {
+              dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+            }
+
+            reverse_proxy 127.0.0.1:9120
+          '';
+        };
       };
     };
 
