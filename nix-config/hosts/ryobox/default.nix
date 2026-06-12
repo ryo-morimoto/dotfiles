@@ -151,7 +151,12 @@ in
               dns cloudflare {env.CLOUDFLARE_API_TOKEN}
             }
 
-            reverse_proxy 127.0.0.1:9120
+            reverse_proxy 127.0.0.1:9120 {
+              header_up Host 127.0.0.1:9120
+              header_up Origin http://127.0.0.1:9120
+              header_up X-Forwarded-Host hermes.ryobox.xyz
+              header_up X-Forwarded-Proto https
+            }
           '';
         };
       };

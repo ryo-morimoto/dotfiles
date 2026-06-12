@@ -83,6 +83,11 @@ dependencies:
       env:
         SEARXNG_URL: http://127.0.0.1:8888
     - name: penpot
-      transport: http
+      transport: stdio
       registry: false
-      url: http://localhost:4401/mcp
+      command: npx
+      args:
+        - -y
+        - mcp-remote
+        - http://localhost:4401/mcp
+        - --allow-http
