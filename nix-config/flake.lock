@@ -116,11 +116,11 @@
         "rust-analyzer-src": "rust-analyzer-src"
       },
       "locked": {
-        "lastModified": 1781260166,
-        "narHash": "sha256-vKKEJke8kswPWPu/J/giMA92VFrVNWQn7x6TwRmJHBo=",
+        "lastModified": 1781343250,
+        "narHash": "sha256-KBJktAwDG9+10j2wMfvOVkBEhZr3yS769xoqqdFI62s=",
         "owner": "nix-community",
         "repo": "fenix",
-        "rev": "a257e130673b0a1caa7137bf0896169910efdd5a",
+        "rev": "aad7d8bb6936d473c2b9d1a5846a1fe1bc92767a",
         "type": "github"
       },
       "original": {
@@ -211,11 +211,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1781189114,
-        "narHash": "sha256-5inaamLgUMWy+MOBE9ChF9QAF1o/74LFuHkI0W/9rqc=",
+        "lastModified": 1781365335,
+        "narHash": "sha256-zqDBhXMzfbdlO7F2bGHe7MOtB3xngd/+4ieMHDC+ZXo=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "486595d2cf49cfcd649b58a284fa11ac0e34da22",
+        "rev": "5b6f5733726a1b2ccafb5dec6ac4ca7299fad66c",
         "type": "github"
       },
       "original": {
@@ -253,11 +253,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1781246800,
-        "narHash": "sha256-LsAnbzdUXP6Yf1pl0hh+0VK+ktjIxKjczJhAv/oRrtU=",
+        "lastModified": 1781331685,
+        "narHash": "sha256-txIyeeGc30uP4HVJUkH0CZtimmP4ydSjrj7loVRhikQ=",
         "owner": "moonbit-community",
         "repo": "moonbit-overlay",
-        "rev": "4ed47bae2c34283df34d74848c86259cb1581bb4",
+        "rev": "c2b7248930e12b249091c8193c785a12f6f3f7ec",
         "type": "github"
       },
       "original": {
@@ -456,11 +456,11 @@
     "rust-analyzer-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1781193851,
-        "narHash": "sha256-Pz4G9dV3Cy9L2Gtl8dMrHlwPa8Oy+vE8NIXmd2b6ZVo=",
+        "lastModified": 1781294997,
+        "narHash": "sha256-XjCyIvJw4JtcwItTKRdQz5h1pLF9hr8ZSYeMP+/1d3A=",
         "owner": "rust-lang",
         "repo": "rust-analyzer",
-        "rev": "dc0ac97934098a20224a4638f39ae88fa97e9b88",
+        "rev": "3f92cd1612268995d5667bd04fa03ba2916413d9",
         "type": "github"
       },
       "original": {
@@ -601,11 +601,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1780607114,
-        "narHash": "sha256-2AVR9CTNLuCE5tl1EU3Mgb1AdGlxYFiYOeATKfpgkz4=",
+        "lastModified": 1781298446,
+        "narHash": "sha256-7l/0ZkRduzKU4QrThL+Z/pmx7LxyokoKLXaecmFEyGM=",
         "owner": "peteonrails",
         "repo": "voxtype",
-        "rev": "978c4ed2a26a1f5fdff409767a697e4c28fbc4bc",
+        "rev": "a0d43b5f82ef5a34d5f668d1d4933d70deb82adc",
         "type": "github"
       },
       "original": {
@@ -657,11 +657,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1781173532,
-        "narHash": "sha256-MwnZpL82aQO1I15JH525vz6REI/OULEAmXDp6cIcgNg=",
+        "lastModified": 1781353552,
+        "narHash": "sha256-FHqsgWr7O3XcRNtBO/bjo/nI06EP9JjUb5AEz0Dh3HI=",
         "owner": "0xc000022070",
         "repo": "zen-browser-flake",
-        "rev": "f13e82162fae68af7716147207fa5f868f5ca381",
+        "rev": "b7562bb6de361d2982a2a6104ee27e4f3169efa5",
         "type": "github"
       },
       "original": {
