@@ -31,20 +31,9 @@
 ## Codebase Investigation
 
 - Work in this order for code changes: explore/investigate, then plan, then execute.
-- Use tools in this order for codebase investigation: `codedb`, then `grepika`, then `rg`.
-- Start codebase understanding with `codedb`, not `rg`:
-  - `CODEDB_NO_TELEMETRY=1 codedb . word <identifier>`
-  - `CODEDB_NO_TELEMETRY=1 codedb . find <symbol>`
-  - `CODEDB_NO_TELEMETRY=1 codedb . outline <path>`
-- Use `grepika` after `codedb` for repo-wide and design-context discovery:
-  - `grepika --root . stats`
-  - `grepika --root . search "<topic>" -l 20`
-  - `grepika --root . context <path> <line>`
-  - `grepika --root . get <path>`
-  - `grepika --root . outline <path>`
-- Treat `codedb` results as leads because it may include ignored, runtime, or bundled files. Treat `grepika` refs and
-  outlines as approximate, not LSP-accurate.
-- Use `rg` for final confirmation and literal matches after `codedb` / `grepika`, not as the first exploration tool.
+- Prefer live source reads for correctness: `rg`, `git grep`, `fd`, direct file reads, LSP, and tests.
+- Use indexed/cache-backed tools only as optional leads, not required first steps. Confirm important findings against
+  live source before implementing or reviewing.
 - Before implementing, briefly state the purpose, change targets, non-targets, risks, and verification method. Ask only
   before non-obvious interface, schema, API, or permission-boundary changes.
 
@@ -58,7 +47,8 @@
 
 ## Tools And Context
 
-- When investigating Markdown (`*.md`) files, start with `qmd search <query>` to find relevant sections.
+- `qmd` can search Markdown collections, and `grepika` can provide ranked repo search. Both rely on indexes/caches, so
+  use them as optional discovery tools and remember their indexes may need periodic updates.
 - For web or external-topic research, use local SearXNG first: `curl 'http://127.0.0.1:8888/search?q=<query>&format=json'`.
   If SearXNG is unavailable or has no useful results, state that and then fall back to another available web search
   tool.

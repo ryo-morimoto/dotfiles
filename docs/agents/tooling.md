@@ -30,8 +30,10 @@
 ## Grepika CLI
 
 Grepika は BM25 + trigram + ripgrep の3バックエンドスコア合算でランキング付き検索結果を返す検索 CLI。
+必須ツールではなく、広めに候補を探したいときの補助として使う。index/cache を持つため、結果を重要判断に
+使う前に live source で確認する。
 
-プロジェクトに入ったら最初に index を構築する。
+使う場合は index を構築する。
 
 ```bash
 grepika --root "$(pwd)" index
