@@ -4,7 +4,7 @@ bindkey '^[[A' history-search-backward
 bindkey '^[[B' history-search-forward
 
 alias apm='uvx --from apm-cli apm'
-alias za='zellij attach --create'
+alias za='zellij attach'
 alias zmain='zellij attach --create main'
 alias tm='tmux attach || tmux new-session'
 
