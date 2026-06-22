@@ -1,3 +1,5 @@
 
-# APM dependencies
+# APM generated
 apm_modules/
+.agents/
+.claude/
