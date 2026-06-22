@@ -6,11 +6,11 @@ targets:
 dependencies:
   apm:
     - ast-grep/agent-skill/ast-grep#577f4d4507678f2c8cee150fae25e6ce309f70b1
-    - EveryInc/compound-engineering-plugin/plugins/compound-engineering#85987d496fdfdc8a18faf592fd53329e23266537
     - ryo-morimoto/skills/orient#45da7bf1a3bfc2560c1cf0f70e1d94c402c5820a
     - /home/ryo-morimoto/ghq/github.com/ryo-morimoto/dotfiles/skills/fp-typescript
     - /home/ryo-morimoto/ghq/github.com/ryo-morimoto/dotfiles/skills/repo-doctor
     - kawasima/evolutionary-naming/skills/evolutionary-naming#9ff0280833cc781018618d5294b52cbeced0d409
+    # mattpocock/skills
     - mattpocock/skills/skills/engineering/diagnose#e3b90b5238f38cdea5996e16861dcae28ef52eda
     - mattpocock/skills/skills/engineering/grill-with-docs#e3b90b5238f38cdea5996e16861dcae28ef52eda
     - mattpocock/skills/skills/engineering/improve-codebase-architecture#e3b90b5238f38cdea5996e16861dcae28ef52eda
@@ -25,38 +25,13 @@ dependencies:
     - mattpocock/skills/skills/productivity/grill-me#e3b90b5238f38cdea5996e16861dcae28ef52eda
     - mattpocock/skills/skills/productivity/handoff#e3b90b5238f38cdea5996e16861dcae28ef52eda
     - mattpocock/skills/skills/productivity/write-a-skill#e3b90b5238f38cdea5996e16861dcae28ef52eda
-    - mgechev/skills-best-practices/skill#979bd0360c82064ee8cf1ca9a0a0ff5335bae2ee
+    # mizchi/skills (selected)
     - mizchi/skills/meta/extract-glossary#89c1b34018ba0d85a770c065ba22f83a8d004d34
-    - mizchi/skills/meta/empirical-prompt-tuning#89c1b34018ba0d85a770c065ba22f83a8d004d34
-    - mizchi/skills/meta/optimizing-descriptions#89c1b34018ba0d85a770c065ba22f83a8d004d34
     - mizchi/skills/meta/retrospective-codify#89c1b34018ba0d85a770c065ba22f83a8d004d34
-    - mizchi/skills/meta/tech-article-reproducibility#89c1b34018ba0d85a770c065ba22f83a8d004d34
-    # mizchi/skills/frontend/*
-    - mizchi/skills/frontend/review-ci#89c1b34018ba0d85a770c065ba22f83a8d004d34
-    - mizchi/skills/frontend/review-deps#89c1b34018ba0d85a770c065ba22f83a8d004d34
-    - mizchi/skills/frontend/review-hygiene#89c1b34018ba0d85a770c065ba22f83a8d004d34
-    - mizchi/skills/frontend/review-performance#89c1b34018ba0d85a770c065ba22f83a8d004d34
-    - mizchi/skills/frontend/review-security#89c1b34018ba0d85a770c065ba22f83a8d004d34
-    - mizchi/skills/frontend/review-state#89c1b34018ba0d85a770c065ba22f83a8d004d34
-    - mizchi/skills/frontend/review-testing#89c1b34018ba0d85a770c065ba22f83a8d004d34
-    - mizchi/skills/frontend/review-triage#89c1b34018ba0d85a770c065ba22f83a8d004d34
-    - mizchi/skills/frontend/review-weekly#89c1b34018ba0d85a770c065ba22f83a8d004d34
-    - mizchi/skills/frontend/review-perspectives/frontend-expert#89c1b34018ba0d85a770c065ba22f83a8d004d34
-    - mizchi/skills/frontend/review-perspectives/frontend-ops-expert#89c1b34018ba0d85a770c065ba22f83a8d004d34
-    - mizchi/skills/frontend/review-perspectives/performance-expert#89c1b34018ba0d85a770c065ba22f83a8d004d34
-    - mizchi/skills/frontend/review-perspectives/react-expert#89c1b34018ba0d85a770c065ba22f83a8d004d34
-    - mizchi/skills/frontend/review-perspectives/security-expert#89c1b34018ba0d85a770c065ba22f83a8d004d34
-    # mizchi/skills/devops/*
-    - mizchi/skills/devops/actions-ci-tuning#89c1b34018ba0d85a770c065ba22f83a8d004d34
-    - mizchi/skills/devops/flaker-storage-cache-on-ci#89c1b34018ba0d85a770c065ba22f83a8d004d34
     - mizchi/skills/devops/gh-fix-ci#89c1b34018ba0d85a770c065ba22f83a8d004d34
     - mizchi/skills/devops/opentelemetry#89c1b34018ba0d85a770c065ba22f83a8d004d34
-    - mizchi/skills/devops/otel-node#89c1b34018ba0d85a770c065ba22f83a8d004d34
-    - mizchi/skills/devops/workers-cd-rollback#89c1b34018ba0d85a770c065ba22f83a8d004d34
-    - slidevjs/slidev/skills/slidev#a1609ffa877a4df90ad1bf34006a85f8281097ef
+    # upstash/context7
     - upstash/context7/skills/context7-cli#7e956e594584db4b1b66a3a4a07781e92b4d7e45
-    - upstash/context7/skills/context7-mcp#7e956e594584db4b1b66a3a4a07781e92b4d7e45
-    - upstash/context7/skills/find-docs#7e956e594584db4b1b66a3a4a07781e92b4d7e45
   mcp:
     - name: context7
       transport: http

@@ -62,7 +62,7 @@
 
 - Desktop stack は Niri + DankMaterialShell を継続し、置き換え済みの旧 desktop stack は repo に残さない。
 - Playwright は Nix の Chromium-only `playwright-driver` を標準にし、`playwright install*` を使わない。
-- OpenCode は Home Manager activation で `compound-engineering` を自動適用する。
+- Agent skills は OSS の個別 skill を APM で管理する。all-in-one plugin は常時ロードの context コストが高いため使わない。
 - OpenCode には managed permission policy を注入せず、Home Manager の `settings.permission = "allow"` を既定にする。
 - Claude Code は `permissions.defaultMode = "bypassPermissions"` と `sandbox.enabled = false` を標準にする。
 - Claude Code の dangerous bypass flag は wrapper ではなく shell alias で付与する。
