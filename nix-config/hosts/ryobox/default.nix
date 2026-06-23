@@ -222,6 +222,7 @@ in
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
+        ExecStartPre = "${pkgs.bash}/bin/bash -c 'for i in $(seq 1 30); do ${pkgs.tailscale}/bin/tailscale status >/dev/null 2>&1 && exit 0; sleep 1; done; echo \"tailscale not ready after 30s\" >&2; exit 1'";
         ExecStart = "${pkgs.tailscale}/bin/tailscale serve reset";
       };
     };
