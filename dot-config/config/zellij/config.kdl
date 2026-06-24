@@ -6,3 +6,7 @@ copy_command "wl-copy"
 copy_clipboard "system"
 copy_on_select true
 show_startup_tips true
+// Disable KKP relay: codex TUI's kitty keyboard protocol state breaks on
+// pane/session switch and the input freezes (codex#12645/#19331). Falling
+// back to legacy input avoids the re-negotiation failure.
+support_kitty_keyboard_protocol false
