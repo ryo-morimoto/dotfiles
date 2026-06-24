@@ -4,7 +4,7 @@ experimental = true
 [tools]
 aqua = "latest"
 portless = "latest"
-"pipx:apm-cli" = "0.16.1"
+"pipx:apm-cli" = "0.21.0"
 "npm:agent-browser" = "latest"
 "npm:@tobilu/qmd" = { version = "2.5.3", npm_args = "--ignore-scripts=false" }
 
