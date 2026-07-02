@@ -3,6 +3,7 @@ experimental = true
 
 [tools]
 aqua = "latest"
+herdr = "latest"
 portless = "latest"
 "pipx:apm-cli" = "0.21.0"
 "npm:agent-browser" = "latest"
@@ -42,3 +43,11 @@ filter_bins = "zed"
 [tasks.install-cursor-agent]
 description = "Install Cursor Agent CLI outside Nix"
 run = "curl https://cursor.com/install -fsS | bash"
+
+[tasks.install-herdr-integrations]
+description = "Install Herdr integrations for backend agent CLIs"
+run = """
+herdr integration install codex
+herdr integration install claude
+herdr integration status
+"""
