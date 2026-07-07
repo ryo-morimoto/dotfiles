@@ -1,8 +1,10 @@
 lockfile_version: '1'
-generated_at: '2026-06-22T07:38:15.817236+00:00'
-apm_version: 0.21.0
+generated_at: '2026-07-07T12:01:39.973471+00:00'
+apm_version: 0.24.0
 dependencies:
 - repo_url: _local/fp-typescript
+  name: fp-typescript
+  version: 0.0.0
   package_type: claude_skill
   deployed_files:
   - .agents/skills/fp-typescript
@@ -91,6 +93,8 @@ dependencies:
   source: local
   local_path: /home/ryo-morimoto/ghq/github.com/ryo-morimoto/dotfiles/skills/fp-typescript
 - repo_url: _local/repo-doctor
+  name: repo-doctor
+  version: 0.0.0
   package_type: claude_skill
   deployed_files:
   - .agents/skills/repo-doctor
@@ -159,9 +163,11 @@ dependencies:
   source: local
   local_path: /home/ryo-morimoto/ghq/github.com/ryo-morimoto/dotfiles/skills/repo-doctor
 - repo_url: ast-grep/agent-skill
+  name: ast-grep
   host: github.com
-  resolved_commit: 577f4d4507678f2c8cee150fae25e6ce309f70b1
-  resolved_ref: 577f4d4507678f2c8cee150fae25e6ce309f70b1
+  resolved_commit: c2a9bc154f4ffe08b25d28d5e852dfac8c0d0d8a
+  resolved_ref: c2a9bc154f4ffe08b25d28d5e852dfac8c0d0d8a
+  version: 1.0.0
   virtual_path: ast-grep
   is_virtual: true
   package_type: marketplace_plugin
@@ -169,20 +175,28 @@ dependencies:
   - .agents/skills/ast-grep
   - .agents/skills/ast-grep/SKILL.md
   - .agents/skills/ast-grep/references/rule_reference.md
+  - .agents/skills/outline
+  - .agents/skills/outline/SKILL.md
   - .claude/skills/ast-grep
   - .claude/skills/ast-grep/SKILL.md
   - .claude/skills/ast-grep/references/rule_reference.md
+  - .claude/skills/outline
+  - .claude/skills/outline/SKILL.md
   deployed_file_hashes:
     .agents/skills/ast-grep/SKILL.md: sha256:1d356580b6d3af4feb5722e820b1c34041f6e90162c063f1c63fce3f21c72543
     .agents/skills/ast-grep/references/rule_reference.md: sha256:9f6d2ba2f2dbde059f61f426c262abe943f548984496962c43c7cc6e44813ad6
+    .agents/skills/outline/SKILL.md: sha256:449b99af327ebebca68bd803c8dba06a442790d24a217580d85781cac16fce2a
     .claude/skills/ast-grep/SKILL.md: sha256:1d356580b6d3af4feb5722e820b1c34041f6e90162c063f1c63fce3f21c72543
     .claude/skills/ast-grep/references/rule_reference.md: sha256:9f6d2ba2f2dbde059f61f426c262abe943f548984496962c43c7cc6e44813ad6
-  content_hash: sha256:f322fcf087d3054076a17f2fa21647a6e67c3e2ad8f6967db80bcaba4ff9d678
+    .claude/skills/outline/SKILL.md: sha256:449b99af327ebebca68bd803c8dba06a442790d24a217580d85781cac16fce2a
+  content_hash: sha256:7e1509ee5ade20d833dc3b574fb611a18ffb078b003101e86525218a23ddea04
   declared_license: MIT
 - repo_url: kawasima/evolutionary-naming
+  name: evolutionary-naming
   host: github.com
-  resolved_commit: 9ff0280833cc781018618d5294b52cbeced0d409
-  resolved_ref: 9ff0280833cc781018618d5294b52cbeced0d409
+  resolved_commit: dcd3e0133114ee14f7a82220ba530997d6c44da9
+  resolved_ref: dcd3e0133114ee14f7a82220ba530997d6c44da9
+  version: unknown
   virtual_path: skills/evolutionary-naming
   is_virtual: true
   package_type: claude_skill
@@ -198,19 +212,57 @@ dependencies:
   - .claude/skills/evolutionary-naming/improve-mode.md
   - .claude/skills/evolutionary-naming/reference.md
   deployed_file_hashes:
-    .agents/skills/evolutionary-naming/SKILL.md: sha256:dab777097da3c36b2f9fac6ab2603a191367c5b4378ce43b99c5b93ab1884765
+    .agents/skills/evolutionary-naming/SKILL.md: sha256:0ebb6b8f279bf67e1fd166048940454383f9ccc668bf4c248e7a23bfd22c13ad
     .agents/skills/evolutionary-naming/audit-mode.md: sha256:443ba4054a4ff0f377448b44ea2599b2aab2c9e0e43ea0a7c10026fa9a214d83
-    .agents/skills/evolutionary-naming/improve-mode.md: sha256:69abfb755ffd6c5a2dbed8e0c85c3ee91ac7390d48423eda71b26f3f44633a57
-    .agents/skills/evolutionary-naming/reference.md: sha256:89447d970b1782eea4d85da9b16be68f2468dde49df3852cae93a6d48ff964ce
-    .claude/skills/evolutionary-naming/SKILL.md: sha256:dab777097da3c36b2f9fac6ab2603a191367c5b4378ce43b99c5b93ab1884765
+    .agents/skills/evolutionary-naming/improve-mode.md: sha256:5d570fbc9c21dde8c2d66038c1b6530c973572f3c7dfd6d4c68c766601701279
+    .agents/skills/evolutionary-naming/reference.md: sha256:b6731b62613b62cb3257a6f5513b84ccd584bae0c3aacd761740ff6a83e3ee77
+    .claude/skills/evolutionary-naming/SKILL.md: sha256:0ebb6b8f279bf67e1fd166048940454383f9ccc668bf4c248e7a23bfd22c13ad
     .claude/skills/evolutionary-naming/audit-mode.md: sha256:443ba4054a4ff0f377448b44ea2599b2aab2c9e0e43ea0a7c10026fa9a214d83
-    .claude/skills/evolutionary-naming/improve-mode.md: sha256:69abfb755ffd6c5a2dbed8e0c85c3ee91ac7390d48423eda71b26f3f44633a57
-    .claude/skills/evolutionary-naming/reference.md: sha256:89447d970b1782eea4d85da9b16be68f2468dde49df3852cae93a6d48ff964ce
-  content_hash: sha256:a438787e6c9036a9f6502aee470a1160fe8d30fbffe952ed24aec0f0d70f438b
+    .claude/skills/evolutionary-naming/improve-mode.md: sha256:5d570fbc9c21dde8c2d66038c1b6530c973572f3c7dfd6d4c68c766601701279
+    .claude/skills/evolutionary-naming/reference.md: sha256:b6731b62613b62cb3257a6f5513b84ccd584bae0c3aacd761740ff6a83e3ee77
+  content_hash: sha256:56ff7cae91cd0f231cf3ca06737a7fdf7084203cfe39de39a5b20d1779cd4bd9
 - repo_url: mattpocock/skills
+  name: skills
   host: github.com
-  resolved_commit: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
-  resolved_ref: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
+  resolved_commit: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  resolved_ref: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  version: unknown
+  virtual_path: skills/engineering/ask-matt
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/ask-matt
+  - .agents/skills/ask-matt/SKILL.md
+  - .claude/skills/ask-matt
+  - .claude/skills/ask-matt/SKILL.md
+  deployed_file_hashes:
+    .agents/skills/ask-matt/SKILL.md: sha256:c0609bf4626b7166fb54dd7fb0091682df05f0491c96ec566b0dc96ed97ea2fb
+    .claude/skills/ask-matt/SKILL.md: sha256:c0609bf4626b7166fb54dd7fb0091682df05f0491c96ec566b0dc96ed97ea2fb
+  content_hash: sha256:2d3f523c8bf1ebbd4d5ecaa1e2678ec629f157248669f1edba807de1d0feb031
+- repo_url: mattpocock/skills
+  name: skills
+  host: github.com
+  resolved_commit: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  resolved_ref: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  version: unknown
+  virtual_path: skills/engineering/code-review
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/code-review
+  - .agents/skills/code-review/SKILL.md
+  - .claude/skills/code-review
+  - .claude/skills/code-review/SKILL.md
+  deployed_file_hashes:
+    .agents/skills/code-review/SKILL.md: sha256:6a65cc61114f96db07ec41e3920e67c9c5bf70dd6e0901eb9460ebcb2bdc209f
+    .claude/skills/code-review/SKILL.md: sha256:6a65cc61114f96db07ec41e3920e67c9c5bf70dd6e0901eb9460ebcb2bdc209f
+  content_hash: sha256:4a17d9d3e0fc87ae48544d371a820fac5a4a78f4c05e7e6b3229094fbf8a7e26
+- repo_url: mattpocock/skills
+  name: skills
+  host: github.com
+  resolved_commit: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  resolved_ref: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  version: unknown
   virtual_path: skills/engineering/codebase-design
   is_virtual: true
   package_type: claude_skill
@@ -232,9 +284,11 @@ dependencies:
     .claude/skills/codebase-design/SKILL.md: sha256:a8d50abac5a4018f60e1d911d4b6f4e36454ca14d6c390c0695a578c7de65dad
   content_hash: sha256:2426dc4accf1a85dedfb560edb3a877ec8828b7375ea08c970df2b6c900a2a22
 - repo_url: mattpocock/skills
+  name: skills
   host: github.com
-  resolved_commit: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
-  resolved_ref: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
+  resolved_commit: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  resolved_ref: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  version: unknown
   virtual_path: skills/engineering/diagnosing-bugs
   is_virtual: true
   package_type: claude_skill
@@ -252,9 +306,11 @@ dependencies:
     .claude/skills/diagnosing-bugs/scripts/hitl-loop.template.sh: sha256:b2932630950e5210075bcd6f850e5accf30c101c5367b29eac3a29b4dd8084c8
   content_hash: sha256:f67ada61a5d555f8604cb0b2aa87e13743468b009311e7d97b8d21dc89bf1aac
 - repo_url: mattpocock/skills
+  name: skills
   host: github.com
-  resolved_commit: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
-  resolved_ref: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
+  resolved_commit: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  resolved_ref: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  version: unknown
   virtual_path: skills/engineering/domain-modeling
   is_virtual: true
   package_type: claude_skill
@@ -276,9 +332,11 @@ dependencies:
     .claude/skills/domain-modeling/SKILL.md: sha256:152e2c97239affb12a60c5f4a7e74ab546a49ae169688c81f4e2ccc42dafa579
   content_hash: sha256:67343881f5def98487d56243155716110afbcbf22ec92421c882d532b941cb17
 - repo_url: mattpocock/skills
+  name: skills
   host: github.com
-  resolved_commit: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
-  resolved_ref: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
+  resolved_commit: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  resolved_ref: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  version: unknown
   virtual_path: skills/engineering/grill-with-docs
   is_virtual: true
   package_type: claude_skill
@@ -292,9 +350,11 @@ dependencies:
     .claude/skills/grill-with-docs/SKILL.md: sha256:610d091047bcfb9db0f75c057d15538481a721111579fc5ec7f83ad9131a2165
   content_hash: sha256:e7ef25bbee50cda2eb7b3a8ef541db0a0396dad7d369f7d14fb610671dd1864b
 - repo_url: mattpocock/skills
+  name: skills
   host: github.com
-  resolved_commit: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
-  resolved_ref: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
+  resolved_commit: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  resolved_ref: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  version: unknown
   virtual_path: skills/engineering/implement
   is_virtual: true
   package_type: claude_skill
@@ -304,13 +364,15 @@ dependencies:
   - .claude/skills/implement
   - .claude/skills/implement/SKILL.md
   deployed_file_hashes:
-    .agents/skills/implement/SKILL.md: sha256:6e79ad337b162393ec5bd4334c37c468a7f18281856d8b15b1b9e6fb4246c252
-    .claude/skills/implement/SKILL.md: sha256:6e79ad337b162393ec5bd4334c37c468a7f18281856d8b15b1b9e6fb4246c252
-  content_hash: sha256:f7b0f3636d20c12d1596336efa6943346f85c97f6419371347ac96c089dca08f
+    .agents/skills/implement/SKILL.md: sha256:5b55552c4a0d90fe15c9ee44abce4498faa03b73e332024e30ab69c2b7065770
+    .claude/skills/implement/SKILL.md: sha256:5b55552c4a0d90fe15c9ee44abce4498faa03b73e332024e30ab69c2b7065770
+  content_hash: sha256:5eedab2e36a68278662484e8e243624fe0bb74040299aa6c8a525feb65b0365c
 - repo_url: mattpocock/skills
+  name: skills
   host: github.com
-  resolved_commit: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
-  resolved_ref: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
+  resolved_commit: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  resolved_ref: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  version: unknown
   virtual_path: skills/engineering/improve-codebase-architecture
   is_virtual: true
   package_type: claude_skill
@@ -328,9 +390,11 @@ dependencies:
     .claude/skills/improve-codebase-architecture/SKILL.md: sha256:0026900866ed2a542af0559cef11dd7ae707633b75cc6f668c2e7c0a33e35032
   content_hash: sha256:8bf292143ca93b00276a0de0fc5f84f2381f4690c5b0d32e99fa283a072f392f
 - repo_url: mattpocock/skills
+  name: skills
   host: github.com
-  resolved_commit: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
-  resolved_ref: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
+  resolved_commit: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  resolved_ref: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  version: unknown
   virtual_path: skills/engineering/prototype
   is_virtual: true
   package_type: claude_skill
@@ -345,16 +409,36 @@ dependencies:
   - .claude/skills/prototype/UI.md
   deployed_file_hashes:
     .agents/skills/prototype/LOGIC.md: sha256:da91dc92195c00d5dc33863b8c1a030998025a0f8583ebf2babd770825b7f70c
-    .agents/skills/prototype/SKILL.md: sha256:863611f7fb65b78265188466cacdb365cbad129d36844ec57603c708d2026b50
+    .agents/skills/prototype/SKILL.md: sha256:efa2a92a2f0f8e7d9d0ecb0cfc65ffd5748c73fa3a25fe164e1c8f426938fb52
     .agents/skills/prototype/UI.md: sha256:d76d565149ee50456c5ddc5e29c27fec8737637874fe5c37d970db085a200b27
     .claude/skills/prototype/LOGIC.md: sha256:da91dc92195c00d5dc33863b8c1a030998025a0f8583ebf2babd770825b7f70c
-    .claude/skills/prototype/SKILL.md: sha256:863611f7fb65b78265188466cacdb365cbad129d36844ec57603c708d2026b50
+    .claude/skills/prototype/SKILL.md: sha256:efa2a92a2f0f8e7d9d0ecb0cfc65ffd5748c73fa3a25fe164e1c8f426938fb52
     .claude/skills/prototype/UI.md: sha256:d76d565149ee50456c5ddc5e29c27fec8737637874fe5c37d970db085a200b27
-  content_hash: sha256:40ff56e36bb13b5a9a16903efd6c78a02690ba430e10a8d1a65559100b77f475
+  content_hash: sha256:e70c8933d30153a4da47865829d356824b2a830367275e3b00c7b431a1544a79
 - repo_url: mattpocock/skills
+  name: skills
   host: github.com
-  resolved_commit: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
-  resolved_ref: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
+  resolved_commit: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  resolved_ref: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  version: unknown
+  virtual_path: skills/engineering/research
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/research
+  - .agents/skills/research/SKILL.md
+  - .claude/skills/research
+  - .claude/skills/research/SKILL.md
+  deployed_file_hashes:
+    .agents/skills/research/SKILL.md: sha256:af378829f015775a3bcd65ff466826722e99359017ae6bae227ca4c9bd14049c
+    .claude/skills/research/SKILL.md: sha256:af378829f015775a3bcd65ff466826722e99359017ae6bae227ca4c9bd14049c
+  content_hash: sha256:87d17f5103899fbe179b552a85485d50f2316ca5b3128f5716af7d88817533e1
+- repo_url: mattpocock/skills
+  name: skills
+  host: github.com
+  resolved_commit: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  resolved_ref: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  version: unknown
   virtual_path: skills/engineering/resolving-merge-conflicts
   is_virtual: true
   package_type: claude_skill
@@ -368,9 +452,11 @@ dependencies:
     .claude/skills/resolving-merge-conflicts/SKILL.md: sha256:c7c9ba81362a786aac05d2223123bf1bd2f8a99c3243a72882ede9c68bedfb24
   content_hash: sha256:bff6e06cec85897477759ed052410450aa91057644f5b70d888e26bc8b348847
 - repo_url: mattpocock/skills
+  name: skills
   host: github.com
-  resolved_commit: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
-  resolved_ref: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
+  resolved_commit: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  resolved_ref: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  version: unknown
   virtual_path: skills/engineering/setup-matt-pocock-skills
   is_virtual: true
   package_type: claude_skill
@@ -392,21 +478,23 @@ dependencies:
   deployed_file_hashes:
     .agents/skills/setup-matt-pocock-skills/SKILL.md: sha256:a85441f31decd5705ade6b526206d60be129dbe926251c67213fe1649da5f197
     .agents/skills/setup-matt-pocock-skills/domain.md: sha256:25be404b58798b3cb2d51c93dba2ab052fc3a425632185726ac3f5fcff193b99
-    .agents/skills/setup-matt-pocock-skills/issue-tracker-github.md: sha256:1e7ac76d3dd7f0ce41d6bf86912619a4bac164a70c6e246ae48f6825e222d56d
-    .agents/skills/setup-matt-pocock-skills/issue-tracker-gitlab.md: sha256:6282954685bf55b7da7fad9f45dc4226d39e498ebaee1e06372708033fa40a09
-    .agents/skills/setup-matt-pocock-skills/issue-tracker-local.md: sha256:9a052f4599525e581721ec24cb2ae3e0296b79053e39f684b540d34d3a4f6528
+    .agents/skills/setup-matt-pocock-skills/issue-tracker-github.md: sha256:52e9f9f1ec0f6d47c6785ac500708ac0521f34abb4cc5475b5dc747165dab17e
+    .agents/skills/setup-matt-pocock-skills/issue-tracker-gitlab.md: sha256:4470f2f64d015fba01af877233296b401bb0d44b5acb9572ffc3ff6b30e8de88
+    .agents/skills/setup-matt-pocock-skills/issue-tracker-local.md: sha256:e0dd9835e3658909132058e9a5fdd851e972220bbadaf78a57e3c6220d470922
     .agents/skills/setup-matt-pocock-skills/triage-labels.md: sha256:4f53c9b40ce2651e3611aa090eaedbd6dbc9b71ef8c5f7e65eac0d8263190d0d
     .claude/skills/setup-matt-pocock-skills/SKILL.md: sha256:a85441f31decd5705ade6b526206d60be129dbe926251c67213fe1649da5f197
     .claude/skills/setup-matt-pocock-skills/domain.md: sha256:25be404b58798b3cb2d51c93dba2ab052fc3a425632185726ac3f5fcff193b99
-    .claude/skills/setup-matt-pocock-skills/issue-tracker-github.md: sha256:1e7ac76d3dd7f0ce41d6bf86912619a4bac164a70c6e246ae48f6825e222d56d
-    .claude/skills/setup-matt-pocock-skills/issue-tracker-gitlab.md: sha256:6282954685bf55b7da7fad9f45dc4226d39e498ebaee1e06372708033fa40a09
-    .claude/skills/setup-matt-pocock-skills/issue-tracker-local.md: sha256:9a052f4599525e581721ec24cb2ae3e0296b79053e39f684b540d34d3a4f6528
+    .claude/skills/setup-matt-pocock-skills/issue-tracker-github.md: sha256:52e9f9f1ec0f6d47c6785ac500708ac0521f34abb4cc5475b5dc747165dab17e
+    .claude/skills/setup-matt-pocock-skills/issue-tracker-gitlab.md: sha256:4470f2f64d015fba01af877233296b401bb0d44b5acb9572ffc3ff6b30e8de88
+    .claude/skills/setup-matt-pocock-skills/issue-tracker-local.md: sha256:e0dd9835e3658909132058e9a5fdd851e972220bbadaf78a57e3c6220d470922
     .claude/skills/setup-matt-pocock-skills/triage-labels.md: sha256:4f53c9b40ce2651e3611aa090eaedbd6dbc9b71ef8c5f7e65eac0d8263190d0d
-  content_hash: sha256:17c9db34daf243859d6e76676c3aee74e3815442278dc665871ebf07ecd49f79
+  content_hash: sha256:94f2e77abfdb1168848e418b1e3132814952ef4c0698ba75583efadf4524c0e9
 - repo_url: mattpocock/skills
+  name: skills
   host: github.com
-  resolved_commit: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
-  resolved_ref: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
+  resolved_commit: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  resolved_ref: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  version: unknown
   virtual_path: skills/engineering/tdd
   is_virtual: true
   package_type: claude_skill
@@ -414,27 +502,25 @@ dependencies:
   - .agents/skills/tdd
   - .agents/skills/tdd/SKILL.md
   - .agents/skills/tdd/mocking.md
-  - .agents/skills/tdd/refactoring.md
   - .agents/skills/tdd/tests.md
   - .claude/skills/tdd
   - .claude/skills/tdd/SKILL.md
   - .claude/skills/tdd/mocking.md
-  - .claude/skills/tdd/refactoring.md
   - .claude/skills/tdd/tests.md
   deployed_file_hashes:
-    .agents/skills/tdd/SKILL.md: sha256:13722957277ed4960061a2d254a0ed7d86f95693e88b40d1c68307e7fdc98287
+    .agents/skills/tdd/SKILL.md: sha256:5363bb2775679fe9311fbb67947f95359169c6e7f1fac77c0f25e190bca6cf2f
     .agents/skills/tdd/mocking.md: sha256:3ceb807fdf4a47d6a93d4d9a891e5ba6d362a6247bd08adc451feebfc17361ef
-    .agents/skills/tdd/refactoring.md: sha256:54fced22dd1911b7094c3fe7979b7c1a40d40be307482c4adf7dc0588f27d6cc
-    .agents/skills/tdd/tests.md: sha256:e12182f5c4c6a844b7c6ab4b8d2623b642aaaae5460fe58ed087efd4f3d5fb8a
-    .claude/skills/tdd/SKILL.md: sha256:13722957277ed4960061a2d254a0ed7d86f95693e88b40d1c68307e7fdc98287
+    .agents/skills/tdd/tests.md: sha256:859f9e592c188fda4fc7277dd180e4ce9c7a2e13f6efe1f6f29eccc9d28c106a
+    .claude/skills/tdd/SKILL.md: sha256:5363bb2775679fe9311fbb67947f95359169c6e7f1fac77c0f25e190bca6cf2f
     .claude/skills/tdd/mocking.md: sha256:3ceb807fdf4a47d6a93d4d9a891e5ba6d362a6247bd08adc451feebfc17361ef
-    .claude/skills/tdd/refactoring.md: sha256:54fced22dd1911b7094c3fe7979b7c1a40d40be307482c4adf7dc0588f27d6cc
-    .claude/skills/tdd/tests.md: sha256:e12182f5c4c6a844b7c6ab4b8d2623b642aaaae5460fe58ed087efd4f3d5fb8a
-  content_hash: sha256:db301393e86619f35ce069f835da580f87a3dce3e20c2f2b24bbb2e322b86200
+    .claude/skills/tdd/tests.md: sha256:859f9e592c188fda4fc7277dd180e4ce9c7a2e13f6efe1f6f29eccc9d28c106a
+  content_hash: sha256:a97c290e9e05c74d6e936745b325a1585e0f5352bf46a595b65f7b24a57ad855
 - repo_url: mattpocock/skills
+  name: skills
   host: github.com
-  resolved_commit: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
-  resolved_ref: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
+  resolved_commit: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  resolved_ref: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  version: unknown
   virtual_path: skills/engineering/to-issues
   is_virtual: true
   package_type: claude_skill
@@ -444,13 +530,15 @@ dependencies:
   - .claude/skills/to-issues
   - .claude/skills/to-issues/SKILL.md
   deployed_file_hashes:
-    .agents/skills/to-issues/SKILL.md: sha256:f8a72a5bc88aa830ae62b323a52b08934da52851b010984c55829a644c7f6ba6
-    .claude/skills/to-issues/SKILL.md: sha256:f8a72a5bc88aa830ae62b323a52b08934da52851b010984c55829a644c7f6ba6
-  content_hash: sha256:4e2a11d35f018490d42a79234432f779d7131b9920373ef24cfbc68229bfef6c
+    .agents/skills/to-issues/SKILL.md: sha256:579013d5e370372c0bfd97f6f93edca8ef34d97e85bf43398fa8488aba223655
+    .claude/skills/to-issues/SKILL.md: sha256:579013d5e370372c0bfd97f6f93edca8ef34d97e85bf43398fa8488aba223655
+  content_hash: sha256:4406ded5e0fb356b9ac8be777270f62d3c5d206a0bc848aaadb19919702a1892
 - repo_url: mattpocock/skills
+  name: skills
   host: github.com
-  resolved_commit: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
-  resolved_ref: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
+  resolved_commit: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  resolved_ref: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  version: unknown
   virtual_path: skills/engineering/to-prd
   is_virtual: true
   package_type: claude_skill
@@ -464,9 +552,11 @@ dependencies:
     .claude/skills/to-prd/SKILL.md: sha256:db7e7188ac4fd47f4925ae6550e0233365b3b05be40f45235ab3a0a6b0165156
   content_hash: sha256:5a733e19d825f22e83de52e68b8840c9fd2fa7501282277a122c1aa28a922059
 - repo_url: mattpocock/skills
+  name: skills
   host: github.com
-  resolved_commit: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
-  resolved_ref: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
+  resolved_commit: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  resolved_ref: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  version: unknown
   virtual_path: skills/engineering/triage
   is_virtual: true
   package_type: claude_skill
@@ -488,9 +578,29 @@ dependencies:
     .claude/skills/triage/SKILL.md: sha256:d45827c299c021f77b0f146fefa3ee679b13f99e9a2ffdf48e8de2347adeefe1
   content_hash: sha256:b77ea99c2e6e97815b373cc476ad4cc1835d3e736867b764602147be71f6c131
 - repo_url: mattpocock/skills
+  name: skills
   host: github.com
-  resolved_commit: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
-  resolved_ref: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
+  resolved_commit: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  resolved_ref: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  version: unknown
+  virtual_path: skills/in-progress/wayfinder
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/wayfinder
+  - .agents/skills/wayfinder/SKILL.md
+  - .claude/skills/wayfinder
+  - .claude/skills/wayfinder/SKILL.md
+  deployed_file_hashes:
+    .agents/skills/wayfinder/SKILL.md: sha256:5fcfb0b51b07315b2a635ae2dbad72be2168507153b10582b915ed1a13ccdad7
+    .claude/skills/wayfinder/SKILL.md: sha256:5fcfb0b51b07315b2a635ae2dbad72be2168507153b10582b915ed1a13ccdad7
+  content_hash: sha256:c4718b3a19aef81696c449a0b950335fca13fb74b5afc6588d1ae0785a42d898
+- repo_url: mattpocock/skills
+  name: skills
+  host: github.com
+  resolved_commit: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  resolved_ref: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  version: unknown
   virtual_path: skills/productivity/grill-me
   is_virtual: true
   package_type: claude_skill
@@ -504,9 +614,11 @@ dependencies:
     .claude/skills/grill-me/SKILL.md: sha256:6189dfceb7304a6e5558f75d87e68fa3bc7fcf7ba120e44f21f8a61fe01eba54
   content_hash: sha256:f321507f77702a54af1db66549ec1685fc625390d06c57d7949cdcda8eb1b5c7
 - repo_url: mattpocock/skills
+  name: skills
   host: github.com
-  resolved_commit: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
-  resolved_ref: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
+  resolved_commit: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  resolved_ref: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  version: unknown
   virtual_path: skills/productivity/grilling
   is_virtual: true
   package_type: claude_skill
@@ -516,13 +628,15 @@ dependencies:
   - .claude/skills/grilling
   - .claude/skills/grilling/SKILL.md
   deployed_file_hashes:
-    .agents/skills/grilling/SKILL.md: sha256:fe00af3e1815f97c0a7644605479328a726b5cd95ba6ef56a4be2a92fae6c20f
-    .claude/skills/grilling/SKILL.md: sha256:fe00af3e1815f97c0a7644605479328a726b5cd95ba6ef56a4be2a92fae6c20f
-  content_hash: sha256:ef685a6fa0bbe73b05bbd8dc1ec97258191587f07c6aa7dbc9006675ceb8f90f
+    .agents/skills/grilling/SKILL.md: sha256:5a35925d03a391bcfa46940868b649b72dba89ec9c19525e785bbb6bd3a7f478
+    .claude/skills/grilling/SKILL.md: sha256:5a35925d03a391bcfa46940868b649b72dba89ec9c19525e785bbb6bd3a7f478
+  content_hash: sha256:1de9e777a60b184b29412fadacb7bbde8c14bb7037e5c4d9d086c941281d1742
 - repo_url: mattpocock/skills
+  name: skills
   host: github.com
-  resolved_commit: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
-  resolved_ref: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
+  resolved_commit: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  resolved_ref: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  version: unknown
   virtual_path: skills/productivity/handoff
   is_virtual: true
   package_type: claude_skill
@@ -536,9 +650,11 @@ dependencies:
     .claude/skills/handoff/SKILL.md: sha256:94bee8c16cbfcf9f1e15187f7e5d0d5a93c4adb7c512feceecaab80c8ff7c059
   content_hash: sha256:5d0f81e38abe6b984e1feaa731927de5291d040982106ac513cf54ec240e00ec
 - repo_url: mattpocock/skills
+  name: skills
   host: github.com
-  resolved_commit: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
-  resolved_ref: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
+  resolved_commit: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  resolved_ref: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  version: unknown
   virtual_path: skills/productivity/teach
   is_virtual: true
   package_type: claude_skill
@@ -568,9 +684,11 @@ dependencies:
     .claude/skills/teach/SKILL.md: sha256:6d2dbe5e03084cf26fef66b535127b36cd1bcbe9478e26b0626029cd51dc2259
   content_hash: sha256:9cd31ea42b40915ea5fd3949ed229b217d1dfad07dd93d9b0db771dcdd6a6c8a
 - repo_url: mattpocock/skills
+  name: skills
   host: github.com
-  resolved_commit: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
-  resolved_ref: 6eeb81b5fcfeeb5bd531dd47ab2f9f2bbea27461
+  resolved_commit: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  resolved_ref: 16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+  version: unknown
   virtual_path: skills/productivity/writing-great-skills
   is_virtual: true
   package_type: claude_skill
@@ -582,21 +700,24 @@ dependencies:
   - .claude/skills/writing-great-skills/GLOSSARY.md
   - .claude/skills/writing-great-skills/SKILL.md
   deployed_file_hashes:
-    .agents/skills/writing-great-skills/GLOSSARY.md: sha256:df0d042f2b69b8a952bd4b0e6904e2eb316f0203c1a5f09169da7f75a5575a61
-    .agents/skills/writing-great-skills/SKILL.md: sha256:7c6ba7ec25bb2c0e173c52cdc2da878aef0b083ec19a9c1799934e480c8833cc
-    .claude/skills/writing-great-skills/GLOSSARY.md: sha256:df0d042f2b69b8a952bd4b0e6904e2eb316f0203c1a5f09169da7f75a5575a61
-    .claude/skills/writing-great-skills/SKILL.md: sha256:7c6ba7ec25bb2c0e173c52cdc2da878aef0b083ec19a9c1799934e480c8833cc
-  content_hash: sha256:581f78b50b3d81b095de86b5c18a4d9fa932fbe414cc82bd26d627d4da518f07
+    .agents/skills/writing-great-skills/GLOSSARY.md: sha256:cccd684c73fb7a06f523497b0121765f92d2b33d6ef9c51602294849233451d6
+    .agents/skills/writing-great-skills/SKILL.md: sha256:4d6ccbc3760b1bd4107c495a79872286ea69494003f3b0a719fc95b147457061
+    .claude/skills/writing-great-skills/GLOSSARY.md: sha256:cccd684c73fb7a06f523497b0121765f92d2b33d6ef9c51602294849233451d6
+    .claude/skills/writing-great-skills/SKILL.md: sha256:4d6ccbc3760b1bd4107c495a79872286ea69494003f3b0a719fc95b147457061
+  content_hash: sha256:42fe94c64d7b9acda9ce7d6495a3476893a1b18615986528f55f7162a29789d4
 - repo_url: mizchi/skills
+  name: skills
   host: github.com
-  resolved_commit: 89c1b34018ba0d85a770c065ba22f83a8d004d34
-  resolved_ref: 89c1b34018ba0d85a770c065ba22f83a8d004d34
+  resolved_commit: 5aaf2d126a04a8b079fd5184eb1860f232afffd3
+  resolved_ref: 5aaf2d126a04a8b079fd5184eb1860f232afffd3
+  version: unknown
   virtual_path: devops/gh-fix-ci
   is_virtual: true
   package_type: claude_skill
   deployed_files:
   - .agents/skills/gh-fix-ci
   - .agents/skills/gh-fix-ci/LICENSE.txt
+  - .agents/skills/gh-fix-ci/README.md
   - .agents/skills/gh-fix-ci/SKILL.md
   - .agents/skills/gh-fix-ci/agents/openai.yaml
   - .agents/skills/gh-fix-ci/assets/github-small.svg
@@ -604,6 +725,7 @@ dependencies:
   - .agents/skills/gh-fix-ci/scripts/inspect_pr_checks.py
   - .claude/skills/gh-fix-ci
   - .claude/skills/gh-fix-ci/LICENSE.txt
+  - .claude/skills/gh-fix-ci/README.md
   - .claude/skills/gh-fix-ci/SKILL.md
   - .claude/skills/gh-fix-ci/agents/openai.yaml
   - .claude/skills/gh-fix-ci/assets/github-small.svg
@@ -611,74 +733,96 @@ dependencies:
   - .claude/skills/gh-fix-ci/scripts/inspect_pr_checks.py
   deployed_file_hashes:
     .agents/skills/gh-fix-ci/LICENSE.txt: sha256:4dd13869245e356246a5b770723247bbb80a8f07a181d1d3d873a1734297cdb9
+    .agents/skills/gh-fix-ci/README.md: sha256:dbb7860544858dfa03a9b7a3f2704c63754fde298f510b4897e641d804a8eebb
     .agents/skills/gh-fix-ci/SKILL.md: sha256:9bb7f0a67de15a4b69ad793e8169cae34ae5e0ac76a9403a483bafd418233ea4
     .agents/skills/gh-fix-ci/agents/openai.yaml: sha256:36f73b9450504983d1647c960689596f59bf9147c14b1b43162912ed7ada9af6
     .agents/skills/gh-fix-ci/assets/github-small.svg: sha256:ee05e92d373d4d84f4612af3c1090ef67698d421bbe30896a4ed5a00cb86a069
     .agents/skills/gh-fix-ci/assets/github.png: sha256:d55a9baa41798d8b5108e3058df3a5bda09914ea9fd73b49929cc38a8832424f
     .agents/skills/gh-fix-ci/scripts/inspect_pr_checks.py: sha256:9459e5b03f86785d184a83e5cd8d621b832e918ec04158a2962d867785812c6c
     .claude/skills/gh-fix-ci/LICENSE.txt: sha256:4dd13869245e356246a5b770723247bbb80a8f07a181d1d3d873a1734297cdb9
+    .claude/skills/gh-fix-ci/README.md: sha256:dbb7860544858dfa03a9b7a3f2704c63754fde298f510b4897e641d804a8eebb
     .claude/skills/gh-fix-ci/SKILL.md: sha256:9bb7f0a67de15a4b69ad793e8169cae34ae5e0ac76a9403a483bafd418233ea4
     .claude/skills/gh-fix-ci/agents/openai.yaml: sha256:36f73b9450504983d1647c960689596f59bf9147c14b1b43162912ed7ada9af6
     .claude/skills/gh-fix-ci/assets/github-small.svg: sha256:ee05e92d373d4d84f4612af3c1090ef67698d421bbe30896a4ed5a00cb86a069
     .claude/skills/gh-fix-ci/assets/github.png: sha256:d55a9baa41798d8b5108e3058df3a5bda09914ea9fd73b49929cc38a8832424f
     .claude/skills/gh-fix-ci/scripts/inspect_pr_checks.py: sha256:9459e5b03f86785d184a83e5cd8d621b832e918ec04158a2962d867785812c6c
-  content_hash: sha256:d47fef8f3302230bd4e4e3ca2a37fd144935a2d3274fcd28ffbe8327a7f89f96
+  content_hash: sha256:822c8d821d30cdd7f0b65a532fa6974ee98140c345bc2b69526ef9d82efeb766
 - repo_url: mizchi/skills
+  name: skills
   host: github.com
-  resolved_commit: 89c1b34018ba0d85a770c065ba22f83a8d004d34
-  resolved_ref: 89c1b34018ba0d85a770c065ba22f83a8d004d34
+  resolved_commit: 5aaf2d126a04a8b079fd5184eb1860f232afffd3
+  resolved_ref: 5aaf2d126a04a8b079fd5184eb1860f232afffd3
+  version: unknown
   virtual_path: devops/opentelemetry
   is_virtual: true
   package_type: claude_skill
   deployed_files:
   - .agents/skills/opentelemetry
+  - .agents/skills/opentelemetry/README.md
   - .agents/skills/opentelemetry/SKILL.md
   - .claude/skills/opentelemetry
+  - .claude/skills/opentelemetry/README.md
   - .claude/skills/opentelemetry/SKILL.md
   deployed_file_hashes:
+    .agents/skills/opentelemetry/README.md: sha256:327d4d40e9e23445430b16a6bb7ae180f0987a46614a3ef7780231190b2b0172
     .agents/skills/opentelemetry/SKILL.md: sha256:7fa0526c5ec16771846a25cea13cc0beb9ec812bc6d5b42b740fedf8283d8d23
+    .claude/skills/opentelemetry/README.md: sha256:327d4d40e9e23445430b16a6bb7ae180f0987a46614a3ef7780231190b2b0172
     .claude/skills/opentelemetry/SKILL.md: sha256:7fa0526c5ec16771846a25cea13cc0beb9ec812bc6d5b42b740fedf8283d8d23
-  content_hash: sha256:165ba88c692eb0f5c55ad77b833708ca0396a4a9f41a2b8dca75eae07f4872b1
+  content_hash: sha256:32af32b43fe7a277c1dd38d57cb2a7efcdb2009b9b052b7c427df61465b15533
 - repo_url: mizchi/skills
+  name: skills
   host: github.com
-  resolved_commit: 89c1b34018ba0d85a770c065ba22f83a8d004d34
-  resolved_ref: 89c1b34018ba0d85a770c065ba22f83a8d004d34
+  resolved_commit: 5aaf2d126a04a8b079fd5184eb1860f232afffd3
+  resolved_ref: 5aaf2d126a04a8b079fd5184eb1860f232afffd3
+  version: unknown
   virtual_path: meta/extract-glossary
   is_virtual: true
   package_type: claude_skill
   deployed_files:
   - .agents/skills/extract-glossary
+  - .agents/skills/extract-glossary/README.md
   - .agents/skills/extract-glossary/SKILL.md
   - .claude/skills/extract-glossary
+  - .claude/skills/extract-glossary/README.md
   - .claude/skills/extract-glossary/SKILL.md
   deployed_file_hashes:
+    .agents/skills/extract-glossary/README.md: sha256:3d1143b0665b3b59a3d9e8a60c331e89e43a2b9a1a775a80db2e5585fded98fd
     .agents/skills/extract-glossary/SKILL.md: sha256:4fc93b67c0ade44bc194b7522de29c7ede6608d8de96f3dbd435b5578e7e7a0a
+    .claude/skills/extract-glossary/README.md: sha256:3d1143b0665b3b59a3d9e8a60c331e89e43a2b9a1a775a80db2e5585fded98fd
     .claude/skills/extract-glossary/SKILL.md: sha256:4fc93b67c0ade44bc194b7522de29c7ede6608d8de96f3dbd435b5578e7e7a0a
-  content_hash: sha256:2d18ea237841e73ed43e50c20b642367a7a99a93dd248cea97872b20e14b6a68
+  content_hash: sha256:43e850db3f9bbbc05625b571569378e329ee9ca16623895188bacd934f5224dd
 - repo_url: mizchi/skills
+  name: skills
   host: github.com
-  resolved_commit: 89c1b34018ba0d85a770c065ba22f83a8d004d34
-  resolved_ref: 89c1b34018ba0d85a770c065ba22f83a8d004d34
+  resolved_commit: 5aaf2d126a04a8b079fd5184eb1860f232afffd3
+  resolved_ref: 5aaf2d126a04a8b079fd5184eb1860f232afffd3
+  version: unknown
   virtual_path: meta/retrospective-codify
   is_virtual: true
   package_type: claude_skill
   deployed_files:
   - .agents/skills/retrospective-codify
+  - .agents/skills/retrospective-codify/README.md
   - .agents/skills/retrospective-codify/SKILL-ja.md
   - .agents/skills/retrospective-codify/SKILL.md
   - .claude/skills/retrospective-codify
+  - .claude/skills/retrospective-codify/README.md
   - .claude/skills/retrospective-codify/SKILL-ja.md
   - .claude/skills/retrospective-codify/SKILL.md
   deployed_file_hashes:
+    .agents/skills/retrospective-codify/README.md: sha256:bdef43f257b112d94d047c467653650dd03fdee556fc8c217a2312e8bc758357
     .agents/skills/retrospective-codify/SKILL-ja.md: sha256:c55610bfe5ac589d43a6f2199d3b9226a46fef41c0e3f6d02958f69da4c240e9
     .agents/skills/retrospective-codify/SKILL.md: sha256:70bd226087028461f1e208ac5497593cdf6a0dc1e074d80f970addc1e36e5afa
+    .claude/skills/retrospective-codify/README.md: sha256:bdef43f257b112d94d047c467653650dd03fdee556fc8c217a2312e8bc758357
     .claude/skills/retrospective-codify/SKILL-ja.md: sha256:c55610bfe5ac589d43a6f2199d3b9226a46fef41c0e3f6d02958f69da4c240e9
     .claude/skills/retrospective-codify/SKILL.md: sha256:70bd226087028461f1e208ac5497593cdf6a0dc1e074d80f970addc1e36e5afa
-  content_hash: sha256:077f9ae3bbf4289fe518e3ad928a6e802d402539ff2e644a7967e3cfbcd443bf
+  content_hash: sha256:3ff8c5c61545f778b8731f8d08eccb2bb38c15bc6fa618db509113f48e0ef670
 - repo_url: ryo-morimoto/skills
+  name: skills
   host: github.com
   resolved_commit: 45da7bf1a3bfc2560c1cf0f70e1d94c402c5820a
   resolved_ref: 45da7bf1a3bfc2560c1cf0f70e1d94c402c5820a
+  version: unknown
   virtual_path: orient
   is_virtual: true
   package_type: claude_skill
@@ -692,9 +836,11 @@ dependencies:
     .claude/skills/orient/SKILL.md: sha256:a4c42b8f10b2d71553bdbf4b9ffb292f8ff38cb7a0aa3a9d4f6c0bd0d98d7637
   content_hash: sha256:4e2dc7e38593392abff6fe0844dac47242b095a616a4b73876758433601d877f
 - repo_url: upstash/context7
+  name: context7
   host: github.com
-  resolved_commit: 7e956e594584db4b1b66a3a4a07781e92b4d7e45
-  resolved_ref: 7e956e594584db4b1b66a3a4a07781e92b4d7e45
+  resolved_commit: 503abf87743abf6bb2fa6de3228ce81dc43c9953
+  resolved_ref: 503abf87743abf6bb2fa6de3228ce81dc43c9953
+  version: unknown
   virtual_path: skills/context7-cli
   is_virtual: true
   package_type: claude_skill
@@ -711,14 +857,14 @@ dependencies:
   - .claude/skills/context7-cli/references/skills.md
   deployed_file_hashes:
     .agents/skills/context7-cli/SKILL.md: sha256:d7b70ba126d9f55d7dc014f95a8264c6c402f351574317909b8c6d14b85c829d
-    .agents/skills/context7-cli/references/docs.md: sha256:ef9b201d183b42f161fca0422603119e10c8ce5c7dd6e53914908c3a9310c96c
+    .agents/skills/context7-cli/references/docs.md: sha256:d2e40eb2a9fa12171524a5d6798f37c0d6879f87b6192226b00b77fb50f61781
     .agents/skills/context7-cli/references/setup.md: sha256:79530eb571b56f9846fd714d3b5e2759f2102042e590347501e43bf22a56a6e0
     .agents/skills/context7-cli/references/skills.md: sha256:a31c9c56044424e07e764de7522fb542ce58b327259b582a1ba18223d13b26b5
     .claude/skills/context7-cli/SKILL.md: sha256:d7b70ba126d9f55d7dc014f95a8264c6c402f351574317909b8c6d14b85c829d
-    .claude/skills/context7-cli/references/docs.md: sha256:ef9b201d183b42f161fca0422603119e10c8ce5c7dd6e53914908c3a9310c96c
+    .claude/skills/context7-cli/references/docs.md: sha256:d2e40eb2a9fa12171524a5d6798f37c0d6879f87b6192226b00b77fb50f61781
     .claude/skills/context7-cli/references/setup.md: sha256:79530eb571b56f9846fd714d3b5e2759f2102042e590347501e43bf22a56a6e0
     .claude/skills/context7-cli/references/skills.md: sha256:a31c9c56044424e07e764de7522fb542ce58b327259b582a1ba18223d13b26b5
-  content_hash: sha256:3be2d8debb56f5c3a339aeb2f4d2247d274cab132b838f29f28124b77ef1cc0b
+  content_hash: sha256:775d76839d2304da676d7e2a2c46997b803482c49de322c8b999d512721183e7
 mcp_servers:
 - context7
 - exa
