@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="ja">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Kodyは何の土台か</title>
+		<link rel="stylesheet" href="../assets/course.css" />
+	</head>
+	<body>
+		<main>
+			<header>
+				<div class="eyebrow">Lesson 0001</div>
+				<h1>Kodyは何の土台か</h1>
+				<p class="lede">
+					このレッスンのゴールは、Kodyを「Hermesの代替」と雑に見るのをやめて、
+					どの層をKodyに任せ、どの層を外部agentに任せるかを判断できるようにすることです。
+				</p>
+			</header>
+
+			<section>
+				<h2>今日の勝ち筋</h2>
+				<p>
+					まず観察から始めます。Kodyの一次資料は、Kodyを「Cloudflare WorkersとMCP上のpersonal
+					assistant platform」と説明し、public MCP surfaceを小さく保って、`search` と Code Mode
+					`execute` の背後にcapability graphを置く設計だと説明しています。
+					参照:
+					<a href="https://github.com/kentcdodds/kody#readme">Kody README</a>,
+					<a href="https://github.com/kentcdodds/kody/blob/main/docs/contributing/project-intent.md">project intent</a>。
+				</p>
+				<p>
+					ここからの推論はこうです。公開されているKodyの中心設計は、AI hostが使う「道具、記憶、鍵、保存済みコード、job、UI」を
+					MCP経由で提供することです。一方、repoをcloneして長時間推論し、実装し、PRを作るcoding agent
+					loopは、Kodyの中心的なprimitiveとしてはまだ現れていません。このため現時点では、Kodyを
+					<strong>agent実行基盤そのもの</strong> ではなく、
+					<strong>agent実行基盤が使うMCP-nativeな自動化基盤</strong> と見るのが安全です。
+				</p>
+			</section>
+
+			<section>
+				<h2>3層で見る</h2>
+				<div class="diagram">
+					<div class="diagram-row">
+						<div class="node">
+							<strong>AI host</strong>
+							ChatGPT、Claude、Cursorなど。ユーザーと会話し、MCP clientを通じてKodyを呼ぶ。
+						</div>
+						<div class="arrow">→</div>
+						<div class="node">
+							<strong>Kody</strong>
+							`search`、`execute`、packages、secrets、memory、jobs、repo sessionsを提供する。
+						</div>
+						<div class="arrow">→</div>
+						<div class="node">
+							<strong>External systems</strong>
+							GitHub、Cursor Cloud Agents、Cloudflare、メール、任意のAPI。
+						</div>
+					</div>
+				</div>
+				<p>
+					MCP公式資料は、MCPをAI applicationsと外部systemsをつなぐ標準と説明しています。
+					Kodyのproject intentは、この標準の上で、hostごとに巨大なtool catalogを持たず、
+					少数の入口から多くのcapabilityへ到達させる方針だと読めます。
+					参照:
+					<a href="https://modelcontextprotocol.io/docs/getting-started/intro">MCP introduction</a>,
+					<a href="https://modelcontextprotocol.io/specification/2025-06-18/server/tools">MCP tools spec</a>。
+				</p>
+			</section>
+
+			<section>
+				<h2>Hermesとの作業仮説</h2>
+				<p>
+					注意: この比較は、まだHermes側の一次資料で検証していない作業仮説です。
+					ここで確かに言えるのは、Kody側の一次資料と実装から見える役割だけです。
+				</p>
+				<div class="grid">
+					<div class="panel">
+						<h3>Hermesのtooling/control plane</h3>
+						<p>Kodyが近い可能性がある層。Kodyにはsecret、外部API呼び出し、記憶、保存済みworkflow、job、UI、repo補助がある。</p>
+					</div>
+					<div class="panel">
+						<h3>Hermesのagent execution</h3>
+						<p>Kodyの主要primitiveとしては前面に出ていない層。planner、executor、reviewer、長期agent loop、coding runtimeは別基盤に任せる候補。</p>
+					</div>
+					<div class="panel">
+						<h3>実用上の見方</h3>
+						<p>現時点の運用仮説では、Kodyを「作業者」より「作業者が使う作業場」と見る。作業者候補はCursor/Codexなど。</p>
+					</div>
+				</div>
+			</section>
+
+			<section>
+				<h2>`start_coding_agent` はどこに置くか</h2>
+				<p>
+					最初の実験先としては <strong>saved package</strong> が有力です。Kody docsは「agent turnsはbuilt-in
+					runtime primitiveではなくpackage-owned behavior」と説明しています。そこから、Cursor Cloud Agentを起動する
+					workflowも、まずpackageとして保存し、`execute`やpackage invocationから呼ぶ設計を試す価値があります。
+					参照:
+					<a href="https://github.com/kentcdodds/kody/blob/main/docs/use/execute.md">execute and workflows</a>。
+				</p>
+				<div class="callout warning">
+					GitHubやCursor Cloud AgentsへのPOST/PATCH/DELETE、またはquota-consuming agent operationは、
+					実行前にmethod、path、bodyを確認するのがKodyの安全方針です。
+					参照:
+					<a href="https://github.com/kentcdodds/kody/blob/main/docs/use/mutating-actions.md">mutating actions</a>。
+				</div>
+			</section>
+
+			<section>
+				<h2>判断練習</h2>
+				<p>現在の証拠だけで判断するなら、次のworkflowはKodyのどこに置くのが妥当でしょう。</p>
+				<div class="quiz" data-answer="package">
+					<p><strong>Workflow:</strong> GitHub issueとCI logを読み、Cursor Cloud Agentを起動し、run idを保存する。</p>
+					<button type="button" data-choice="core">Core capability</button>
+					<button type="button" data-choice="package">Saved package</button>
+					<button type="button" data-choice="agent">External agent only</button>
+					<div class="answer small" hidden></div>
+				</div>
+			</section>
+
+			<section>
+				<h2>覚える圧縮形</h2>
+				<div class="callout">
+					Kodyは、Hermesのagent実行基盤を抜いたものというより、
+					<strong>agent実行基盤が使うMCP-nativeな道具箱と永続化層</strong> と見る、という作業仮説から始める。
+				</div>
+				<p>
+					次に見る参照:
+					<a href="../reference/kody-concept-map.html">Kody Concept Map</a>。
+				</p>
+			</section>
+
+			<footer>
+				<p>
+					Primary source:
+					<a href="https://github.com/kentcdodds/kody/blob/main/docs/contributing/project-intent.md">Kody project intent</a>。
+					不明点はこのagentに質問してください。次回は、実際にローカル起動する前の「secret / host approval / mutation確認」の地図を作れます。
+				</p>
+			</footer>
+		</main>
+
+		<script>
+			for (const quiz of document.querySelectorAll(".quiz")) {
+				const answer = quiz.dataset.answer;
+				const result = quiz.querySelector(".answer");
+				for (const button of quiz.querySelectorAll("button")) {
+					button.addEventListener("click", () => {
+						const correct = button.dataset.choice === answer;
+						result.hidden = false;
+						result.dataset.state = correct ? "correct" : "wrong";
+						result.textContent = correct
+							? "推奨。現時点の証拠ではsaved packageがMVP候補です。外部API連携とrun追跡をpackage-owned storageで試せます。"
+							: "別案もありえます。ただしcore capabilityは標準primitive化してから検討しやすく、external agent onlyだとKody側のsecretと履歴管理を活かしにくいです。";
+					});
+				}
+			}
+		</script>
+	</body>
+</html>

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ja">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Kody Concept Map</title>
+		<link rel="stylesheet" href="../assets/course.css" />
+	</head>
+	<body>
+		<main>
+			<header>
+				<div class="eyebrow">Reference</div>
+				<h1>Kody Concept Map</h1>
+				<p class="lede">
+					Kodyを動かす前に使う圧縮版の概念地図。Hermes比較、実装判断、`start_coding_agent`
+					の置き場所を決めるための参照用。
+				</p>
+			</header>
+
+			<section>
+				<h2>One sentence</h2>
+				<div class="callout">
+					現時点の証拠では、Kodyはagent本体というより、MCP経由で使える個人用の道具・記憶・secret・package・job実行基盤として捉えるのが安全。
+				</div>
+			</section>
+
+			<section>
+				<h2>Core split</h2>
+				<div class="grid">
+					<div class="panel">
+						<h3>Kodyが持つ</h3>
+						<p>MCP endpoint、`search`、`execute`、capability registry、saved packages、secrets、values、memory、jobs、workflows、services、repo sessions。</p>
+					</div>
+					<div class="panel">
+						<h3>中心には見えない</h3>
+						<p>LLM agent loop、planner/executor/reviewer orchestration、coding agent runtime、モデル選択、agent step履歴。少なくともKodyの主要primitiveとしては前面に出ていない。</p>
+					</div>
+					<div class="panel">
+						<h3>外部候補</h3>
+						<p>Cursor Cloud Agents、Codex cloud agent、GitHub Actions、その他の実作業agentは外部に任せる候補。Kodyは文脈と鍵を渡すcontrol planeになれる可能性がある。</p>
+					</div>
+				</div>
+			</section>
+
+			<section>
+				<h2>Decision rule</h2>
+				<div class="grid">
+					<div class="panel">
+						<h3>Core capability</h3>
+						<p>Kody全体の標準primitiveにしたい、全ユーザーに共通、強い永続化/監査/検索統合が必要。</p>
+					</div>
+					<div class="panel">
+						<h3>Saved package</h3>
+						<p>特定workflow、外部API連携、試行錯誤、ユーザー単位のsecret/storageで足りそうな場合。MVP候補。</p>
+					</div>
+					<div class="panel">
+						<h3>External agent</h3>
+						<p>repoをcloneして実装する、長い推論loopを回す、PRを作る、CIを直す。Kody外の実行基盤に任せる候補。</p>
+					</div>
+				</div>
+			</section>
+
+			<section>
+				<h2>`start_coding_agent` placement</h2>
+				<p>
+					最初の実験先は saved package が有力。`cursor_api_key` と GitHub token は saved secret に置き、package-owned storage
+					に `runId`、`agentId`、repo、task digest、statusを保存する。複数workflowで繰り返し使う標準機能になったら
+					core capability化を検討する。
+				</p>
+			</section>
+
+			<footer>
+				<p>
+					Related lesson:
+					<a href="../lessons/0001-kody-concept-model.html">Kodyは何の土台か</a>
+				</p>
+			</footer>
+		</main>
+	</body>
+</html>

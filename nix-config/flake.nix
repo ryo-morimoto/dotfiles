@@ -83,7 +83,14 @@
       ...
     }:
     let
-      communityOverlay = final: _prev: {
+      communityOverlay = final: prev: {
+        codex = prev.codex.overrideAttrs (old: {
+          postInstall = (old.postInstall or "") + ''
+            substituteInPlace "$out/bin/codex" \
+              --replace-fail "exec \"$out/bin/codex-raw\"  \"\$@\"" \
+                             "exec -a codex \"$out/bin/codex-raw\" \"\$@\""
+          '';
+        });
         zen-browser = zen-browser.packages.${final.stdenv.hostPlatform.system}.default;
         seiren-mcp = seiren.packages.${final.stdenv.hostPlatform.system}.default;
         soulforge = soulforge.packages.${final.stdenv.hostPlatform.system}.default;
