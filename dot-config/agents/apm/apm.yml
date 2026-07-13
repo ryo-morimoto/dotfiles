@@ -10,29 +10,29 @@ dependencies:
     - /home/ryo-morimoto/ghq/github.com/ryo-morimoto/dotfiles/skills/fp-typescript
     - /home/ryo-morimoto/ghq/github.com/ryo-morimoto/dotfiles/skills/repo-doctor
     - kawasima/evolutionary-naming/skills/evolutionary-naming#dcd3e0133114ee14f7a82220ba530997d6c44da9
-    # mattpocock/skills (v1.0+)
-    - mattpocock/skills/skills/engineering/ask-matt#16a2a5cd00b4416f673f4ff38c7971a04dd708e7
-    - mattpocock/skills/skills/engineering/code-review#16a2a5cd00b4416f673f4ff38c7971a04dd708e7
-    - mattpocock/skills/skills/engineering/diagnosing-bugs#16a2a5cd00b4416f673f4ff38c7971a04dd708e7
-    - mattpocock/skills/skills/engineering/grill-with-docs#16a2a5cd00b4416f673f4ff38c7971a04dd708e7
-    - mattpocock/skills/skills/engineering/improve-codebase-architecture#16a2a5cd00b4416f673f4ff38c7971a04dd708e7
-    - mattpocock/skills/skills/engineering/prototype#16a2a5cd00b4416f673f4ff38c7971a04dd708e7
-    - mattpocock/skills/skills/engineering/research#16a2a5cd00b4416f673f4ff38c7971a04dd708e7
-    - mattpocock/skills/skills/engineering/setup-matt-pocock-skills#16a2a5cd00b4416f673f4ff38c7971a04dd708e7
-    - mattpocock/skills/skills/engineering/tdd#16a2a5cd00b4416f673f4ff38c7971a04dd708e7
-    - mattpocock/skills/skills/engineering/to-issues#16a2a5cd00b4416f673f4ff38c7971a04dd708e7
-    - mattpocock/skills/skills/engineering/to-prd#16a2a5cd00b4416f673f4ff38c7971a04dd708e7
-    - mattpocock/skills/skills/engineering/triage#16a2a5cd00b4416f673f4ff38c7971a04dd708e7
-    - mattpocock/skills/skills/engineering/codebase-design#16a2a5cd00b4416f673f4ff38c7971a04dd708e7
-    - mattpocock/skills/skills/engineering/domain-modeling#16a2a5cd00b4416f673f4ff38c7971a04dd708e7
-    - mattpocock/skills/skills/engineering/implement#16a2a5cd00b4416f673f4ff38c7971a04dd708e7
-    - mattpocock/skills/skills/engineering/resolving-merge-conflicts#16a2a5cd00b4416f673f4ff38c7971a04dd708e7
-    - mattpocock/skills/skills/productivity/grill-me#16a2a5cd00b4416f673f4ff38c7971a04dd708e7
-    - mattpocock/skills/skills/productivity/grilling#16a2a5cd00b4416f673f4ff38c7971a04dd708e7
-    - mattpocock/skills/skills/productivity/handoff#16a2a5cd00b4416f673f4ff38c7971a04dd708e7
-    - mattpocock/skills/skills/productivity/writing-great-skills#16a2a5cd00b4416f673f4ff38c7971a04dd708e7
-    - mattpocock/skills/skills/productivity/teach#16a2a5cd00b4416f673f4ff38c7971a04dd708e7
-    - mattpocock/skills/skills/in-progress/wayfinder#16a2a5cd00b4416f673f4ff38c7971a04dd708e7
+    # mattpocock/skills (engineering + productivity, pinned to main 2026-07-10)
+    - mattpocock/skills/skills/engineering/ask-matt#391a2701dd948f94f56a39f7533f8eea9a859c87
+    - mattpocock/skills/skills/engineering/code-review#391a2701dd948f94f56a39f7533f8eea9a859c87
+    - mattpocock/skills/skills/engineering/codebase-design#391a2701dd948f94f56a39f7533f8eea9a859c87
+    - mattpocock/skills/skills/engineering/diagnosing-bugs#391a2701dd948f94f56a39f7533f8eea9a859c87
+    - mattpocock/skills/skills/engineering/domain-modeling#391a2701dd948f94f56a39f7533f8eea9a859c87
+    - mattpocock/skills/skills/engineering/grill-with-docs#391a2701dd948f94f56a39f7533f8eea9a859c87
+    - mattpocock/skills/skills/engineering/implement#391a2701dd948f94f56a39f7533f8eea9a859c87
+    - mattpocock/skills/skills/engineering/improve-codebase-architecture#391a2701dd948f94f56a39f7533f8eea9a859c87
+    - mattpocock/skills/skills/engineering/prototype#391a2701dd948f94f56a39f7533f8eea9a859c87
+    - mattpocock/skills/skills/engineering/research#391a2701dd948f94f56a39f7533f8eea9a859c87
+    - mattpocock/skills/skills/engineering/resolving-merge-conflicts#391a2701dd948f94f56a39f7533f8eea9a859c87
+    - mattpocock/skills/skills/engineering/setup-matt-pocock-skills#391a2701dd948f94f56a39f7533f8eea9a859c87
+    - mattpocock/skills/skills/engineering/tdd#391a2701dd948f94f56a39f7533f8eea9a859c87
+    - mattpocock/skills/skills/engineering/to-spec#391a2701dd948f94f56a39f7533f8eea9a859c87
+    - mattpocock/skills/skills/engineering/to-tickets#391a2701dd948f94f56a39f7533f8eea9a859c87
+    - mattpocock/skills/skills/engineering/triage#391a2701dd948f94f56a39f7533f8eea9a859c87
+    - mattpocock/skills/skills/engineering/wayfinder#391a2701dd948f94f56a39f7533f8eea9a859c87
+    - mattpocock/skills/skills/productivity/grill-me#391a2701dd948f94f56a39f7533f8eea9a859c87
+    - mattpocock/skills/skills/productivity/grilling#391a2701dd948f94f56a39f7533f8eea9a859c87
+    - mattpocock/skills/skills/productivity/handoff#391a2701dd948f94f56a39f7533f8eea9a859c87
+    - mattpocock/skills/skills/productivity/teach#391a2701dd948f94f56a39f7533f8eea9a859c87
+    - mattpocock/skills/skills/productivity/writing-great-skills#391a2701dd948f94f56a39f7533f8eea9a859c87
     # mizchi/skills (selected)
     - mizchi/skills/meta/extract-glossary#5aaf2d126a04a8b079fd5184eb1860f232afffd3
     - mizchi/skills/meta/retrospective-codify#5aaf2d126a04a8b079fd5184eb1860f232afffd3
