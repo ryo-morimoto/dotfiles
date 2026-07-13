@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  dms,
   ...
 }:
 
@@ -635,7 +634,6 @@ in
     enableDynamicTheming = true;
     enableClipboardPaste = true;
     enableSystemMonitoring = true;
-    quickshell.package = dms.inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default;
     systemd.enable = true;
     niri = {
       enableKeybinds = true;

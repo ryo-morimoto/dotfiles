@@ -129,10 +129,7 @@
                 ];
               };
               extraSpecialArgs = {
-                inherit
-                  dms
-                  voxtype
-                  ;
+                inherit voxtype;
                 inherit inputs;
               };
             };
