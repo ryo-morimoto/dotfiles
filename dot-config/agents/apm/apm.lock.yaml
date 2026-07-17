@@ -1,5 +1,5 @@
 lockfile_version: '1'
-generated_at: '2026-07-17T17:49:02.556903+00:00'
+generated_at: '2026-07-17T18:40:56.416422+00:00'
 apm_version: 0.25.0
 dependencies:
 - repo_url: _local/fp-typescript
@@ -664,6 +664,28 @@ dependencies:
     .claude/skills/wayfinder/agents/openai.yaml: sha256:88bc81a11a6d52ac67aeaa76b8b619e387020d47c5133a4dd4927fd15c4ad073
   content_hash: sha256:d4e1b0fa933e7377d97193e52626b880a8c1b441894fbec03f3ff0cb939e70c7
 - repo_url: mattpocock/skills
+  name: batch-grill-me
+  host: github.com
+  resolved_commit: 9603c1cc8118d08bc1b3bf34cf714f62178dea3b
+  resolved_ref: 9603c1cc8118d08bc1b3bf34cf714f62178dea3b
+  version: 1.0.0
+  virtual_path: skills/in-progress/batch-grill-me
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/batch-grill-me
+  - .agents/skills/batch-grill-me/SKILL.md
+  - .agents/skills/batch-grill-me/agents/openai.yaml
+  - .claude/skills/batch-grill-me
+  - .claude/skills/batch-grill-me/SKILL.md
+  - .claude/skills/batch-grill-me/agents/openai.yaml
+  deployed_file_hashes:
+    .agents/skills/batch-grill-me/SKILL.md: sha256:7ca3ecc5c0214c5084475b453831d4cab81ddadf80180a10635f5d27c3ae3ca2
+    .agents/skills/batch-grill-me/agents/openai.yaml: sha256:9cc96b6036200927aa97485bfcc42408883c32dd67a96e4ad9087159c78014d7
+    .claude/skills/batch-grill-me/SKILL.md: sha256:7ca3ecc5c0214c5084475b453831d4cab81ddadf80180a10635f5d27c3ae3ca2
+    .claude/skills/batch-grill-me/agents/openai.yaml: sha256:9cc96b6036200927aa97485bfcc42408883c32dd67a96e4ad9087159c78014d7
+  content_hash: sha256:6d6015cccf045d5f38c6b50c41c134f25ff4ed00edd94a71825ebe710a3440e8
+- repo_url: mattpocock/skills
   name: skills
   host: github.com
   resolved_commit: 9603c1cc8118d08bc1b3bf34cf714f62178dea3b
@@ -1008,6 +1030,33 @@ deployments:
   - ast-grep/agent-skill/ast-grep
   active_owner: ast-grep/agent-skill/ast-grep
   content_hash: sha256:9f6d2ba2f2dbde059f61f426c262abe943f548984496962c43c7cc6e44813ad6
+- kind: project-relative
+  target: agents
+  value: .agents/skills/batch-grill-me
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills/skills/in-progress/batch-grill-me
+  active_owner: mattpocock/skills/skills/in-progress/batch-grill-me
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/batch-grill-me/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills/skills/in-progress/batch-grill-me
+  active_owner: mattpocock/skills/skills/in-progress/batch-grill-me
+  content_hash: sha256:7ca3ecc5c0214c5084475b453831d4cab81ddadf80180a10635f5d27c3ae3ca2
+- kind: project-relative
+  target: agents
+  value: .agents/skills/batch-grill-me/agents/openai.yaml
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills/skills/in-progress/batch-grill-me
+  active_owner: mattpocock/skills/skills/in-progress/batch-grill-me
+  content_hash: sha256:9cc96b6036200927aa97485bfcc42408883c32dd67a96e4ad9087159c78014d7
 - kind: project-relative
   target: agents
   value: .agents/skills/code-review
@@ -2448,6 +2497,33 @@ deployments:
   - ast-grep/agent-skill/ast-grep
   active_owner: ast-grep/agent-skill/ast-grep
   content_hash: sha256:9f6d2ba2f2dbde059f61f426c262abe943f548984496962c43c7cc6e44813ad6
+- kind: project-relative
+  target: claude
+  value: .claude/skills/batch-grill-me
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills/skills/in-progress/batch-grill-me
+  active_owner: mattpocock/skills/skills/in-progress/batch-grill-me
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/batch-grill-me/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills/skills/in-progress/batch-grill-me
+  active_owner: mattpocock/skills/skills/in-progress/batch-grill-me
+  content_hash: sha256:7ca3ecc5c0214c5084475b453831d4cab81ddadf80180a10635f5d27c3ae3ca2
+- kind: project-relative
+  target: claude
+  value: .claude/skills/batch-grill-me/agents/openai.yaml
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills/skills/in-progress/batch-grill-me
+  active_owner: mattpocock/skills/skills/in-progress/batch-grill-me
+  content_hash: sha256:9cc96b6036200927aa97485bfcc42408883c32dd67a96e4ad9087159c78014d7
 - kind: project-relative
   target: claude
   value: .claude/skills/code-review
