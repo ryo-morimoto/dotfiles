@@ -20,9 +20,10 @@ SearXNG MCP is declared in `dot-config/agents/apm/apm.yml` for APM-managed
 harnesses. `dot-config/agents/mcp/mcp.json` is the equivalent shared JSON form
 for Pi's `pi-mcp-adapter` or any client that reads `mcpServers`.
 
-APM lockfiles, package cache, deployed skills, generated agents, and MCP runtime
-outputs remain tool-owned generated state. Keep pinned source dependencies here;
-let `apm install --global` regenerate the live outputs.
+Keep `dot-config/agents/apm/apm.yml` and its adjacent `apm.lock.yaml` together as
+the tracked reproducibility inputs. The live `~/.apm/apm.lock.yaml`, package
+cache, deployed skills, generated agents, and MCP runtime outputs remain
+tool-owned generated state; let `apm install --global` regenerate them.
 
 Nix may still enable stable agent tool packages, such as Codex and Claude Code.
 Tool behavior, shared prompts, and reviewed examples belong here.
