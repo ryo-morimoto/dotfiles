@@ -1,5 +1,5 @@
 lockfile_version: '1'
-generated_at: '2026-07-17T17:47:59.464741+00:00'
+generated_at: '2026-07-17T17:49:02.556903+00:00'
 apm_version: 0.25.0
 dependencies:
 - repo_url: _local/fp-typescript
@@ -663,16 +663,6 @@ dependencies:
     .claude/skills/wayfinder/SKILL.md: sha256:257e40665b28ae959ffdcb97d7a72b074360f4a3d201bd84786505308546e434
     .claude/skills/wayfinder/agents/openai.yaml: sha256:88bc81a11a6d52ac67aeaa76b8b619e387020d47c5133a4dd4927fd15c4ad073
   content_hash: sha256:d4e1b0fa933e7377d97193e52626b880a8c1b441894fbec03f3ff0cb939e70c7
-- repo_url: mattpocock/skills
-  name: batch-grill-me
-  host: github.com
-  resolved_commit: 9603c1cc8118d08bc1b3bf34cf714f62178dea3b
-  resolved_ref: 9603c1cc8118d08bc1b3bf34cf714f62178dea3b
-  version: 1.0.0
-  virtual_path: skills/in-progress/batch-grill-me
-  is_virtual: true
-  package_type: claude_skill
-  content_hash: sha256:6d6015cccf045d5f38c6b50c41c134f25ff4ed00edd94a71825ebe710a3440e8
 - repo_url: mattpocock/skills
   name: skills
   host: github.com
