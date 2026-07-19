@@ -9,6 +9,7 @@ dependencies:
     - ryo-morimoto/skills/skills/clarify-requirements-and-design#e7670dbcd46b4aa0b3a7fd23d7d06428a65d82e5
     - ryo-morimoto/skills/skills/distill-decision-signal#8cf718b4af614857cc704aad3e71700ffac257fd
     - ryo-morimoto/skills/skills/orient#e7670dbcd46b4aa0b3a7fd23d7d06428a65d82e5
+    - ryo-morimoto/skills/skills/report-feedback-on-ryo-skills#1b26b07627d475fddecfea57984bf891f7026cfe
     - /home/ryo-morimoto/ghq/github.com/ryo-morimoto/dotfiles/skills/fp-typescript
     - /home/ryo-morimoto/ghq/github.com/ryo-morimoto/dotfiles/skills/repo-doctor
     - kawasima/evolutionary-naming/skills/evolutionary-naming#dcd3e0133114ee14f7a82220ba530997d6c44da9

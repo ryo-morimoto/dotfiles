@@ -1,5 +1,5 @@
 lockfile_version: '1'
-generated_at: '2026-07-19T15:30:10.689041+00:00'
+generated_at: '2026-07-19T16:09:31.534195+00:00'
 apm_version: 0.25.0
 dependencies:
 - repo_url: _local/fp-typescript
@@ -664,11 +664,11 @@ dependencies:
     .claude/skills/wayfinder/agents/openai.yaml: sha256:88bc81a11a6d52ac67aeaa76b8b619e387020d47c5133a4dd4927fd15c4ad073
   content_hash: sha256:d4e1b0fa933e7377d97193e52626b880a8c1b441894fbec03f3ff0cb939e70c7
 - repo_url: mattpocock/skills
-  name: batch-grill-me
+  name: skills
   host: github.com
   resolved_commit: 9603c1cc8118d08bc1b3bf34cf714f62178dea3b
   resolved_ref: 9603c1cc8118d08bc1b3bf34cf714f62178dea3b
-  version: 1.0.0
+  version: unknown
   virtual_path: skills/in-progress/batch-grill-me
   is_virtual: true
   package_type: claude_skill
@@ -957,6 +957,16 @@ dependencies:
   is_virtual: true
   package_type: claude_skill
   content_hash: sha256:4e2dc7e38593392abff6fe0844dac47242b095a616a4b73876758433601d877f
+- repo_url: ryo-morimoto/skills
+  name: skills
+  host: github.com
+  resolved_commit: 1b26b07627d475fddecfea57984bf891f7026cfe
+  resolved_ref: 1b26b07627d475fddecfea57984bf891f7026cfe
+  version: unknown
+  virtual_path: skills/report-feedback-on-ryo-skills
+  is_virtual: true
+  package_type: claude_skill
+  content_hash: sha256:4eb6284a23906df916264bd59c6728bb950a6382b24240eb847781ee1954475a
 - repo_url: upstash/context7
   name: context7
   host: github.com
