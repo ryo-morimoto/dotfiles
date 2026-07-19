@@ -7,6 +7,7 @@ herdr = "latest"
 portless = "latest"
 "pipx:apm-cli" = "0.25.0"
 "npm:agent-browser" = "latest"
+"npm:@xai-official/grok" = "0.2.103"
 "npm:@tobilu/qmd" = { version = "2.5.3", npm_args = "--ignore-scripts=false" }
 
 [tools."github:justrach/codedb"]
