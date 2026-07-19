@@ -16,10 +16,6 @@ Global instruction and APM source config files are managed by Home Manager symli
 - `~/.apm/config.json` -> `dot-config/agents/apm/config.json`
 - `~/.apm/marketplaces.json` -> `dot-config/agents/apm/marketplaces.json`
 
-SearXNG MCP is declared in `dot-config/agents/apm/apm.yml` for APM-managed
-harnesses. `dot-config/agents/mcp/mcp.json` is the equivalent shared JSON form
-for Pi's `pi-mcp-adapter` or any client that reads `mcpServers`.
-
 Keep `dot-config/agents/apm/apm.yml` and its adjacent `apm.lock.yaml` together as
 the tracked reproducibility inputs. The live `~/.apm/apm.lock.yaml`, package
 cache, deployed skills, generated agents, and MCP runtime outputs remain

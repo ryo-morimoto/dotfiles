@@ -3891,7 +3891,6 @@ mcp_servers:
 - exa
 - linear
 - penpot
-- searxng
 mcp_configs:
   context7:
     name: context7
@@ -3919,15 +3918,5 @@ mcp_configs:
     - mcp-remote
     - http://localhost:4401/mcp
     - --allow-http
-    registry: false
-    command: npx
-  searxng:
-    name: searxng
-    transport: stdio
-    env:
-      SEARXNG_URL: http://127.0.0.1:8888
-    args:
-    - -y
-    - mcp-searxng
     registry: false
     command: npx

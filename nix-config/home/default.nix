@@ -219,10 +219,6 @@ in
       ".codex/AGENTS.md".source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/agents/AGENTS.md";
       ".claude/CLAUDE.md".source =
         config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/agents/AGENTS.md";
-      ".config/containers/systemd/searxng.container".source =
-        config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/searxng/quadlet/searxng.container";
-      ".config/containers/systemd/searxng-cache.volume".source =
-        config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/searxng/quadlet/searxng-cache.volume";
     };
 
     activation = {
@@ -231,26 +227,6 @@ in
           echo "Installing mise tools from ~/.config/mise/config.toml"
           ${lib.getExe pkgs.mise} install --yes || \
             echo "warning: mise install failed; retry with: mise install" >&2
-        fi
-      '';
-
-      prepareSearxng = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        searxng_state="$HOME/.local/state/searxng"
-        searxng_env="$searxng_state/searxng.env"
-
-        mkdir -p "$searxng_state"
-        chmod 700 "$searxng_state"
-
-        if [ ! -s "$searxng_env" ]; then
-          umask 077
-          {
-            printf 'SEARXNG_SECRET=%s\n' "$(${lib.getExe pkgs.openssl} rand -hex 32)"
-            printf 'SEARXNG_BASE_URL=http://127.0.0.1:8888/\n'
-          } > "$searxng_env"
-        fi
-
-        if command -v systemctl >/dev/null 2>&1; then
-          systemctl --user daemon-reload >/dev/null 2>&1 || true
         fi
       '';
 

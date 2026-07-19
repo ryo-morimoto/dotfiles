@@ -49,9 +49,6 @@
 
 - `qmd` can search Markdown collections, and `grepika` can provide ranked repo search. Both rely on indexes/caches, so
   use them as optional discovery tools and remember their indexes may need periodic updates.
-- For web or external-topic research, use local SearXNG first: `curl 'http://127.0.0.1:8888/search?q=<query>&format=json'`.
-  If SearXNG is unavailable or has no useful results, state that and then fall back to another available web search
-  tool.
 - Prefer precise project-aware tools for search, reading, and edits when available; otherwise use fast local commands
   and small, targeted reads.
 - Keep tool output out of the conversation unless it matters. For write/create/update calls, mention only success and
