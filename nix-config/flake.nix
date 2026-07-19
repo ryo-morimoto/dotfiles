@@ -91,23 +91,16 @@
                              "exec -a codex \"$out/bin/codex-raw\" \"\$@\""
           '';
         });
-        catppuccin-gtk =
-          (prev.catppuccin-gtk.override {
-            python3 = prev.python3.override {
-              packageOverrides = _pythonFinal: pythonPrev: {
-                catppuccin = pythonPrev.catppuccin.overridePythonAttrs (_old: {
-                  doCheck = false;
-                  pythonImportsCheck = [ ];
-                });
-              };
+        catppuccin-gtk = prev.catppuccin-gtk.override {
+          python3 = prev.python3.override {
+            packageOverrides = _pythonFinal: pythonPrev: {
+              catppuccin = pythonPrev.catppuccin.overridePythonAttrs (_old: {
+                doCheck = false;
+                pythonImportsCheck = [ ];
+              });
             };
-          }).overrideAttrs
-            (old: {
-              postPatch = (old.postPatch or "") + ''
-                substituteInPlace sources/build/args.py \
-                  --replace-fail "        type=bool," ""
-              '';
-            });
+          };
+        };
         zen-browser = zen-browser.packages.${final.stdenv.hostPlatform.system}.default;
         seiren-mcp = seiren.packages.${final.stdenv.hostPlatform.system}.default;
         soulforge = soulforge.packages.${final.stdenv.hostPlatform.system}.default;
