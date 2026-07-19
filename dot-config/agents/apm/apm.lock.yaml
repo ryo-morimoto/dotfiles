@@ -1,5 +1,5 @@
 lockfile_version: '1'
-generated_at: '2026-07-17T18:40:56.416422+00:00'
+generated_at: '2026-07-19T15:30:10.689041+00:00'
 apm_version: 0.25.0
 dependencies:
 - repo_url: _local/fp-typescript
@@ -930,20 +930,32 @@ dependencies:
 - repo_url: ryo-morimoto/skills
   name: skills
   host: github.com
-  resolved_commit: 45da7bf1a3bfc2560c1cf0f70e1d94c402c5820a
-  resolved_ref: 45da7bf1a3bfc2560c1cf0f70e1d94c402c5820a
+  resolved_commit: e7670dbcd46b4aa0b3a7fd23d7d06428a65d82e5
+  resolved_ref: e7670dbcd46b4aa0b3a7fd23d7d06428a65d82e5
   version: unknown
-  virtual_path: orient
+  virtual_path: skills/clarify-requirements-and-design
   is_virtual: true
   package_type: claude_skill
-  deployed_files:
-  - .agents/skills/orient
-  - .agents/skills/orient/SKILL.md
-  - .claude/skills/orient
-  - .claude/skills/orient/SKILL.md
-  deployed_file_hashes:
-    .agents/skills/orient/SKILL.md: sha256:a4c42b8f10b2d71553bdbf4b9ffb292f8ff38cb7a0aa3a9d4f6c0bd0d98d7637
-    .claude/skills/orient/SKILL.md: sha256:a4c42b8f10b2d71553bdbf4b9ffb292f8ff38cb7a0aa3a9d4f6c0bd0d98d7637
+  content_hash: sha256:a22388fc59760bc2f2698acb215a22579e495e66949097fc09f04b66ebfb3d2a
+- repo_url: ryo-morimoto/skills
+  name: skills
+  host: github.com
+  resolved_commit: 8cf718b4af614857cc704aad3e71700ffac257fd
+  resolved_ref: 8cf718b4af614857cc704aad3e71700ffac257fd
+  version: unknown
+  virtual_path: skills/distill-decision-signal
+  is_virtual: true
+  package_type: claude_skill
+  content_hash: sha256:574bf0bf3817c9eae28ad0b464125d5715c8d8a42518a2a576c77ecbe7c38e33
+- repo_url: ryo-morimoto/skills
+  name: skills
+  host: github.com
+  resolved_commit: e7670dbcd46b4aa0b3a7fd23d7d06428a65d82e5
+  resolved_ref: e7670dbcd46b4aa0b3a7fd23d7d06428a65d82e5
+  version: unknown
+  virtual_path: skills/orient
+  is_virtual: true
+  package_type: claude_skill
   content_hash: sha256:4e2dc7e38593392abff6fe0844dac47242b095a616a4b73876758433601d877f
 - repo_url: upstash/context7
   name: context7
@@ -1786,24 +1798,6 @@ deployments:
   - mizchi/skills/devops/opentelemetry
   active_owner: mizchi/skills/devops/opentelemetry
   content_hash: sha256:7fa0526c5ec16771846a25cea13cc0beb9ec812bc6d5b42b740fedf8283d8d23
-- kind: project-relative
-  target: agents
-  value: .agents/skills/orient
-  runtime: null
-  scope: project
-  owners:
-  - ryo-morimoto/skills/orient
-  active_owner: ryo-morimoto/skills/orient
-  content_hash: null
-- kind: project-relative
-  target: agents
-  value: .agents/skills/orient/SKILL.md
-  runtime: null
-  scope: project
-  owners:
-  - ryo-morimoto/skills/orient
-  active_owner: ryo-morimoto/skills/orient
-  content_hash: sha256:a4c42b8f10b2d71553bdbf4b9ffb292f8ff38cb7a0aa3a9d4f6c0bd0d98d7637
 - kind: project-relative
   target: agents
   value: .agents/skills/outline
@@ -3253,24 +3247,6 @@ deployments:
   - mizchi/skills/devops/opentelemetry
   active_owner: mizchi/skills/devops/opentelemetry
   content_hash: sha256:7fa0526c5ec16771846a25cea13cc0beb9ec812bc6d5b42b740fedf8283d8d23
-- kind: project-relative
-  target: claude
-  value: .claude/skills/orient
-  runtime: null
-  scope: project
-  owners:
-  - ryo-morimoto/skills/orient
-  active_owner: ryo-morimoto/skills/orient
-  content_hash: null
-- kind: project-relative
-  target: claude
-  value: .claude/skills/orient/SKILL.md
-  runtime: null
-  scope: project
-  owners:
-  - ryo-morimoto/skills/orient
-  active_owner: ryo-morimoto/skills/orient
-  content_hash: sha256:a4c42b8f10b2d71553bdbf4b9ffb292f8ff38cb7a0aa3a9d4f6c0bd0d98d7637
 - kind: project-relative
   target: claude
   value: .claude/skills/outline
