@@ -142,7 +142,7 @@ in
                 header_up Remote-Port {remote_port}
                 header_up Original-URI {uri}
                 copy_headers {
-                  Tailscale-Login>Tailscale-User-Login
+                  Tailscale-User>Tailscale-User-Login
                 }
               }
 
