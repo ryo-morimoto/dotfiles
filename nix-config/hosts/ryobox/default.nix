@@ -127,6 +127,29 @@ in
         hash = "sha256-7g8zDx5RhbptXFyEPtexxkHX8hw/gF001bZ7wX4Mjhs=";
       };
       virtualHosts = {
+        "collie.ryobox.xyz" = {
+          extraConfig = ''
+            tls {
+              dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+            }
+
+            route {
+              request_header -Tailscale-User-Login
+
+              forward_auth unix/${config.services.tailscaleAuth.socketPath} {
+                uri /auth
+                header_up Remote-Addr {remote_host}
+                header_up Remote-Port {remote_port}
+                header_up Original-URI {uri}
+                copy_headers {
+                  Tailscale-Login>Tailscale-User-Login
+                }
+              }
+
+              reverse_proxy 127.0.0.1:8787
+            }
+          '';
+        };
         "plane.ryobox.xyz" = {
           extraConfig = ''
             tls {
@@ -168,6 +191,7 @@ in
       useRoutingFeatures = "client";
       extraUpFlags = [ "--ssh" ];
     };
+    tailscaleAuth.enable = true;
 
     # OpenSSH disabled - using Tailscale SSH instead
     # openssh = {
@@ -209,8 +233,14 @@ in
   };
   systemd.services = {
     caddy = {
-      after = [ "tailscale-serve-reset.service" ];
-      requires = [ "tailscale-serve-reset.service" ];
+      after = [
+        "tailscale-nginx-auth.socket"
+        "tailscale-serve-reset.service"
+      ];
+      requires = [
+        "tailscale-nginx-auth.socket"
+        "tailscale-serve-reset.service"
+      ];
       serviceConfig.EnvironmentFile = config.age.secrets.caddy-cloudflare.path;
     };
 
@@ -304,6 +334,8 @@ in
   };
 
   # User
+  users.users.caddy.extraGroups = [ config.services.tailscaleAuth.group ];
+
   users.users.${username} = {
     isNormalUser = true;
     extraGroups = [
