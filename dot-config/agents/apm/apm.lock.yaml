@@ -967,6 +967,52 @@ dependencies:
   is_virtual: true
   package_type: claude_skill
   content_hash: sha256:4eb6284a23906df916264bd59c6728bb950a6382b24240eb847781ee1954475a
+- repo_url: ryo-morimoto/skills
+  name: skills
+  host: github.com
+  resolved_commit: 1c1d375ad7f7d76dbe39b88058f49f1a2876ee7a
+  resolved_ref: 1c1d375ad7f7d76dbe39b88058f49f1a2876ee7a
+  version: unknown
+  virtual_path: skills/splitting-changes
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/splitting-changes
+  - .agents/skills/splitting-changes/SKILL.md
+  - .agents/skills/splitting-changes/agents/openai.yaml
+  - .agents/skills/splitting-changes/references/delivery-metrics.md
+  - .agents/skills/splitting-changes/references/evidence.md
+  - .agents/skills/splitting-changes/references/plan-format.md
+  - .agents/skills/splitting-changes/references/safe-steps.md
+  - .agents/skills/splitting-changes/references/value-slicing.md
+  - .agents/skills/splitting-changes/scripts/validate_split_plan.py
+  - .claude/skills/splitting-changes
+  - .claude/skills/splitting-changes/SKILL.md
+  - .claude/skills/splitting-changes/agents/openai.yaml
+  - .claude/skills/splitting-changes/references/delivery-metrics.md
+  - .claude/skills/splitting-changes/references/evidence.md
+  - .claude/skills/splitting-changes/references/plan-format.md
+  - .claude/skills/splitting-changes/references/safe-steps.md
+  - .claude/skills/splitting-changes/references/value-slicing.md
+  - .claude/skills/splitting-changes/scripts/validate_split_plan.py
+  deployed_file_hashes:
+    .agents/skills/splitting-changes/SKILL.md: sha256:c411f4a3e4f36330fde19ed6050aad3f4486f2b412d92b91aed8f72212acd2c7
+    .agents/skills/splitting-changes/agents/openai.yaml: sha256:194d40b65782afe1c7ada8c06eef353f7f3b5981f1c62c53e5dc2999a54f7f29
+    .agents/skills/splitting-changes/references/delivery-metrics.md: sha256:5747a6e9ca9e4b488c902b9e9732afba547bdd5cdc0aac2a8cc4ddb8efdfed66
+    .agents/skills/splitting-changes/references/evidence.md: sha256:b8f1d58d25c09677515ebfe416cf5b6ea33b1ed157d365f6f91dd6d5c2e208fe
+    .agents/skills/splitting-changes/references/plan-format.md: sha256:3d8fc2ac4eef1a49109320dfcb178ff4d6a32ae343ee4954273905b93c1d8a04
+    .agents/skills/splitting-changes/references/safe-steps.md: sha256:2e06fc9530174f637454fc33b1741db7b8c7db256460a607ac63ee6aebfd4ec4
+    .agents/skills/splitting-changes/references/value-slicing.md: sha256:3ae0cf745115c21e654c1bad833872a003b1db91487ddbca435556d4149b87b1
+    .agents/skills/splitting-changes/scripts/validate_split_plan.py: sha256:2114734d6d8171f31b0ba4c4eefe80a095eb839036e1e5ccd8a061a43528b355
+    .claude/skills/splitting-changes/SKILL.md: sha256:c411f4a3e4f36330fde19ed6050aad3f4486f2b412d92b91aed8f72212acd2c7
+    .claude/skills/splitting-changes/agents/openai.yaml: sha256:194d40b65782afe1c7ada8c06eef353f7f3b5981f1c62c53e5dc2999a54f7f29
+    .claude/skills/splitting-changes/references/delivery-metrics.md: sha256:5747a6e9ca9e4b488c902b9e9732afba547bdd5cdc0aac2a8cc4ddb8efdfed66
+    .claude/skills/splitting-changes/references/evidence.md: sha256:b8f1d58d25c09677515ebfe416cf5b6ea33b1ed157d365f6f91dd6d5c2e208fe
+    .claude/skills/splitting-changes/references/plan-format.md: sha256:3d8fc2ac4eef1a49109320dfcb178ff4d6a32ae343ee4954273905b93c1d8a04
+    .claude/skills/splitting-changes/references/safe-steps.md: sha256:2e06fc9530174f637454fc33b1741db7b8c7db256460a607ac63ee6aebfd4ec4
+    .claude/skills/splitting-changes/references/value-slicing.md: sha256:3ae0cf745115c21e654c1bad833872a003b1db91487ddbca435556d4149b87b1
+    .claude/skills/splitting-changes/scripts/validate_split_plan.py: sha256:2114734d6d8171f31b0ba4c4eefe80a095eb839036e1e5ccd8a061a43528b355
+  content_hash: sha256:2cc59154fcc874e7be7cec8c174edd5e56380373ac93f70449947696c5cca72b
 - repo_url: upstash/context7
   name: context7
   host: github.com
@@ -2177,6 +2223,87 @@ deployments:
   - mattpocock/skills/skills/engineering/setup-matt-pocock-skills
   active_owner: mattpocock/skills/skills/engineering/setup-matt-pocock-skills
   content_hash: sha256:4f53c9b40ce2651e3611aa090eaedbd6dbc9b71ef8c5f7e65eac0d8263190d0d
+- kind: project-relative
+  target: agents
+  value: .agents/skills/splitting-changes
+  runtime: null
+  scope: project
+  owners:
+  - ryo-morimoto/skills/skills/splitting-changes
+  active_owner: ryo-morimoto/skills/skills/splitting-changes
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/splitting-changes/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ryo-morimoto/skills/skills/splitting-changes
+  active_owner: ryo-morimoto/skills/skills/splitting-changes
+  content_hash: sha256:c411f4a3e4f36330fde19ed6050aad3f4486f2b412d92b91aed8f72212acd2c7
+- kind: project-relative
+  target: agents
+  value: .agents/skills/splitting-changes/agents/openai.yaml
+  runtime: null
+  scope: project
+  owners:
+  - ryo-morimoto/skills/skills/splitting-changes
+  active_owner: ryo-morimoto/skills/skills/splitting-changes
+  content_hash: sha256:194d40b65782afe1c7ada8c06eef353f7f3b5981f1c62c53e5dc2999a54f7f29
+- kind: project-relative
+  target: agents
+  value: .agents/skills/splitting-changes/references/delivery-metrics.md
+  runtime: null
+  scope: project
+  owners:
+  - ryo-morimoto/skills/skills/splitting-changes
+  active_owner: ryo-morimoto/skills/skills/splitting-changes
+  content_hash: sha256:5747a6e9ca9e4b488c902b9e9732afba547bdd5cdc0aac2a8cc4ddb8efdfed66
+- kind: project-relative
+  target: agents
+  value: .agents/skills/splitting-changes/references/evidence.md
+  runtime: null
+  scope: project
+  owners:
+  - ryo-morimoto/skills/skills/splitting-changes
+  active_owner: ryo-morimoto/skills/skills/splitting-changes
+  content_hash: sha256:b8f1d58d25c09677515ebfe416cf5b6ea33b1ed157d365f6f91dd6d5c2e208fe
+- kind: project-relative
+  target: agents
+  value: .agents/skills/splitting-changes/references/plan-format.md
+  runtime: null
+  scope: project
+  owners:
+  - ryo-morimoto/skills/skills/splitting-changes
+  active_owner: ryo-morimoto/skills/skills/splitting-changes
+  content_hash: sha256:3d8fc2ac4eef1a49109320dfcb178ff4d6a32ae343ee4954273905b93c1d8a04
+- kind: project-relative
+  target: agents
+  value: .agents/skills/splitting-changes/references/safe-steps.md
+  runtime: null
+  scope: project
+  owners:
+  - ryo-morimoto/skills/skills/splitting-changes
+  active_owner: ryo-morimoto/skills/skills/splitting-changes
+  content_hash: sha256:2e06fc9530174f637454fc33b1741db7b8c7db256460a607ac63ee6aebfd4ec4
+- kind: project-relative
+  target: agents
+  value: .agents/skills/splitting-changes/references/value-slicing.md
+  runtime: null
+  scope: project
+  owners:
+  - ryo-morimoto/skills/skills/splitting-changes
+  active_owner: ryo-morimoto/skills/skills/splitting-changes
+  content_hash: sha256:3ae0cf745115c21e654c1bad833872a003b1db91487ddbca435556d4149b87b1
+- kind: project-relative
+  target: agents
+  value: .agents/skills/splitting-changes/scripts/validate_split_plan.py
+  runtime: null
+  scope: project
+  owners:
+  - ryo-morimoto/skills/skills/splitting-changes
+  active_owner: ryo-morimoto/skills/skills/splitting-changes
+  content_hash: sha256:2114734d6d8171f31b0ba4c4eefe80a095eb839036e1e5ccd8a061a43528b355
 - kind: project-relative
   target: agents
   value: .agents/skills/tdd
@@ -3626,6 +3753,87 @@ deployments:
   - mattpocock/skills/skills/engineering/setup-matt-pocock-skills
   active_owner: mattpocock/skills/skills/engineering/setup-matt-pocock-skills
   content_hash: sha256:4f53c9b40ce2651e3611aa090eaedbd6dbc9b71ef8c5f7e65eac0d8263190d0d
+- kind: project-relative
+  target: claude
+  value: .claude/skills/splitting-changes
+  runtime: null
+  scope: project
+  owners:
+  - ryo-morimoto/skills/skills/splitting-changes
+  active_owner: ryo-morimoto/skills/skills/splitting-changes
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/splitting-changes/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ryo-morimoto/skills/skills/splitting-changes
+  active_owner: ryo-morimoto/skills/skills/splitting-changes
+  content_hash: sha256:c411f4a3e4f36330fde19ed6050aad3f4486f2b412d92b91aed8f72212acd2c7
+- kind: project-relative
+  target: claude
+  value: .claude/skills/splitting-changes/agents/openai.yaml
+  runtime: null
+  scope: project
+  owners:
+  - ryo-morimoto/skills/skills/splitting-changes
+  active_owner: ryo-morimoto/skills/skills/splitting-changes
+  content_hash: sha256:194d40b65782afe1c7ada8c06eef353f7f3b5981f1c62c53e5dc2999a54f7f29
+- kind: project-relative
+  target: claude
+  value: .claude/skills/splitting-changes/references/delivery-metrics.md
+  runtime: null
+  scope: project
+  owners:
+  - ryo-morimoto/skills/skills/splitting-changes
+  active_owner: ryo-morimoto/skills/skills/splitting-changes
+  content_hash: sha256:5747a6e9ca9e4b488c902b9e9732afba547bdd5cdc0aac2a8cc4ddb8efdfed66
+- kind: project-relative
+  target: claude
+  value: .claude/skills/splitting-changes/references/evidence.md
+  runtime: null
+  scope: project
+  owners:
+  - ryo-morimoto/skills/skills/splitting-changes
+  active_owner: ryo-morimoto/skills/skills/splitting-changes
+  content_hash: sha256:b8f1d58d25c09677515ebfe416cf5b6ea33b1ed157d365f6f91dd6d5c2e208fe
+- kind: project-relative
+  target: claude
+  value: .claude/skills/splitting-changes/references/plan-format.md
+  runtime: null
+  scope: project
+  owners:
+  - ryo-morimoto/skills/skills/splitting-changes
+  active_owner: ryo-morimoto/skills/skills/splitting-changes
+  content_hash: sha256:3d8fc2ac4eef1a49109320dfcb178ff4d6a32ae343ee4954273905b93c1d8a04
+- kind: project-relative
+  target: claude
+  value: .claude/skills/splitting-changes/references/safe-steps.md
+  runtime: null
+  scope: project
+  owners:
+  - ryo-morimoto/skills/skills/splitting-changes
+  active_owner: ryo-morimoto/skills/skills/splitting-changes
+  content_hash: sha256:2e06fc9530174f637454fc33b1741db7b8c7db256460a607ac63ee6aebfd4ec4
+- kind: project-relative
+  target: claude
+  value: .claude/skills/splitting-changes/references/value-slicing.md
+  runtime: null
+  scope: project
+  owners:
+  - ryo-morimoto/skills/skills/splitting-changes
+  active_owner: ryo-morimoto/skills/skills/splitting-changes
+  content_hash: sha256:3ae0cf745115c21e654c1bad833872a003b1db91487ddbca435556d4149b87b1
+- kind: project-relative
+  target: claude
+  value: .claude/skills/splitting-changes/scripts/validate_split_plan.py
+  runtime: null
+  scope: project
+  owners:
+  - ryo-morimoto/skills/skills/splitting-changes
+  active_owner: ryo-morimoto/skills/skills/splitting-changes
+  content_hash: sha256:2114734d6d8171f31b0ba4c4eefe80a095eb839036e1e5ccd8a061a43528b355
 - kind: project-relative
   target: claude
   value: .claude/skills/tdd

@@ -44,6 +44,7 @@ dependencies:
     - mizchi/skills/devops/opentelemetry#7a0d72866a0bb3e9ac3e2768c328b09ba2bc40c4
     # upstash/context7
     - upstash/context7/skills/context7-cli#23843e9ce62908896cf2dcd32cc5c03c05047416
+    - ryo-morimoto/skills/skills/splitting-changes#1c1d375ad7f7d76dbe39b88058f49f1a2876ee7a
   mcp:
     - name: context7
       transport: http
