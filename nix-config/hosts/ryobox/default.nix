@@ -15,6 +15,7 @@ in
 {
   imports = [
     ./hardware-configuration.nix
+    ./agent-canvas.nix
     ./forgejo.nix
     ./plane.nix
   ];
@@ -33,6 +34,7 @@ in
       80
       443
       5757
+      8443 # Agent Canvas Tailscale Serve (non-443; Caddy owns 443)
     ];
   };
 
@@ -179,6 +181,37 @@ in
               header_up Origin http://127.0.0.1:9120
               header_up X-Forwarded-Host hermes.ryobox.xyz
               header_up X-Forwarded-Proto https
+            }
+          '';
+        };
+        # OpenHands Agent Canvas — Docker on 127.0.0.1:8000.
+        # UI lives at /canvas; APIs at /api and /api/automation.
+        "agent-canvas.ryobox.xyz" = {
+          extraConfig = ''
+            tls {
+              dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+            }
+
+            route {
+              request_header -Tailscale-User-Login
+
+              forward_auth unix/${config.services.tailscaleAuth.socketPath} {
+                uri /auth
+                header_up Remote-Addr {remote_host}
+                header_up Remote-Port {remote_port}
+                header_up Original-URI {uri}
+                copy_headers {
+                  Tailscale-User>Tailscale-User-Login
+                }
+              }
+
+              reverse_proxy 127.0.0.1:8000 {
+                # Live agent events use WebSocket / SSE.
+                transport http {
+                  read_timeout 3600s
+                  write_timeout 3600s
+                }
+              }
             }
           '';
         };

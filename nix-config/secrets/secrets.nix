@@ -8,4 +8,6 @@ in
   "plane-secret-key.age".publicKeys = [ ryobox ];
   "plane-postgres-password.age".publicKeys = [ ryobox ];
   "plane-minio-secret-key.age".publicKeys = [ ryobox ];
+  "agent-canvas-api-key.age".publicKeys = [ ryobox ];
+  "agent-canvas-oh-secret-key.age".publicKeys = [ ryobox ];
 }
