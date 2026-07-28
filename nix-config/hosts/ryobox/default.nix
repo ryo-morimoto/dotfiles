@@ -269,7 +269,7 @@ in
 
     "nixos-upgrade" = {
       after = [ "dotfiles-pull.service" ];
-      wants = [ "dotfiles-pull.service" ];
+      requires = [ "dotfiles-pull.service" ];
     };
   };
 
@@ -405,10 +405,10 @@ in
       ln -sfn ${pkgs.bash}/bin/bash /bin/bash
     '';
 
-    # Automatic system upgrade from local repo (git pull → rebuild)
+    # Pull mutable dotfiles locally, then rebuild from the trusted GitHub main branch.
     autoUpgrade = {
       enable = true;
-      flake = "${dotfilesDir}/nix-config#ryobox";
+      flake = "github:ryo-morimoto/dotfiles/main?dir=nix-config#ryobox";
       dates = "05:00";
       randomizedDelaySec = "45min";
       allowReboot = false;
