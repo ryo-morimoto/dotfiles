@@ -1,14 +1,16 @@
 [settings]
 experimental = true
+lockfile = true
+minimum_release_age = "24h"
 
 [tools]
 aqua = "latest"
 herdr = "latest"
 portless = "latest"
-"pipx:apm-cli" = "0.25.0"
+"pipx:apm-cli" = "latest"
 "npm:agent-browser" = "latest"
-"npm:@xai-official/grok" = "0.2.103"
-"npm:@tobilu/qmd" = { version = "2.5.3", npm_args = "--ignore-scripts=false" }
+"npm:@xai-official/grok" = "latest"
+"npm:@tobilu/qmd" = { version = "latest", npm_args = "--ignore-scripts=false" }
 
 [tools."github:justrach/codedb"]
 version = "latest"
@@ -31,8 +33,9 @@ asset_pattern = "starlint-linux-x64.tar.gz"
 rename_exe = "starlint"
 
 [tools."http:coderabbit"]
-version = "0.4.0"
-url = "https://cli.coderabbit.ai/releases/{{version}}/coderabbit-linux-x64.zip"
+version = "latest"
+url = "https://cli.coderabbit.ai/releases/{{ version }}/coderabbit-linux-x64.zip"
+version_list_url = "https://cli.coderabbit.ai/releases/latest/VERSION"
 rename_exe = "coderabbit"
 
 [tools."github:zed-industries/zed"]

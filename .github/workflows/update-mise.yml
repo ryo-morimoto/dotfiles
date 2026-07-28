@@ -1,0 +1,39 @@
+name: Update mise.lock
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "30 19 * * 0" # 04:30 JST every Monday
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      MISE_GLOBAL_CONFIG_FILE: ${{ github.workspace }}/dot-config/config/mise/config.toml
+      MISE_SAFE: "1"
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          ref: main
+      - uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3.6.3
+        with:
+          version: 2026.7.15
+          install: false
+          cache: false
+      - name: Update mise.lock
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mise lock --global --bump --platform linux-x64 --minimum-release-age 24h --yes
+          mise upgrade --minimum-release-age 24h --yes "http:coderabbit"
+      - name: Commit and push
+        run: |
+          if git diff --quiet -- dot-config/config/mise/mise.lock; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add dot-config/config/mise/mise.lock
+          git commit -m "chore: update mise.lock"
+          git pull --rebase origin main
+          git push origin HEAD:main
