@@ -12,7 +12,7 @@ dependencies:
     - ryo-morimoto/skills/skills/report-feedback-on-ryo-skills#1b26b07627d475fddecfea57984bf891f7026cfe
     - /home/ryo-morimoto/ghq/github.com/ryo-morimoto/dotfiles/skills/fp-typescript
     - /home/ryo-morimoto/ghq/github.com/ryo-morimoto/dotfiles/skills/repo-doctor
-    - ryo-morimoto/skills/skills/rigorous-naming#bb5ad3e32cc2e46940611a1672122387468fabcf
+    - ryo-morimoto/skills/skills/rigorous-naming#4f2dc0d5b9dc8098470a4df789dbf18aab59a5f8
     # mattpocock/skills (engineering + in-progress + productivity, pinned to main 2026-07-18)
     - mattpocock/skills/skills/engineering/ask-matt#9603c1cc8118d08bc1b3bf34cf714f62178dea3b
     - mattpocock/skills/skills/engineering/code-review#9603c1cc8118d08bc1b3bf34cf714f62178dea3b
