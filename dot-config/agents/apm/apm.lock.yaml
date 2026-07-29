@@ -1,5 +1,5 @@
 lockfile_version: '1'
-generated_at: '2026-07-28T07:25:20.275772+00:00'
+generated_at: '2026-07-29T04:09:46.309420+00:00'
 apm_version: 0.26.0
 dependencies:
 - repo_url: _local/fp-typescript
@@ -1016,8 +1016,8 @@ dependencies:
 - repo_url: ryo-morimoto/skills
   name: rigorous-naming
   host: github.com
-  resolved_commit: bb5ad3e32cc2e46940611a1672122387468fabcf
-  resolved_ref: bb5ad3e32cc2e46940611a1672122387468fabcf
+  resolved_commit: 4f2dc0d5b9dc8098470a4df789dbf18aab59a5f8
+  resolved_ref: 4f2dc0d5b9dc8098470a4df789dbf18aab59a5f8
   version: unknown
   virtual_path: skills/rigorous-naming
   is_virtual: true
@@ -1030,6 +1030,8 @@ dependencies:
   - .agents/skills/rigorous-naming/agents/openai.yaml
   - .agents/skills/rigorous-naming/references/calibration.md
   - .agents/skills/rigorous-naming/references/design-signals.md
+  - .agents/skills/rigorous-naming/references/naming-decisions.md
+  - .agents/skills/rigorous-naming/references/research-adoption-review.md
   - .claude/skills/rigorous-naming
   - .claude/skills/rigorous-naming/ATTRIBUTION.md
   - .claude/skills/rigorous-naming/LICENSE
@@ -1037,20 +1039,26 @@ dependencies:
   - .claude/skills/rigorous-naming/agents/openai.yaml
   - .claude/skills/rigorous-naming/references/calibration.md
   - .claude/skills/rigorous-naming/references/design-signals.md
+  - .claude/skills/rigorous-naming/references/naming-decisions.md
+  - .claude/skills/rigorous-naming/references/research-adoption-review.md
   deployed_file_hashes:
-    .agents/skills/rigorous-naming/ATTRIBUTION.md: sha256:9543e8b3d44679511525f602cbab9307de814a81d4b53d22ffdc601997191f6b
+    .agents/skills/rigorous-naming/ATTRIBUTION.md: sha256:158f6f665c1c4cf2be19422adbb50852f374675ad165460ab87daf7ef9deaf3f
     .agents/skills/rigorous-naming/LICENSE: sha256:9ef07ef9276888d7dcbd5a86b2a77bc5483556fc5202cadf4679fae0fd54d720
-    .agents/skills/rigorous-naming/SKILL.md: sha256:69462df0eeda7c7cc9eceda0d6b7b0f98c6a8780f269e6b9d4237792998465a6
-    .agents/skills/rigorous-naming/agents/openai.yaml: sha256:02c72b44184bcda374ceaae69784dd0839bae72d38bc51a94033cfc293071ed1
-    .agents/skills/rigorous-naming/references/calibration.md: sha256:f5a5ea8f49d08161335305d29a6ce0642b667be66bb98aecf03687a758893de9
-    .agents/skills/rigorous-naming/references/design-signals.md: sha256:3049b278c2be99762975feb0fe77cbe05f103193d2f11905bfd964444c585cf5
-    .claude/skills/rigorous-naming/ATTRIBUTION.md: sha256:9543e8b3d44679511525f602cbab9307de814a81d4b53d22ffdc601997191f6b
+    .agents/skills/rigorous-naming/SKILL.md: sha256:3ae2f2f0cf94ee19073dcdbd3eb7fdf1d8095736661af2a2cb2ebddd0c29c535
+    .agents/skills/rigorous-naming/agents/openai.yaml: sha256:5c2e216d95066fd662113ead51f734faeb8558e3d60cdf407cde5b0700db05a2
+    .agents/skills/rigorous-naming/references/calibration.md: sha256:b43e2283598a765c6a91789e6d09210a14c4a89e21ff27f50c2c4117c229a561
+    .agents/skills/rigorous-naming/references/design-signals.md: sha256:86157bb482030dbba275c67eecaef2e13d9aea69692df9ad6a937400b64ded0b
+    .agents/skills/rigorous-naming/references/naming-decisions.md: sha256:43489fef22ac6c0b5f7da8ff13a95ad35e5281ce6d15d95ea140b91d156d1e2e
+    .agents/skills/rigorous-naming/references/research-adoption-review.md: sha256:1e63eabd8e723542de1013d4111853ae96fee66cc67926f94b09fb87b769ff16
+    .claude/skills/rigorous-naming/ATTRIBUTION.md: sha256:158f6f665c1c4cf2be19422adbb50852f374675ad165460ab87daf7ef9deaf3f
     .claude/skills/rigorous-naming/LICENSE: sha256:9ef07ef9276888d7dcbd5a86b2a77bc5483556fc5202cadf4679fae0fd54d720
-    .claude/skills/rigorous-naming/SKILL.md: sha256:69462df0eeda7c7cc9eceda0d6b7b0f98c6a8780f269e6b9d4237792998465a6
-    .claude/skills/rigorous-naming/agents/openai.yaml: sha256:02c72b44184bcda374ceaae69784dd0839bae72d38bc51a94033cfc293071ed1
-    .claude/skills/rigorous-naming/references/calibration.md: sha256:f5a5ea8f49d08161335305d29a6ce0642b667be66bb98aecf03687a758893de9
-    .claude/skills/rigorous-naming/references/design-signals.md: sha256:3049b278c2be99762975feb0fe77cbe05f103193d2f11905bfd964444c585cf5
-  content_hash: sha256:ea7208d3f60d25f3bba7b6d96acd05cdfb0e0ad93b3df881b800ee19826c5b0f
+    .claude/skills/rigorous-naming/SKILL.md: sha256:3ae2f2f0cf94ee19073dcdbd3eb7fdf1d8095736661af2a2cb2ebddd0c29c535
+    .claude/skills/rigorous-naming/agents/openai.yaml: sha256:5c2e216d95066fd662113ead51f734faeb8558e3d60cdf407cde5b0700db05a2
+    .claude/skills/rigorous-naming/references/calibration.md: sha256:b43e2283598a765c6a91789e6d09210a14c4a89e21ff27f50c2c4117c229a561
+    .claude/skills/rigorous-naming/references/design-signals.md: sha256:86157bb482030dbba275c67eecaef2e13d9aea69692df9ad6a937400b64ded0b
+    .claude/skills/rigorous-naming/references/naming-decisions.md: sha256:43489fef22ac6c0b5f7da8ff13a95ad35e5281ce6d15d95ea140b91d156d1e2e
+    .claude/skills/rigorous-naming/references/research-adoption-review.md: sha256:1e63eabd8e723542de1013d4111853ae96fee66cc67926f94b09fb87b769ff16
+  content_hash: sha256:922d19ddf932867e93a6b4c1fb30b99594904a47d934d39c81b80dd0629dbfe7
 - repo_url: ryo-morimoto/skills
   name: splitting-changes
   host: github.com
@@ -2378,7 +2386,7 @@ deployments:
   owners:
   - ryo-morimoto/skills/skills/rigorous-naming
   active_owner: ryo-morimoto/skills/skills/rigorous-naming
-  content_hash: sha256:9543e8b3d44679511525f602cbab9307de814a81d4b53d22ffdc601997191f6b
+  content_hash: sha256:158f6f665c1c4cf2be19422adbb50852f374675ad165460ab87daf7ef9deaf3f
 - kind: project-relative
   target: agent-skills
   value: .agents/skills/rigorous-naming/LICENSE
@@ -2396,7 +2404,7 @@ deployments:
   owners:
   - ryo-morimoto/skills/skills/rigorous-naming
   active_owner: ryo-morimoto/skills/skills/rigorous-naming
-  content_hash: sha256:69462df0eeda7c7cc9eceda0d6b7b0f98c6a8780f269e6b9d4237792998465a6
+  content_hash: sha256:3ae2f2f0cf94ee19073dcdbd3eb7fdf1d8095736661af2a2cb2ebddd0c29c535
 - kind: project-relative
   target: agent-skills
   value: .agents/skills/rigorous-naming/agents/openai.yaml
@@ -2405,7 +2413,7 @@ deployments:
   owners:
   - ryo-morimoto/skills/skills/rigorous-naming
   active_owner: ryo-morimoto/skills/skills/rigorous-naming
-  content_hash: sha256:02c72b44184bcda374ceaae69784dd0839bae72d38bc51a94033cfc293071ed1
+  content_hash: sha256:5c2e216d95066fd662113ead51f734faeb8558e3d60cdf407cde5b0700db05a2
 - kind: project-relative
   target: agent-skills
   value: .agents/skills/rigorous-naming/references/calibration.md
@@ -2414,7 +2422,7 @@ deployments:
   owners:
   - ryo-morimoto/skills/skills/rigorous-naming
   active_owner: ryo-morimoto/skills/skills/rigorous-naming
-  content_hash: sha256:f5a5ea8f49d08161335305d29a6ce0642b667be66bb98aecf03687a758893de9
+  content_hash: sha256:b43e2283598a765c6a91789e6d09210a14c4a89e21ff27f50c2c4117c229a561
 - kind: project-relative
   target: agent-skills
   value: .agents/skills/rigorous-naming/references/design-signals.md
@@ -2423,7 +2431,25 @@ deployments:
   owners:
   - ryo-morimoto/skills/skills/rigorous-naming
   active_owner: ryo-morimoto/skills/skills/rigorous-naming
-  content_hash: sha256:3049b278c2be99762975feb0fe77cbe05f103193d2f11905bfd964444c585cf5
+  content_hash: sha256:86157bb482030dbba275c67eecaef2e13d9aea69692df9ad6a937400b64ded0b
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/rigorous-naming/references/naming-decisions.md
+  runtime: null
+  scope: project
+  owners:
+  - ryo-morimoto/skills/skills/rigorous-naming
+  active_owner: ryo-morimoto/skills/skills/rigorous-naming
+  content_hash: sha256:43489fef22ac6c0b5f7da8ff13a95ad35e5281ce6d15d95ea140b91d156d1e2e
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/rigorous-naming/references/research-adoption-review.md
+  runtime: null
+  scope: project
+  owners:
+  - ryo-morimoto/skills/skills/rigorous-naming
+  active_owner: ryo-morimoto/skills/skills/rigorous-naming
+  content_hash: sha256:1e63eabd8e723542de1013d4111853ae96fee66cc67926f94b09fb87b769ff16
 - kind: project-relative
   target: agent-skills
   value: .agents/skills/setup-matt-pocock-skills
@@ -4097,7 +4123,7 @@ deployments:
   owners:
   - ryo-morimoto/skills/skills/rigorous-naming
   active_owner: ryo-morimoto/skills/skills/rigorous-naming
-  content_hash: sha256:9543e8b3d44679511525f602cbab9307de814a81d4b53d22ffdc601997191f6b
+  content_hash: sha256:158f6f665c1c4cf2be19422adbb50852f374675ad165460ab87daf7ef9deaf3f
 - kind: project-relative
   target: claude
   value: .claude/skills/rigorous-naming/LICENSE
@@ -4115,7 +4141,7 @@ deployments:
   owners:
   - ryo-morimoto/skills/skills/rigorous-naming
   active_owner: ryo-morimoto/skills/skills/rigorous-naming
-  content_hash: sha256:69462df0eeda7c7cc9eceda0d6b7b0f98c6a8780f269e6b9d4237792998465a6
+  content_hash: sha256:3ae2f2f0cf94ee19073dcdbd3eb7fdf1d8095736661af2a2cb2ebddd0c29c535
 - kind: project-relative
   target: claude
   value: .claude/skills/rigorous-naming/agents/openai.yaml
@@ -4124,7 +4150,7 @@ deployments:
   owners:
   - ryo-morimoto/skills/skills/rigorous-naming
   active_owner: ryo-morimoto/skills/skills/rigorous-naming
-  content_hash: sha256:02c72b44184bcda374ceaae69784dd0839bae72d38bc51a94033cfc293071ed1
+  content_hash: sha256:5c2e216d95066fd662113ead51f734faeb8558e3d60cdf407cde5b0700db05a2
 - kind: project-relative
   target: claude
   value: .claude/skills/rigorous-naming/references/calibration.md
@@ -4133,7 +4159,7 @@ deployments:
   owners:
   - ryo-morimoto/skills/skills/rigorous-naming
   active_owner: ryo-morimoto/skills/skills/rigorous-naming
-  content_hash: sha256:f5a5ea8f49d08161335305d29a6ce0642b667be66bb98aecf03687a758893de9
+  content_hash: sha256:b43e2283598a765c6a91789e6d09210a14c4a89e21ff27f50c2c4117c229a561
 - kind: project-relative
   target: claude
   value: .claude/skills/rigorous-naming/references/design-signals.md
@@ -4142,7 +4168,25 @@ deployments:
   owners:
   - ryo-morimoto/skills/skills/rigorous-naming
   active_owner: ryo-morimoto/skills/skills/rigorous-naming
-  content_hash: sha256:3049b278c2be99762975feb0fe77cbe05f103193d2f11905bfd964444c585cf5
+  content_hash: sha256:86157bb482030dbba275c67eecaef2e13d9aea69692df9ad6a937400b64ded0b
+- kind: project-relative
+  target: claude
+  value: .claude/skills/rigorous-naming/references/naming-decisions.md
+  runtime: null
+  scope: project
+  owners:
+  - ryo-morimoto/skills/skills/rigorous-naming
+  active_owner: ryo-morimoto/skills/skills/rigorous-naming
+  content_hash: sha256:43489fef22ac6c0b5f7da8ff13a95ad35e5281ce6d15d95ea140b91d156d1e2e
+- kind: project-relative
+  target: claude
+  value: .claude/skills/rigorous-naming/references/research-adoption-review.md
+  runtime: null
+  scope: project
+  owners:
+  - ryo-morimoto/skills/skills/rigorous-naming
+  active_owner: ryo-morimoto/skills/skills/rigorous-naming
+  content_hash: sha256:1e63eabd8e723542de1013d4111853ae96fee66cc67926f94b09fb87b769ff16
 - kind: project-relative
   target: claude
   value: .claude/skills/setup-matt-pocock-skills
