@@ -55,3 +55,11 @@ herdr integration install codex
 herdr integration install claude
 herdr integration status
 """
+
+[tasks.install-herdr-browser]
+description = "Install the Herdr Browser plugin"
+run = """
+herdr config check
+herdr plugin install ogulcancelik/herdr-browser --yes
+herdr plugin list --plugin official.browser
+"""

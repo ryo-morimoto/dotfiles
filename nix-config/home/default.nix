@@ -984,6 +984,10 @@ in
       "mimeapps.list".force = true;
       "nvim".source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/nvim";
       "ghostty".source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/ghostty";
+      "herdr/config.toml" = {
+        force = true;
+        source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/herdr/config.toml";
+      };
       "zsh".source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/zsh";
       "lazygit".source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/lazygit";
       "mise".source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/mise";
