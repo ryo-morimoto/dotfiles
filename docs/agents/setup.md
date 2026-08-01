@@ -18,8 +18,6 @@
 |   `-- agents/
 |-- tools/
 |   `-- <tool>/...
-|-- skills/
-|   `-- <skill>/...
 |-- docs/
 |   `-- plans/
 `-- .github/workflows/
