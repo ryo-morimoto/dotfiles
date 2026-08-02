@@ -1,0 +1,10 @@
+apiVersion: 1
+
+providers:
+  - name: Agent observability
+    type: file
+    disableDeletion: true
+    editable: false
+    options:
+      path: /otel-lgtm/agent-latency.json
+      foldersFromFilesStructure: false

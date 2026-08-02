@@ -14,9 +14,10 @@ let
 in
 {
   imports = [
-    ./hardware-configuration.nix
     ./agent-canvas.nix
+    ./agent-observability.nix
     ./forgejo.nix
+    ./hardware-configuration.nix
     ./plane.nix
   ];
 

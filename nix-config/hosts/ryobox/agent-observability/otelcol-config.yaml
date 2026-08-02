@@ -1,0 +1,100 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+        cors:
+          allowed_origins:
+            - http://127.0.0.1
+            - http://localhost
+  prometheus/collector:
+    config:
+      scrape_configs:
+        - job_name: opentelemetry-collector
+          scrape_interval: 10s
+          static_configs:
+            - targets: [127.0.0.1:8888]
+
+extensions:
+  health_check:
+    endpoint: 0.0.0.0:13133
+    path: /ready
+
+processors:
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 512
+    spike_limit_mib: 128
+  transform/agent-normalization:
+    error_mode: ignore
+    trace_statements:
+      - context: resource
+        statements:
+          - set(attributes["agent.name"], "claude_code") where IsMatch(attributes["service.name"], "(?i).*claude.*")
+          - set(attributes["agent.name"], "codex") where IsMatch(attributes["service.name"], "(?i).*codex.*")
+      - context: span
+        statements:
+          - set(attributes["model.name"], attributes["model"]) where attributes["model"] != nil
+          - set(attributes["tool.name"], attributes["tool_name"]) where attributes["tool_name"] != nil
+          - set(attributes["turn.id"], attributes["prompt.id"]) where attributes["prompt.id"] != nil
+          - set(attributes["mcp.server.name"], attributes["mcp_server_name"]) where attributes["mcp_server_name"] != nil
+          - set(attributes["mcp.tool.name"], attributes["mcp_tool_name"]) where attributes["mcp_tool_name"] != nil
+    log_statements:
+      - context: resource
+        statements:
+          - set(attributes["agent.name"], "claude_code") where IsMatch(attributes["service.name"], "(?i).*claude.*")
+          - set(attributes["agent.name"], "codex") where IsMatch(attributes["service.name"], "(?i).*codex.*")
+      - context: log
+        statements:
+          - set(attributes["model.name"], attributes["model"]) where attributes["model"] != nil
+          - set(attributes["tool.name"], attributes["tool_name"]) where attributes["tool_name"] != nil
+          - set(attributes["turn.id"], attributes["prompt.id"]) where attributes["prompt.id"] != nil
+          - set(attributes["mcp.server.name"], attributes["mcp_server_name"]) where attributes["mcp_server_name"] != nil
+          - set(attributes["mcp.tool.name"], attributes["mcp_tool_name"]) where attributes["mcp_tool_name"] != nil
+    metric_statements:
+      - context: resource
+        statements:
+          - set(attributes["agent.name"], "claude_code") where IsMatch(attributes["service.name"], "(?i).*claude.*")
+          - set(attributes["agent.name"], "codex") where IsMatch(attributes["service.name"], "(?i).*codex.*")
+  batch:
+    send_batch_size: 1024
+    timeout: 5s
+
+exporters:
+  otlp_http/metrics:
+    endpoint: http://127.0.0.1:9090/api/v1/otlp
+    tls:
+      insecure: true
+  otlp_http/traces:
+    endpoint: http://127.0.0.1:4418
+    tls:
+      insecure: true
+  otlp_http/logs:
+    endpoint: http://127.0.0.1:3100/otlp
+    tls:
+      insecure: true
+  otlp_grpc/profiles:
+    endpoint: http://127.0.0.1:4040
+    tls:
+      insecure: true
+
+service:
+  extensions: [health_check]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, transform/agent-normalization, batch]
+      exporters: [otlp_http/traces]
+    metrics:
+      receivers: [otlp, prometheus/collector]
+      processors: [memory_limiter, transform/agent-normalization, batch]
+      exporters: [otlp_http/metrics]
+    logs:
+      receivers: [otlp]
+      processors: [memory_limiter, transform/agent-normalization, batch]
+      exporters: [otlp_http/logs]
+    profiles:
+      receivers: [otlp]
+      exporters: [otlp_grpc/profiles]

@@ -1,0 +1,357 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "description": "Claude Code and Codex latency decomposition. Missing values remain null rather than being treated as zero.",
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "tempo",
+        "uid": "tempo"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "legend": {
+          "calcs": ["lastNotNull"],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "metricsQueryType": "range",
+          "query": "{ name = \"claude_code.interaction\" } | quantile_over_time(duration, .50)",
+          "queryType": "traceql",
+          "refId": "Claude p50"
+        },
+        {
+          "metricsQueryType": "range",
+          "query": "{ name = \"claude_code.interaction\" } | quantile_over_time(duration, .95)",
+          "queryType": "traceql",
+          "refId": "Claude p95"
+        }
+      ],
+      "title": "Turn latency — Claude p50 / p95",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "tempo",
+        "uid": "tempo"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": ["lastNotNull"],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "metricsQueryType": "range",
+          "query": "{ name = \"claude_code.llm_request\" } | quantile_over_time(duration, .50)",
+          "queryType": "traceql",
+          "refId": "Claude p50"
+        },
+        {
+          "metricsQueryType": "range",
+          "query": "{ name = \"claude_code.llm_request\" } | quantile_over_time(duration, .95)",
+          "queryType": "traceql",
+          "refId": "Claude p95"
+        }
+      ],
+      "title": "LLM request latency — Claude p50 / p95",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "calcs": ["lastNotNull"],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, sum by (le, service_name, model) (rate(codex_api_request_duration_ms_bucket[$__rate_interval])))",
+          "legendFormat": "{{service_name}} {{model}} p50",
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum by (le, service_name, model) (rate(codex_api_request_duration_ms_bucket[$__rate_interval])))",
+          "legendFormat": "{{service_name}} {{model}} p95",
+          "refId": "B"
+        }
+      ],
+      "title": "LLM request latency — Codex p50 / p95",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": ["lastNotNull"],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, sum by (le, service_name, tool) (rate(codex_tool_call_duration_ms_bucket[$__rate_interval])))",
+          "legendFormat": "{{service_name}} {{tool}} p50",
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum by (le, service_name, tool) (rate(codex_tool_call_duration_ms_bucket[$__rate_interval])))",
+          "legendFormat": "{{service_name}} {{tool}} p95",
+          "refId": "B"
+        }
+      ],
+      "title": "Tool latency — Codex p50 / p95",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "calcs": ["sum"],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (service_name, tool) (increase(codex_tool_call_total[$__range]))",
+          "legendFormat": "{{service_name}} {{tool}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Tool calls in selected range — Codex",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "max": 1,
+          "min": 0,
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 16
+      },
+      "id": 6,
+      "options": {
+        "legend": {
+          "calcs": ["lastNotNull"],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (service_name, tool) (rate(codex_tool_call_total{success=\"false\"}[$__rate_interval])) / sum by (service_name, tool) (rate(codex_tool_call_total[$__rate_interval]))",
+          "legendFormat": "{{service_name}} {{tool}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Tool failure rate — Codex",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "tempo",
+        "uid": "tempo"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 24
+      },
+      "id": 7,
+      "options": {},
+      "targets": [
+        {
+          "limit": 100,
+          "query": "{ resource.agent.name != nil }",
+          "queryType": "traceqlSearch",
+          "refId": "A",
+          "tableType": "traces"
+        }
+      ],
+      "title": "Agent traces — drill-down",
+      "type": "traces"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "loki"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 24
+      },
+      "id": 8,
+      "options": {
+        "dedupStrategy": "none",
+        "enableInfiniteScrolling": false,
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
+      },
+      "targets": [
+        {
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "{service_name=~\".*claude.*|.*codex.*|agent-telemetry-backfill\"}",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Agent events — redacted raw view",
+      "type": "logs"
+    }
+  ],
+  "refresh": "10s",
+  "schemaVersion": 42,
+  "tags": ["opentelemetry", "claude-code", "codex"],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Agent latency — Claude Code vs Codex",
+  "uid": "agent-latency",
+  "version": 1,
+  "weekStart": "monday"
+}
