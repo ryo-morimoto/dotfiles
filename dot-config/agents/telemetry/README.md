@@ -132,6 +132,26 @@ docker exec agent-observability \
   | rg '^(claude_code|codex|traces_)'
 ```
 
+Codex 0.146.0 exports counters and histograms with Delta temporality. The
+Prometheus process therefore runs with `otlp-deltatocumulative`; without that
+feature Prometheus drops those native metrics even though the Collector accepts
+them. The conversion keeps in-memory state, so restarting Prometheus appears as
+a counter reset. `rate()` and `increase()` handle that reset.
+
+Prometheus uses `UnderscoreEscapingWithSuffixes`. Codex duration instruments
+already end in `duration_ms` and also declare the `ms` unit, so their stored
+histogram families include an additional `milliseconds` suffix:
+
+```text
+codex_api_request_duration_ms_milliseconds_bucket
+codex_tool_call_duration_ms_milliseconds_bucket
+```
+
+The pre-fix Delta samples were dropped and are not backfilled. For a dashboard
+probe, keep an interactive Codex session open until two metric export batches
+have arrived; a single shutdown flush does not provide enough points for
+`rate()`.
+
 Inspect the resource service names received by Loki:
 
 ```bash

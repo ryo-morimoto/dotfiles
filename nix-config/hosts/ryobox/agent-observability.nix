@@ -28,7 +28,7 @@ let
       -e GF_AUTH_DISABLE_LOGIN_FORM=true \
       -e GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/otel-lgtm/agent-latency.json \
       -e GF_USERS_DEFAULT_THEME=dark \
-      -e PROMETHEUS_EXTRA_ARGS=--storage.tsdb.retention.time=14d \
+      -e 'PROMETHEUS_EXTRA_ARGS=--storage.tsdb.retention.time=14d --enable-feature=otlp-deltatocumulative' \
       -v ${dataDir}:/data \
       -v ${./agent-observability/otelcol-config.yaml}:/otel-lgtm/otelcol-config.yaml:ro \
       -v ${./agent-observability/loki-config.yaml}:/otel-lgtm/loki-config.yaml:ro \
