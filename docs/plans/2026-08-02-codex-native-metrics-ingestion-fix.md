@@ -68,12 +68,12 @@ Codex 0.146.0 と Prometheus 3.13.1 が使用する translator v1.0.0 から、�
 
 | OTel instrument | Prometheus series family |
 | --- | --- |
-| `codex.api_request` | `codex_api_request_total` |
-| `codex.api_request.duration_ms` unit=`ms` | `codex_api_request_duration_ms_milliseconds_*` |
-| `codex.sse_event` | `codex_sse_event_total` |
-| `codex.sse_event.duration_ms` unit=`ms` | `codex_sse_event_duration_ms_milliseconds_*` |
+| `codex.responses_api.inference_time.duration_ms` unit=`ms` | `codex_responses_api_inference_time_duration_ms_milliseconds_*` |
+| `codex.responses_api.overhead.duration_ms` unit=`ms` | `codex_responses_api_overhead_duration_ms_milliseconds_*` |
 | `codex.websocket.request` | `codex_websocket_request_total` |
+| `codex.websocket.request.duration_ms` unit=`ms` | `codex_websocket_request_duration_ms_milliseconds_*` |
 | `codex.websocket.event` | `codex_websocket_event_total` |
+| `codex.websocket.event.duration_ms` unit=`ms` | `codex_websocket_event_duration_ms_milliseconds_*` |
 | `codex.tool.call` | `codex_tool_call_total` |
 | `codex.tool.call.duration_ms` unit=`ms` | `codex_tool_call_duration_ms_milliseconds_*` |
 
@@ -121,18 +121,23 @@ parser が複数の `--enable-feature` を受理することはローカル imag
 
 ### U2. Correct Codex histogram queries
 
-dashboard の次の family を置換する。
+runtime verification で Codex 0.146.0 が `codex.api_request` ではなく
+`codex.responses_api.inference_time.duration_ms` を export することを確認した。dashboard は
+次の family を参照する。
 
 ```text
-codex_api_request_duration_ms_bucket
--> codex_api_request_duration_ms_milliseconds_bucket
+codex_responses_api_inference_time_duration_ms_milliseconds_bucket
 
-codex_tool_call_duration_ms_bucket
--> codex_tool_call_duration_ms_milliseconds_bucket
+codex_tool_call_duration_ms_milliseconds_bucket
 ```
 
 counter query `codex_tool_call_total` は既に変換後の名前と一致するため変更しない。
 `service_name`、`model`、`tool`、`success` grouping も維持する。
+
+`success="false"` series は最初の失敗まで存在しない。成功した tool call がある期間を
+no data ではなく 0% と表示するため、failure-rate query は total series の zero-valued
+fallback を `or` で結合してから total で除算する。tool call 自体がない期間は no data の
+ままとする。
 
 JSON を編集後、`jq empty` と dashboard query の exact-name scan を行う。
 
@@ -182,8 +187,7 @@ batch を確認してから dashboard を判定する。
 Prometheus API から metric 名を列挙し、最低限次を確認する。
 
 ```text
-codex_api_request_total
-codex_api_request_duration_ms_milliseconds_bucket
+codex_responses_api_inference_time_duration_ms_milliseconds_bucket
 codex_tool_call_total
 codex_tool_call_duration_ms_milliseconds_bucket
 ```

@@ -143,9 +143,14 @@ already end in `duration_ms` and also declare the `ms` unit, so their stored
 histogram families include an additional `milliseconds` suffix:
 
 ```text
-codex_api_request_duration_ms_milliseconds_bucket
+codex_responses_api_inference_time_duration_ms_milliseconds_bucket
 codex_tool_call_duration_ms_milliseconds_bucket
 ```
+
+Codex does not create a `success="false"` tool counter series until a failure
+occurs. The dashboard uses the total tool-call series as a zero-valued fallback,
+so an active interval with successful calls only displays a 0% failure rate
+instead of no data.
 
 The pre-fix Delta samples were dropped and are not backfilled. For a dashboard
 probe, keep an interactive Codex session open until two metric export batches

@@ -132,12 +132,12 @@
       },
       "targets": [
         {
-          "expr": "histogram_quantile(0.50, sum by (le, service_name, model) (rate(codex_api_request_duration_ms_milliseconds_bucket[$__rate_interval])))",
+          "expr": "histogram_quantile(0.50, sum by (le, service_name, model) (rate(codex_responses_api_inference_time_duration_ms_milliseconds_bucket[$__rate_interval])))",
           "legendFormat": "{{service_name}} {{model}} p50",
           "refId": "A"
         },
         {
-          "expr": "histogram_quantile(0.95, sum by (le, service_name, model) (rate(codex_api_request_duration_ms_milliseconds_bucket[$__rate_interval])))",
+          "expr": "histogram_quantile(0.95, sum by (le, service_name, model) (rate(codex_responses_api_inference_time_duration_ms_milliseconds_bucket[$__rate_interval])))",
           "legendFormat": "{{service_name}} {{model}} p95",
           "refId": "B"
         }
@@ -261,7 +261,7 @@
       },
       "targets": [
         {
-          "expr": "sum by (service_name, tool) (rate(codex_tool_call_total{success=\"false\"}[$__rate_interval])) / sum by (service_name, tool) (rate(codex_tool_call_total[$__rate_interval]))",
+          "expr": "(sum by (service_name, tool) (rate(codex_tool_call_total{success=\"false\"}[$__rate_interval])) or sum by (service_name, tool) (rate(codex_tool_call_total[$__rate_interval])) * 0) / sum by (service_name, tool) (rate(codex_tool_call_total[$__rate_interval]))",
           "legendFormat": "{{service_name}} {{tool}}",
           "refId": "A"
         }
