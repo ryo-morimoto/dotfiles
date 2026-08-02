@@ -24,8 +24,8 @@
 ```
 
 - `nix-config/`: Nix flake、NixOS modules、Home Manager baseline、nixpkgs/community package wiring、agenix secrets。
-- `dot-config/config/`: Home Manager から `~/.config` に symlink する mutable app config。
-- `dot-config/agents/`: AI tool runtime notes と reviewed examples。Nix は live Codex、Claude、APM、MCP、skill、hook config を生成しない。
+- `dot-config/config/`: Home Manager から link/sync する mutable app config。Claude Code の全体設定と Codex の stable base もここに置く。
+- `dot-config/agents/`: AI tool runtime notes と reviewed examples。Nix は agent config の内容を生成せず、必要な link/copy/merge の lifecycle だけを管理する。
 - `tools/`: 補助ツール。
 - `docs/plans/`: 設計メモ・実装計画。
 
@@ -37,7 +37,7 @@
 - 既存責務を崩さない。host は `nix-config/hosts/`、user は `nix-config/home/`、Nix 外の experimental tool は `dot-config/config/mise/`。
 - 新規アプリ設定は `dot-config/config/<app>/` に追加し、Home Manager から参照する。
 - 新規シークレットは平文で置かず、`nix-config/secrets/*.age` と `nix-config/secrets/secrets.nix` で管理する。
-- AI tool runtime config、MCP、skills、hooks、plugins は原則 Nix で生成しない。
+- AI tool runtime config、MCP、skills、hooks、plugins は原則 Nix で生成しない。Claude Code の tracked settings は writable live file へ copy し、Codex の tracked stable base は tool-owned dynamic state を保持して live file へ merge する。
 - 生成物や host-local state は原則コミットしない。必要なら `.gitignore` で吸収する。
 
 ## Goal Handling

@@ -1,8 +1,9 @@
 # Agent telemetry
 
 Claude Code と Codex の遅延を、ローカルの Grafana LGTM で比較するための運用手順。
-live runtime config は従来どおり `~/.claude/settings.json` と
-`~/.codex/config.toml` を source of truth とし、Nix から生成しない。
+telemetry の安定設定は `dot-config/config/claude/settings.json` と
+`dot-config/config/codex/config.toml` を source of truth とする。Home Manager は
+tracked content を生成せず、writable live config への copy/merge だけを行う。
 
 ## Architecture
 
@@ -50,7 +51,9 @@ the dashboard itself is provisioned and not editable in the UI.
 
 ## Runtime configuration
 
-Claude Code uses the `env` object in `~/.claude/settings.json`:
+Claude Code uses the `env` object in
+`dot-config/config/claude/settings.json`. Home Manager copies it to the
+writable `~/.claude/settings.json`:
 
 ```json
 {
@@ -73,8 +76,9 @@ Claude Code uses the `env` object in `~/.claude/settings.json`:
 }
 ```
 
-Codex uses the user-level `~/.codex/config.toml`. Project-local `.codex` config
-cannot override telemetry routing.
+Codex stable settings live in `dot-config/config/codex/config.toml` and are
+merged into the user-level `~/.codex/config.toml`. Project-local `.codex`
+config cannot override telemetry routing.
 
 ```toml
 [otel]
@@ -87,6 +91,11 @@ metrics_exporter = { otlp-grpc = { endpoint = "http://127.0.0.1:4317" } }
 
 Restart each CLI after changing its config. The settings used by an already
 running process do not change retroactively.
+
+If Claude Code changes its writable live settings, review and run
+`claude-config-pull` before rebuilding. Codex project trust and generated state
+are preserved automatically by the merge and must not be copied into the
+tracked base.
 
 ## Privacy boundary
 

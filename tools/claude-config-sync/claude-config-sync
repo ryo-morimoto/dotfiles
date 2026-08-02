@@ -1,0 +1,136 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+usage() {
+	cat <<'EOF'
+Usage: claude-config-sync --source PATH --live PATH (--push | --pull | --check)
+
+Push the tracked Claude Code settings to the writable live file, pull reviewed
+live settings back to the repository, or check whether the two files differ.
+EOF
+}
+
+fail() {
+	printf 'claude-config-sync: %s\n' "$1" >&2
+	exit 1
+}
+
+source_config=""
+live_config=""
+mode=""
+
+while (($# > 0)); do
+	case "$1" in
+	--source)
+		(($# >= 2)) || fail "--source requires a path"
+		source_config=$2
+		shift 2
+		;;
+	--live)
+		(($# >= 2)) || fail "--live requires a path"
+		live_config=$2
+		shift 2
+		;;
+	--push | --pull | --check)
+		[[ -z $mode ]] || fail "choose only one mode"
+		mode=${1#--}
+		shift
+		;;
+	-h | --help)
+		usage
+		exit 0
+		;;
+	*)
+		fail "unknown argument"
+		;;
+	esac
+done
+
+[[ -n $source_config ]] || fail "--source is required"
+[[ -n $live_config ]] || fail "--live is required"
+[[ -n $mode ]] || fail "one mode is required"
+
+for command_name in cp dirname jq mkdir mktemp mv rm; do
+	command -v "$command_name" >/dev/null 2>&1 || fail "required command is unavailable"
+done
+
+validate_json() {
+	jq empty "$1" >/dev/null 2>&1
+}
+
+canonical_json() {
+	jq -S -c '.' "$1"
+}
+
+contains_private_paths() {
+	jq -e '[.. | strings | select(test("/ghq/|/worktrees?/|^/tmp(/|$)"))] | length > 0' "$1" >/dev/null
+}
+
+copy_atomically() {
+	local from=$1
+	local to=$2
+	local to_dir
+	local temporary
+
+	to_dir=$(dirname "$to")
+	mkdir -p "$to_dir"
+	temporary=$(mktemp "$to_dir/.claude-config-sync.XXXXXX")
+	cp -- "$from" "$temporary"
+	if [[ -e $to ]]; then
+		chmod --reference="$to" "$temporary"
+	else
+		chmod 0600 "$temporary"
+	fi
+	mv -- "$temporary" "$to"
+}
+
+case "$mode" in
+push)
+	[[ -f $source_config ]] || fail "tracked source does not exist"
+	[[ ! -L $live_config ]] || fail "live config must be a writable regular file"
+	validate_json "$source_config" || fail "tracked source is invalid JSON"
+
+	if [[ -e $live_config ]]; then
+		[[ -f $live_config ]] || fail "live config is not a regular file"
+		validate_json "$live_config" || fail "live config is invalid JSON"
+		if [[ $(canonical_json "$source_config") == "$(canonical_json "$live_config")" ]]; then
+			printf 'claude-config-sync: up to date\n'
+			exit 0
+		fi
+		cp -p -- "$live_config" "$live_config.pre-dotfiles"
+	fi
+
+	copy_atomically "$source_config" "$live_config"
+	printf 'claude-config-sync: updated live config\n'
+	;;
+pull)
+	[[ -f $live_config ]] || fail "live config does not exist"
+	[[ ! -L $live_config ]] || fail "live config must be a writable regular file"
+	validate_json "$live_config" || fail "live config is invalid JSON"
+	contains_private_paths "$live_config" && fail "live config contains a private-looking path"
+	command -v gitleaks >/dev/null 2>&1 || fail "gitleaks is required for pull"
+	gitleaks detect --no-banner --no-git --source "$live_config" >/dev/null 2>&1 ||
+		fail "gitleaks rejected the live config"
+
+	if [[ -f $source_config ]] && [[ $(canonical_json "$source_config") == "$(canonical_json "$live_config")" ]]; then
+		printf 'claude-config-sync: up to date\n'
+		exit 0
+	fi
+
+	copy_atomically "$live_config" "$source_config"
+	printf 'claude-config-sync: updated tracked source; review the Git diff before commit\n'
+	;;
+check)
+	[[ -f $source_config ]] || fail "tracked source does not exist"
+	[[ -f $live_config ]] || fail "live config does not exist"
+	validate_json "$source_config" || fail "tracked source is invalid JSON"
+	validate_json "$live_config" || fail "live config is invalid JSON"
+	if [[ $(canonical_json "$source_config") == "$(canonical_json "$live_config")" ]]; then
+		printf 'claude-config-sync: up to date\n'
+		exit 0
+	fi
+	printf 'claude-config-sync: live and tracked settings differ\n'
+	exit 2
+	;;
+esac

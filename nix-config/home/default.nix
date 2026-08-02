@@ -222,6 +222,34 @@ in
     };
 
     activation = {
+      syncClaudeCodeConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        PATH="${
+          lib.makeBinPath [
+            pkgs.bash
+            pkgs.coreutils
+            pkgs.jq
+          ]
+        }" \
+        ${dotfilesRoot}/tools/claude-config-sync/claude-config-sync \
+          --source ${dotConfigRoot}/config/claude/settings.json \
+          --live "$HOME/.claude/settings.json" \
+          --push
+      '';
+
+      syncCodexConfig = lib.hm.dag.entryAfter [ "syncClaudeCodeConfig" ] ''
+        PATH="${
+          lib.makeBinPath [
+            pkgs.bash
+            pkgs.coreutils
+            pkgs.jq
+            pkgs.yq-go
+          ]
+        }" \
+        ${dotfilesRoot}/tools/codex-config-sync/codex-config-sync \
+          --base ${dotConfigRoot}/config/codex/config.toml \
+          --live "$HOME/.codex/config.toml"
+      '';
+
       installMiseTools = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         if [ -r "$HOME/.config/mise/config.toml" ]; then
           echo "Installing mise tools from ~/.config/mise/config.toml"
@@ -371,6 +399,10 @@ in
           };
           agents = {
             claude = "claude --dangerously-skip-permissions";
+            claude-config-check = "${dotfilesRoot}/tools/claude-config-sync/claude-config-sync --source ${dotConfigRoot}/config/claude/settings.json --live $HOME/.claude/settings.json --check";
+            claude-config-pull = "${dotfilesRoot}/tools/claude-config-sync/claude-config-sync --source ${dotConfigRoot}/config/claude/settings.json --live $HOME/.claude/settings.json --pull";
+            claude-config-push = "${dotfilesRoot}/tools/claude-config-sync/claude-config-sync --source ${dotConfigRoot}/config/claude/settings.json --live $HOME/.claude/settings.json --push";
+            codex-config-check = "${dotfilesRoot}/tools/codex-config-sync/codex-config-sync --base ${dotConfigRoot}/config/codex/config.toml --live $HOME/.codex/config.toml --check";
           };
         in
         navigation // git // modern // utils // k8s // agents;
