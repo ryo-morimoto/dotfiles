@@ -6,7 +6,6 @@ minimum_release_age = "24h"
 [tools]
 aqua = "latest"
 herdr = "latest"
-portless = "latest"
 "pipx:apm-cli" = "latest"
 "npm:agent-browser" = "latest"
 "npm:@xai-official/grok" = "latest"

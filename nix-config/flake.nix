@@ -83,6 +83,9 @@
       ...
     }:
     let
+      localOverlay = final: _prev: {
+        portless = final.callPackage ./packages/portless { };
+      };
       communityOverlay = final: prev: {
         codex = prev.codex.overrideAttrs (old: {
           postInstall = (old.postInstall or "") + ''
@@ -142,6 +145,7 @@
               moonbit-overlay.overlays.default
               nix-claude-code.overlays.default
               codex-cli-nix.overlays.default
+              localOverlay
               communityOverlay
             ];
             home-manager = {
@@ -166,5 +170,11 @@
           }
         ];
       };
+
+      packages.x86_64-linux.portless =
+        (import nixpkgs {
+          system = "x86_64-linux";
+          overlays = [ localOverlay ];
+        }).portless;
     };
 }

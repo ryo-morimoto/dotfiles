@@ -19,6 +19,7 @@ in
     ./forgejo.nix
     ./hardware-configuration.nix
     ./plane.nix
+    ./portless.nix
   ];
 
   # Bootloader
@@ -32,7 +33,6 @@ in
     hostName = "ryobox";
     networkmanager.enable = true;
     firewall.interfaces.tailscale0.allowedTCPPorts = [
-      80
       443
       5757
       8443 # Agent Canvas Tailscale Serve (non-443; Caddy owns 443)
@@ -125,6 +125,10 @@ in
     # Tailscale IP, and Caddy gets public certificates through Cloudflare DNS-01.
     caddy = {
       enable = true;
+      globalConfig = ''
+        default_bind 100.116.123.65 fd7a:115c:a1e0::a736:7b41
+        auto_https disable_redirects
+      '';
       package = pkgs.caddy.withPlugins {
         plugins = [ "github.com/caddy-dns/cloudflare@v0.2.2" ];
         hash = "sha256-mqIa0wI/VfjDblg0NnkzKllWHXZZPLwHP8xEVSwZuPE=";
@@ -216,6 +220,40 @@ in
             }
           '';
         };
+        "*.p.ryobox.xyz" = {
+          extraConfig = ''
+            tls {
+              dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+            }
+
+            route {
+              request_header -Tailscale-User-Login
+
+              forward_auth unix/${config.services.tailscaleAuth.socketPath} {
+                uri /auth
+                header_up Remote-Addr {remote_host}
+                header_up Remote-Port {remote_port}
+                header_up Original-URI {uri}
+                copy_headers {
+                  Tailscale-User>Tailscale-User-Login
+                }
+              }
+
+              @allowed header Tailscale-User-Login ryo.morimoto.dev@gmail.com
+              handle @allowed {
+                reverse_proxy https://127.0.0.1:443 {
+                  header_up Host {http.request.host}
+                  transport http {
+                    tls_trust_pool file ${../../certs/portless-wildcard.crt}
+                    tls_server_name {http.request.host}
+                  }
+                }
+              }
+
+              respond "Forbidden" 403
+            }
+          '';
+        };
       };
     };
 
@@ -268,21 +306,49 @@ in
   systemd.services = {
     caddy = {
       after = [
+        "portless.service"
+        "tailscale-address-ready.service"
         "tailscale-nginx-auth.socket"
         "tailscale-serve-reset.service"
       ];
       requires = [
+        "tailscale-address-ready.service"
         "tailscale-nginx-auth.socket"
         "tailscale-serve-reset.service"
       ];
+      wants = [ "portless.service" ];
       serviceConfig.EnvironmentFile = config.age.secrets.caddy-cloudflare.path;
+    };
+
+    tailscale-address-ready = {
+      description = "Wait for the fixed ryobox Tailscale addresses";
+      before = [ "caddy.service" ];
+      after = [ "tailscaled.service" ];
+      requires = [ "tailscaled.service" ];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        ExecStart = pkgs.writeShellScript "tailscale-address-ready" ''
+          set -euo pipefail
+          for attempt in $(${pkgs.coreutils}/bin/seq 1 60); do
+            addresses="$(${pkgs.iproute2}/bin/ip -o address show dev tailscale0 2>/dev/null || true)"
+            if ${pkgs.gnugrep}/bin/grep -Fq '100.116.123.65/' <<<"$addresses" \
+              && ${pkgs.gnugrep}/bin/grep -Fq 'fd7a:115c:a1e0::a736:7b41/' <<<"$addresses"; then
+              exit 0
+            fi
+            ${pkgs.coreutils}/bin/sleep 1
+          done
+          echo 'expected Tailscale addresses were not assigned to tailscale0' >&2
+          exit 1
+        '';
+      };
     };
 
     tailscale-serve-reset = {
       description = "Clear Tailscale Serve before Caddy binds HTTPS";
       before = [ "caddy.service" ];
-      after = [ "tailscaled.service" ];
-      requires = [ "tailscaled.service" ];
+      after = [ "tailscale-address-ready.service" ];
+      requires = [ "tailscale-address-ready.service" ];
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;

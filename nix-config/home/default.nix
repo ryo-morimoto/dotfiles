@@ -40,6 +40,11 @@ in
       CHROME_PATH = lib.getExe pkgs.chromium;
       CLAUDE_CODE_NO_FLICKER = "1";
       CLAUDE_CODE_DISABLE_MOUSE = "1";
+      PORTLESS_HTTPS = "1";
+      PORTLESS_PORT = "443";
+      PORTLESS_STATE_DIR = "/var/lib/portless";
+      PORTLESS_SYNC_HOSTS = "0";
+      PORTLESS_TLD = "p.ryobox.xyz";
       # Required so mise-installed zed (bundled libxkbcommon) finds keymap data on NixOS
       XKB_CONFIG_ROOT = "${pkgs.xkeyboard_config}/share/X11/xkb";
     };
@@ -138,6 +143,7 @@ in
         lazygit
         just
         mise
+        portless
 
         # Web development
         nodejs

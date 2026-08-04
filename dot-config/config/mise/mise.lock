@@ -113,7 +113,3 @@ backend = "npm:agent-browser"
 [[tools."pipx:apm-cli"]]
 version = "0.26.0"
 backend = "pipx:apm-cli"
-
-[[tools.portless]]
-version = "0.15.5"
-backend = "npm:portless"

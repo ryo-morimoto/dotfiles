@@ -1,0 +1,13 @@
+diff --git a/dist/cli.js b/dist/cli.js
+index 1ca7056..75ee5b7 100755
+--- a/dist/cli.js
++++ b/dist/cli.js
+@@ -6403,7 +6403,7 @@ async function startProxy(options) {
+     useWildcard: desiredWildcard
+   };
+-  if (!isWindows && proxyPort < PRIVILEGED_PORT_THRESHOLD && (process.getuid?.() ?? -1) !== 0) {
++  if (!isWindows && proxyPort < PRIVILEGED_PORT_THRESHOLD && (process.getuid?.() ?? -1) !== 0 && process.env.PORTLESS_ASSUME_BIND_CAPABILITY !== "1") {
+     const startArgs = [
+       process.execPath,
+       getEntryScript(),
+       "proxy",

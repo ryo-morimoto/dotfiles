@@ -1,0 +1,29 @@
+{
+  "name": "portless",
+  "version": "0.15.5",
+  "description": "Replace port numbers with stable, named local URLs",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "bin": {
+    "portless": "./dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=24"
+  },
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ],
+  "license": "Apache-2.0"
+}
