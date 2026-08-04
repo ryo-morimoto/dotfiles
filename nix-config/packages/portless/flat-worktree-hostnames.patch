@@ -1,0 +1,35 @@
+diff --git a/dist/cli.js b/dist/cli.js
+index 1ca7056..8971df8 100755
+--- a/dist/cli.js
++++ b/dist/cli.js
+@@ -1349,7 +1349,11 @@ function findGitRoot(startDir) {
+   return null;
+ }
+ function applyWorktreePrefix(baseName, worktree) {
+-  return worktree ? `${worktree.prefix}.${baseName}` : baseName;
++  if (!worktree) return baseName;
++  if (process.env.PORTLESS_FLAT_WORKTREE === "1") {
++    return sanitizeForHostname(`${worktree.prefix}-${baseName}`);
++  }
++  return `${worktree.prefix}.${baseName}`;
+ }
+ var DEFAULT_BRANCHES = /* @__PURE__ */ new Set(["main", "master"]);
+ function branchToPrefix(branch) {
+@@ -5621,7 +5625,7 @@ async function handleGet(args) {
+   }
+   const name = positional[0];
+   const worktree = skipWorktree ? null : detectWorktreePrefix();
+-  const effectiveName = worktree ? `${worktree.prefix}.${name}` : name;
++  const effectiveName = applyWorktreePrefix(name, worktree);
+   const { port, tls: tls2, tlds } = await discoverState();
+   const hostname = buildHostnames(effectiveName, tlds)[0];
+   const url = formatUrl(hostname, port, tls2);
+@@ -7097,7 +7101,7 @@ async function handleRun(args) {
+     parsed.appPort = appConfig.appPort;
+   }
+   const worktree = detectWorktreePrefix();
+-  const effectiveName = worktree ? `${worktree.prefix}.${baseName}` : baseName;
++  const effectiveName = applyWorktreePrefix(baseName, worktree);
+   const { dir, port, tls: tls2, tlds, lanMode, lanIp } = await discoverState();
+   const store = new RouteStore(dir, {
+     onWarning: (msg) => console.warn(colors_default.yellow(msg))

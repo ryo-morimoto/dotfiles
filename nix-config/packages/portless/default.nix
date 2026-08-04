@@ -16,7 +16,10 @@ buildNpmPackage rec {
     hash = "sha512-zmJu4Q8/fY54oVUT/5NnmF4Ih8wTdCvCf6JCN783dRYl9mXkJBzXSckX2lztGCLIbM70varDjCudAbGKT73XPg==";
   };
 
-  patches = [ ./no-sudo-with-bind-capability.patch ];
+  patches = [
+    ./flat-worktree-hostnames.patch
+    ./no-sudo-with-bind-capability.patch
+  ];
   patchFlags = [
     "-p1"
     "--fuzz=0"

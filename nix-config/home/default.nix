@@ -40,6 +40,7 @@ in
       CHROME_PATH = lib.getExe pkgs.chromium;
       CLAUDE_CODE_NO_FLICKER = "1";
       CLAUDE_CODE_DISABLE_MOUSE = "1";
+      PORTLESS_FLAT_WORKTREE = "1";
       PORTLESS_HTTPS = "1";
       PORTLESS_PORT = "443";
       PORTLESS_STATE_DIR = "/var/lib/portless";

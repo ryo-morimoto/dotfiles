@@ -23,6 +23,7 @@ in
 
     environment = {
       PORTLESS_ASSUME_BIND_CAPABILITY = "1";
+      PORTLESS_FLAT_WORKTREE = "1";
       PORTLESS_HTTPS = "1";
       PORTLESS_PORT = "443";
       PORTLESS_STATE_DIR = "/var/lib/portless";

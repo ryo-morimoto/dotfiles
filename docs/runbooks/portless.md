@@ -12,6 +12,8 @@
 
 Portless は非 root で動作し、systemd から `CAP_NET_BIND_SERVICE` だけを受け取る。`PORTLESS_ASSUME_BIND_CAPABILITY=1` は system service にだけ設定する。
 
+worktree 内では `PORTLESS_FLAT_WORKTREE=1` により、URL を `https://<worktree>-<name>.p.ryobox.xyz` の 1 ラベル形式にする。これにより `*.p.ryobox.xyz` の wildcard DNS/TLS の範囲を外れない。
+
 ## deploy 前確認
 
 現在の generation を store path で記録する。
@@ -29,7 +31,7 @@ tailscale serve status --json | jq .
 ps -eo pid,user,args | rg '[p]ortless'
 ```
 
-2026-08-04 時点では、別 repo の Devbox から Portless v0.12.0 が TCP 1355 で動作し、Tailscale Serve :8444 もその route を公開している。新構成へ切り替える前に、その repo の開発 process を停止するか、利用者と停止時間を調整する。
+旧 Devbox Portless v0.12.0、TCP 1355、Tailscale Serve :8444 は 2026-08-04 に廃止済みである。これらが存在する場合は意図しない旧構成の再導入として扱い、deploy を止めて除去する。
 
 DNS は Cloudflare proxy を使わない。次を確認する。
 
@@ -89,7 +91,7 @@ rg '^Cap(Amb|Bnd|Eff):' "/proc/$portless_pid/status"
 ```sh
 command -v portless
 portless --version
-env | rg '^PORTLESS_(HTTPS|PORT|STATE_DIR|SYNC_HOSTS|TLD)='
+env | rg '^PORTLESS_(FLAT_WORKTREE|HTTPS|PORT|STATE_DIR|SYNC_HOSTS|TLD)='
 ```
 
 test route を起動する。
@@ -116,7 +118,7 @@ curl --fail-with-body --show-error https://smoke-test.p.ryobox.xyz/
 
 `tailscale-serve-reset.service` は deploy 時に mutable な Serve 設定を消す。成功後に `agent-canvas-tailscale-serve.service` を起動し、宣言済みの Agent Canvas :8443 だけを復元する。
 
-現在の :8444 は旧 Portless `--tailscale` が作った runtime state であり、新しい wildcard ingress へ移行後は復元しない。移行前に :8444 が必要なら deploy を止め、別の宣言的 service として用途を確定する。
+旧 Portless `--tailscale` が作っていた :8444 は廃止済みであり、復元しない。再び現れた場合は mutable な旧 runtime state として削除する。
 
 ## 証明書更新
 
@@ -143,4 +145,4 @@ sudo systemctl stop portless.service
 sudo /nix/store/<recorded-nixos-system>/bin/switch-to-configuration switch
 ```
 
-その後、必要な場合だけ旧 Devbox Portless process と Tailscale Serve を復元する。単純な `nixos-rebuild --rollback` は、途中で別 generation が作られていると意図しない世代へ戻るため使わない。
+旧 Devbox Portless process、TCP 1355、Tailscale Serve :8444 は rollback 時も復元しない。単純な `nixos-rebuild --rollback` は、途中で別 generation が作られていると意図しない世代へ戻るため使わない。
