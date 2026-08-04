@@ -198,7 +198,8 @@ in
       ];
       serviceConfig = {
         Type = "oneshot";
-        RemainAfterExit = true;
+        # Keep the unit startable after every tailscale-serve-reset.
+        RemainAfterExit = false;
         ExecStartPre = "${pkgs.bash}/bin/bash -c 'for i in $(seq 1 30); do ${pkgs.tailscale}/bin/tailscale status >/dev/null 2>&1 && exit 0; sleep 1; done; echo \"tailscale not ready\" >&2; exit 1'";
         ExecStart = applyServe;
       };

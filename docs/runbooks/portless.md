@@ -78,7 +78,7 @@ rg '^Cap(Amb|Bnd|Eff):' "/proc/$portless_pid/status"
 
 - Caddy は `100.116.123.65:443` と Tailscale IPv6 の 443 にだけ bind する。
 - Portless は loopback の 443 にだけ bind する。
-- TCP 80 listener と firewall 許可は存在しない。
+- Tailscale IP や外部 interface に TCP 80 listener と firewall 許可は存在しない。Portless の loopback:80 redirect は許容する。
 - Portless process は `ryo-morimoto` で、ambient capability は `cap_net_bind_service` だけである。
 - Portless の journal に sudo prompt がない。
 
@@ -114,7 +114,7 @@ curl --fail-with-body --show-error https://smoke-test.p.ryobox.xyz/
 
 ## Tailscale Serve の扱い
 
-`tailscale-serve-reset.service` は deploy 時に mutable な Serve 設定を消す。その後、宣言済みの Agent Canvas :8443 だけを復元する。
+`tailscale-serve-reset.service` は deploy 時に mutable な Serve 設定を消す。成功後に `agent-canvas-tailscale-serve.service` を起動し、宣言済みの Agent Canvas :8443 だけを復元する。
 
 現在の :8444 は旧 Portless `--tailscale` が作った runtime state であり、新しい wildcard ingress へ移行後は復元しない。移行前に :8444 が必要なら deploy を止め、別の宣言的 service として用途を確定する。
 

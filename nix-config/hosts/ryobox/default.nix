@@ -349,6 +349,7 @@ in
       before = [ "caddy.service" ];
       after = [ "tailscale-address-ready.service" ];
       requires = [ "tailscale-address-ready.service" ];
+      unitConfig.OnSuccess = "agent-canvas-tailscale-serve.service";
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
