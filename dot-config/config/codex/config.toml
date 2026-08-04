@@ -1,10 +1,14 @@
 approval_policy = "never"
-model = "gpt-5.6-luna"
-model_reasoning_effort = "max"
+model = "gpt-5.6-sol"
+model_reasoning_effort = "medium"
 personality = "pragmatic"
 review_model = "gpt-5.6-luna"
 sandbox_mode = "danger-full-access"
-service_tier = "fast"
+service_tier = "default"
+
+[agents]
+default_subagent_model = "gpt-5.6-luna"
+default_subagent_reasoning_effort = "max"
 
 [features]
 apps = false
