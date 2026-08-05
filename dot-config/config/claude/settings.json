@@ -34,7 +34,7 @@
     "baseRef": "fresh"
   },
   "enabledPlugins": {},
-  "effortLevel": "high",
+  "effortLevel": "low",
   "tui": "default",
   "autoMemoryEnabled": false,
   "skipDangerousModePermissionPrompt": true,
