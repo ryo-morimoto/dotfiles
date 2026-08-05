@@ -21,7 +21,7 @@
 
 ### Configuration Shape
 
-- 関連設定は、一箇所で読める粒度の `nix-config/home/<domain>/default.nix` か `dot-config/config/<app>/` に集約する。
+- 関連設定は、一箇所で読める粒度の `nix-config/home/<domain>/default.nix` か `dot-config/chezmoi/` の source に集約する。
 - `nix-config/home/default.nix` は import の集約に寄せ、過剰な submodule 分割は避ける。
 - package 定義や app 設定は、既存の責務境界に合わせて置く。境界をまたぐ場合は先に構造を確認する。
 
@@ -50,7 +50,7 @@
 - Codex、Claude Code、APM、MCP、skills、hooks、plugins は mutable runtime config を既定にする。
 - Nix は agent tool の stable runtime prerequisite と config lifecycle を導入してよいが、live `~/.codex`、`~/.claude`、`~/.apm` config の内容は生成しない。
 - Disposable AI tools は Nix の外に置く。1ヶ月以上繰り返し使い、rebuild-time 管理に見合うものだけ nixpkgs か maintained community package に昇格する。
-- Agent の stable settings は `dot-config/config/<tool>/`、operation notes と reviewed examples は `dot-config/agents/` に置く。単一の runtime file に stable config と host-local state が混在する場合は、tracked base を live file へ merge し、tool-owned state を Git 管理から除外する。
+- Agent の stable settings は `dot-config/chezmoi/` の source、operation notes と reviewed examples は `dot-config/agents/` に置く。単一の runtime file に stable config と host-local state が混在する場合は、chezmoi modify template で tracked base を live file へ merge し、tool-owned state を Git 管理から除外する。
 
 ### Review And Planning
 
@@ -71,6 +71,9 @@
 - `semgrep` CLI は Home Manager に常設せず、必要時だけ一時導入または個別環境で使う。
 - Neovim の日本語 Markdown では spell を無効化せず、`spelllang=en,cjk` で英単語チェックを残す。
 - Repo 内に `worktrees/` は持たず、worktree は project 隣接の `{project}-wt/<name>` に置く。
+- `$HOME` 配備は pure な標準 chezmoi 運用に従う。実体は source dir(`dot-config/chezmoi/`)に置き copy 配備、tool が書き換えた live の変更は `chezmoi re-add` で回収する。独自 wrapper・symlink shim は持たない。template は共有 AGENTS.md と Codex modify merge の 2 つだけ。Home Manager は package 導入・`sourceDir` 設定生成・activation での `chezmoi apply --force` だけを担う。
+- Machine-generated なファイル(DMS theme 出力等、ユーザー操作なしで tool が再生成するもの)は chezmoi 管理に含めない。rebuild の apply が tool 出力を巻き戻すため。lock file(lazy-lock、mise.lock、approvals)は reproducibility 入力として例外的に管理し、更新操作の後に `chezmoi re-add` で回収する。
+- Config の内容検査は self-maintained な lint/policy を持たず、OSS hook(pre-commit-hooks の `check-toml` / `check-json` / `check-yaml`、gitleaks default rules)と diff review だけで行う。
 
 ## 未確定ドメイン
 

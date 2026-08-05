@@ -92,10 +92,10 @@ metrics_exporter = { otlp-grpc = { endpoint = "http://127.0.0.1:4317" } }
 Restart each CLI after changing its config. The settings used by an already
 running process do not change retroactively.
 
-If Claude Code changes its writable live settings, review and run
-`claude-config-pull` before rebuilding. Codex project trust and generated state
-are preserved automatically by the merge and must not be copied into the
-tracked base.
+If Claude Code changes its writable live settings, review `chezmoi diff` and
+pull the change with `chezmoi re-add ~/.claude/settings.json` before rebuilding.
+Codex project trust and generated state are preserved automatically by the
+chezmoi modify merge and must not be copied into the tracked base.
 
 ## Privacy boundary
 

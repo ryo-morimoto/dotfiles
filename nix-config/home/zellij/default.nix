@@ -1,19 +1,11 @@
 {
-  config,
   pkgs,
   ...
 }:
 
-let
-  dotfilesRoot = "${config.home.homeDirectory}/ghq/github.com/ryo-morimoto/dotfiles";
-  dotConfigRoot = "${dotfilesRoot}/dot-config";
-in
 {
+  # ~/.config/zellij is deployed by chezmoi (see dot-config/chezmoi/dot_config/)
   home.packages = with pkgs; [
     zellij
   ];
-
-  xdg.configFile = {
-    "zellij".source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/zellij";
-  };
 }

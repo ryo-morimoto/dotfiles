@@ -29,7 +29,7 @@
 - Functions: `camelCase`.
 - Options: `camelCase`, for example `programs.zsh.enable`.
 - Packages: `kebab-case`.
-- Experimental tool config: `dot-config/config/mise/config.toml`.
+- Experimental tool config: `dot-config/chezmoi/dot_config/mise/config.toml`.
 - Module files: `default.nix`.
 
 ## Types And Assertions
@@ -51,7 +51,7 @@ lib.mkIf (cfg.enable && cfg.disable) (lib.warn "矛盾した設定" null)
 ## Organization
 
 - Prefer nixpkgs or maintained community packages over local package definitions.
-- Manage experimental tools outside Nix under `dot-config/config/mise/`.
+- Manage experimental tools outside Nix under `dot-config/chezmoi/dot_config/mise/`.
 - Host-specific config belongs in `nix-config/hosts/<hostname>/`.
 - User environment config belongs in `nix-config/home/`.
 - Keep `nix-config/flake.nix` minimal and delegate details to modules.

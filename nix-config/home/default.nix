@@ -206,58 +206,17 @@ in
         # AI tools
         soulforge
         seiren-mcp
+
+        # Dotfiles deployment
+        chezmoi
       ]);
 
-    file = {
-      ".agent-browser/config.json".source =
-        config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/agent-browser/config.json";
-      ".apm/apm.yml" = {
-        force = true;
-        source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/agents/apm/apm.yml";
-      };
-      ".apm/config.json" = {
-        force = true;
-        source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/agents/apm/config.json";
-      };
-      ".apm/marketplaces.json" = {
-        force = true;
-        source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/agents/apm/marketplaces.json";
-      };
-      ".codex/AGENTS.md".source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/agents/AGENTS.md";
-      ".claude/CLAUDE.md".source =
-        config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/agents/AGENTS.md";
-    };
-
     activation = {
-      syncClaudeCodeConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        PATH="${
-          lib.makeBinPath [
-            pkgs.bash
-            pkgs.coreutils
-            pkgs.jq
-          ]
-        }" \
-        ${dotfilesRoot}/tools/claude-config-sync/claude-config-sync \
-          --source ${dotConfigRoot}/config/claude/settings.json \
-          --live "$HOME/.claude/settings.json" \
-          --push
+      syncChezmoiConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        ${lib.getExe pkgs.chezmoi} apply --force
       '';
 
-      syncCodexConfig = lib.hm.dag.entryAfter [ "syncClaudeCodeConfig" ] ''
-        PATH="${
-          lib.makeBinPath [
-            pkgs.bash
-            pkgs.coreutils
-            pkgs.jq
-            pkgs.yq-go
-          ]
-        }" \
-        ${dotfilesRoot}/tools/codex-config-sync/codex-config-sync \
-          --base ${dotConfigRoot}/config/codex/config.toml \
-          --live "$HOME/.codex/config.toml"
-      '';
-
-      installMiseTools = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      installMiseTools = lib.hm.dag.entryAfter [ "syncChezmoiConfig" ] ''
         if [ -r "$HOME/.config/mise/config.toml" ]; then
           echo "Installing mise tools from ~/.config/mise/config.toml"
           ${lib.getExe pkgs.mise} install --yes || \
@@ -288,6 +247,10 @@ in
     claude-code.enable = true;
     codex.enable = true;
     home-manager.enable = true;
+    opencode = {
+      enable = true;
+      settings.permission = "allow";
+    };
 
     git = {
       enable = true;
@@ -406,10 +369,6 @@ in
           };
           agents = {
             claude = "claude --dangerously-skip-permissions";
-            claude-config-check = "${dotfilesRoot}/tools/claude-config-sync/claude-config-sync --source ${dotConfigRoot}/config/claude/settings.json --live $HOME/.claude/settings.json --check";
-            claude-config-pull = "${dotfilesRoot}/tools/claude-config-sync/claude-config-sync --source ${dotConfigRoot}/config/claude/settings.json --live $HOME/.claude/settings.json --pull";
-            claude-config-push = "${dotfilesRoot}/tools/claude-config-sync/claude-config-sync --source ${dotConfigRoot}/config/claude/settings.json --live $HOME/.claude/settings.json --push";
-            codex-config-check = "${dotfilesRoot}/tools/codex-config-sync/codex-config-sync --base ${dotConfigRoot}/config/codex/config.toml --live $HOME/.codex/config.toml --check";
           };
         in
         navigation // git // modern // utils // k8s // agents;
@@ -1018,20 +977,12 @@ in
 
     mimeApps.enable = true;
 
-    # Dotfiles (mkOutOfStoreSymlink for instant updates)
+    # Dotfiles under dot-config are deployed by chezmoi (see dot-config/chezmoi/)
     configFile = {
       "mimeapps.list".force = true;
-      "nvim".source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/nvim";
-      "ghostty".source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/ghostty";
-      "herdr/config.toml" = {
-        force = true;
-        source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/herdr/config.toml";
-      };
-      "zsh".source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/zsh";
-      "lazygit".source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/lazygit";
-      "mise".source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/mise";
-      "worktrunk".source = config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/worktrunk";
-
+      "chezmoi/chezmoi.toml".text = ''
+        sourceDir = "${dotConfigRoot}/chezmoi"
+      '';
     };
   };
 

@@ -1,13 +1,8 @@
 {
-  config,
   lib,
   ...
 }:
 
-let
-  dotfilesRoot = "${config.home.homeDirectory}/ghq/github.com/ryo-morimoto/dotfiles";
-  dotConfigRoot = "${dotfilesRoot}/dot-config";
-in
 {
   programs.obsidian = {
     enable = true;
@@ -81,15 +76,7 @@ in
     };
   };
 
-  home.file = {
-    "obsidian/Templates/daily.md".source =
-      config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/knowledge/obsidian/templates/daily.md";
-    "obsidian/Templates/note.md".source =
-      config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/knowledge/obsidian/templates/note.md";
-    "obsidian/AGENTS.md".source =
-      config.lib.file.mkOutOfStoreSymlink "${dotConfigRoot}/config/knowledge/obsidian/AGENTS.md";
-  };
-
+  # Vault templates and AGENTS.md are deployed by chezmoi (see dot-config/chezmoi/obsidian/)
   home.activation.initObsidianVault = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     for dir in Daily Templates Attachments; do
       mkdir -p "$HOME/obsidian/$dir"

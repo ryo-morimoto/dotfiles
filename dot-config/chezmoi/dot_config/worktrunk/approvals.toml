@@ -1,0 +1,6 @@
+[projects."github.com/commercex-holdings/bookoff.app"]
+approved-commands = [
+    "cp {{ primary_worktree_path }}/.env.local .env.local",
+    "wt step copy-ignored",
+    "devbox run install",
+]

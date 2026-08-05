@@ -1,4 +1,16 @@
 repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-toml
+        files: '^dot-config/'
+        exclude: '/modify_'
+      - id: check-json
+        files: '^dot-config/'
+        exclude: '^dot-config/chezmoi/dot_config/nvim/'
+      - id: check-yaml
+        files: '^dot-config/'
+
   - repo: local
     hooks:
       # Lint (priority 0: run in parallel)

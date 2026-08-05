@@ -19,7 +19,8 @@
 .claude/settings.local.json
 .claude/agents/
 .claude/commands/
-.claude/skills/
+.claude/skills/*
+!.claude/skills/dotfiles-deploy/
 .mcp.json
 
 # compound-engineering runtime data

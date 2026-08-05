@@ -1,0 +1,7 @@
+{{- /* chezmoi:modify-template */ -}}
+{{- $base := include ".chezmoitemplates/codex/config.toml" | fromToml -}}
+{{- $live := dict -}}
+{{- if .chezmoi.stdin -}}
+{{- $live = .chezmoi.stdin | fromToml -}}
+{{- end -}}
+{{- merge $base $live | toToml -}}

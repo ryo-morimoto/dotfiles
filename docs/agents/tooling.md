@@ -115,6 +115,6 @@ grepika --root . search "test.*<symbol>"
 
 Zellij is installed for manual evaluation. tmux remains available as fallback.
 
-- Runtime config: `dot-config/config/zellij/`
+- Runtime config: `dot-config/chezmoi/dot_config/zellij/`
 - Manual main session command: `zmain`
 - tmux fallback command: `tm`

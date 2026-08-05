@@ -14,6 +14,7 @@
 |   |-- packages/
 |   `-- secrets/
 |-- dot-config/
+|   |-- chezmoi/
 |   |-- config/
 |   `-- agents/
 |-- tools/
@@ -24,20 +25,21 @@
 ```
 
 - `nix-config/`: Nix flake、NixOS modules、Home Manager baseline、nixpkgs/community package wiring、agenix secrets。
-- `dot-config/config/`: Home Manager から link/sync する mutable app config。Claude Code の全体設定と Codex の stable base もここに置く。
-- `dot-config/agents/`: AI tool runtime notes と reviewed examples。Nix は agent config の内容を生成せず、必要な link/copy/merge の lifecycle だけを管理する。
+- `dot-config/chezmoi/`: chezmoi source dir(標準の chezmoi 命名規約)。`$HOME` へ配備される app config の実体はすべてここに置く。Claude Code の全体設定と Codex の stable base も含む。
+- `dot-config/config/`: `$HOME` へ配備せず repo 内 path を直接参照させる content(Claude marketplace の `knowledge/know` 等)。
+- `dot-config/agents/`: AI tool runtime notes と reviewed examples。Nix は agent config の内容を生成せず、chezmoi を起動する lifecycle だけを管理する。
 - `tools/`: 補助ツール。
 - `docs/plans/`: 設計メモ・実装計画。
 
 ## Source Of Truth
 
 - 再現したい基盤は `nix-config/`、運用しながら変える設定は `dot-config/` に置く。
-- Home Manager / activation の出力先は直接編集しない。対応する `nix-config/home/<domain>/*.nix` か `dot-config/config/<app>/` を更新する。
+- Home Manager / activation の出力先は直接編集しない。対応する `nix-config/home/<domain>/*.nix` か `dot-config/chezmoi/` の source を更新する。live 側だけの変更は `chezmoi re-add` で source に回収する。
 - 出力先か source か判別できないときは `readlink` で symlink target を確認してから編集する。
-- 既存責務を崩さない。host は `nix-config/hosts/`、user は `nix-config/home/`、Nix 外の experimental tool は `dot-config/config/mise/`。
-- 新規アプリ設定は `dot-config/config/<app>/` に追加し、Home Manager から参照する。
+- 既存責務を崩さない。host は `nix-config/hosts/`、user は `nix-config/home/`、Nix 外の experimental tool は `dot-config/chezmoi/dot_config/mise/`。
+- 新規アプリ設定は `chezmoi add <target>` で管理下に追加する。詳細 workflow は `dotfiles-deploy` skill を参照。
 - 新規シークレットは平文で置かず、`nix-config/secrets/*.age` と `nix-config/secrets/secrets.nix` で管理する。
-- AI tool runtime config、MCP、skills、hooks、plugins は原則 Nix で生成しない。Claude Code の tracked settings は writable live file へ copy し、Codex の tracked stable base は tool-owned dynamic state を保持して live file へ merge する。
+- AI tool runtime config、MCP、skills、hooks、plugins は原則 Nix で生成しない。Claude Code の tracked settings は chezmoi が writable live file へ copy し、Codex の tracked stable base は chezmoi modify template が tool-owned dynamic state を保持して live file へ merge する。
 - 生成物や host-local state は原則コミットしない。必要なら `.gitignore` で吸収する。
 
 ## Goal Handling
@@ -89,11 +91,16 @@ nix develop ./nix-config
 
 # Evaluate a specific attribute
 nix eval ./nix-config#nixosConfigurations.ryobox.config.system.build.toplevel
+
+# Preview / apply dotfiles deployment (chezmoi)
+chezmoi diff
+chezmoi apply --force
 ```
 
 ## Verification Rules
 
 - `.nix` を編集したら `nixfmt` を実行する。
 - `nix-config/flake.nix` / `nix-config/flake.lock` を編集したら `nix flake check ./nix-config` を実行する。
+- `dot-config/chezmoi/` を編集したら `chezmoi diff` で意図した差分だけかを確認してから `chezmoi apply --force` を実行する。
 - Markdown-only 変更では `git diff --check -- <paths>` で空白エラーを確認する。
 - 検証できなかった場合は、未検証の範囲と理由を明記する。

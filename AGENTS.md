@@ -12,3 +12,5 @@ This file is intentionally brief. Detailed instructions live in focused docs:
   - [docs/agents/tooling.md](./docs/agents/tooling.md)
 - Agent operating principles and unresolved domains:
   - [docs/agents/operating-principles.md](./docs/agents/operating-principles.md)
+- Dotfiles deployment workflow (chezmoi):
+  - [.claude/skills/dotfiles-deploy/SKILL.md](./.claude/skills/dotfiles-deploy/SKILL.md)
