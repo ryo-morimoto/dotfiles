@@ -35,7 +35,10 @@ live 側だけを編集した変更は次の apply で消えるので、残し�
 例: `dot_config/nvim/init.lua` → `~/.config/nvim/init.lua`、
 `private_dot_claude/private_settings.json` → `~/.claude/settings.json`。
 
-## この repo の template エントリ(2 つだけ)
+## この repo の template エントリ
+
+skill symlink 用の `symlink_*.tmpl`(homeDir 展開のみ)を除くと、内容を持つ
+template は次の 2 つだけ。
 
 1. **共有 agent 指示** `.chezmoitemplates/AGENTS.md`
    `~/.claude/CLAUDE.md` と `~/.codex/AGENTS.md` の 2 target へ同一内容を
@@ -47,6 +50,15 @@ live 側だけを編集した変更は次の apply で消えるので、残し�
    保持される。Codex 設定の変更は base を編集して apply。
    **base に tool-owned dynamic state や絶対 repo/worktree/temp path を
    入れない**(自動検査はない。diff review で止める)。
+
+## Cross-tool shared skills(symlink 配備)
+
+self-authored な agent skill は実体を repo の `dot-config/config/skills/<name>/`
+に置き、chezmoi source の `symlink_<name>.tmpl` エントリ
+(`private_dot_claude/skills/`、`private_dot_codex/skills/`、
+`dot_config/opencode/skills/`)で各 tool の skill dir から symlink 参照させる。
+copy ではないため編集は apply 不要で即時反映。新規 skill は実体 dir を追加し、
+3 箇所に symlink エントリを足して apply する。
 
 ## Tool が書き換えるファイル(drift は正常、re-add で回収)
 
