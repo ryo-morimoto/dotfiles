@@ -198,6 +198,7 @@ in
         imagemagick
 
         # Utilities
+        _1password-cli
         watchexec
         fastfetch
         age
