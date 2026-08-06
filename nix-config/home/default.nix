@@ -145,6 +145,7 @@ in
         just
         mise
         portless
+        nssTools
 
         # Web development
         nodejs
