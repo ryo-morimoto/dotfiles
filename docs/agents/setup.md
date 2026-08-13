@@ -11,7 +11,9 @@
 |   |-- flake.lock
 |   |-- hosts/
 |   |-- home/
+|   |-- overlays/
 |   |-- packages/
+|   |-- certs/
 |   `-- secrets/
 |-- dot-config/
 |   |-- chezmoi/
@@ -24,7 +26,7 @@
 `-- .github/workflows/
 ```
 
-- `nix-config/`: Nix flake、NixOS modules、Home Manager baseline、nixpkgs/community package wiring、agenix secrets。
+- `nix-config/`: Nix flake、NixOS modules、Home Manager baseline、nixpkgs/community package wiring、agenix secrets。overlay(nixpkgs からの離脱)は `overlays/`、TLS 証明書の公開部分は `certs/`(対の秘密鍵は `secrets/*.age`)。
 - `dot-config/chezmoi/`: chezmoi source dir(標準の chezmoi 命名規約)。`$HOME` へ配備される app config の実体はすべてここに置く。Claude Code の全体設定と Codex の stable base も含む。
 - `dot-config/config/`: `$HOME` へ配備せず repo 内 path を直接参照させる content(Claude marketplace の `knowledge/know` 等)。
 - `dot-config/agents/`: AI tool runtime notes と reviewed examples。Nix は agent config の内容を生成せず、chezmoi を起動する lifecycle だけを管理する。

@@ -62,11 +62,10 @@
 
 - Desktop stack は Niri + DankMaterialShell を継続し、置き換え済みの旧 desktop stack は repo に残さない。
 - Playwright は Nix の Chromium-only `playwright-driver` を標準にし、`playwright install*` を使わない。
-- Agent skills は OSS の個別 skill を APM で管理する。all-in-one plugin は常時ロードの context コストが高いため使わない。
+- APM は MCP server の宣言管理に使う。all-in-one plugin は常時ロードの context コストが高いため使わない。
 - OpenCode には managed permission policy を注入せず、Home Manager の `settings.permission = "allow"` を既定にする。
 - Claude Code は `permissions.defaultMode = "bypassPermissions"` と `sandbox.enabled = false` を標準にする。
 - Claude Code の dangerous bypass flag は wrapper ではなく shell alias で付与する。
-- Claude Code から Codex を使う入口は OpenAI の `codex-plugin-cc` marketplace を使う。
 - `semgrep@claude-plugins-official` は自動 hook の副作用があるため、既定では無効化する。
 - `semgrep` CLI は Home Manager に常設し、この repo の Nix policy(`.semgrep/nix.yaml`)を pre-commit と CI で強制する。
 - Neovim の日本語 Markdown では spell を無効化せず、`spelllang=en,cjk` で英単語チェックを残す。
@@ -79,3 +78,4 @@
 ## 未確定ドメイン
 
 - 既定ブラウザの方向性（Firefox 基準の維持 / Zen への移行）
+- OSS agent skill の管理経路（APM 経由 / skill dir への直置き。現状 `module-design-optimization` が `~/.claude/skills` に管理外で直置きされている）
