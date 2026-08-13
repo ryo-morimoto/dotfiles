@@ -2,41 +2,42 @@
   description = "NixOS configuration";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    home-manager = {
-      url = "github:nix-community/home-manager";
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    codex-cli-nix = {
+      url = "github:sadjow/codex-cli-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     dms = {
       url = "github:AvengeMedia/DankMaterialShell/stable";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    niri-flake = {
-      url = "github:sodiboo/niri-flake";
-    };
-    zen-browser = {
-      url = "github:0xc000022070/zen-browser-flake";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        home-manager.follows = "home-manager";
-      };
-    };
-    agenix = {
-      url = "github:ryantm/agenix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    voxtype = {
-      url = "github:peteonrails/voxtype";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     fenix = {
       url = "github:nix-community/fenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    home-manager = {
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     moonbit-overlay = {
       url = "github:moonbit-community/moonbit-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    niri-flake = {
+      url = "github:sodiboo/niri-flake";
+    };
+    nix-claude-code = {
+      url = "github:ryoppippi/nix-claude-code";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-hazkey = {
+      url = "github:aster-void/nix-hazkey";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     seiren = {
       url = "github:ryo-morimoto/seiren/nix-pkgs";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -45,64 +46,36 @@
       url = "github:ryo-morimoto/soulforge";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-hazkey = {
-      url = "github:aster-void/nix-hazkey";
+    voxtype = {
+      url = "github:peteonrails/voxtype";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-claude-code = {
-      url = "github:ryoppippi/nix-claude-code";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    codex-cli-nix = {
-      url = "github:sadjow/codex-cli-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        home-manager.follows = "home-manager";
+      };
     };
   };
 
   outputs =
     inputs@{
-      nixpkgs,
-      home-manager,
-      dms,
-      niri-flake,
-      zen-browser,
       agenix,
-      voxtype,
-      fenix,
-      moonbit-overlay,
-      seiren,
-      soulforge,
-      nix-hazkey,
-      nix-claude-code,
       codex-cli-nix,
+      dms,
+      fenix,
+      home-manager,
+      moonbit-overlay,
+      niri-flake,
+      nix-claude-code,
+      nix-hazkey,
+      nixpkgs,
+      voxtype,
       ...
     }:
     let
-      localOverlay = final: _prev: {
-        portless = final.callPackage ./packages/portless { };
-      };
-      communityOverlay = final: prev: {
-        codex = prev.codex.overrideAttrs (old: {
-          postInstall = (old.postInstall or "") + ''
-            substituteInPlace "$out/bin/codex" \
-              --replace-fail "exec \"$out/bin/codex-raw\"  \"\$@\"" \
-                             "exec -a codex \"$out/bin/codex-raw\" \"\$@\""
-          '';
-        });
-        catppuccin-gtk = prev.catppuccin-gtk.override {
-          python3 = prev.python3.override {
-            packageOverrides = _pythonFinal: pythonPrev: {
-              catppuccin = pythonPrev.catppuccin.overridePythonAttrs (_old: {
-                doCheck = false;
-                pythonImportsCheck = [ ];
-              });
-            };
-          };
-        };
-        zen-browser = zen-browser.packages.${final.stdenv.hostPlatform.system}.default;
-        seiren-mcp = seiren.packages.${final.stdenv.hostPlatform.system}.default;
-        soulforge = soulforge.packages.${final.stdenv.hostPlatform.system}.default;
-      };
+      overlays = import ./overlays { inherit inputs; };
     in
     {
       nixosConfigurations.ryobox = nixpkgs.lib.nixosSystem {
@@ -121,13 +94,14 @@
           home-manager.nixosModules.home-manager
           {
             nixpkgs.hostPlatform = "x86_64-linux";
+            # overlays.community は codex を上書きするため codex-cli-nix より後に置く
             nixpkgs.overlays = [
               fenix.overlays.default
               moonbit-overlay.overlays.default
               nix-claude-code.overlays.default
               codex-cli-nix.overlays.default
-              localOverlay
-              communityOverlay
+              overlays.local
+              overlays.community
             ];
             home-manager = {
               backupFileExtension = "hm-bak";
@@ -139,7 +113,7 @@
                   dms.homeModules.dank-material-shell
                   dms.homeModules.niri
                   voxtype.homeManagerModules.default
-                  zen-browser.homeModules.beta
+                  inputs.zen-browser.homeModules.beta
                   ./home
                 ];
               };
@@ -155,7 +129,7 @@
       packages.x86_64-linux.portless =
         (import nixpkgs {
           system = "x86_64-linux";
-          overlays = [ localOverlay ];
+          overlays = [ overlays.local ];
         }).portless;
     };
 }
