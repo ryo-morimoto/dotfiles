@@ -2,6 +2,8 @@
 
 日本語で回答してください。明示的に別言語を求められた場合だけ切り替えてください。
 
+素の nixpkgs から離脱する変更(overrideAttrs / overlay / 独自 fetch などの package override)は、実装前に必ずユーザーの許可を取ること。
+
 This file is intentionally brief. Detailed instructions live in focused docs:
 
 - Setup, checks, maintenance workflow, and source-of-truth rules:
