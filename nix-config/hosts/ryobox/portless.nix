@@ -10,6 +10,16 @@ let
   certificate = ../../certs/portless-wildcard.crt;
 in
 {
+  # portless client 用の共通環境変数(service 用は systemd.services.portless.environment)
+  environment.sessionVariables = {
+    PORTLESS_FLAT_WORKTREE = "1";
+    PORTLESS_HTTPS = "1";
+    PORTLESS_PORT = "443";
+    PORTLESS_STATE_DIR = "/var/lib/portless";
+    PORTLESS_SYNC_HOSTS = "0";
+    PORTLESS_TLD = tld;
+  };
+
   age.secrets.portless-tls-key = {
     file = ../../secrets/portless-tls-key.age;
     mode = "0400";
