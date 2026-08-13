@@ -1,14 +1,14 @@
 { config, pkgs, ... }:
 
 let
-  planeTag = "v1.3.0";
+  planeTag = "v1.4.1";
   listenHttpPort = 8090;
   minioAccessKey = "plane-minio";
   planeFqdn = "plane.ryobox.xyz";
 
   composeYml = pkgs.fetchurl {
     url = "https://raw.githubusercontent.com/makeplane/plane/${planeTag}/deployments/cli/community/docker-compose.yml";
-    hash = "sha256-LHpVlWrpXMnGTOkWsYwfhevzoPwB3/6DSxJHuiZLxk0=";
+    hash = "sha256-zi3Ggp31oxxIL4oprTOe9KJqnMIT4gGtaCPV4Pk/gys=";
   };
 
   overrideYml = pkgs.writeText "plane-override.yml" ''
