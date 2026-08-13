@@ -23,26 +23,6 @@
         "type": "github"
       }
     },
-    "banto": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1771352984,
-        "narHash": "sha256-JzcXsenTyaF6vKYe3pq0Rsp18dNeX4FUDOXUHwKuRrU=",
-        "owner": "ryo-morimoto",
-        "repo": "banto",
-        "rev": "0cf5f53a930fc1f17aed5c17c41428dfaf2daa38",
-        "type": "github"
-      },
-      "original": {
-        "owner": "ryo-morimoto",
-        "repo": "banto",
-        "type": "github"
-      }
-    },
     "codex-cli-nix": {
       "inputs": {
         "flake-utils": "flake-utils",
@@ -430,7 +410,6 @@
     "root": {
       "inputs": {
         "agenix": "agenix",
-        "banto": "banto",
         "codex-cli-nix": "codex-cli-nix",
         "dms": "dms",
         "fenix": "fenix",

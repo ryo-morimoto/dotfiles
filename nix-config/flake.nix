@@ -21,10 +21,6 @@
         home-manager.follows = "home-manager";
       };
     };
-    banto = {
-      url = "github:ryo-morimoto/banto";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -70,7 +66,6 @@
       dms,
       niri-flake,
       zen-browser,
-      banto,
       agenix,
       voxtype,
       fenix,
@@ -130,7 +125,6 @@
         modules = [
           ./hosts/ryobox
           agenix.nixosModules.default
-          banto.nixosModules.default
           nix-hazkey.nixosModules.hazkey
           {
             services.hazkey.server.package = nix-hazkey.packages.x86_64-linux.hazkey-server.override {
