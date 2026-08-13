@@ -99,19 +99,6 @@
             };
           };
         };
-        # Temporary equivalent of nixpkgs#c088236 until it reaches nixos-unstable.
-        niri = prev.niri.overrideAttrs (old: {
-          buildInputs = map (
-            buildInput:
-            if
-              (buildInput.pname or null) == "libdisplay-info"
-              && final.lib.versionAtLeast (buildInput.version or "0") "0.4"
-            then
-              final.libdisplay-info_0_2
-            else
-              buildInput
-          ) old.buildInputs;
-        });
         zen-browser = zen-browser.packages.${final.stdenv.hostPlatform.system}.default;
         seiren-mcp = seiren.packages.${final.stdenv.hostPlatform.system}.default;
         soulforge = soulforge.packages.${final.stdenv.hostPlatform.system}.default;
