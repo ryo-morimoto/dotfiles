@@ -31,6 +31,8 @@ let
     pg_pass=$(cat "${config.age.secrets.plane-postgres-password.path}")
     pg_pass_url=$(printf '%s' "$pg_pass" | ${pkgs.jq}/bin/jq -sRr @uri)
     minio_secret=$(cat "${config.age.secrets.plane-minio-secret-key.path}")
+    mq_pass=$(cat "${config.age.secrets.plane-rabbitmq-password.path}")
+    mq_pass_url=$(printf '%s' "$mq_pass" | ${pkgs.jq}/bin/jq -sRr @uri)
 
     umask 077
     cat > /run/plane/.env <<EOF
@@ -56,9 +58,9 @@ let
     FILE_SIZE_LIMIT=5242880
 
     RABBITMQ_USER=plane
-    RABBITMQ_PASSWORD=plane
+    RABBITMQ_PASSWORD=$mq_pass
     RABBITMQ_VHOST=plane
-    AMQP_URL=amqp://plane:plane@plane-mq:5672/plane
+    AMQP_URL=amqp://plane:$mq_pass_url@plane-mq:5672/plane
 
     LISTEN_HTTP_PORT=${toString listenHttpPort}
     LISTEN_HTTPS_PORT=443
@@ -85,6 +87,7 @@ in
     plane-secret-key.file = ../../secrets/plane-secret-key.age;
     plane-postgres-password.file = ../../secrets/plane-postgres-password.age;
     plane-minio-secret-key.file = ../../secrets/plane-minio-secret-key.age;
+    plane-rabbitmq-password.file = ../../secrets/plane-rabbitmq-password.age;
   };
 
   systemd.services = {
