@@ -141,6 +141,10 @@ in
         portless
         nssTools
 
+        # Claude Code sandbox (Linux backend)
+        bubblewrap
+        socat
+
         # Web development
         nodejs
         bun
@@ -363,11 +367,8 @@ in
             kx = "kubectx";
             kn = "kubens";
           };
-          agents = {
-            claude = "claude --dangerously-skip-permissions";
-          };
         in
-        navigation // git // modern // utils // k8s // agents;
+        navigation // git // modern // utils // k8s;
       initContent = ''
         # GPG
         export GPG_TTY=$(tty)

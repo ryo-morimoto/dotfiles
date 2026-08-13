@@ -64,8 +64,7 @@
 - Playwright は Nix の Chromium-only `playwright-driver` を標準にし、`playwright install*` を使わない。
 - APM は MCP server の宣言管理に使う。all-in-one plugin は常時ロードの context コストが高いため使わない。
 - OpenCode には managed permission policy を注入せず、Home Manager の `settings.permission = "allow"` を既定にする。
-- Claude Code は `permissions.defaultMode = "bypassPermissions"` と `sandbox.enabled = false` を標準にする。
-- Claude Code の dangerous bypass flag は wrapper ではなく shell alias で付与する。
+- Claude Code は `permissions.defaultMode = "auto"` と `sandbox.enabled = true` を標準にする(2026-08 に bypass 運用から移行)。dangerous bypass の alias は使わない。
 - `semgrep@claude-plugins-official` は自動 hook の副作用があるため、既定では無効化する。
 - `semgrep` CLI は Home Manager に常設し、この repo の Nix policy(`.semgrep/nix.yaml`)を pre-commit と CI で強制する。
 - Neovim の日本語 Markdown では spell を無効化せず、`spelllang=en,cjk` で英単語チェックを残す。

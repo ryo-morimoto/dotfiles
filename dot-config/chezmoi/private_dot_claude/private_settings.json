@@ -16,6 +16,12 @@
     "OTEL_METRICS_INCLUDE_ACCOUNT_UUID": "false"
   },
   "model": "claude-fable-5[1m]",
+  "permissions": {
+    "defaultMode": "auto"
+  },
+  "sandbox": {
+    "enabled": true
+  },
   "hooks": {
     "SessionStart": [
       {
@@ -37,7 +43,6 @@
   "effortLevel": "low",
   "tui": "default",
   "autoMemoryEnabled": false,
-  "skipDangerousModePermissionPrompt": true,
   "editorMode": "vim",
   "autoCompactEnabled": true,
   "remoteControlAtStartup": false
