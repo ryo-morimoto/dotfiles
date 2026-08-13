@@ -30,7 +30,7 @@
 - Options: `camelCase`, for example `programs.zsh.enable`.
 - Packages: `kebab-case`.
 - Experimental tool config: `dot-config/chezmoi/dot_config/mise/config.toml`.
-- Module files: `default.nix`.
+- Module files: 単一ファイル module は `<name>.nix` でよい。ディレクトリ化する場合は entry point を `default.nix` にする。
 
 ## Types And Assertions
 
