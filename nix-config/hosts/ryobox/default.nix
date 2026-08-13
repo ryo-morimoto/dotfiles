@@ -13,7 +13,6 @@ let
 in
 {
   imports = [
-    ./agent-canvas.nix
     ./agent-observability.nix
     ./caddy.nix
     ./forgejo.nix
@@ -35,7 +34,6 @@ in
     firewall.interfaces.tailscale0.allowedTCPPorts = [
       443
       5757
-      8443 # Agent Canvas Tailscale Serve (non-443; Caddy owns 443)
     ];
   };
 
@@ -189,7 +187,6 @@ in
       before = [ "caddy.service" ];
       after = [ "tailscale-address-ready.service" ];
       requires = [ "tailscale-address-ready.service" ];
-      unitConfig.OnSuccess = "agent-canvas-tailscale-serve.service";
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;

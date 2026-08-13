@@ -10,6 +10,4 @@ in
   "plane-minio-secret-key.age".publicKeys = [ ryobox ];
   "plane-rabbitmq-password.age".publicKeys = [ ryobox ];
   "portless-tls-key.age".publicKeys = [ ryobox ];
-  "agent-canvas-api-key.age".publicKeys = [ ryobox ];
-  "agent-canvas-oh-secret-key.age".publicKeys = [ ryobox ];
 }
