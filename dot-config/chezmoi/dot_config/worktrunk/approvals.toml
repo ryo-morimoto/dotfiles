@@ -3,4 +3,5 @@ approved-commands = [
     "cp {{ primary_worktree_path }}/.env.local .env.local",
     "wt step copy-ignored",
     "devbox run install",
+    "wt step copy-ignored --from {{ base }}",
 ]
