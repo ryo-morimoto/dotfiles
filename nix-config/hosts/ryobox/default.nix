@@ -447,6 +447,8 @@ in
       "docker"
       "input"
     ];
+    # 新規マシンの初回セットアップ専用。初回ログイン後に必ず passwd で変更する。
+    # 既存マシンでは無視される(現在のパスワードには影響しない)。
     initialPassword = "changeme";
     shell = pkgs.zsh;
   };
