@@ -68,13 +68,13 @@
 - Claude Code の dangerous bypass flag は wrapper ではなく shell alias で付与する。
 - Claude Code から Codex を使う入口は OpenAI の `codex-plugin-cc` marketplace を使う。
 - `semgrep@claude-plugins-official` は自動 hook の副作用があるため、既定では無効化する。
-- `semgrep` CLI は Home Manager に常設せず、必要時だけ一時導入または個別環境で使う。
+- `semgrep` CLI は Home Manager に常設し、この repo の Nix policy(`.semgrep/nix.yaml`)を pre-commit と CI で強制する。
 - Neovim の日本語 Markdown では spell を無効化せず、`spelllang=en,cjk` で英単語チェックを残す。
 - Repo 内に `worktrees/` は持たず、worktree は project 隣接の `{project}-wt/<name>` に置く。
 - `$HOME` 配備は pure な標準 chezmoi 運用に従う。実体は source dir(`dot-config/chezmoi/`)に置き copy 配備、tool が書き換えた live の変更は `chezmoi re-add` で回収する。独自 wrapper・symlink shim は持たない。template は共有 AGENTS.md、Codex modify merge、skill symlink の homeDir 展開だけ。Home Manager は package 導入・`sourceDir` 設定生成・activation での `chezmoi apply --force` だけを担う。
 - Machine-generated なファイル(DMS theme 出力等、ユーザー操作なしで tool が再生成するもの)は chezmoi 管理に含めない。rebuild の apply が tool 出力を巻き戻すため。lock file(lazy-lock、mise.lock、approvals)は reproducibility 入力として例外的に管理し、更新操作の後に `chezmoi re-add` で回収する。
 - Self-authored な cross-tool agent skill は実体を `dot-config/config/skills/<name>/` に一箇所置き、chezmoi の `symlink_` エントリで各 tool の skill dir(`~/.claude/skills`、`~/.codex/skills`、`~/.config/opencode/skills`)から参照させる。copy 配備しないので編集は即時に全 tool へ反映される。OSS skill の APM 管理とは別経路。
-- Config の内容検査は self-maintained な lint/policy を持たず、OSS hook(pre-commit-hooks の `check-toml` / `check-json` / `check-yaml`、gitleaks default rules)と diff review だけで行う。
+- Config の内容検査は OSS hook(pre-commit-hooks の `check-toml` / `check-json` / `check-yaml`、gitleaks default rules)と diff review を基本にする。例外として Nix の再現性・スコープ制御ルールだけは self-maintained な `.semgrep/nix.yaml` で強制する。ルールは ERROR のみ(違反を fail させる価値がないルールは持たない)。
 
 ## 未確定ドメイン
 

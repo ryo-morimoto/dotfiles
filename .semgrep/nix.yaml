@@ -2,10 +2,10 @@ rules:
   # Security: allowUnfree without scoping permits all non-free packages
   - id: nix.broad-allow-unfree
     languages: [generic]
-    severity: WARNING
+    severity: ERROR
     message: >-
       allowUnfree = true permits all non-free packages globally.
-      Consider allowUnfreePredicate for scoped control.
+      Use allowUnfreePredicate for scoped control.
     pattern: allowUnfree = true
     paths:
       include: ["*.nix"]
@@ -24,7 +24,7 @@ rules:
   # Reproducibility: builtins.fetchurl without hash is not pinned
   - id: nix.unpinned-builtins-fetchurl
     languages: [generic]
-    severity: WARNING
+    severity: ERROR
     message: >-
       builtins.fetchurl without sha256 does not pin content.
       Use pkgs.fetchurl with a hash instead.
@@ -35,7 +35,7 @@ rules:
   # Idempotency: hardcoded /home paths break portability
   - id: nix.hardcoded-home-path
     languages: [generic]
-    severity: WARNING
+    severity: ERROR
     message: >-
       Hardcoded /home path detected. Use a variable
       (homeDirectory, config.home.homeDirectory, etc.) for portability.
@@ -44,27 +44,3 @@ rules:
       include: ["*.nix"]
       # homeDirectory definition itself is unavoidable
       exclude: ["**/home/default.nix"]
-
-  # Declarativeness: mkForce/mkOverride may indicate design issues
-  - id: nix.mkforce-audit
-    languages: [generic]
-    severity: INFO
-    message: >-
-      mkForce/mkOverride overrides module priority by force.
-      Review whether the config structure can be simplified instead.
-    pattern-either:
-      - pattern: lib.mkForce
-      - pattern: lib.mkOverride
-    paths:
-      include: ["*.nix"]
-
-  # Security: permittedInsecurePackages should be reviewed periodically
-  - id: nix.insecure-packages-review
-    languages: [generic]
-    severity: INFO
-    message: >-
-      permittedInsecurePackages is set. Ensure these packages
-      are still needed and review their security status periodically.
-    pattern: permittedInsecurePackages
-    paths:
-      include: ["*.nix"]
