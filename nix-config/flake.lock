@@ -31,11 +31,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1786067426,
-        "narHash": "sha256-Qvi7ZJ9MpkUXdeu+zjxYkR92BIvwqp7LpqxbnZzVTOg=",
+        "lastModified": 1786986462,
+        "narHash": "sha256-vF/o/vZfjsesLd9R/ildQnWdVze5FkrDr/O4wk1Hu5o=",
         "owner": "sadjow",
         "repo": "codex-cli-nix",
-        "rev": "edc92332229d4e8c658f5f2fda3a8e29280e8a1a",
+        "rev": "66aa59a6b8ab5675232d948aa83cf25af714f215",
         "type": "github"
       },
       "original": {
@@ -96,11 +96,11 @@
         "rust-analyzer-src": "rust-analyzer-src"
       },
       "locked": {
-        "lastModified": 1786900242,
-        "narHash": "sha256-52Fj2HDnEeW13PAjZJiSuTqzDbCBKu4841O6WLJKcig=",
+        "lastModified": 1786973651,
+        "narHash": "sha256-OZ8WHQ+PeUbqhuQZ7Q+bxUn4d8QFOsa71UZwTHA/7+M=",
         "owner": "nix-community",
         "repo": "fenix",
-        "rev": "27a7186cfd33b512c0bfe5e60c385cb5938323fc",
+        "rev": "f3760fb22367a4d063a5455f9bf92281c1e70545",
         "type": "github"
       },
       "original": {
@@ -207,11 +207,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1786887553,
-        "narHash": "sha256-0J8EwNSJ/2OeyuvXgfG+k5uBT1gkg0ww7VEo+14xl50=",
+        "lastModified": 1786988494,
+        "narHash": "sha256-nZcYMi4nJxjqp8atEWkowCtRQplS6RuzqIxcPUqG0CA=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "5bd505963717a894b02a57cdbcc00db28d9b029f",
+        "rev": "ec161155d76f7ec25404c0da2fa9f5f133f6ae4c",
         "type": "github"
       },
       "original": {
@@ -249,11 +249,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1786849420,
-        "narHash": "sha256-V6bQV9Xq0tQiBghlt4xm6QDJ2XiFuQQxrWuxaD0s4tc=",
+        "lastModified": 1786937959,
+        "narHash": "sha256-Do4AaruzX55HrdCPDhSq+Ym3/l0fxJ8DyZsMaGBtPSI=",
         "owner": "moonbit-community",
         "repo": "moonbit-overlay",
-        "rev": "db5cfcc065bf59a1de4c57c7630f89e1ca610fcc",
+        "rev": "c0737cecc23a8033951969d1d90da4d8f0fb6fbf",
         "type": "github"
       },
       "original": {
@@ -325,11 +325,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1786791650,
-        "narHash": "sha256-8v3G3aVZFImtTkOhK3d90BK8Bc8Wzay2K3jLcjtTNTw=",
+        "lastModified": 1786993816,
+        "narHash": "sha256-ALfSv1+YeEl9+kEx7JrkOnfcotI+aG4DdCQcw+wIvRQ=",
         "owner": "ryoppippi",
         "repo": "nix-claude-code",
-        "rev": "a52ba64d4283acbb64563dc73b0f520479f612fd",
+        "rev": "11f69394f4cfe68138cdb813be9702387fb1a632",
         "type": "github"
       },
       "original": {
@@ -428,11 +428,11 @@
     "rust-analyzer-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1786775975,
-        "narHash": "sha256-IepgRMQrv3ycKp/FRDYMErByu1kD7DH2+ZOW1z3UYWo=",
+        "lastModified": 1786897424,
+        "narHash": "sha256-AxaCvcUZIgkNvzxDY85k7ICuGaWNbrVuGUn6SxLS+V0=",
         "owner": "rust-lang",
         "repo": "rust-analyzer",
-        "rev": "2d6e364110e162f271f9c3198722bf2e98e53088",
+        "rev": "bb3bbbd9e4529cbf1a6392d5953f03eb01af3792",
         "type": "github"
       },
       "original": {
@@ -552,11 +552,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1785945821,
-        "narHash": "sha256-NLSyTCW4K4ofhNBllt3omPasm6QpralXH1DBZOc91Dw=",
+        "lastModified": 1786901030,
+        "narHash": "sha256-WSFCsDSE5ffgD2MqzkM2CYjeFiKhRF/dJUN8uedb6YE=",
         "owner": "numtide",
         "repo": "treefmt-nix",
-        "rev": "ae7910970dddc408fe6ab1c8e4b277bb21d72dc0",
+        "rev": "27b3b12a8e6375f28ebe122f07d230ca5459bbfa",
         "type": "github"
       },
       "original": {
@@ -573,11 +573,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1786714390,
-        "narHash": "sha256-yocRHGetgqt3SJ/px/ftz3Z6vvAEMSFoa+VhJux/9hs=",
+        "lastModified": 1786927393,
+        "narHash": "sha256-DE75/iivXLwQPfgudwPFDhdkNicldQfEbOxMyUsGS3c=",
         "owner": "peteonrails",
         "repo": "voxtype",
-        "rev": "167c99e4fc92a0c8a5520b1e360be1b82f71d2da",
+        "rev": "afc05bd2934145d26d8a17b6a8fe93618cc44b0a",
         "type": "github"
       },
       "original": {
