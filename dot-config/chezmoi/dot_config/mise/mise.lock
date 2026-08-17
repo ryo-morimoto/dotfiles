@@ -95,6 +95,10 @@ rename_exe = "coderabbit"
 checksum = "blake3:c46ecc21911af30407181750e0834ee03f14e7feb4ad4b001e0b65872056a5f6"
 url = "https://cli.coderabbit.ai/releases/0.7.1/coderabbit-linux-x64.zip"
 
+[[tools."npm:@earendil-works/pi-coding-agent"]]
+version = "0.84.1"
+backend = "npm:@earendil-works/pi-coding-agent"
+
 [[tools."npm:@tobilu/qmd"]]
 version = "2.5.3"
 backend = "npm:@tobilu/qmd"

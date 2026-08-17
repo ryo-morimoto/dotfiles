@@ -8,6 +8,7 @@ aqua = "latest"
 herdr = "latest"
 "pipx:apm-cli" = "latest"
 "npm:agent-browser" = "latest"
+"npm:@earendil-works/pi-coding-agent" = "latest"
 "npm:@xai-official/grok" = "latest"
 "npm:@tobilu/qmd" = { version = "latest", npm_args = "--ignore-scripts=false" }
 
