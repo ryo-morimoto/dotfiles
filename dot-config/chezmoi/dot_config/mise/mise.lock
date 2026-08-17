@@ -103,7 +103,7 @@ backend = "npm:@tobilu/qmd"
 npm_args = "--ignore-scripts=false"
 
 [[tools."npm:@xai-official/grok"]]
-version = "0.2.118"
+version = "1.0.4"
 backend = "npm:@xai-official/grok"
 
 [[tools."npm:agent-browser"]]
