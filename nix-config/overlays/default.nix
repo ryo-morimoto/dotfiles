@@ -8,15 +8,7 @@
   };
 
   # nixpkgs / 他 overlay の package への override と外部 flake package の注入。
-  # codex-cli-nix の overlay より後に適用すること(codex を上書きするため)。
   community = final: prev: {
-    codex = prev.codex.overrideAttrs (old: {
-      postInstall = (old.postInstall or "") + ''
-        substituteInPlace "$out/bin/codex" \
-          --replace-fail "exec \"$out/bin/codex-raw\"  \"\$@\"" \
-                         "exec -a codex \"$out/bin/codex-raw\" \"\$@\""
-      '';
-    });
     catppuccin-gtk = prev.catppuccin-gtk.override {
       python3 = prev.python3.override {
         packageOverrides = _pythonFinal: pythonPrev: {

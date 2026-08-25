@@ -94,7 +94,7 @@
           home-manager.nixosModules.home-manager
           {
             nixpkgs.hostPlatform = "x86_64-linux";
-            # overlays.community は codex を上書きするため codex-cli-nix より後に置く
+            # overlays.community は他 overlay の package を参照するため最後に置く
             nixpkgs.overlays = [
               fenix.overlays.default
               moonbit-overlay.overlays.default
