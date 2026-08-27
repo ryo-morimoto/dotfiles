@@ -253,28 +253,18 @@ in
             gcb = "git checkout -b";
             lg = "lazygit";
           };
+          # coreutils 名を alias で上書きしない。AI agent / script が
+          # 非対話 shell 想定で実行するコマンドの挙動が変わるため。
+          # (eza/bat/rg/fd/sd/trash 等は素の名前で直接呼ぶ)
           modern = {
-            ls = "eza --icons";
             ll = "eza -la --icons";
             la = "eza -a --icons";
             lt = "eza --tree --icons";
-            cat = "bat";
-            grep = "rg";
-            find = "fd";
-            ps = "procs";
-            du = "dust";
-            df = "duf";
-            top = "btop";
-            sed = "sd";
-            diff = "difftastic";
           };
           utils = {
             path = "echo $PATH | tr ':' '\\n'";
             ports = "ss -tulanp";
             myip = "curl -s ifconfig.me";
-            rm = "trash";
-            cp = "cp -iv";
-            mv = "mv -iv";
             clip = "wl-copy";
             paste = "wl-paste";
           };
