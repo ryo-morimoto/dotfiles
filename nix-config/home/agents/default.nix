@@ -8,9 +8,20 @@
 let
   dotfilesRoot = "${config.home.homeDirectory}/ghq/github.com/ryo-morimoto/dotfiles";
   dotConfigRoot = "${dotfilesRoot}/dot-config";
+  devServerReaper = pkgs.writeShellApplication {
+    name = "dev-server-reaper";
+    runtimeInputs = [
+      pkgs.coreutils
+      pkgs.gnugrep
+      pkgs.procps
+    ];
+    text = builtins.readFile ./dev-server-reaper.sh;
+  };
 in
 {
   home = {
+    packages = [ devServerReaper ];
+
     sessionVariables = {
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1";
       PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright-driver.browsers.override {
@@ -64,18 +75,40 @@ in
     };
   };
 
-  systemd.user.services.penpot-mcp = {
-    Unit = {
-      Description = "Penpot MCP server";
-      After = [ "network.target" ];
+  systemd.user = {
+    services.penpot-mcp = {
+      Unit = {
+        Description = "Penpot MCP server";
+        After = [ "network.target" ];
+      };
+      Service = {
+        Environment = "PNPM_CONFIG_DANGEROUSLY_ALLOW_ALL_BUILDS=true";
+        ExecStart = "${pkgs.nodejs}/bin/npx -y @penpot/mcp@stable";
+        Restart = "on-failure";
+        RestartSec = 5;
+      };
+      Install.WantedBy = [ "default.target" ];
     };
-    Service = {
-      Environment = "PNPM_CONFIG_DANGEROUSLY_ALLOW_ALL_BUILDS=true";
-      ExecStart = "${pkgs.nodejs}/bin/npx -y @penpot/mcp@stable";
-      Restart = "on-failure";
-      RestartSec = 5;
+
+    # AI agent が起動して放置した dev server(next dev / vite 等)を定期回収する。
+    # 個別 tool の hook に依存しない最終防衛線。詳細は dev-server-reaper.sh 冒頭。
+    services.dev-server-reaper = {
+      Unit.Description = "Reap leftover dev servers started by AI agents";
+      Service = {
+        Type = "oneshot";
+        ExecStart = "${lib.getExe devServerReaper} orphans";
+      };
     };
-    Install.WantedBy = [ "default.target" ];
+
+    timers.dev-server-reaper = {
+      Unit.Description = "Periodically reap leftover dev servers";
+      Timer = {
+        OnBootSec = "10min";
+        OnUnitActiveSec = "15min";
+        AccuracySec = "1min";
+      };
+      Install.WantedBy = [ "timers.target" ];
+    };
   };
 
   # Dotfiles under dot-config are deployed by chezmoi (see dot-config/chezmoi/)

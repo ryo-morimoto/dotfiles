@@ -52,6 +52,15 @@ portless list                   # 稼働中 route の一覧
 portless doctor                 # proxy / routes / DNS / CA trust の診断
 ```
 
+## 寿命(dev server の後始末)
+
+- agent が起動した dev server は **作業終了時に必ず停止する**(Ctrl-C / `kill`)。
+- 停止し忘れは `dev-server-reaper`(Home Manager の user timer)が回収する:
+  tty なし(= agent 起動)で 3h 超、または tty ありでも 24h 超の
+  `next dev` / `vite` / `pnpm dev` 系を SIGTERM→SIGKILL する。
+- 意図して長時間残したい場合だけ `DEVSERVER_KEEP=1 portless run ...` で除外する。
+- 状態確認: `dev-server-reaper list`、手動回収: `dev-server-reaper orphans`。
+
 ## 使い分け
 
 - dev server を起動するときは基本 `portless run` を通す。URL が安定し、
