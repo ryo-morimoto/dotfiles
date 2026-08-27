@@ -34,6 +34,7 @@ in
     firewall.interfaces.tailscale0.allowedTCPPorts = [
       443
       5757
+      6768 # orca serve
     ];
   };
 
@@ -274,6 +275,8 @@ in
   # User
   users.users.${username} = {
     isNormalUser = true;
+    # user service(orca-serve 等)を logout 後も維持する。
+    linger = true;
     extraGroups = [
       "wheel"
       "networkmanager"

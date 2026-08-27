@@ -17,6 +17,19 @@ let
     ];
     text = builtins.readFile ./dev-server-reaper.sh;
   };
+  orcaServe = pkgs.writeShellApplication {
+    name = "orca-serve";
+    runtimeInputs = [
+      pkgs.appimage-run
+      pkgs.tailscale
+      pkgs.xvfb-run
+    ];
+    text = ''
+      addr="$(tailscale ip -4)"
+      exec xvfb-run --auto-servernum appimage-run "$ORCA_APPIMAGE" \
+        serve --port 6768 --pairing-address "$addr" --json
+    '';
+  };
 in
 {
   home = {
@@ -76,27 +89,55 @@ in
   };
 
   systemd.user = {
-    services.penpot-mcp = {
-      Unit = {
-        Description = "Penpot MCP server";
-        After = [ "network.target" ];
+    services = {
+      penpot-mcp = {
+        Unit = {
+          Description = "Penpot MCP server";
+          After = [ "network.target" ];
+        };
+        Service = {
+          Environment = "PNPM_CONFIG_DANGEROUSLY_ALLOW_ALL_BUILDS=true";
+          ExecStart = "${pkgs.nodejs}/bin/npx -y @penpot/mcp@stable";
+          Restart = "on-failure";
+          RestartSec = 5;
+        };
+        Install.WantedBy = [ "default.target" ];
       };
-      Service = {
-        Environment = "PNPM_CONFIG_DANGEROUSLY_ALLOW_ALL_BUILDS=true";
-        ExecStart = "${pkgs.nodejs}/bin/npx -y @penpot/mcp@stable";
-        Restart = "on-failure";
-        RestartSec = 5;
-      };
-      Install.WantedBy = [ "default.target" ];
-    };
 
-    # AI agent が起動して放置した dev server(next dev / vite 等)を定期回収する。
-    # 個別 tool の hook に依存しない最終防衛線。詳細は dev-server-reaper.sh 冒頭。
-    services.dev-server-reaper = {
-      Unit.Description = "Reap leftover dev servers started by AI agents";
-      Service = {
-        Type = "oneshot";
-        ExecStart = "${lib.getExe devServerReaper} orphans";
+      # Orca を headless runtime server として常駐させ、laptop / browser / mobile から
+      # Tailscale 越しに使う。AppImage は Nix 外(~/Applications)で手動更新する。
+      # Orca が ~/.claude/settings.json と ~/.codex/hooks.json に注入する hook は
+      # `chezmoi re-add` で source に取り込む方針。
+      orca-serve = {
+        Unit = {
+          Description = "Orca runtime server (headless)";
+          After = [ "network-online.target" ];
+          StartLimitIntervalSec = 300;
+          StartLimitBurst = 5;
+        };
+        Service = {
+          Environment = [
+            "LIBGL_ALWAYS_SOFTWARE=1"
+            "ORCA_APPIMAGE=%h/Applications/orca-linux.AppImage"
+          ];
+          ExecStart = lib.getExe orcaServe;
+          KillMode = "mixed";
+          Restart = "on-failure";
+          # exit 3 = 別 instance が同じ userData を使用中。自動再起動しない。
+          RestartPreventExitStatus = 3;
+          RestartSec = 5;
+        };
+        Install.WantedBy = [ "default.target" ];
+      };
+
+      # AI agent が起動して放置した dev server(next dev / vite 等)を定期回収する。
+      # 個別 tool の hook に依存しない最終防衛線。詳細は dev-server-reaper.sh 冒頭。
+      dev-server-reaper = {
+        Unit.Description = "Reap leftover dev servers started by AI agents";
+        Service = {
+          Type = "oneshot";
+          ExecStart = "${lib.getExe devServerReaper} orphans";
+        };
       };
     };
 
