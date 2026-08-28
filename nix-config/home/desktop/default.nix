@@ -389,6 +389,17 @@
         ];
       };
 
+      "orca-desktop" = {
+        name = "Orca";
+        genericName = "Agentic IDE";
+        # orca-serve が ~/.config/orca(既定 userData)を占有しているため、
+        # desktop client は別 profile で起動しないと single-instance で即終了する。
+        exec = "appimage-run ${config.home.homeDirectory}/Applications/orca-linux.AppImage --user-data-dir=${config.home.homeDirectory}/.config/orca-desktop";
+        terminal = false;
+        categories = [ "Development" ];
+        settings.StartupWMClass = "orca";
+      };
+
       "zed" = {
         name = "Zed";
         genericName = "Text Editor";
