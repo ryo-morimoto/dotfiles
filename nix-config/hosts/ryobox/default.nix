@@ -267,9 +267,10 @@ in
 
   # Programs
   programs = {
+    firefox.enable = true;
+    fuse.enable = true;
     niri.enable = true;
     zsh.enable = true;
-    firefox.enable = true;
   };
 
   # User
@@ -333,6 +334,7 @@ in
     enable = true;
     libraries = with pkgs; [
       alsa-lib
+      fuse
       libGL
       vulkan-loader
       fontconfig
