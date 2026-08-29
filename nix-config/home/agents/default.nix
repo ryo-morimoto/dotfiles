@@ -125,6 +125,17 @@ in
         source = lib.getExe orcaCli;
         force = true;
       };
+      # Orca terminal は userData/linux-orca-cli-shim を PATH 先頭に挿す。shim が Nix store への
+      # symlink だと Orca の書き換えが EROFS で失敗して shim 注入自体を諦め、~/.local/bin の
+      # Nix 版 wrapper に fall back する。serve profile と desktop profile の両方に置く。
+      ".config/orca/linux-orca-cli-shim/orca" = {
+        source = lib.getExe orcaCli;
+        force = true;
+      };
+      ".config/orca-desktop/linux-orca-cli-shim/orca" = {
+        source = lib.getExe orcaCli;
+        force = true;
+      };
     };
 
     sessionVariables = {
