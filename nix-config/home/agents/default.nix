@@ -61,6 +61,10 @@ let
       export ORCA_NODE_OPTIONS="''${NODE_OPTIONS-}"
       export ORCA_NODE_REPL_EXTERNAL_MODULE="''${NODE_REPL_EXTERNAL_MODULE-}"
       unset NODE_OPTIONS NODE_REPL_EXTERNAL_MODULE
+      # Orca terminal は DISPLAY=:99(serve が sandbox 内で起動した Xvfb)を継承するが、その socket は
+      # host の /tmp/.X11-unix に無く bwrap の bind mount で失敗する。CLI は Node として動き
+      # display 不要なので外す(upstream の shim も DISPLAY= で起動している)。
+      unset DISPLAY
       ELECTRON_RUN_AS_NODE=1 exec appimage-run -w "$appdir" -- -e \
         '(async()=>{try{const path=require("path");const appDir=process.env.APPDIR;if(!appDir){console.error("APPDIR is not set.");process.exit(1);}const cli=path.join(appDir,"resources","app.asar.unpacked","out","cli","index.js");await Promise.resolve(require(cli).main(process.argv.slice(1)));}catch(error){console.error(error&&error.stack?error.stack:String(error));process.exit(1);}})();' \
         -- "$@"
