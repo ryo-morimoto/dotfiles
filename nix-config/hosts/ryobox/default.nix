@@ -138,7 +138,12 @@ in
     # };
   };
 
-  systemd.user.services.hazkey-server.serviceConfig.WorkingDirectory = "%t";
+  systemd.user.services.hazkey-server = {
+    after = [ "graphical-session.target" ];
+    partOf = [ "graphical-session.target" ];
+    wantedBy = lib.mkForce [ "graphical-session.target" ];
+    serviceConfig.WorkingDirectory = "%t";
+  };
 
   # agenix: use host SSH key for decryption (openssh is disabled; Tailscale SSH is used instead)
   age = {
