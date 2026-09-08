@@ -326,6 +326,7 @@ in
     pkg:
     builtins.elem (lib.getName pkg) [
       "1password-cli"
+      "chatgpt"
       "claude"
       "claude-code"
       "cursor"

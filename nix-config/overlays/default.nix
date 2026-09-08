@@ -4,6 +4,9 @@
 {
   # repo local の自作 package
   local = final: _prev: {
+    # Official Linux .deb wrap. nixpkgs.chatgpt is still Darwin-only
+    # (nixpkgs#551713 / #551852).
+    chatgpt = final.callPackage ../packages/chatgpt { };
     portless = final.callPackage ../packages/portless { };
   };
 

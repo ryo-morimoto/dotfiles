@@ -70,6 +70,7 @@ in
         # Communication
         vesktop
         slack
+        chatgpt
 
         # Design
         penpot-desktop
