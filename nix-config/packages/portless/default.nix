@@ -7,13 +7,13 @@
 
 buildNpmPackage rec {
   pname = "portless";
-  version = "0.15.5";
+  version = "0.15.6";
 
   nodejs = nodejs_24;
 
   src = fetchurl {
     url = "https://registry.npmjs.org/portless/-/portless-${version}.tgz";
-    hash = "sha512-zmJu4Q8/fY54oVUT/5NnmF4Ih8wTdCvCf6JCN783dRYl9mXkJBzXSckX2lztGCLIbM70varDjCudAbGKT73XPg==";
+    hash = "sha512-uOAwWLF32rmyEGFASzSO0VOaqb/AQxFCCzyZbPGd82UNNOfIEvc09zy92nroNibE5HNfzV4oVB0ObKbPXgkM9A==";
   };
 
   patches = [
@@ -30,7 +30,7 @@ buildNpmPackage rec {
     const pkg = require("./package.json");
     const expected = {
       name: "portless",
-      version: "0.15.5",
+      version: "0.15.6",
       node: ">=24",
       bin: "./dist/cli.js",
       license: "Apache-2.0",
@@ -61,7 +61,7 @@ buildNpmPackage rec {
     cp ${./package-lock.json} package-lock.json
   '';
 
-  npmDepsHash = "sha256-NhuqCS86DhwOi+MLdW2JhtLR2eaObPBbGHKi52nW4TY=";
+  npmDepsHash = "sha256-appQD4Yestz7d1HfDxdBcYjg/Bx4rEtWRTx+5S/l7rE=";
   forceEmptyCache = true;
   dontNpmBuild = true;
 

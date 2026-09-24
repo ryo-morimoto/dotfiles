@@ -1,6 +1,6 @@
 {
   "name": "portless",
-  "version": "0.15.5",
+  "version": "0.15.6",
   "description": "Replace port numbers with stable, named local URLs",
   "type": "module",
   "main": "./dist/index.js",
