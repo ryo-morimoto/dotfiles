@@ -6,10 +6,6 @@
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    codex-cli-nix = {
-      url = "github:sadjow/codex-cli-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     dms = {
       url = "github:AvengeMedia/DankMaterialShell/stable";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -62,7 +58,6 @@
   outputs =
     inputs@{
       agenix,
-      codex-cli-nix,
       dms,
       fenix,
       home-manager,
@@ -99,7 +94,6 @@
               fenix.overlays.default
               moonbit-overlay.overlays.default
               nix-claude-code.overlays.default
-              codex-cli-nix.overlays.default
               overlays.local
               overlays.community
             ];

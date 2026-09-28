@@ -188,7 +188,6 @@ in
 
   programs = {
     claude-code.enable = true;
-    codex.enable = true;
     opencode = {
       enable = true;
       settings.permission = "allow";

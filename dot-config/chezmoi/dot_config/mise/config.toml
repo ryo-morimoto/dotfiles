@@ -48,6 +48,20 @@ filter_bins = "zed"
 description = "Install Cursor Agent CLI outside Nix"
 run = "curl https://cursor.com/install -fsS | bash"
 
+[tasks.install-codex]
+description = "Install the official Codex CLI and start its shared daemon"
+run = """
+bash -o pipefail -c 'curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 sh'
+"$HOME/.local/bin/codex" app-server daemon start
+"""
+
+[tasks.update-codex]
+description = "Update the official Codex CLI and shared daemon"
+run = """
+mise run install-codex
+"$HOME/.local/bin/codex" app-server daemon update
+"""
+
 [tasks.install-herdr-integrations]
 description = "Install Herdr integrations for backend agent CLIs"
 run = """

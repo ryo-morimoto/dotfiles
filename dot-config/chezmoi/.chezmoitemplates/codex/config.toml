@@ -1,5 +1,5 @@
 approval_policy = "never"
-model = "gpt-5.6-sol"
+model = "gpt-6-sol"
 model_reasoning_effort = "medium"
 personality = "pragmatic"
 review_model = "gpt-5.6-luna"
@@ -12,6 +12,7 @@ default_subagent_reasoning_effort = "high"
 
 [features]
 apps = false
+daemon_auto_start = true
 fast_mode = true
 hooks = true
 multi_agent = true

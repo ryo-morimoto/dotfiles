@@ -307,11 +307,9 @@ in
       auto-optimise-store = true;
       extra-substituters = [
         "https://cache.numtide.com"
-        "https://codex-cli.cachix.org"
       ];
       extra-trusted-public-keys = [
         "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
-        "codex-cli.cachix.org-1:1Br3H1hHoRYG22n//cGKJOk3cQXgYobUel6O8DgSing="
       ];
     };
 
