@@ -296,26 +296,6 @@
         "type": "github"
       }
     },
-    "nix-claude-code": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1790362914,
-        "narHash": "sha256-AUzY4WHi8MK5Tvbpuh9XSjZVGmU6Gc+FHgLd9/L7ONw=",
-        "owner": "ryoppippi",
-        "repo": "nix-claude-code",
-        "rev": "411bd0b12c0cf6e49f305ea8bfec2034651b5771",
-        "type": "github"
-      },
-      "original": {
-        "owner": "ryoppippi",
-        "repo": "nix-claude-code",
-        "type": "github"
-      }
-    },
     "nix-hazkey": {
       "inputs": {
         "home-manager": "home-manager_3",
@@ -393,7 +373,6 @@
         "home-manager": "home-manager_2",
         "moonbit-overlay": "moonbit-overlay",
         "niri-flake": "niri-flake",
-        "nix-claude-code": "nix-claude-code",
         "nix-hazkey": "nix-hazkey",
         "nixpkgs": "nixpkgs_2",
         "seiren": "seiren",

@@ -7,7 +7,6 @@ mcp_servers:
 - context7
 - exa
 - linear
-- penpot
 mcp_configs:
   context7:
     name: context7
@@ -27,13 +26,3 @@ mcp_configs:
     transport: http
     registry: false
     url: https://mcp.linear.app/mcp
-  penpot:
-    name: penpot
-    transport: stdio
-    args:
-    - -y
-    - mcp-remote
-    - http://localhost:4401/mcp
-    - --allow-http
-    registry: false
-    command: npx

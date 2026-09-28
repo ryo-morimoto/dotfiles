@@ -187,7 +187,6 @@ in
   };
 
   programs = {
-    claude-code.enable = true;
     opencode = {
       enable = true;
       settings.permission = "allow";
@@ -196,20 +195,6 @@ in
 
   systemd.user = {
     services = {
-      penpot-mcp = {
-        Unit = {
-          Description = "Penpot MCP server";
-          After = [ "network.target" ];
-        };
-        Service = {
-          Environment = "PNPM_CONFIG_DANGEROUSLY_ALLOW_ALL_BUILDS=true";
-          ExecStart = "${pkgs.nodejs}/bin/npx -y @penpot/mcp@stable";
-          Restart = "on-failure";
-          RestartSec = 5;
-        };
-        Install.WantedBy = [ "default.target" ];
-      };
-
       # Orca を headless runtime server として常駐させ、laptop / browser / mobile から
       # Tailscale 越しに使う。AppImage は Nix 外(~/Applications)で手動更新する。
       # Orca が ~/.claude/settings.json と ~/.codex/hooks.json に注入する hook は

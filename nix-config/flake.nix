@@ -25,10 +25,6 @@
     niri-flake = {
       url = "github:sodiboo/niri-flake";
     };
-    nix-claude-code = {
-      url = "github:ryoppippi/nix-claude-code";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     nix-hazkey = {
       url = "github:aster-void/nix-hazkey";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -63,7 +59,6 @@
       home-manager,
       moonbit-overlay,
       niri-flake,
-      nix-claude-code,
       nix-hazkey,
       nixpkgs,
       voxtype,
@@ -93,7 +88,6 @@
             nixpkgs.overlays = [
               fenix.overlays.default
               moonbit-overlay.overlays.default
-              nix-claude-code.overlays.default
               overlays.local
               overlays.community
             ];

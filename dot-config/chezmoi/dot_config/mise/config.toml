@@ -48,6 +48,10 @@ filter_bins = "zed"
 description = "Install Cursor Agent CLI outside Nix"
 run = "curl https://cursor.com/install -fsS | bash"
 
+[tasks.install-claude]
+description = "Install the official auto-updating Claude Code CLI"
+run = "bash -o pipefail -c 'curl -fsSL https://claude.ai/install.sh | bash'"
+
 [tasks.install-codex]
 description = "Install the official Codex CLI and start its shared daemon"
 run = """
