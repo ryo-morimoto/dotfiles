@@ -2,9 +2,11 @@ name: ryo-morimoto-global-agents
 version: 1.0.0
 targets:
   - claude
+  - codex
   - agent-skills
 dependencies:
-  apm: []
+  apm:
+    - obra/superpowers
   mcp:
     - name: context7
       transport: http
