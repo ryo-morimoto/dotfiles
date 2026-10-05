@@ -135,7 +135,7 @@ in
         chromium
 
         # System/CLI development
-        moonbit-bin.moonbit.latest
+        moonbit-bin.latest
         go
         gcc
         (fenix.combine [

@@ -22,6 +22,11 @@
         };
       };
     };
+    # Temporary: semgrep 1.172.0 pins pyjwt~=2.13 but nixpkgs ships pyjwt 2.14.
+    # Remove once NixOS/nixpkgs#569851 reaches nixos-unstable.
+    semgrep = prev.semgrep.overridePythonAttrs (old: {
+      pythonRelaxDeps = old.pythonRelaxDeps ++ [ "pyjwt" ];
+    });
     zen-browser = inputs.zen-browser.packages.${final.stdenv.hostPlatform.system}.default;
     seiren-mcp = inputs.seiren.packages.${final.stdenv.hostPlatform.system}.default;
     soulforge = inputs.soulforge.packages.${final.stdenv.hostPlatform.system}.default;
