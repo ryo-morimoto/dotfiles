@@ -18,27 +18,7 @@ let
     text = builtins.readFile ./dev-server-reaper.sh;
   };
   orcaAppImage = "${config.home.homeDirectory}/Applications/orca-linux.AppImage";
-  # Electron の single-instance lock は SIGKILL 後に残留し、lock 先 pid が死んでいても
-  # Orca が「別 instance 稼働中」と誤検知して exit 3 で止まる。pid が生きていない場合だけ掃除する
-  # 最終防衛線。通常停止は SIGTERM で Orca 自身が lock を解放する(KillMode=control-group)。
-  orcaCleanLock = pkgs.writeShellApplication {
-    name = "orca-clean-lock";
-    runtimeInputs = [
-      pkgs.coreutils
-      pkgs.gnused
-    ];
-    text = ''
-      dir="''${XDG_CONFIG_HOME:-$HOME/.config}/orca"
-      [ -L "$dir/SingletonLock" ] || exit 0
-      pid="$(readlink "$dir/SingletonLock" | sed 's/.*-//')"
-      if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
-        exit 0
-      fi
-      echo "orca-clean-lock: removing stale singleton lock (pid $pid)"
-      rm -f "$dir/SingletonLock" "$dir/SingletonCookie" "$dir/SingletonSocket"
-    '';
-  };
-  # Orca は serve 起動時に ~/.local/bin/{orca,orca-ide} へ AppImage を直接 exec する wrapper を
+  # Orca は起動時に ~/.local/bin/{orca,orca-ide} へ AppImage を直接 exec する wrapper を
   # 生成するが、NixOS では共有 lib が無く動かない。Orca は既存 path が symlink(non-Orca)なら
   # 上書きを拒否する(inspectAppImageWrapper -> conflict / dispatcher -> skipped-foreign)ので、
   # Home Manager が symlink で置く Nix 版 wrapper が恒久的に使われる。
@@ -61,57 +41,12 @@ let
       export ORCA_NODE_OPTIONS="''${NODE_OPTIONS-}"
       export ORCA_NODE_REPL_EXTERNAL_MODULE="''${NODE_REPL_EXTERNAL_MODULE-}"
       unset NODE_OPTIONS NODE_REPL_EXTERNAL_MODULE
-      # Orca terminal は DISPLAY=:99(serve が sandbox 内で起動した Xvfb)を継承するが、その socket は
-      # host の /tmp/.X11-unix に無く bwrap の bind mount で失敗する。CLI は Node として動き
-      # display 不要なので外す(upstream の shim も DISPLAY= で起動している)。
+      # CLI は Node として動き display 不要。stale な DISPLAY(sandbox 内 Xvfb 等)を継承すると
+      # bwrap の bind mount で失敗するので外す(upstream の shim も DISPLAY= で起動している)。
       unset DISPLAY
       ELECTRON_RUN_AS_NODE=1 exec appimage-run -w "$appdir" -- -e \
         '(async()=>{try{const path=require("path");const appDir=process.env.APPDIR;if(!appDir){console.error("APPDIR is not set.");process.exit(1);}const cli=path.join(appDir,"resources","app.asar.unpacked","out","cli","index.js");await Promise.resolve(require(cli).main(process.argv.slice(1)));}catch(error){console.error(error&&error.stack?error.stack:String(error));process.exit(1);}})();' \
         -- "$@"
-    '';
-  };
-  # bwrap(appimage-run)は SIGTERM を子へ転送せず、cgroup 一斉 SIGTERM では Electron が lock を
-  # 解放する前に落ちる。Electron main(`--serve` を持つ唯一の process)だけに SIGTERM を送り、
-  # 自前の graceful quit(SingletonLock 解放・Xvfb 停止)を待つ。残りは systemd の control-group kill。
-  orcaServeStop = pkgs.writeShellApplication {
-    name = "orca-serve-stop";
-    runtimeInputs = [
-      pkgs.coreutils
-      pkgs.gnugrep
-      pkgs.procps
-    ];
-    text = ''
-      cgroup="/sys/fs/cgroup$(cut -d: -f3 /proc/self/cgroup)"
-      target=""
-      while read -r pid; do
-        if tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null | grep -q -- ' --serve '; then
-          target="$pid"
-          break
-        fi
-      done < "$cgroup/cgroup.procs"
-      [ -n "$target" ] || exit 0
-      kill -TERM "$target"
-      for _ in $(seq 25); do
-        kill -0 "$target" 2>/dev/null || exit 0
-        sleep 1
-      done
-      echo "orca-serve-stop: pid $target did not exit within 25s; leaving it to systemd" >&2
-    '';
-  };
-  # DISPLAY 未設定なら Orca 自身が PATH 上の Xvfb を起動・管理する(stale X lock の掃除込み)ので
-  # xvfb-run を挟まない。exec chain を保って SIGTERM が Electron に届くようにする。
-  orcaServe = pkgs.writeShellApplication {
-    name = "orca-serve";
-    runtimeInputs = [
-      pkgs.appimage-run
-      pkgs.tailscale
-      pkgs.which
-      pkgs.xorg-server
-    ];
-    text = ''
-      addr="$(tailscale ip -4)"
-      exec appimage-run "$ORCA_APPIMAGE" \
-        serve --port 6768 --pairing-address "$addr" --json
     '';
   };
 in
@@ -131,12 +66,8 @@ in
       };
       # Orca terminal は userData/linux-orca-cli-shim を PATH 先頭に挿す。shim が Nix store への
       # symlink だと Orca の書き換えが EROFS で失敗して shim 注入自体を諦め、~/.local/bin の
-      # Nix 版 wrapper に fall back する。serve profile と desktop profile の両方に置く。
+      # Nix 版 wrapper に fall back する。
       ".config/orca/linux-orca-cli-shim/orca" = {
-        source = lib.getExe orcaCli;
-        force = true;
-      };
-      ".config/orca-desktop/linux-orca-cli-shim/orca" = {
         source = lib.getExe orcaCli;
         force = true;
       };
@@ -195,41 +126,6 @@ in
 
   systemd.user = {
     services = {
-      # Orca を headless runtime server として常駐させ、laptop / browser / mobile から
-      # Tailscale 越しに使う。AppImage は Nix 外(~/Applications)で手動更新する。
-      # Orca が ~/.claude/settings.json と ~/.codex/hooks.json に注入する hook は
-      # `chezmoi re-add` で source に取り込む方針。
-      orca-serve = {
-        Unit = {
-          Description = "Orca runtime server (headless)";
-          After = [ "network-online.target" ];
-          StartLimitIntervalSec = 300;
-          StartLimitBurst = 5;
-        };
-        Service = {
-          Environment = [
-            "LIBGL_ALWAYS_SOFTWARE=1"
-            "ORCA_APPIMAGE=${orcaAppImage}"
-            # Chromium は xdg-desktop-portal 用に自身を `app-orca-<pid>.scope` へ移動する
-            # (components/dbus/xdg/systemd.cc)。service の cgroup から脱走すると stop で
-            # 止まらず orphan が port と profile lock を握り続けるので、唯一の guard である
-            # この env で無効化する。Chromium 内で他の用途は無い。
-            "FLATPAK_SANDBOX_DIR=/nonexistent"
-          ];
-          ExecStartPre = lib.getExe orcaCleanLock;
-          ExecStart = lib.getExe orcaServe;
-          ExecStop = lib.getExe orcaServeStop;
-          # main PID は bwrap になり SIGTERM を転送しないため、ExecStop 後の残りは cgroup 全体を kill。
-          KillMode = "control-group";
-          TimeoutStopSec = 40;
-          Restart = "on-failure";
-          # exit 3 = 別 instance が同じ userData を使用中。自動再起動しない。
-          RestartPreventExitStatus = 3;
-          RestartSec = 5;
-        };
-        Install.WantedBy = [ "default.target" ];
-      };
-
       # AI agent が起動して放置した dev server(next dev / vite 等)を定期回収する。
       # 個別 tool の hook に依存しない最終防衛線。詳細は dev-server-reaper.sh 冒頭。
       dev-server-reaper = {

@@ -34,7 +34,7 @@ in
     firewall.interfaces.tailscale0.allowedTCPPorts = [
       443
       5757
-      6768 # orca serve
+      6768 # Orca desktop app のリモートクライアント公開用
     ];
   };
 

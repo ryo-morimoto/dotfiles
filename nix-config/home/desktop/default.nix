@@ -116,6 +116,13 @@
         { command = [ "awww-daemon" ]; }
         { command = [ "swayosd-server" ]; }
         { command = [ "blueman-applet" ]; }
+        # Orca は desktop app 1本で常駐し、リモートクライアントのサーバーも兼ねる。
+        {
+          command = [
+            "appimage-run"
+            "${config.home.homeDirectory}/Applications/orca-linux.AppImage"
+          ];
+        }
       ];
 
       prefer-no-csd = true;
@@ -392,9 +399,10 @@
       "orca-desktop" = {
         name = "Orca";
         genericName = "Agentic IDE";
-        # orca-serve が ~/.config/orca(既定 userData)を占有しているため、
-        # desktop client は別 profile で起動しないと single-instance で即終了する。
-        exec = "appimage-run ${config.home.homeDirectory}/Applications/orca-linux.AppImage --user-data-dir=${config.home.homeDirectory}/.config/orca-desktop";
+        # desktop app がこのマシン唯一の Orca instance(既定 userData ~/.config/orca)。
+        # laptop / mobile へは Settings → Remote Orca Servers のアクセスリンクで公開する。
+        # AppImage は Nix 外(~/Applications)で Orca 自身の autoUpdater が更新する。
+        exec = "appimage-run ${config.home.homeDirectory}/Applications/orca-linux.AppImage";
         terminal = false;
         categories = [ "Development" ];
         settings.StartupWMClass = "orca";
