@@ -11,7 +11,7 @@
 |---|---|---|---|
 | 1. 制約を確定する | 完了 (2026-10-24 合意) | MUST の制約に【仮】が残っていない | `checks/no-provisional-must.sh` → OK (v3、MUST 18件)。壊した版 (v2) では FAIL (PERF-1 / REL-1 / MNT-1)。`checks/ids-preserved.sh v2 v3` → OK (77件が残り、N6 / PERF-5 / Q8 / Q9 を追加)。壊した版 (FUN-5 の行を削除) では FAIL |
 | 2. 構成を提案する | 完了 (2026-10-24 合意) | すべての MUST 制約が、どれかの ADR に対応付いている | `checks/must-covered-by-adr.sh` → OK (MUST 18件)。壊した版 (ADR-0006 から SAF-1 を外す) では FAIL。ADR が存在しない ID を参照した版も FAIL |
-| 3. 検証を設計する | 進行中 (D-V1 のモデルで出た設計の穴について確認待ち) | D-V1〜D-V4 それぞれに判断と理由があり、値するものが壊した版で失敗する | `verify/README.md` に判断を記録 (4つとも値する)。D-V1: 合意した図は 2026-10-24 にユーザーが承認。TLA+ のモデルでは、合意した図のままだと `NoWayBack` が破れる。提案 (a)〜(e) では `NoWayBack` と `UpdatesStayPossible` の両方が成り立つ。壊した版5つはすべて期待どおりに失敗する (`verify/run.sh` → exit 0) |
+| 3. 検証を設計する | 進行中 (D-V1 完了。D-V2〜D-V4 を作業中) | D-V1〜D-V4 それぞれに判断と理由があり、値するものが壊した版で失敗する | `verify/README.md` に判断を記録 (4つとも値する)。D-V1: 合意した図は 2026-10-24 にユーザーが承認。TLA+ のモデルでは、合意した図のままだと `NoWayBack` が破れる。提案 (a)〜(e) では `NoWayBack` と `UpdatesStayPossible` の両方が成り立つ。壊した版5つはすべて期待どおりに失敗する (`verify/run.sh` → exit 0) |
 | 4. 機能テストを用意する | 未着手 | 6章の各項目がスクリプトになっている | 未作成 |
 | 5. 構成を実装する | 未着手 | 4章の機能テストが通る | 未作成 |
 
@@ -47,7 +47,7 @@
 | SEC-3 | SHOULD | ADR-0001 (部分): AUR は許可リスト3件 | 未実施 | 2026-10-24 回答: ok |
 | SEC-4 | SHOULD | — | 未実施 | — |
 | MNT-1 | MUST | ADR-0001/0003 (部分): Arch + 推論は上流のコンテナ | 計測 2026-10-23: llama-cpp (extra) 8日、DMS 3日。過去180日の超過は cuda 1、ollama-cuda 1、llama-cpp 1 (`research/snapshots/`) | 2026-10-24 回答: 最新系列を追う → ADR-0001 決定 6 |
-| MNT-2 | MUST | ADR-0001: decman の差分適用 | 未実施 → `drive/declare-apply` | — |
+| MNT-2 | MUST | ADR-0001: decman の差分適用。ADR-0002 決定 10 により、1回のログインの間の更新回数に上限がある | 未実施 → `drive/declare-apply` | 2026-10-24 回答: 更新回数の上限を受け入れる |
 | MNT-3 | MUST | ADR-0001: decman と chezmoi を dotfiles の1か所に | 未実施 | — |
 | MNT-4 | SHOULD | ADR-0001 (部分): informant + AUR 差分の確認 | 未実施 (週ごとに記録) | — |
 | MNT-5 | SHOULD | ADR-0001 (部分): NVIDIA の VRAM 対策は長く残る | 未実施 | — |

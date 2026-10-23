@@ -15,6 +15,7 @@ not_satisfied: []
 | 日付 | 内容 |
 |---|---|
 | 2026-10-24 | `@home` にもスナップショットを取り、指定したパスだけを戻す手順を足した (決定 7)。1つ前の推論イメージを残す規則を足した (決定 8)。理由: 「更新は /home を書き換えない」という前提が成り立たないため。アプリは更新後の初回起動でユーザー設定を新しい形式に移すことがある (例: DMS 2.0 は設定の場所を `DankMaterialShell` から `dms` に移す)。移行が一方通行だと、ルートだけを戻しても旧版が新しい形式の設定を読めず、作業面が壊れたままになる |
+| 2026-10-24 | D-V1 (TLA+) の結果を受けて、決定 9〜13 を足した。limine-snapper-sync は `MAX_SNAPSHOT_ENTRIES` を超えた起動エントリを、important を見ずに古い順に消す (`SnapshotManager.java`)。そのため「壊れたまま更新を重ねる」と、動いた状態のエントリが押し出された。ユーザーが承認 |
 
 ## 文脈
 
@@ -49,6 +50,12 @@ not_satisfied: []
      - chezmoi で宣言した設定は一覧に入れない。`chezmoi apply` で戻るからである。
    - 手順はルートの復元と合わせて15分に収める (REL-1)。
 8. **推論イメージ:** 宣言で指しているイメージに加えて、1つ前のダイジェストのイメージを `@containers` に残す (prune の対象から外す)。ルートを戻すとイメージの指定も1つ前に戻るので、ネットワークなしでそれを起動できるようにする。
+9. **動いた印 (D-V1 の a):** ログインできたら、ユーザーのサービスがそのときの状態のスナップショットを作り、userdata に `important=yes` と `desktop_good=yes` を付ける (cleanup の方式は number)。
+10. **押し出しを止めるフック (D-V1 の b):** pacman の PreTransaction フック (`AbortOnFail`) で、更新すると最新の `desktop_good` の起動エントリが `MAX_SNAPSHOT_ENTRIES` で押し出される場合に、更新を止める。該当するエントリが無ければ止める (fail-closed)。止まったら、再起動してログインし直す。
+    - あわせて、decman の1回の実行で取るスナップショットを、pre / post の1組にまとめる。押し出しまでにできる更新の回数を増やすためである。方法は段階5で確かめる。
+11. **復元のラッパー (D-V1 の c):** 復元は `desktop_good` の付いたスナップショットからだけ行う。ラッパーのスクリプトが、印の無いものを拒む。
+12. **件数の上限 (D-V1 の d):** `MAX_SNAPSHOT_ENTRIES` は数値で決める (`auto` にしない)。値は ESP に `LIMIT_USAGE_PERCENT` 未満で収まるエントリの数より小さくする。値は段階4で、ESP の使用量を測って決める。
+13. **snap-pac の `important_packages` と `important_commands` は無効のまま** (既定値) にする (D-V1 の e)。
 
 ## 満たす制約
 
@@ -70,6 +77,7 @@ not_satisfied: []
   - ESP を 4GiB 取る。
   - `@home` のスナップショットが容量を使う (CoW なので差分の分だけ)。snapper の cleanup で古いものを消す。
   - 巻き戻しの手順に、`home` の部分的な復元が1手加わる。
+  - 決定 10 により、ログインしてから次に再起動・ログインするまでにできる更新の回数に上限ができる (MNT-2 に影響)。回数は ⌈`MAX_SNAPSHOT_ENTRIES` ÷ (1回の実行で取るスナップショットの数)⌉ − 1 回。ユーザーが承認 (2026-10-24)
   - limine-snapper-sync は AUR で、ビルドに GraalVM (Java) を取ってくる。
   - Secure Boot を有効にすると、Limine 11.2 以降は設定のチェックサムを登録しないと panic する (ADR-0007)。
 - **選ばなかった案:**
@@ -85,5 +93,5 @@ not_satisfied: []
 
 ## 検証
 
-- D-V1: 更新 → 失敗 → 直前の状態へ、を状態機械で書き、`AlwaysAWorkingStateReachable` を検査する (段階3。statechart で挙動を合意してから)。
+- D-V1: `verify/d-v1/model/Rollback.tla` で `NoWayBack` (= handoff の `AlwaysAWorkingStateReachable`) と `UpdatesStayPossible` を検査する。決定 9〜13 を外した版が失敗することも確かめる (`verify/run.sh`)。
 - 機能テスト `drive/rollback-drill`: 壊れた更新をわざと入れ、ブートメニューから戻るまでの時間を測る。まず VM で行い、代用と明記する (段階4)。
