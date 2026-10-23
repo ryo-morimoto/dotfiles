@@ -1,0 +1,297 @@
+#!/usr/bin/env bash
+# Desktop の機能テスト (段階4)。Launch / Doctor / Drive / Evidence / Cleanup。
+#
+#   dv launch                 検証できる状態にする (real: 起動とログインの完了を待つ / standin: 代わりの環境を作る)
+#   dv doctor                 読むだけの点検。「この環境を検証してよいか」に答える
+#   dv drive <feature>        機能を利用者と同じ経路で動かし、証拠を残す
+#                             feature: workspace | inference | rollback | install-from-zero | declare-apply
+#   dv evidence               今回の証拠の置き場所を表示する
+#   dv cleanup                今回の実行が作ったものだけを片付ける (証拠は残す)
+#
+# 環境変数:
+#   DV_TARGET=real|standin    real = 実機の Desktop。standin = 代わりの環境 (今は network namespace だけ)。既定は real
+#   DV_RUN_ID                 実行の ID。既定は日時。launch と cleanup で同じ値を使う
+#   DV_EVIDENCE_ROOT          証拠の置き場所。既定は ~/.local/state/desktop-verify/evidence
+#   DV_ALLOWED_PEER           inference: 許可した相手 (ssh で入れる tailnet の端末か Server)。未設定なら skip
+#   DV_DENIED_PEER            inference: tailnet の許可していない端末 (ssh 先)。未設定なら skip
+#   DV_LAN_PEER               inference: LAN の別の端末 (ssh 先)。未設定なら skip
+#   DV_API_KEY_FILE           inference: API キーのファイル。既定は /etc/llama/api-keys
+#   DV_STANDIN_NFT            standin: 本番の生成器の代わりに入れる nft の規則 (standin/broken-*.nft。壊した版の確認用)
+#
+# 判定: 各 check は pass / fail / skip を記録する。skip は「前提が無くて確かめていない」で、pass ではない。
+# 1つでも fail があれば exit 1、fail が無く skip があれば exit 3、全部 pass なら exit 0。
+set -uo pipefail
+
+here="$(cd "$(dirname "$0")" && pwd)"
+desktop_dir="$(cd "$here/.." && pwd)"
+DV_TARGET="${DV_TARGET:-real}"
+DV_RUN_ID="${DV_RUN_ID:-$(date -u +%Y%m%dT%H%M%SZ)}"
+DV_EVIDENCE_ROOT="${DV_EVIDENCE_ROOT:-$HOME/.local/state/desktop-verify/evidence}"
+DV_STATE_ROOT="${DV_STATE_ROOT:-$HOME/.local/state/desktop-verify/runs}"
+state="$DV_STATE_ROOT/$DV_RUN_ID"
+INFER_PORT="$(python3 -I -c 'import json,sys; print(json.load(open(sys.argv[1]))["port"])' "$desktop_dir/verify/d-v3/designs/design.json")"
+
+mkdir -p "$state"
+
+# ---------------------------------------------------------------- 記録
+
+feature=""; evid=""; n_pass=0; n_fail=0; n_skip=0
+
+begin() {  # begin <feature>
+  feature="$1"
+  evid="$DV_EVIDENCE_ROOT/$DV_RUN_ID/$feature"
+  mkdir -p "$evid"
+  {
+    echo "feature: $feature"
+    echo "target: $DV_TARGET"
+    echo "run_id: $DV_RUN_ID"
+    echo "host: $(hostname)"
+    echo "dotfiles_commit: $(git -C "$desktop_dir" rev-parse HEAD 2>/dev/null || echo unknown)"
+    echo "started: $(date -u +%FT%TZ)"
+  } >"$evid/meta.txt"
+  : >"$evid/results.tsv"
+}
+
+record() {  # record <id> <pass|fail|skip> <説明>
+  printf '%s\t%s\t%s\n' "$1" "$2" "$3" >>"$evid/results.tsv"
+  printf '%-5s %-28s %s\n' "$2" "$1" "$3"
+  case "$2" in pass) n_pass=$((n_pass+1));; fail) n_fail=$((n_fail+1));; skip) n_skip=$((n_skip+1));; esac
+}
+
+run_cmd() {  # run_cmd <id> <cmd...> : コマンド、stdout、stderr、exit code を証拠に残す。exit code を返す
+  local id="$1"; shift
+  local out="$evid/$id"
+  printf '%q ' "$@" >"$out.cmd"; echo >>"$out.cmd"
+  "$@" >"$out.stdout" 2>"$out.stderr"; local rc=$?
+  echo "$rc" >"$out.exit"
+  return $rc
+}
+
+check() {  # check <id> <説明> <cmd...> : exit 0 なら pass
+  local id="$1" desc="$2"; shift 2
+  if run_cmd "$id" "$@"; then record "$id" pass "$desc"; else record "$id" fail "$desc (exit $(cat "$evid/$id.exit")、$evid/$id.stderr)"; fi
+}
+
+check_refused() {  # check_refused <id> <説明> <cmd...> : 失敗すれば pass (届かないことの確認)
+  local id="$1" desc="$2"; shift 2
+  if run_cmd "$id" "$@"; then record "$id" fail "$desc (届いてしまった。$evid/$id.stdout)"; else record "$id" pass "$desc"; fi
+}
+
+# curl で TCP の接続ができたかを返す。HTTP の応答 (401 も含む) があれば exit 0、つながらなければ exit 1。
+# 「届かない」の確認に使う。curl -f は 401 でも失敗するので、それだと届いたのに届かないと数えてしまう。
+CONNECTS='code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 5 "$0"); [ "$code" != 000 ]' 
+
+skip() { record "$1" skip "$2"; }
+
+finish() {
+  echo "ended: $(date -u +%FT%TZ)" >>"$evid/meta.txt"
+  echo "pass=$n_pass fail=$n_fail skip=$n_skip" | tee -a "$evid/meta.txt"
+  echo "証拠: $evid"
+  if (( n_fail > 0 )); then return 1; elif (( n_skip > 0 )); then return 3; else return 0; fi
+}
+
+started() { echo "$*" >>"$state/started.txt"; }   # cleanup で片付けるものを記録する
+
+# ---------------------------------------------------------------- 代わりの環境 (network namespace)
+# 実機との違い (features/inference.md の「代用」に同じ):
+#   - tailscale0 は TUN ではなく veth。Tailscale の ACL は無く、許可していない tailnet の端末は試さない。
+#   - llama-server の代わりに python3 -m http.server を Tailscale のアドレスで待ち受けさせる (届くかだけを見る)。
+#   - nftables の規則は本番と同じ gen_nft.py の出力を使う。
+
+NS_D="dv-desktop-$DV_RUN_ID"; NS_LAN="dv-lan-$DV_RUN_ID"; NS_TS="dv-ts-$DV_RUN_ID"
+D_LAN=192.168.50.10; LAN_HOST=192.168.50.20; D_TS=100.64.0.1; TS_PEER=100.64.0.2
+
+standin_launch() {
+  [[ $EUID -eq 0 ]] || { echo "standin の launch には root が要る (network namespace を作る)"; return 1; }
+  ip netns add "$NS_D" && started "netns $NS_D"
+  ip netns add "$NS_LAN" && started "netns $NS_LAN"
+  ip netns add "$NS_TS" && started "netns $NS_TS"
+  ip -n "$NS_D" link set lo up; ip -n "$NS_LAN" link set lo up; ip -n "$NS_TS" link set lo up
+  # LAN: desktop の lan0 <-> LAN の端末
+  ip link add dvlan0 netns "$NS_D" type veth peer name eth0 netns "$NS_LAN"
+  ip -n "$NS_D" link set dvlan0 name lan0
+  ip -n "$NS_D" addr add "$D_LAN/24" dev lan0; ip -n "$NS_D" link set lan0 up
+  ip -n "$NS_LAN" addr add "$LAN_HOST/24" dev eth0; ip -n "$NS_LAN" link set eth0 up
+  # LAN の端末が Tailscale のアドレス宛てに、LAN 経由で送れるようにする (weak host model を試すため)
+  ip -n "$NS_LAN" route add "$D_TS/32" via "$D_LAN"
+  # tailnet: desktop の tailscale0 <-> 許可した tailnet の端末
+  ip link add dvts0 netns "$NS_D" type veth peer name ts0 netns "$NS_TS"
+  ip -n "$NS_D" link set dvts0 name tailscale0
+  ip -n "$NS_D" addr add "$D_TS/32" dev tailscale0; ip -n "$NS_D" link set tailscale0 up
+  ip -n "$NS_D" route add "$TS_PEER/32" dev tailscale0
+  ip -n "$NS_TS" addr add "$TS_PEER/32" dev ts0; ip -n "$NS_TS" link set ts0 up
+  ip -n "$NS_TS" route add "$D_TS/32" dev ts0
+  # 本番と同じ生成器で nftables の規則を入れる
+  if [[ -n "${DV_STANDIN_NFT:-}" ]]; then
+    cp "$DV_STANDIN_NFT" "$state/nft.conf"   # 壊した版で、検査が効いていることを確かめるときだけ使う
+  else
+    python3 -I "$here/gen_nft.py" "$desktop_dir/verify/d-v3/designs/design.json" >"$state/nft.conf"
+  fi
+  ip netns exec "$NS_D" nft -f "$state/nft.conf"
+  # 推論 API の代わり (Tailscale のアドレスで待ち受ける)
+  mkdir -p "$state/www/v1" && echo '{"object":"list","data":[{"id":"standin"}]}' >"$state/www/v1/models"
+  ip netns exec "$NS_D" python3 -I -m http.server --bind "$D_TS" --directory "$state/www" "$INFER_PORT" \
+    >"$state/http.log" 2>&1 &
+  echo $! >"$state/http.pid"; started "pid $(cat "$state/http.pid")"
+  for _ in $(seq 50); do ip netns exec "$NS_D" python3 -I -c "import socket;socket.create_connection(('$D_TS',$INFER_PORT),1)" 2>/dev/null && break; sleep 0.1; done
+  echo "ready: standin $DV_RUN_ID (desktop の tailscale0=$D_TS、lan0=$D_LAN、port $INFER_PORT)"
+}
+
+standin_cleanup() {
+  [[ -f "$state/started.txt" ]] || { echo "この run ($DV_RUN_ID) が作ったものは記録されていない"; return 0; }
+  tac "$state/started.txt" | while read -r kind name; do
+    case "$kind" in
+      pid) kill "$name" 2>/dev/null || true ;;
+      netns) ip netns del "$name" 2>/dev/null || true ;;
+      unit) systemctl stop "$name" 2>/dev/null || true ;;
+    esac
+  done
+  rm -f "$state/started.txt"
+  echo "cleanup: $DV_RUN_ID が作ったものを片付けた (証拠は $DV_EVIDENCE_ROOT/$DV_RUN_ID に残す)"
+}
+
+# ---------------------------------------------------------------- Launch / Doctor
+
+launch() {
+  if [[ "$DV_TARGET" == standin ]]; then standin_launch; return; fi
+  # 実機: 起動とログインが終わっていることを待つ。推論サービスは止まっていれば起動し、cleanup で止める
+  systemctl is-system-running --wait >/dev/null 2>&1 || true
+  systemctl --user is-active --quiet niri.service || { echo "niri のセッションが無い。ログインしてから実行する"; return 1; }
+  if ! systemctl is-active --quiet llama-server.service; then
+    sudo systemctl start llama-server.service && started "unit llama-server.service"
+  fi
+  echo "ready: real $(hostname) run $DV_RUN_ID"
+}
+
+doctor() {
+  begin doctor
+  if [[ "$DV_TARGET" == standin ]]; then
+    check standin-netns "代わりの環境の namespace がある" ip netns exec "$NS_D" true
+    check standin-nft "nftables の規則が入っている" bash -c "ip netns exec '$NS_D' nft list table inet desktop_inference"
+    check standin-http "推論の代わりが待ち受けている" ip netns exec "$NS_D" python3 -I -c "import socket;socket.create_connection(('$D_TS',$INFER_PORT),1)"
+    finish; return
+  fi
+  check os-arch "OS が Arch Linux" grep -q '^ID=arch$' /etc/os-release
+  check nvidia "NVIDIA ドライバが読めている" nvidia-smi --query-gpu=name,driver_version --format=csv,noheader
+  check niri "niri のセッションがある" niri msg version
+  check tailscale "Tailscale がつながっている" bash -c 'tailscale status --json | python3 -I -c "import json,sys; d=json.load(sys.stdin); sys.exit(d[\"BackendState\"]!=\"Running\")"'
+  check snapper-root "snapper の root 設定がある" sudo snapper -c root get-config
+  check snapper-home "snapper の home 設定がある (ADR-0002 決定 7)" sudo snapper -c home get-config
+  check llama "推論サービスが動いている" systemctl is-active llama-server.service
+  check evidence-dir "証拠の置き場所に書ける" test -w "$evid"
+  finish
+}
+
+# ---------------------------------------------------------------- Drive: 各機能 (features/*.md と対応)
+
+drive_inference() {
+  begin inference
+  local url_ts="http://$D_TS:$INFER_PORT/v1/models"
+  if [[ "$DV_TARGET" == standin ]]; then
+    check   reach-allowed-peer   "許可した tailnet の端末から届く (代用: veth の tailscale0)" ip netns exec "$NS_TS" curl -sf --max-time 3 "$url_ts"
+    check   reach-desktop-self   "Desktop 自身から届く" ip netns exec "$NS_D" curl -sf --max-time 3 "$url_ts"
+    check_refused deny-lan-to-lan-ip "LAN の端末から LAN のアドレス宛ては届かない" ip netns exec "$NS_LAN" sh -c "$CONNECTS" "http://$D_LAN:$INFER_PORT/v1/models"
+    check_refused deny-lan-to-ts-ip  "LAN の端末から Tailscale のアドレス宛て (LAN 経由) は届かない" ip netns exec "$NS_LAN" sh -c "$CONNECTS" "$url_ts"
+    skip    deny-other-tailnet   "許可していない tailnet の端末: 代用の環境には Tailscale の ACL が無いので試さない (実機で確かめる)"
+    run_cmd nft-ruleset ip netns exec "$NS_D" nft list ruleset || true
+    finish; return
+  fi
+  local key_file="${DV_API_KEY_FILE:-/etc/llama/api-keys}"
+  local name; name="$(tailscale status --json | python3 -I -c 'import json,sys; print(json.load(sys.stdin)["Self"]["DNSName"].rstrip("."))')"
+  local url="http://$name:$INFER_PORT/v1/models"
+  local key; key="$(sudo head -n1 "$key_file" 2>/dev/null)"
+  check service-listens "推論サービスが Tailscale のアドレスだけで待ち受ける" bash -c "ss -Hltn 'sport = :$INFER_PORT' | awk '{print \$4}' | grep -v -E '^(0\\.0\\.0\\.0|\\*|\\[::\\]):'"
+  check nft-rule "nftables の規則が宣言どおり (iifname で tailscale0 と lo だけ受け入れ、ほかは落とす)" bash -c "sudo nft list table inet desktop_inference | tee /dev/stderr | grep -q 'tcp dport $INFER_PORT iifname { \"tailscale0\", \"lo\" } accept' && sudo nft list table inet desktop_inference | grep -q 'tcp dport $INFER_PORT drop'"
+  check api-openai-compatible "自分から OpenAI 互換の /v1/models が返る (COMP-2)" curl -sf --max-time 5 -H "Authorization: Bearer $key" "$url"
+  check_refused api-requires-key "API キーが無いと受け付けない" curl -sf --max-time 5 "$url"
+  if [[ -n "${DV_ALLOWED_PEER:-}" ]]; then
+    check reach-allowed-peer "許可した相手 ($DV_ALLOWED_PEER) から届く" ssh "$DV_ALLOWED_PEER" curl -sf --max-time 5 -H "'Authorization: Bearer $key'" "$url"
+  else skip reach-allowed-peer "DV_ALLOWED_PEER が未設定"; fi
+  if [[ -n "${DV_DENIED_PEER:-}" ]]; then
+    check_refused deny-other-tailnet "許可していない tailnet の端末 ($DV_DENIED_PEER) から届かない" ssh "$DV_DENIED_PEER" sh -c "$(printf %q "$CONNECTS")" "$url"
+  else skip deny-other-tailnet "DV_DENIED_PEER が未設定"; fi
+  if [[ -n "${DV_LAN_PEER:-}" ]]; then
+    local lan_ip; lan_ip="$(ip -4 route get 1.1.1.1 | awk '{for(i=1;i<=NF;i++) if($i=="src") print $(i+1)}')"
+    local ts_ip; ts_ip="$(tailscale ip -4)"
+    check_refused deny-lan-to-lan-ip "LAN の端末 ($DV_LAN_PEER) から LAN のアドレス宛ては届かない" ssh "$DV_LAN_PEER" sh -c "$(printf %q "$CONNECTS")" "http://$lan_ip:$INFER_PORT/v1/models"
+    skip deny-lan-to-ts-ip "LAN の端末から Tailscale のアドレス宛て (LAN 経由): LAN の端末に経路を足す必要があり、人が行う (features/inference.md)"
+  else skip deny-lan "DV_LAN_PEER が未設定"; fi
+  # VRAM (PERF-1 / PERF-5): 推論を止めた状態で測る
+  sudo systemctl stop llama-server.service
+  sleep 3
+  check vram-resident-le-512mib "推論を止めた状態で、作業面の常駐分の VRAM が 0.5GB 以下 (PERF-1)" bash -c "'$here/vram.sh' resident-mib | awk '{exit !(\$1 <= 512)}'"
+  run_cmd vram-per-process "$here/vram.sh" per-process || true
+  sudo systemctl start llama-server.service
+  finish
+}
+
+drive_workspace() {
+  begin workspace
+  [[ "$DV_TARGET" == real ]] || { skip all "workspace は実機でだけ動かす (GPU と画面が要る)"; finish; return; }
+  check session-wayland "ログインしたセッションが Wayland の niri" bash -c 'loginctl show-session "$XDG_SESSION_ID" -p Type --value | grep -qx wayland && systemctl --user is-active --quiet niri.service'
+  check outputs-2x144 "2画面が 1920x1080 で 144Hz 前後 (FUN-1)" bash -c "niri msg --json outputs | python3 -I -c '
+import json,sys
+outs=[o for o in json.load(sys.stdin).values() if o.get(\"current_mode\") is not None]
+ok=[o for o in outs if (m:=o[\"modes\"][o[\"current_mode\"]]) and m[\"width\"]==1920 and m[\"height\"]==1080 and m[\"refresh_rate\"]>=143000]
+print(len(outs), len(ok)); sys.exit(not (len(outs)==2 and len(ok)==2))'"
+  check ime-hazkey "fcitx5 が動き、hazkey が入力メソッドにある (P-3)" bash -c 'fcitx5-remote >/dev/null && grep -q "hazkey" ~/.config/fcitx5/profile'
+  check clipboard "クリップボードの往復" bash -c 'v="dv-$RANDOM"; printf %s "$v" | wl-copy && [ "$(wl-paste -n)" = "$v" ]'
+  check screenshot "スクリーンショットが撮れる" bash -c "niri msg action screenshot-screen --write-to-disk true && sleep 1 && find \"\$(xdg-user-dir PICTURES)\" -newer '$evid/meta.txt' -name '*.png' | grep -q ."
+  check screencast-portal "画面共有の portal が動いている" busctl --user status org.freedesktop.portal.Desktop
+  check niri-layers-lint "niri 設定の層が R1 / R2 を満たす (D-V2)" python3 -I "$desktop_dir/verify/d-v2/niri_layers.py" lint "$HOME/.config/niri"
+  check niri-validate "niri が設定を受け付ける" niri validate
+  check boot-time "電源投入からログインまで 60 秒以内 (PERF-4、MAY)" bash -c "systemd-analyze | grep -oE '= [0-9.]+s' | tr -dc '0-9.' | awk '{exit !(\$1 < 60)}'"
+  run_cmd screenshot-evidence niri msg --json outputs || true
+  finish
+}
+
+drive_declare_apply() {
+  begin declare-apply
+  [[ "$DV_TARGET" == real ]] || { skip all "declare-apply は実機でだけ動かす (decman と pacman が要る)"; finish; return; }
+  local pkg="${DV_PROBE_PACKAGE:-cowsay}"
+  check decman-clean-before "宣言と実機に差が無い (decman --dry-run が何もしない)" bash -c "sudo decman --dry-run 2>&1 | tee /dev/stderr | grep -qiE 'nothing to do|no changes' "
+  skip declare-add "宣言に $pkg を足して decman を流し、使えるまでの時間を測る: 宣言の編集は人が行う (手順は features/declare-apply.md)"
+  check undeclared-state "宣言されていない状態の一覧が空か既知のものだけ (INT-3)" "$here/undeclared.sh"
+  finish
+}
+
+drive_rollback() {
+  begin rollback
+  [[ "$DV_TARGET" == real ]] || { skip all "rollback は実機か VM で動かす (btrfs、snapper、Limine が要る)。代わりの環境は未整備"; finish; return; }
+  check good-entry-exists "ブートメニューに desktop_good のエントリがある (NoWayBack の実物)" bash -c "sudo snapper -c root --csvout list --columns number,userdata | grep -q 'desktop_good=yes'"
+  check entries-below-esp "MAX_SNAPSHOT_ENTRIES が数値で、ESP の使用率が LIMIT_USAGE_PERCENT 未満 (ADR-0002 決定 12)" bash -c ". /etc/default/limine; [[ \"\$MAX_SNAPSHOT_ENTRIES\" =~ ^[0-9]+$ ]] && u=\$(df --output=pcent /boot | tail -1 | tr -dc 0-9) && [ \"\$u\" -lt \"\${LIMIT_USAGE_PERCENT:-85}\" ]"
+  check snap-pac-no-important "snap-pac の important_packages が無効 (決定 13)" bash -c "! grep -E '^[[:space:]]*important_(packages|commands)' /etc/snap-pac.ini"
+  check guard-hook-installed "押し出しを止めるフックが入っている (決定 10)" test -f /etc/pacman.d/hooks/00-desktop-guard-eviction.hook
+  skip drill "巻き戻し訓練 (15分以内): ブートメニューでの選択は人が行う。手順と時間の記録は features/rollback.md"
+  finish
+}
+
+drive_install_from_zero() {
+  begin install-from-zero
+  skip all "空のディスクからの再現は VM で行う (代用)。手順は features/install-from-zero.md。段階5で install/ を作ってから動かす"
+  finish
+}
+
+# ---------------------------------------------------------------- main
+
+cmd="${1:-}"; shift || true
+case "$cmd" in
+  launch) launch ;;
+  doctor) doctor ;;
+  drive)
+    case "${1:-}" in
+      inference) drive_inference ;;
+      workspace) drive_workspace ;;
+      declare-apply) drive_declare_apply ;;
+      rollback) drive_rollback ;;
+      install-from-zero) drive_install_from_zero ;;
+      *) echo "feature: workspace | inference | rollback | install-from-zero | declare-apply"; exit 2 ;;
+    esac ;;
+  evidence) echo "$DV_EVIDENCE_ROOT/$DV_RUN_ID" ;;
+  cleanup)
+    if [[ "$DV_TARGET" == standin ]]; then standin_cleanup; else
+      [[ -f "$state/started.txt" ]] && while read -r kind name; do [[ "$kind" == unit ]] && sudo systemctl stop "$name"; done <"$state/started.txt"
+      rm -f "$state/started.txt"; echo "cleanup: $DV_RUN_ID (証拠は $DV_EVIDENCE_ROOT/$DV_RUN_ID に残す)"
+    fi ;;
+  *) sed -n '2,25p' "$0"; exit 2 ;;
+esac

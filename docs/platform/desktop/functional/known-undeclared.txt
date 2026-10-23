@@ -1,0 +1,5 @@
+# 宣言しないと決めた状態 (undeclared.sh が無視する行)。1行に1つ、undeclared.sh の出力と同じ形で書く。
+# 足すときは、なぜ宣言しないかを上の行にコメントで書く。
+# 機械が生成するファイル (宣言すると tool の出力を巻き戻すため。運用原則)
+unowned: /etc/machine-id
+unowned: /etc/adjtime

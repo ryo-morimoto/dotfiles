@@ -22,6 +22,7 @@
 .claude/skills/*
 !.claude/skills/dotfiles-deploy/
 !.claude/skills/desktop-formal-verification/
+!.claude/skills/verify-desktop/
 .mcp.json
 
 # compound-engineering runtime data
