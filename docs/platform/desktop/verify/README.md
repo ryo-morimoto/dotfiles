@@ -99,7 +99,7 @@ statechart の from-chart で、利用者から見た挙動を図にした。TLA
 
 **範囲:** スナップショットは12個まで。`NUMBER_LIMIT=4`、`NUMBER_LIMIT_IMPORTANT=2`、`MAX_SNAPSHOT_ENTRIES=7`、ESP の容量はエントリ8件分、1回の decman で pacman のトランザクションは2回。成り立ったのはこの範囲での話で、実際の数値では段階4で計測する。
 
-**MNT-2 への影響:** (b) のために、ログインしてから次に再起動・ログインするまでにできる更新の回数に上限ができる。上限は `(MAX_SNAPSHOT_ENTRIES − 1) ÷ (2 × トランザクション数)` 回より少ない。例: `MAX_SNAPSHOT_ENTRIES=30` で、1回の decman が3トランザクションなら4回。decman の1回を1組の pre / post にまとめれば14回になる [推論。snap-pac をその間だけ止める方法は段階5で確かめる]。
+**MNT-2 への影響:** (b) のために、ログインしてから次に再起動・ログインするまでにできる更新の回数に上限ができる。回数は ⌈`MAX_SNAPSHOT_ENTRIES` ÷ (2 × トランザクション数)⌉ − 1 回である。例: `MAX_SNAPSHOT_ENTRIES=30` で、1回の decman が3トランザクションなら4回。decman の1回を1組の pre / post にまとめれば14回になる [推論。snap-pac をその間だけ止める方法は段階5で確かめる]。
 
 **1コマンドで再実行:** `docs/platform/desktop/verify/run.sh` (TLA+ tools v1.7.4 を sha256 で固定して取得し、各 cfg の `expect:` と照合する)。
 
