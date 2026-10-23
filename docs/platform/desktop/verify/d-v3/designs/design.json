@@ -1,0 +1,1 @@
+{"_comment": "ADR-0003 の設計: host ネットワーク、Tailscale のアドレスで待ち受け、nftables は iif で tailscale0 と lo だけ受け入れる", "expect": "pass", "port": 8080, "network": "host", "listen": "ts-ip", "publish_host_ip": null, "nft_input": {"match": "iifname", "accept": ["tailscale0", "lo"]}, "tailscale_acl_allows": ["own-device", "server"]}

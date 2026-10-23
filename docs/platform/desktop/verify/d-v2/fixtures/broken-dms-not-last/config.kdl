@@ -1,0 +1,8 @@
+include "base.kdl"
+include "default-binds.kdl"
+include "dms/colors.kdl"
+include "dms/layout.kdl"
+include "dms/binds.kdl"
+include "dms/outputs.kdl"
+include "dms/windowrules.kdl"
+include "local.kdl"

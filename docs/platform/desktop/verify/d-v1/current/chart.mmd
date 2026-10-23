@@ -1,0 +1,43 @@
+---
+title: "D-V1 current design"
+config:
+  markdownAutoWrap: false
+  state:
+    useMaxWidth: false
+---
+stateDiagram-v2
+  %% labels in full
+  classDef works fill:#f4f6f7,stroke:#566573,color:#1b2631
+  classDef wrong fill:#fdedec,stroke:#c0392b,color:#7b241c
+  classDef fixed fill:#e9f7ef,stroke:#1e8449,color:#145a32
+  classDef worksPath fill:#f4f6f7,stroke:#1f3a93,stroke-width:4px,color:#1b2631
+  classDef wrongPath fill:#fdedec,stroke:#1f3a93,stroke-width:4px,color:#7b241c
+  classDef fixedPath fill:#e9f7ef,stroke:#1f3a93,stroke-width:4px,color:#145a32
+  state "Legend" as legend {
+    state "Works" as legendWorks
+    state "Breaks a rule" as legendWrong
+  }
+  class legendWorks works
+  class legendWrong wrong
+  state "Booted from snapshot" as s0
+  state "Broken by update, good<br/>entry kept" as s1
+  state "Broken, no good entry in<br/>boot menu" as s2
+  state "Desktop works" as s3
+  state "Old version, settings in<br/>new format" as s4
+  state "Updated again while<br/>broken, good entry kept" as s5
+  [*] --> s3
+  s3 --> s1 : update breaks the desktop or<br/>power fails during update
+  s1 --> s5 : update again while broken
+  s1 --> s0 : pick the good snapshot in the<br/>boot menu
+  s5 --> s2 : cleanup deletes the old<br/>snapshots or the ESP fills up<br/>and old boot entries go
+  s5 --> s0 : pick the good snapshot in the<br/>boot menu
+  s0 --> s1 : the picked snapshot was broken<br/>too
+  s0 --> s3 : restore and reboot
+  s0 --> s4 : restore and reboot, but the<br/>new version migrated settings
+  s4 --> s3 : restore the listed home paths
+  class s0 works
+  class s1 works
+  class s2 wrong
+  class s3 works
+  class s4 works
+  class s5 works

@@ -1,0 +1,1 @@
+{"_comment": "壊した版: Tailscale の ACL が全許可", "expect": "fail", "port": 8080, "network": "host", "listen": "ts-ip", "publish_host_ip": null, "nft_input": {"match": "iifname", "accept": ["tailscale0", "lo"]}, "tailscale_acl_allows": ["own-device", "server", "other-tailnet-device"]}
