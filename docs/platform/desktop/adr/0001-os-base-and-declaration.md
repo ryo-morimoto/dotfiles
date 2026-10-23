@@ -1,6 +1,6 @@
 ---
 id: ADR-0001
-status: proposed
+status: accepted
 satisfies: [FUN-1, FUN-2, MNT-2, MNT-3, FLX-2, INT-3]
 partial: [MNT-1, MNT-4, SEC-3, MNT-5]
 not_satisfied: []
@@ -8,7 +8,7 @@ not_satisfied: []
 
 # ADR-0001: OS は Arch Linux、システムの宣言は decman
 
-日付: 2026-10-24。状態: 提案。採点は [`../candidates.md`](../candidates.md)。
+日付: 2026-10-24。状態: 承認 (2026-10-24)。採点は [`../candidates.md`](../candidates.md)。
 
 ## 文脈
 
@@ -30,7 +30,8 @@ not_satisfied: []
 
 4. **zen は Flathub から入れる** (decman の Flatpak 管理を使う)。上流の Linux 向け手順は Flathub を第一に挙げている。AUR の `zen-browser-bin` はメンテナが上流の人ではないので使わない。
 5. **DMS は extra から入れる**。2026-10-23 時点では `dms-shell` が 1.6.3 で、上流で改名した `dux-shell` 2.0.0 が extra-testing にある。
-6. **推論ランタイムは OS のパッケージから入れない** (ADR-0003)。llama.cpp と ollama は鮮度の超過が多かった部品で、これを OS の更新から切り離す。
+6. **NVIDIA ドライバは Arch の `nvidia-open` (extra) を使う**。これは NVIDIA の最新系列 (New Feature Branch。2026-10-24 時点で 615) を追う。安定版の系列 (Production Branch、595) は Arch の公式に無く、使うには自前でパッケージングすることになる。CUDA 13.4 の新機能は R615 以上を要る (CUDA 13.4 のリリースノート)。壊れたときは `@pkg` のキャッシュから1つ前の版に戻す (ADR-0002)。
+7. **推論ランタイムは OS のパッケージから入れない** (ADR-0003)。llama.cpp と ollama は鮮度の超過が多かった部品で、これを OS の更新から切り離す。
 
 ## 満たす制約
 

@@ -9,8 +9,8 @@
 
 | 段階 | 状態 | 終わる条件 | 機械検査 |
 |---|---|---|---|
-| 1. 制約を確定する | 完了 (確認待ち) | MUST の制約に【仮】が残っていない | `checks/no-provisional-must.sh` → OK (v3、MUST 18件)。壊した版 (v2) では FAIL (PERF-1 / REL-1 / MNT-1)。`checks/ids-preserved.sh v2 v3` → OK (77件が残り、N6 / PERF-5 / Q8 / Q9 を追加)。壊した版 (FUN-5 の行を削除) では FAIL |
-| 2. 構成を提案する | 完了 (確認待ち) | すべての MUST 制約が、どれかの ADR に対応付いている | `checks/must-covered-by-adr.sh` → OK (MUST 18件)。壊した版 (ADR-0006 から SAF-1 を外す) では FAIL。ADR が存在しない ID を参照した版も FAIL |
+| 1. 制約を確定する | 完了 (2026-10-24 合意) | MUST の制約に【仮】が残っていない | `checks/no-provisional-must.sh` → OK (v3、MUST 18件)。壊した版 (v2) では FAIL (PERF-1 / REL-1 / MNT-1)。`checks/ids-preserved.sh v2 v3` → OK (77件が残り、N6 / PERF-5 / Q8 / Q9 を追加)。壊した版 (FUN-5 の行を削除) では FAIL |
+| 2. 構成を提案する | 完了 (2026-10-24 合意) | すべての MUST 制約が、どれかの ADR に対応付いている | `checks/must-covered-by-adr.sh` → OK (MUST 18件)。壊した版 (ADR-0006 から SAF-1 を外す) では FAIL。ADR が存在しない ID を参照した版も FAIL |
 | 3. 検証を設計する | 未着手 | D-V1〜D-V4 それぞれに判断と理由がある | 未作成 |
 | 4. 機能テストを用意する | 未着手 | 6章の各項目がスクリプトになっている | 未作成 |
 | 5. 構成を実装する | 未着手 | 4章の機能テストが通る | 未作成 |
@@ -37,16 +37,16 @@
 | INT-1 | MUST | ADR-0004: GUI が書く層 (`dms/*.kdl`) は管理外。chezmoi は黙って上書きしない | 未実施 → D-V2、`drive/settings-live-reload` | — |
 | INT-2 | MUST | ADR-0004: niri は include 先も即時に読み直す | 未実施 | — |
 | INT-3 | SHOULD | ADR-0001: `decman --dry-run` + pacman の一覧 + `chezmoi status` | 未実施 → `doctor/undeclared-state` | — |
-| REL-1 | MUST | ADR-0002 (部分): limine-snapper-sync でブートメニューから戻す | 未実施 → D-V1、`drive/rollback-drill` | /home と /var/log は戻さない設計でよいか |
+| REL-1 | MUST | ADR-0002 (部分): limine-snapper-sync でブートメニューから戻す | 未実施 → D-V1、`drive/rollback-drill` | 2026-10-24 回答: 説明の破綻 (アプリが一方通行で設定を移す) を直す → ADR-0002 決定 7 (`@home` を指定パスだけ戻す) |
 | REL-2 | SHOULD | ADR-0002: `@pkg` のキャッシュ / ALA、推論はダイジェスト | 未実施 | — |
 | REL-3 | MUST | ADR-0003: 7章の約束 (ベストエフォート) | 未実施 | — |
-| REL-4 | MUST | ADR-0004: git → Server、残りは restic → HDD | 未実施 → `doctor/desktop-only-data` | git の外のデータは同じ筐体の HDD にだけ置く。筐体ごとの損失は対象外でよいか |
+| REL-4 | MUST | ADR-0004: git → Server、残りは restic → HDD | 未実施 → `doctor/desktop-only-data` | 2026-10-24 回答: ok |
 | REL-5 | SHOULD | ADR-0002: HDD は `nofail` | 未実施 | — |
 | SEC-1 | MUST | ADR-0003: tailscale0 だけ + nftables + ACL + API キー | 未実施 → D-V3、`drive/inference-reachability` | — |
-| SEC-2 | MUST | ADR-0005: age + gitleaks | 未実施 → `doctor/secrets` | ディスク暗号化 (LUKS) を足すか (ADR-0007 と関係) |
-| SEC-3 | SHOULD | ADR-0001 (部分): AUR は許可リスト3件 | 未実施 | AUR を許可リスト3件 (hazkey-bin、decman、limine-snapper-sync) に絞ってよいか |
+| SEC-2 | MUST | ADR-0005: age + gitleaks | 未実施 → `doctor/secrets` | 2026-10-24 回答: 暗号化しない (顧客情報を置かない)。持ち出しには失効手順書 (`runbooks/credential-revocation.md`) で備える |
+| SEC-3 | SHOULD | ADR-0001 (部分): AUR は許可リスト3件 | 未実施 | 2026-10-24 回答: ok |
 | SEC-4 | SHOULD | — | 未実施 | — |
-| MNT-1 | MUST | ADR-0001/0003 (部分): Arch + 推論は上流のコンテナ | 計測 2026-10-23: llama-cpp (extra) 8日、DMS 3日。過去180日の超過は cuda 1、ollama-cuda 1、llama-cpp 1 (`research/snapshots/`) | NVIDIA は new feature 系列 (今は 615) まで追う前提でよいか。production 系列だけでよいなら候補 D の評価が変わる |
+| MNT-1 | MUST | ADR-0001/0003 (部分): Arch + 推論は上流のコンテナ | 計測 2026-10-23: llama-cpp (extra) 8日、DMS 3日。過去180日の超過は cuda 1、ollama-cuda 1、llama-cpp 1 (`research/snapshots/`) | 2026-10-24 回答: 最新系列を追う → ADR-0001 決定 6 |
 | MNT-2 | MUST | ADR-0001: decman の差分適用 | 未実施 → `drive/declare-apply` | — |
 | MNT-3 | MUST | ADR-0001: decman と chezmoi を dotfiles の1か所に | 未実施 | — |
 | MNT-4 | SHOULD | ADR-0001 (部分): informant + AUR 差分の確認 | 未実施 (週ごとに記録) | — |

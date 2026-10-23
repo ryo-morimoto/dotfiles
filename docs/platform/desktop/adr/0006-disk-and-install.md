@@ -1,6 +1,6 @@
 ---
 id: ADR-0006
-status: proposed
+status: accepted
 satisfies: [SAF-1]
 partial: [FLX-3]
 not_satisfied: []
@@ -8,7 +8,7 @@ not_satisfied: []
 
 # ADR-0006: ディスクは by-id で指定し、検査を通してからインストールする
 
-日付: 2026-10-24。状態: 提案。
+日付: 2026-10-24。状態: 承認 (2026-10-24)。
 
 ## 文脈
 

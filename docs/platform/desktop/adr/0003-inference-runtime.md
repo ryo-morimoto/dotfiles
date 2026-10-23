@@ -1,6 +1,6 @@
 ---
 id: ADR-0003
-status: proposed
+status: accepted
 satisfies: [FUN-3, COMP-2, SEC-1, REL-3, SAF-2, PERF-1]
 partial: [COMP-1, MNT-1, PERF-2, PERF-3]
 not_satisfied: []
@@ -8,7 +8,7 @@ not_satisfied: []
 
 # ADR-0003: 推論は上流の llama.cpp コンテナ。Tailscale の内側だけに出す
 
-日付: 2026-10-24。状態: 提案。
+日付: 2026-10-24。状態: 承認 (2026-10-24)。
 
 ## 文脈
 

@@ -285,12 +285,12 @@ v3 での変更は無い (Q4 で「ベストエフォート」を確認した)�
 | 範囲 | 手段 | ADR |
 |---|---|---|
 | OS と宣言 | Arch Linux (core/extra) + decman。AUR は上流の作者が保守する3件だけ | ADR-0001 |
-| 更新と巻き戻し | btrfs + snapper + snap-pac + Limine + limine-snapper-sync | ADR-0002 |
+| 更新と巻き戻し | btrfs + snapper + snap-pac + Limine + limine-snapper-sync。`/home` は指定したパスだけ戻す | ADR-0002 |
 | 推論 | 上流の llama.cpp コンテナ (CUDA 13) を podman + CDI で動かす。tailscale0 だけで待ち受け、ACL と API キーで守る | ADR-0003 |
 | ユーザー設定とデータ | chezmoi + mise。作業データは git → Server、残りは restic → HDD | ADR-0004 |
 | 秘密情報 | age で暗号化して git に置く | ADR-0005 |
 | ディスクとインストール | by-id の宣言と、検査つきの消去の入口1つ + archinstall | ADR-0006 |
-| Secure Boot | 無効 (確認待ち) | ADR-0007 |
+| Secure Boot とディスク暗号化 | どちらも使わない。持ち出しへの備えは資格情報の失効手順書 | ADR-0007 |
 
 v2 の採点表 (A.1) は candidates.md に置き換えた。v2 の表は git の履歴 (commit 5c0b169) にある。
 
@@ -307,6 +307,7 @@ v2 の採点表 (A.1) は candidates.md に置き換えた。v2 の表は git �
 | restic → HDD | Server にバックアップの受け口ができる | 7章の約束に足す案を台帳に書く | 0004 |
 | age | システム側の秘密情報が5つを超える | sops | 0005 |
 | Secure Boot 無効 | Secure Boot を求める制約を足す | sbctl + Limine の設定チェックサムの連動 | 0007 |
+| ディスク暗号化なし | 顧客情報や、失効できない秘密を置くことになる | LUKS | 0007 |
 | どれでも | P-1 / P-2 の見直しトリガー (3.2) が発生 | 別のコンポジタやシェル (本文の制約で評価し直す) | — |
 | どれでも | PERF-3 の違反 (swap の常用) を計測で確認 | G-MON-1 を見直し、RAM の増設を判断する | — |
 

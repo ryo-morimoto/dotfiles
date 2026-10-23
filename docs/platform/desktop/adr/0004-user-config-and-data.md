@@ -1,6 +1,6 @@
 ---
 id: ADR-0004
-status: proposed
+status: accepted
 satisfies: [INT-1, INT-2, FLX-1, REL-4]
 partial: [FUN-2]
 not_satisfied: []
@@ -8,7 +8,7 @@ not_satisfied: []
 
 # ADR-0004: ユーザー設定は chezmoi、開発ツールは mise。データは Desktop に置かない
 
-日付: 2026-10-24。状態: 提案。
+日付: 2026-10-24。状態: 承認 (2026-10-24)。
 
 ## 文脈
 

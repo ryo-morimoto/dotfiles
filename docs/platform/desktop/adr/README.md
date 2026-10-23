@@ -16,10 +16,10 @@ not_satisfied: [ID, ...]  # 満たせない。同上
 
 | ADR | 決定 | 状態 |
 |---|---|---|
-| [0001](0001-os-base-and-declaration.md) | OS は Arch Linux、システムの宣言は decman | 提案 |
-| [0002](0002-update-and-rollback.md) | 更新と巻き戻しは btrfs + snapper + Limine + limine-snapper-sync | 提案 |
-| [0003](0003-inference-runtime.md) | 推論は上流の llama.cpp コンテナ。Tailscale の内側だけに出す | 提案 |
-| [0004](0004-user-config-and-data.md) | ユーザー設定は chezmoi、開発ツールは mise。データは Desktop に置かない | 提案 |
-| [0005](0005-secrets.md) | 秘密情報は age で暗号化して git に置く | 提案 |
-| [0006](0006-disk-and-install.md) | ディスクは by-id で指定し、検査を通してからインストールする | 提案 |
-| [0007](0007-secure-boot.md) | Secure Boot は無効にする | 提案 (確認待ち) |
+| [0001](0001-os-base-and-declaration.md) | OS は Arch Linux、システムの宣言は decman | 承認 |
+| [0002](0002-update-and-rollback.md) | 更新と巻き戻しは btrfs + snapper + Limine + limine-snapper-sync | 承認 |
+| [0003](0003-inference-runtime.md) | 推論は上流の llama.cpp コンテナ。Tailscale の内側だけに出す | 承認 |
+| [0004](0004-user-config-and-data.md) | ユーザー設定は chezmoi、開発ツールは mise。データは Desktop に置かない | 承認 |
+| [0005](0005-secrets.md) | 秘密情報は age で暗号化して git に置く | 承認 |
+| [0006](0006-disk-and-install.md) | ディスクは by-id で指定し、検査を通してからインストールする | 承認 |
+| [0007](0007-secure-boot.md) | Secure Boot は無効にし、ディスクは暗号化しない | 承認 |
