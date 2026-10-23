@@ -11,7 +11,7 @@
 |---|---|---|---|
 | 1. 制約を確定する | 完了 (2026-10-24 合意) | MUST の制約に【仮】が残っていない | `checks/no-provisional-must.sh` → OK (v3、MUST 18件)。壊した版 (v2) では FAIL (PERF-1 / REL-1 / MNT-1)。`checks/ids-preserved.sh v2 v3` → OK (77件が残り、N6 / PERF-5 / Q8 / Q9 を追加)。壊した版 (FUN-5 の行を削除) では FAIL |
 | 2. 構成を提案する | 完了 (2026-10-24 合意) | すべての MUST 制約が、どれかの ADR に対応付いている | `checks/must-covered-by-adr.sh` → OK (MUST 18件)。壊した版 (ADR-0006 から SAF-1 を外す) では FAIL。ADR が存在しない ID を参照した版も FAIL |
-| 3. 検証を設計する | 進行中 (D-V1 完了。D-V2〜D-V4 を作業中) | D-V1〜D-V4 それぞれに判断と理由があり、値するものが壊した版で失敗する | `verify/README.md` に判断を記録 (4つとも値する)。D-V1: 合意した図は 2026-10-24 にユーザーが承認。TLA+ のモデルでは、合意した図のままだと `NoWayBack` が破れる。提案 (a)〜(e) では `NoWayBack` と `UpdatesStayPossible` の両方が成り立つ。壊した版5つはすべて期待どおりに失敗する (`verify/run.sh` → exit 0) |
+| 3. 検証を設計する | 完了 (確認待ち) | D-V1〜D-V4 それぞれに判断と理由があり、値するものが壊した版で失敗する | `verify/README.md` に判断を記録 (4つとも値する)。`verify/run.sh` → exit 0 (26件: 正しい版6件が成り立ち、壊した版20件が期待どおりに失敗)。TLA+ tools は v1.7.4 を sha256 で固定。project-local skill `.claude/skills/desktop-formal-verification/` を作り、壊した設計で検出→戻して通ることを確かめた |
 | 4. 機能テストを用意する | 未着手 | 6章の各項目がスクリプトになっている | 未作成 |
 | 5. 構成を実装する | 未着手 | 4章の機能テストが通る | 未作成 |
 
@@ -34,7 +34,7 @@
 | COMP-1 | MUST | ADR-0003 (部分): `--fit` で余白を残す | 未実施 | — |
 | COMP-2 | MUST | ADR-0003: llama-server の OpenAI 互換 API | 未実施 | — |
 | COMP-3 | SHOULD | Tailscale の MagicDNS (手段に依らない) | 未実施 | — |
-| INT-1 | MUST | ADR-0004: GUI が書く層 (`dms/*.kdl`) は管理外。chezmoi は黙って上書きしない | 未実施 → D-V2、`drive/settings-live-reload` | — |
+| INT-1 | MUST | ADR-0004: GUI が書く層 (`dms/*.kdl`) は管理外。chezmoi は黙って上書きしない | D-V2 (`verify/run.sh`): R1 / R2 のもとで `DmsUiWriteAlwaysWins` が成り立つ (全列挙)。R1 か R2 を外すと破れる。実ファイルの lint は段階5の設定に対して行う → `drive/settings-live-reload` | — |
 | INT-2 | MUST | ADR-0004: niri は include 先も即時に読み直す | 未実施 | — |
 | INT-3 | SHOULD | ADR-0001: `decman --dry-run` + pacman の一覧 + `chezmoi status` | 未実施 → `doctor/undeclared-state` | — |
 | REL-1 | MUST | ADR-0002 (部分): limine-snapper-sync でブートメニューから戻す | D-V1 (`verify/run.sh`): 今の ADR のままでは `NoWayBack` が破れる。提案 (a)〜(e) を足すと成り立つ (スナップショット12個までの範囲)。時間は未計測 → `drive/rollback-drill` | 2026-10-24 回答: 説明の破綻 (アプリが一方通行で設定を移す) を直す → ADR-0002 決定 7 (`@home` を指定パスだけ戻す) |
@@ -42,7 +42,7 @@
 | REL-3 | MUST | ADR-0003: 7章の約束 (ベストエフォート) | 未実施 | — |
 | REL-4 | MUST | ADR-0004: git → Server、残りは restic → HDD | 未実施 → `doctor/desktop-only-data` | 2026-10-24 回答: ok |
 | REL-5 | SHOULD | ADR-0002: HDD は `nofail` | 未実施 | — |
-| SEC-1 | MUST | ADR-0003: tailscale0 だけ + nftables + ACL + API キー | 未実施 → D-V3、`drive/inference-reachability` | — |
+| SEC-1 | MUST | ADR-0003: tailscale0 だけ + nftables + ACL + API キー | D-V3 (`verify/run.sh`): `design.json` で `InferenceOnlyFromAllowedPeers` が成り立つ。壊した版5つ (ACL の全許可、PublishPort、daddr での判定、0.0.0.0 で nftables 無し、閉じすぎ) は失敗する。ACL は前提 (Server への依頼 #1) → `drive/inference-reachability` | — |
 | SEC-2 | MUST | ADR-0005: age + gitleaks | 未実施 → `doctor/secrets` | 2026-10-24 回答: 暗号化しない (顧客情報を置かない)。持ち出しには失効手順書 (`runbooks/credential-revocation.md`) で備える |
 | SEC-3 | SHOULD | ADR-0001 (部分): AUR は許可リスト3件 | 未実施 | 2026-10-24 回答: ok |
 | SEC-4 | SHOULD | — | 未実施 | — |
@@ -55,7 +55,7 @@
 | FLX-2 | SHOULD | ADR-0001: decman の集合 | 未実施 | — |
 | FLX-3 | SHOULD | ADR-0006 (部分): `install/bootstrap.sh` | 未実施 → `drive/install-from-zero` (VM で代用) | — |
 | FLX-4 | MAY | — | 未実施 | — |
-| SAF-1 | MUST | ADR-0006: 消去の入口1つ + by-id / シリアル番号 / 容量の検査 | 未実施 → D-V4 | — |
+| SAF-1 | MUST | ADR-0006: 消去の入口1つ + by-id / シリアル番号 / 容量の検査 | D-V4 (`verify/run.sh`): 雛形 (`fixtures/good`) で `WipeTargetsOnlyDeclaredIds` が成り立つ。壊した版6つは失敗する。実行時の照合は → `drive/install-from-zero` (代用) | — |
 | SAF-2 | SHOULD | ADR-0003: `nvidia-smi -pl` | 未実施 | — |
 
 ## 2. 見直しトリガーの記録
