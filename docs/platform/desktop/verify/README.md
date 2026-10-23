@@ -57,6 +57,52 @@ statechart の from-chart で、利用者から見た挙動を図にした。TLA
 - 時間 (15分) は扱わない。時間は機能テストで測る。
 - 「動いた」の判定に引っかからない壊れ方は扱わない。たとえば、作業面は起動するが日本語入力が壊れている場合である。この場合も印が付く。
 
+### TLA+ のモデルで見つかったこと (2026-10-24)
+
+合意した図 (`d-v1/proposed`) を受けて、各部品の実際の振る舞いを入れたモデルを書いた (`d-v1/model/Rollback.tla`)。モデルに入れた部品と、根拠にしたソースは次のとおり。
+
+| 部品 | 振る舞い | 出典 |
+|---|---|---|
+| snap-pac | トランザクションごとに pre と post を取る | snap-pac 3.0.1 |
+| snapper の number cleanup | 新しい順に `NUMBER_LIMIT` 件と、important の `NUMBER_LIMIT_IMPORTANT` 件を残す | snapper `client/cleanup.cc` |
+| limine-snapper-sync | `MAX_SNAPSHOT_ENTRIES` を超えた分は、古いエントリから消す (important は見ない)。ESP が上限なら新しいエントリを足さない | `SnapshotManager.java`、README |
+| limine-snapper-restore | 戻すたびに、壊れた側を backup のエントリとして足す | README |
+
+**合意した図のままでは、規則 `NoWayBack` が破れる** (`agreed.cfg`)。図では「動いた印を付け、cleanup は印を消さない」としたが、起動エントリを消すのは snapper ではなく limine-snapper-sync で、こちらは印を見ない。反例は3手である。
+
+1. 更新で壊れる。
+2. 壊れたまま、もう一度更新する。新しいスナップショットのエントリが増える。
+3. `MAX_SNAPSHOT_ENTRIES` を超えた分を limine-snapper-sync が古い順に消す。動いた印の付いたエントリも消える。
+
+**提案** (`proposed.cfg`。ここでは2つの規則が両方成り立つ):
+
+- **(a) 動いた印:** ログインできたら、`important=yes` と `desktop_good=yes` を付けたスナップショットを作る。
+- **(b) pacman のフック:** 更新すると、最新の `desktop_good` のエントリが件数の上限で押し出される場合は、更新を止める (fail-closed)。
+- **(c) 復元のラッパー:** 復元は `desktop_good` の付いたスナップショットからだけ行う。
+- **(d) 件数の上限:** `MAX_SNAPSHOT_ENTRIES` は数値で決め、ESP に収まるエントリの数より小さくする。
+- **(e) snap-pac の `important_packages` は無効のままにする。** これは既定値である。
+
+規則は2つある。
+
+- `NoWayBack` (合意した規則): 作業面が壊れたとき、ブートメニューには必ず動いた状態のエントリが残っている。
+- `UpdatesStayPossible` (追加): (b) が fail-closed なので、印が無いと更新が一切できなくなり、`NoWayBack` は空虚に成り立ってしまう。これを検出するための規則である。作業面が動いていてログインした直後は、更新できなければならない。
+
+**壊した版** (どれも期待どおりに失敗する):
+
+| 設定 | 壊したところ | 破れる規則 |
+|---|---|---|
+| `agreed.cfg` | (b) のフックが無い (合意した図のまま) | NoWayBack |
+| `broken-no-mark.cfg` | (a) の印を付けない | UpdatesStayPossible |
+| `broken-pick-any.cfg` | (c) が無く、印の無いものからも復元する。復元のたびに backup のエントリが増え、印のあるエントリを押し出す | NoWayBack |
+| `broken-entries-ge-esp.cfg` | (d) が無く、件数の上限が ESP の容量と同じ | UpdatesStayPossible |
+| `broken-important-on-update.cfg` | (e) が無く、snap-pac が important を付ける | NoWayBack |
+
+**範囲:** スナップショットは12個まで。`NUMBER_LIMIT=4`、`NUMBER_LIMIT_IMPORTANT=2`、`MAX_SNAPSHOT_ENTRIES=7`、ESP の容量はエントリ8件分、1回の decman で pacman のトランザクションは2回。成り立ったのはこの範囲での話で、実際の数値では段階4で計測する。
+
+**MNT-2 への影響:** (b) のために、ログインしてから次に再起動・ログインするまでにできる更新の回数に上限ができる。上限は `(MAX_SNAPSHOT_ENTRIES − 1) ÷ (2 × トランザクション数)` 回より少ない。例: `MAX_SNAPSHOT_ENTRIES=30` で、1回の decman が3トランザクションなら4回。decman の1回を1組の pre / post にまとめれば14回になる [推論。snap-pac をその間だけ止める方法は段階5で確かめる]。
+
+**1コマンドで再実行:** `docs/platform/desktop/verify/run.sh` (TLA+ tools v1.7.4 を sha256 で固定して取得し、各 cfg の `expect:` と照合する)。
+
 ## D-V2: 途中で見つけたこと (niri のソースを読んだ結果)
 
 niri の commit e19df12 (2026-10-21) の `niri-config/src/lib.rs` と `niri-config/src/output.rs` を読んだ。
@@ -67,9 +113,9 @@ niri の commit e19df12 (2026-10-21) の `niri-config/src/lib.rs` と `niri-conf
 
 これを規則にして、全列挙で `DmsUiWriteAlwaysWins` を検査する。構成ファイルを作る段階5では、実際の KDL ファイルを入力にする。
 
-## D-V3: Server への確認事項 (候補)
+## D-V3: Server への確認事項
 
-Tailscale の ACL は tailnet 全体の設定で、Desktop だけでは決められない。D-V3 の検査は、Desktop 側の設定 (待ち受けアドレスと nftables) と、「ACL がこうなっていること」という前提に分けて書く。ACL の前提は台帳の「Server への確認事項」に載せる。
+Tailscale の ACL は tailnet 全体の設定で、Desktop だけでは決められない。D-V3 の検査は、Desktop 側の設定 (待ち受けアドレスと nftables) と、「ACL がこうなっていること」という前提に分けて書く。ACL の前提は台帳の「Server への確認事項」#1 に載せた。依頼の文面は `server-requests/0001-inference-acl.md` にある。
 
 ## 道具の版
 
@@ -81,4 +127,4 @@ Tailscale の ACL は tailnet 全体の設定で、Desktop だけでは決めら
 | Java | 21 (OpenJDK) | — |
 | Mermaid の PNG 出力 | `npx @mermaid-js/mermaid-cli` (statechart が呼ぶ) | 版は D-V1 の確定時に固定する |
 
-1コマンドでの再実行 (`verify/run.sh`) は、D-V1 の挙動に合意してから作る。中身は、jar の取得と sha256 の照合、statechart スクリプトの取得 (commit 固定)、D-V1〜D-V4 の実行、壊した版の実行。
+1コマンドでの再実行は `verify/run.sh`。今は D-V1 を実行する。D-V2〜D-V4 は作るたびに足す。
