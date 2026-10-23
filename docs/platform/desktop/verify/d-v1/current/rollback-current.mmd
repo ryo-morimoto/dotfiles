@@ -1,0 +1,22 @@
+stateDiagram-v2
+  state "Desktop works" as Working
+  state "Broken by update, good entry kept" as BrokenWithGood
+  state "Updated again while broken, good entry kept" as BrokenRepeated
+  state "Broken, no good entry in boot menu" as BrokenNoGood
+  state "Booted from snapshot" as BootedSnapshot
+  state "Old version, settings in new format" as OldWithNewSettings
+  [*] --> Working
+  Working --> Working : update succeeds
+  Working --> BrokenWithGood : update breaks the desktop
+  Working --> BrokenWithGood : power fails during update
+  BrokenWithGood --> BrokenRepeated : update again while broken
+  BrokenRepeated --> BrokenRepeated : update again while broken
+  BrokenRepeated --> BrokenNoGood : cleanup deletes the old snapshots
+  BrokenRepeated --> BrokenNoGood : the ESP fills up and old boot entries go
+  BrokenWithGood --> BootedSnapshot : pick the good snapshot in the boot menu
+  BrokenRepeated --> BootedSnapshot : pick the good snapshot in the boot menu
+  BootedSnapshot --> BrokenWithGood : the picked snapshot was broken too
+  BootedSnapshot --> Working : restore and reboot
+  BootedSnapshot --> OldWithNewSettings : restore and reboot, but the new version migrated settings
+  OldWithNewSettings --> Working : restore the listed home paths
+  %% never NoWayBack: Broken, no good entry in boot menu -- When the desktop is broken, the boot menu always still has an entry that worked.
