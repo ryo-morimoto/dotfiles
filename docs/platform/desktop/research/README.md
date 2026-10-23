@@ -8,6 +8,6 @@
 | `snapshots/freshness-<日付>.{json,md}` | 計測の結果。日付は UTC |
 
 ```bash
-python3 -m venv .venv && .venv/bin/pip install brotli==1.1.0
+python3 -m venv .venv && .venv/bin/pip install brotli==1.1.0 zstandard==0.23.0
 .venv/bin/python -I docs/platform/desktop/research/freshness.py --out-dir docs/platform/desktop/research/snapshots
 ```

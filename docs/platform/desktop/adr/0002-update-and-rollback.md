@@ -1,0 +1,73 @@
+---
+id: ADR-0002
+status: proposed
+satisfies: [REL-2, REL-5]
+partial: [REL-1]
+not_satisfied: []
+---
+
+# ADR-0002: 更新と巻き戻しは btrfs + snapper + Limine + limine-snapper-sync
+
+日付: 2026-10-24。状態: 提案。
+
+## 文脈
+
+- 鮮度を上に置いた (Q1) ので、更新で壊れる回数は増えると見込む [推論]。REL-1 (別マシンなしで15分以内に直前の動作状態へ戻る) は MUST のまま残っている。
+- Arch wiki の正式なロールバック手順は、ライブ USB で起動してサブボリュームを差し替え、chroot で initramfs を作り直すものである。これは「別マシンなし」は満たすが、15分に収まる保証が無い。
+- /boot が ESP にあると snapper のスナップショットに入らない。ルートだけ戻すと、カーネルとモジュールの版がずれる (wiki)。
+
+## 決定
+
+1. **ファイルシステム:** NVMe のルートを btrfs にする。サブボリュームは次のとおり。
+
+   | サブボリューム | マウント先 | 戻すか |
+   |---|---|---|
+   | `@` | `/` | 戻す |
+   | `@home` | `/home` | 戻さない |
+   | `@log` | `/var/log` | 戻さない (調査用) |
+   | `@pkg` | `/var/cache/pacman/pkg` | 戻さない (旧版の入れ直しに使う) |
+   | `@containers` | `/var/lib/containers` | 戻さない (推論イメージとモデル。ADR-0003) |
+   | `@snapshots` | `/.snapshots` | — |
+
+   pacman の DB (`/var/lib/pacman`) は wiki の指示どおり `@` に残す。
+2. **スナップショット:** snapper (root の設定だけ) と snap-pac を使う。pacman の前後で自動で取る。decman は pacman を呼ぶので、decman で適用したときも取られる [推論。D-V1 と機能テストで確かめる]。
+3. **ブートローダ:** Limine と limine-snapper-sync (AUR、上流の作者が保守) を使う。ブートメニューからスナップショットを選んで起動でき、`limine-snapper-restore` が対応するカーネルも一緒に戻す。
+4. **ESP:** 4GiB 以上にする (limine-snapper-sync の推奨。NVIDIA のモジュールで initramfs が 200〜300MiB 増える)。NVMe 1TB から割り当てる。
+5. **部品1つだけ戻す (REL-2):** `@pkg` のキャッシュか Arch Linux Archive から `pacman -U` で旧版を入れ、decman の宣言で `IgnorePkg` 相当に固定する。推論ランタイムはイメージのダイジェストを1つ前に戻す (ADR-0003)。
+6. **HDD 2TB:** 起動に必要なものを置かない。`nofail` でマウントする (REL-5)。
+
+## 満たす制約
+
+| ID | どう満たすか | 根拠 |
+|---|---|---|
+| REL-2 | 旧版のパッケージファイルは `@pkg` に残る。推論はイメージ単位で戻せる | wiki.archlinux.org/title/Downgrading_packages |
+| REL-5 | HDD は起動に必須のマウントに含めない (`nofail`) | — |
+
+## 満たせない制約と妥協
+
+| ID | 満たせない部分 | 妥協の理由と手当て |
+|---|---|---|
+| REL-1 (部分) | (1) `/home`、`/var/log`、`@containers`、NVRAM、ファームウェアは戻らない。(2) ESP の使用率が上限 (既定 85%) に達すると、limine-snapper-sync は古いエントリを警告なしに消す。(3) 読み取り専用のスナップショットから起動したときに、サービスがどう動くかは実機で確かめていない。(4) 15分に収まるかは計測していない | (1) は意図どおりで、`/home` の作業データは git / Server へ置く (REL-4)。(2) は ESP を広く取り、機能テストで「直前のスナップショットのエントリがあること」を毎回確かめる。(3) と (4) は D-V1 (形式検証) と月1回の巻き戻し訓練 (6章) で確かめる。15分を超えた事例は REL-1 の違反として数える |
+
+## トレードオフ
+
+- **得るもの:** ブートメニューから戻せること (別マシンもライブ USB も要らない)。カーネルも揃えて戻ること。
+- **失うもの:**
+  - ESP を 4GiB 取る。
+  - limine-snapper-sync は AUR で、ビルドに GraalVM (Java) を取ってくる。
+  - Secure Boot を有効にすると、Limine 11.2 以降は設定のチェックサムを登録しないと panic する (ADR-0007)。
+- **選ばなかった案:**
+  - GRUB + grub-btrfs (どちらも extra): 読み取り専用スナップショットからの起動に overlayfs のフックが要る。そのフックは busybox の initramfs 専用で、復元は手作業になる。15分の保証が弱い。
+  - systemd-boot: スナップショットからの起動が標準には無い。
+
+## 切り替えトリガー
+
+| 条件 | 切り替え先 |
+|---|---|
+| limine-snapper-sync が AUR で孤児になる、またはビルドできない状態が2週間続く | GRUB + grub-btrfs (公式) に移り、復元の手順を D-V1 で検証し直す |
+| REL-1 の違反が四半期に2回 | ADR-0001 のトリガーで C (NixOS) へ |
+
+## 検証
+
+- D-V1: 更新 → 失敗 → 直前の状態へ、を状態機械で書き、`AlwaysAWorkingStateReachable` を検査する (段階3。statechart で挙動を合意してから)。
+- 機能テスト `drive/rollback-drill`: 壊れた更新をわざと入れ、ブートメニューから戻るまでの時間を測る。まず VM で行い、代用と明記する (段階4)。

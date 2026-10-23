@@ -2,7 +2,7 @@
 """MNT-1 (鮮度) の計測: 上流のリリース日と、各候補で使える版・届いた日を一次情報から取り直す。
 
 使い方:
-    python3 -m venv .venv && .venv/bin/pip install brotli==1.1.0
+    python3 -m venv .venv && .venv/bin/pip install brotli==1.1.0 zstandard==0.23.0
     .venv/bin/python -I freshness.py --out-dir snapshots/
 
 出力:
@@ -167,6 +167,43 @@ def arch() -> dict:
     except Exception as e:  # noqa: BLE001
         for c in aur:
             res[c] = entry(error=repr(e))
+    return res
+
+
+def cachyos(arch_res: dict) -> dict:
+    """CachyOS の repo DB を読み、Arch より優先される CachyOS 側の版を取る。無ければ Arch の値を使う。"""
+    import io
+    import tarfile
+
+    import zstandard  # pip install zstandard==0.23.0
+
+    repos = ["x86_64_v3/cachyos-v3/cachyos-v3", "x86_64_v3/cachyos-core-v3/cachyos-core-v3",
+             "x86_64_v3/cachyos-extra-v3/cachyos-extra-v3", "x86_64/cachyos/cachyos"]
+    names = {"niri": "niri", "dms": "dms-shell", "nvidia": "nvidia-open", "cuda": "cuda", "ollama": "ollama-cuda",
+             "llama.cpp": "llama-cpp", "hazkey": "fcitx5-hazkey"}
+    found: dict[str, tuple] = {}
+    for r in repos:
+        url = f"https://mirror.cachyos.org/repo/{r}.db"
+        raw = zstandard.ZstdDecompressor().stream_reader(io.BytesIO(get(url, binary=True))).read()
+        with tarfile.open(fileobj=io.BytesIO(raw)) as t:
+            for m in t.getmembers():
+                if not m.name.endswith("/desc"):
+                    continue
+                kv = {p.split("\n")[0]: p.split("\n")[1:] for p in t.extractfile(m).read().decode().strip().split("\n\n")}
+                name = kv["%NAME%"][0]
+                if name in names.values() and name not in found:  # 先に読んだリポジトリが優先
+                    ver = re.sub(r"^\d+:", "", kv["%VERSION%"][0]).rsplit("-", 1)[0]
+                    built = dt.datetime.fromtimestamp(int(kv["%BUILDDATE%"][0]), dt.timezone.utc).date().isoformat()
+                    found[name] = (ver, built, url, r.rsplit("/", 1)[1])
+    res = {}
+    for c, pkg in names.items():
+        if pkg in found:
+            ver, built, url, repo = found[pkg]
+            res[c] = entry(ver, built, url, f"[{repo}]/{pkg} (届いた日は今の pkgrel の BUILDDATE。再ビルドがあると初出より遅く出る)")
+        else:
+            e = dict(arch_res.get(c, entry()))
+            e["note"] = f"CachyOS のリポジトリに無いので Arch の値: {e.get('note')}"
+            res[c] = e
     return res
 
 
@@ -413,7 +450,8 @@ def main() -> int:
     out.mkdir(parents=True, exist_ok=True)
 
     snap = {"date": TODAY.isoformat(), "n_days": N_DAYS, "upstream": upstream_all(), "candidates": {}, "metrics": {}}
-    for name, fn in [("Arch", arch), ("NixOS unstable", nixos), ("Fedora 44", fedora), ("Tumbleweed", tumbleweed)]:
+    for name, fn in [("Arch", arch), ("CachyOS", lambda: cachyos(snap["candidates"]["Arch"])),
+                     ("NixOS unstable", nixos), ("Fedora 44", fedora), ("Tumbleweed", tumbleweed)]:
         try:
             snap["candidates"][name] = fn()
         except Exception as e:  # noqa: BLE001

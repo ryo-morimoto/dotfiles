@@ -17,15 +17,15 @@ MNT-1: 上流のリリースから 3 日以内。`current_lag` は今日の遅�
 
 ## 候補ごとの版と遅れ
 
-| 部品 | Arch | NixOS unstable | Fedora 44 | Tumbleweed |
-|---|---|---|---|---|
-| niri | 26.04 / lag 0 / arrival 0 | 26.04 / lag 0 | 26.04 / lag 0 / arrival 15 | 26.04 / lag 0 |
-| dms | 1.6.3 / lag 3 / arrival 0 / hist n=9 med=0 max=3 >3d=0 | 1.6.3 / lag 3 | 2.0.0 / lag 0 / arrival 0 / hist n=10 med=0.0 max=1 >3d=0 | 無し |
-| hazkey | 0.2.1 / lag 0 / arrival 1 | 無し | 無し | 無し |
-| nvidia | 615.78.08 / lag 0 / arrival 1 / hist n=6 med=1.0 max=2 >3d=0 | 615.78.08 / lag 0 | 615.78.08 / lag 0 | **595.104.02 / lag 150** |
-| ollama | 0.40.8 / lag 1 / arrival 1 / hist n=34 med=1.0 max=5 >3d=1 | **0.40.4 / lag 8** | **0.12.11 / lag 116** | 0.40.6 / lag 3 |
-| llama.cpp | **0.6.0 / lag 8 / arrival 1 / hist n=6 med=1.0 max=5 >3d=1** | **0.6.0 / lag 8** | 無し | 0.7.0 / lag 0 |
-| cuda | 13.4.3 / lag 0 / arrival 0 / hist n=5 med=1 max=7 >3d=1 | 13.4.3 / lag 0 | 13.4.3 / lag 0 | 無し |
+| 部品 | Arch | CachyOS | NixOS unstable | Fedora 44 | Tumbleweed |
+|---|---|---|---|---|---|
+| niri | 26.04 / lag 0 / arrival 0 | 26.04 / lag 0 / arrival 1 | 26.04 / lag 0 | 26.04 / lag 0 / arrival 15 | 26.04 / lag 0 |
+| dms | 1.6.3 / lag 3 / arrival 0 / hist n=9 med=0 max=3 >3d=0 | 1.6.3 / lag 3 / arrival 7 | 1.6.3 / lag 3 | 2.0.0 / lag 0 / arrival 0 / hist n=10 med=0.0 max=1 >3d=0 | 無し |
+| hazkey | 0.2.1 / lag 0 / arrival 1 | 0.2.1 / lag 0 / arrival 1 | 無し | 無し | 無し |
+| nvidia | 615.78.08 / lag 0 / arrival 1 / hist n=6 med=1.0 max=2 >3d=0 | 615.78.08 / lag 0 / arrival 10 | 615.78.08 / lag 0 | 615.78.08 / lag 0 | **595.104.02 / lag 150** |
+| ollama | 0.40.8 / lag 1 / arrival 1 / hist n=34 med=1.0 max=5 >3d=1 | 0.40.8 / lag 1 / arrival 1 | **0.40.4 / lag 8** | **0.12.11 / lag 116** | 0.40.6 / lag 3 |
+| llama.cpp | **0.6.0 / lag 8 / arrival 1 / hist n=6 med=1.0 max=5 >3d=1** | **0.6.0 / lag 8 / arrival 1** | **0.6.0 / lag 8** | 無し | 0.7.0 / lag 0 |
+| cuda | 13.4.3 / lag 0 / arrival 0 / hist n=5 med=1 max=7 >3d=1 | 13.4.3 / lag 0 / arrival 0 / hist n=5 med=1 max=7 >3d=1 | 13.4.3 / lag 0 | 13.4.3 / lag 0 | 無し |
 
 太字は今日の時点で N 日を超えている。
 
@@ -39,6 +39,14 @@ MNT-1: 上流のリリースから 3 日以内。`current_lag` は今日の遅�
   - ollama: extra/ollama-cuda https://archlinux.org/packages/extra/x86_64/ollama-cuda/
   - llama.cpp: extra/llama-cpp https://archlinux.org/packages/extra/x86_64/llama-cpp/
   - cuda: extra/cuda https://archlinux.org/packages/extra/x86_64/cuda/
+- **CachyOS**
+  - niri: [cachyos-extra-v3]/niri (届いた日は今の pkgrel の BUILDDATE。再ビルドがあると初出より遅く出る) https://mirror.cachyos.org/repo/x86_64_v3/cachyos-extra-v3/cachyos-extra-v3.db
+  - dms: [cachyos]/dms-shell (届いた日は今の pkgrel の BUILDDATE。再ビルドがあると初出より遅く出る) https://mirror.cachyos.org/repo/x86_64/cachyos/cachyos.db
+  - hazkey: CachyOS のリポジトリに無いので Arch の値: AUR/fcitx5-hazkey (届いた日は LastModified。初出より遅い可能性がある) https://aur.archlinux.org/packages/fcitx5-hazkey
+  - nvidia: [cachyos-extra-v3]/nvidia-open (届いた日は今の pkgrel の BUILDDATE。再ビルドがあると初出より遅く出る) https://mirror.cachyos.org/repo/x86_64_v3/cachyos-extra-v3/cachyos-extra-v3.db
+  - ollama: [cachyos-extra-v3]/ollama-cuda (届いた日は今の pkgrel の BUILDDATE。再ビルドがあると初出より遅く出る) https://mirror.cachyos.org/repo/x86_64_v3/cachyos-extra-v3/cachyos-extra-v3.db
+  - llama.cpp: [cachyos-extra-v3]/llama-cpp (届いた日は今の pkgrel の BUILDDATE。再ビルドがあると初出より遅く出る) https://mirror.cachyos.org/repo/x86_64_v3/cachyos-extra-v3/cachyos-extra-v3.db
+  - cuda: CachyOS のリポジトリに無いので Arch の値: extra/cuda https://archlinux.org/packages/extra/x86_64/cuda/
 - **NixOS unstable**
   - niri: nixos-unstable の niri。届いた日はチャネルの記録からは取れない https://channels.nixos.org/nixos-unstable/packages.json.br
   - dms: nixos-unstable の dms-shell。届いた日はチャネルの記録からは取れない https://channels.nixos.org/nixos-unstable/packages.json.br
@@ -67,5 +75,5 @@ MNT-1: 上流のリリースから 3 日以内。`current_lag` は今日の遅�
 ## nixos-unstable のチャネル (過去 182 日)
 
 - 更新回数 78、更新間隔の中央値 1.85 日、最大 9.62 日
-- チャネルの古さ: 中央値 1.28 日、p95 5.39 日、最大 9.59 日
-- 最終更新 2026-10-20T19:02:32+00:00。取得元: https://prometheus.nixos.org/api/v1/query_range?query=channel_update_time%7Bchannel%3D%22nixos-unstable%22%7D&start=1777043619&end=1792768419&step=3600
+- チャネルの古さ: 中央値 1.29 日、p95 5.4 日、最大 9.6 日
+- 最終更新 2026-10-20T19:02:32+00:00。取得元: https://prometheus.nixos.org/api/v1/query_range?query=channel_update_time%7Bchannel%3D%22nixos-unstable%22%7D&start=1777044735&end=1792769535&step=3600
