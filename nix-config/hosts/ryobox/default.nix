@@ -47,8 +47,6 @@ in
       type = "fcitx5";
       fcitx5 = {
         waylandFrontend = true;
-        # 日本語読みから絵文字を変換候補に出すため(hazkey は絵文字辞書が未接続)
-        addons = [ pkgs.fcitx5-mozc ];
         settings = {
           globalOptions = {
             "Hotkey/TriggerKeys" = {
@@ -76,10 +74,6 @@ in
             };
             "Groups/0/Items/1" = {
               Name = "hazkey";
-              Layout = "";
-            };
-            "Groups/0/Items/2" = {
-              Name = "mozc";
               Layout = "";
             };
             GroupOrder = {
