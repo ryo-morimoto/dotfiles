@@ -1,6 +1,25 @@
-{ config, pkgs, ... }:
-
 {
+  config,
+  inputs,
+  osConfig,
+  pkgs,
+  ...
+}:
+
+let
+  hazkeyDictionary = osConfig.services.hazkey.dictionary;
+in
+{
+  # hazkey-server reads an azooKey user dictionary from here; it supplies emoji conversion candidates.
+  xdg.cacheFile."hazkey/shared" = {
+    source = pkgs.callPackage ../../packages/hazkey-emoji-dictionary {
+      emojiSource = inputs.azookey-emoji-dictionary;
+      charId = "${hazkeyDictionary.package}${hazkeyDictionary.path}/louds/charID.chid";
+    };
+    recursive = true;
+    onChange = "${pkgs.systemd}/bin/systemctl --user try-restart hazkey-server.service";
+  };
+
   # GTK theme (Catppuccin Mocha)
   gtk = {
     enable = true;

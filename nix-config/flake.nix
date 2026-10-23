@@ -6,6 +6,10 @@
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    azookey-emoji-dictionary = {
+      url = "github:azooKey/azooKey_emoji_dictionary_storage";
+      flake = false;
+    };
     dms = {
       url = "github:AvengeMedia/DankMaterialShell/stable";
       inputs.nixpkgs.follows = "nixpkgs";

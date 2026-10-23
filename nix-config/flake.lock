@@ -20,6 +20,22 @@
         "type": "github"
       }
     },
+    "azookey-emoji-dictionary": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1784951132,
+        "narHash": "sha256-946Heiee2jAUsylQAA2IKAzjkuYuOqxr0yL+4GEkuUY=",
+        "owner": "azooKey",
+        "repo": "azooKey_emoji_dictionary_storage",
+        "rev": "eb15a8d1ea7c0688932d468024e62aa9c2d961c4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "azooKey",
+        "repo": "azooKey_emoji_dictionary_storage",
+        "type": "github"
+      }
+    },
     "dank-qml-common": {
       "flake": false,
       "locked": {
@@ -322,6 +338,7 @@
     "root": {
       "inputs": {
         "agenix": "agenix",
+        "azookey-emoji-dictionary": "azookey-emoji-dictionary",
         "dms": "dms",
         "fenix": "fenix",
         "home-manager": "home-manager",
