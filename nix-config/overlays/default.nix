@@ -22,6 +22,14 @@
         };
       };
     };
+    # Temporary(NixOS/nixpkgs#531687): Qt 6.12 の uic が "::" 始まりのクラス名を拒否する
+    # (google/mozc#1594)。tools/nixpkgs-pending が lock への到着を検知して削除 PR を作る。
+    mozc = prev.mozc.overrideAttrs (old: {
+      postPatch = old.postPatch + ''
+        substituteInPlace src/gui/dictionary_tool/dictionary_tool.ui \
+          --replace-fail "::mozc::gui::DictionaryContentTableWidget" "mozc::gui::DictionaryContentTableWidget"
+      '';
+    });
     zen-browser = inputs.zen-browser.packages.${final.stdenv.hostPlatform.system}.default;
     seiren-mcp = inputs.seiren.packages.${final.stdenv.hostPlatform.system}.default;
     soulforge = inputs.soulforge.packages.${final.stdenv.hostPlatform.system}.default;
