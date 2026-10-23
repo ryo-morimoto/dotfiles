@@ -1,0 +1,4 @@
+window-rule {
+    match app-id="zen"
+    open-maximized false
+}

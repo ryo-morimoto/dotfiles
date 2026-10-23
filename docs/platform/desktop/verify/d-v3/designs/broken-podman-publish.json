@@ -1,0 +1,1 @@
+{"_comment": "壊した版: bridge ネットワークで PublishPort=8080 (0.0.0.0)。netavark の DNAT が input チェーンを素通りする", "expect": "fail", "port": 8080, "network": "bridge", "listen": "any", "publish_host_ip": "any", "nft_input": {"match": "iifname", "accept": ["tailscale0", "lo"]}, "tailscale_acl_allows": ["own-device", "server"]}

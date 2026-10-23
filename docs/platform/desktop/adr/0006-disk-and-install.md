@@ -23,7 +23,7 @@ not_satisfied: []
    - `/dev/disk/by-id/` のパス
    - シリアル番号と容量 (期待値)
    - 役割 (system / data)
-2. **消去する操作は、ラッパースクリプトの1つの関数からだけ行う** (`install/wipe.sh` の `wipe_declared`)。この関数は次を確かめてから消す。
+2. **消去する操作は、1つの関数からだけ行う** (`install/wipe.py` の `wipe_declared`)。Python で書く。呼び出しを `ast` で静的に検査できるからである (D-V4)。この関数は次を確かめてから消す。
    1. by-id のパスが存在し、ちょうど1つのブロックデバイスに解決されること。
    2. `lsblk` で読んだシリアル番号と容量が、宣言と一致すること。
    3. マウントされていないこと。
@@ -63,5 +63,9 @@ not_satisfied: []
 
 ## 検証
 
-- D-V4: `install/` 以下のスクリプトで、消去・初期化のコマンド (`wipefs`、`sgdisk`、`mkfs.*`、`blkdiscard`、archinstall) を呼ぶ箇所が、`wipe_declared` の中だけにあること。そこに渡る値が `disks.toml` の by-id から来ることも静的に検査する (段階3)。
+- D-V4: `verify/d-v4/wipe_static_check.py install/` で `WipeTargetsOnlyDeclaredIds` を検査する。規則は次の4つ。
+  - W1: 消去コマンドは `wipe_declared` の中だけで呼ぶ。
+  - W2: 渡すデバイスは `resolve_declared` の戻り値だけ。
+  - W3: `shell=True` と `os.system` を使わない。
+  - W4: 解決より前に消さない。
 - 機能テスト `drive/install-from-zero`: VM に宣言と違うディスクを付けて、ラッパーが止まることを確かめる (壊した版)。そのうえで、宣言どおりのディスクに入れて所要時間を測る (段階4、代用)。

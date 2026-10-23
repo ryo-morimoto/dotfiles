@@ -32,9 +32,9 @@ run_tlc() {  # run_tlc <dir> <spec> <cfg>
     [[ -z "$result" ]] && result="error"
   fi
   if [[ "$result" == "$expect" ]]; then
-    printf 'ok    %-45s expect=%-22s got=%s\n' "$dir/$cfg" "$expect" "$result"
+    printf 'ok    %-45s expect=%-22s got=%s\n' "${dir#"$here"/}/$cfg" "$expect" "$result"
   else
-    printf 'FAIL  %-45s expect=%-22s got=%s\n' "$dir/$cfg" "$expect" "$result"
+    printf 'FAIL  %-45s expect=%-22s got=%s\n' "${dir#"$here"/}/$cfg" "$expect" "$result"
     [[ "$result" == "error" ]] && grep -E "Error|error" <<<"$out" | head -5
     rc=1
   fi
@@ -43,6 +43,43 @@ run_tlc() {  # run_tlc <dir> <spec> <cfg>
 # D-V1: 更新と巻き戻し (TLA+)
 for cfg in "$here"/d-v1/model/*.cfg; do
   run_tlc "$here/d-v1/model" Rollback.tla "$(basename "$cfg")"
+done
+
+# D-V2〜D-V4: Python の標準ライブラリだけで動く検査。expect は 0 (成り立つ) か 1 (反例あり)
+run_py() {  # run_py <expect_exit> <label> <args...>
+  local expect="$1" label="$2"; shift 2
+  local got=0
+  python3 -I "$@" >/tmp/desktop-verify.$$ 2>&1 || got=$?
+  if [[ "$got" == "$expect" ]]; then
+    printf 'ok    %-45s expect=exit%-18s got=exit%s\n' "$label" "$expect" "$got"
+  else
+    printf 'FAIL  %-45s expect=exit%-18s got=exit%s\n' "$label" "$expect" "$got"
+    sed 's/^/      /' /tmp/desktop-verify.$$
+    rc=1
+  fi
+  rm -f /tmp/desktop-verify.$$
+}
+
+# D-V2: niri 設定の層 (全列挙 + 実ファイルの検査)
+v2="$here/d-v2/niri_layers.py"
+run_py 0 "d-v2 model (R1, R2)"            "$v2" model
+run_py 1 "d-v2 model --drop R1 (壊した版)" "$v2" model --drop R1
+run_py 1 "d-v2 model --drop R2 (壊した版)" "$v2" model --drop R2
+for d in "$here"/d-v2/fixtures/*/; do
+  name=$(basename "$d"); expect=1; [[ "$name" == good ]] && expect=0
+  run_py "$expect" "d-v2 lint fixtures/$name" "$v2" lint "$d"
+done
+
+# D-V3: 推論 API の公開範囲 (全列挙)
+for f in "$here"/d-v3/designs/*.json; do
+  expect=$(python3 -I -c 'import json,sys; print(0 if json.load(open(sys.argv[1]))["expect"]=="pass" else 1)' "$f")
+  run_py "$expect" "d-v3 $(basename "$f")" "$here/d-v3/inference_exposure.py" "$f"
+done
+
+# D-V4: ディスクの消去の静的検査
+for d in "$here"/d-v4/fixtures/*/; do
+  name=$(basename "$d"); expect=1; [[ "$name" == good ]] && expect=0
+  run_py "$expect" "d-v4 fixtures/$name" "$here/d-v4/wipe_static_check.py" "$d/install"
 done
 
 exit $rc

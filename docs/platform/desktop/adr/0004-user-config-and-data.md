@@ -26,6 +26,9 @@ not_satisfied: []
 2. **niri の設定は include で層に分ける** (付録 A.3 の共通部品)。読み込み順は DMS ベース → default-binds → local.kdl → `dms/*.kdl`。最後の `dms/*.kdl` は DMS の設定画面が書くので、そこが勝つ。
    - chezmoi が管理する: 前の3層。
    - chezmoi が管理しない: `dms/*.kdl`。機械が生成するファイルは管理に含めない、という既存の原則に従う。
+   - **R1:** `output` 節は `dms/outputs.kdl` にだけ書く。niri は同じ画面の `output` 節が複数あると、最初のものを使う (`niri-config/src/output.rs:150`)。そのため、前の層にあると DMS の画面設定が効かない (D-V2)。
+   - **R2:** `config.kdl` の中で、`dms/*.kdl` の include を最後に置く。include は位置で効くからである。
+   - R1 と R2 は `verify/d-v2/niri_layers.py lint` で、実際のファイルについて検査する。
 3. **DMS の settings.json** は、GUI で変えた結果を `chezmoi re-add` で source に回収する。chezmoi は「最後に書いた後でアプリが変えた」ファイルを、上書きする前に確認する。
 4. **開発ツールとエージェント CLI** は mise で入れる (`dot-config/chezmoi/dot_config/mise/`)。OS のパッケージに依存しないものは mise に置く。
 5. **データ:**

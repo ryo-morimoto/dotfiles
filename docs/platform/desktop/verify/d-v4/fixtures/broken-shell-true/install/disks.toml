@@ -1,0 +1,10 @@
+# ディスクの宣言 (ADR-0006)。by-id、シリアル番号、容量 (バイト) を書く。値は検査用の例。
+[system]
+by_id = "/dev/disk/by-id/nvme-EXAMPLE_SSD_1TB_S000000000000"
+serial = "S000000000000"
+size_bytes = 1000204886016
+
+[data]
+by_id = "/dev/disk/by-id/ata-EXAMPLE_HDD_2TB_Z0000000"
+serial = "Z0000000"
+size_bytes = 2000398934016

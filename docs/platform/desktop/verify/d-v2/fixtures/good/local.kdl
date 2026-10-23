@@ -1,0 +1,8 @@
+// 自分の上書き。output 節はここに書かない (R1)
+window-rule {
+    match app-id="zen"
+    open-maximized true
+}
+/- output "DP-1" {
+    mode "1920x1080@60"
+}

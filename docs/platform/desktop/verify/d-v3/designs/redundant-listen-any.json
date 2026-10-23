@@ -1,0 +1,1 @@
+{"_comment": "参考: 0.0.0.0 で待ち受けても、nftables が止める (層が重なっていることの確認)", "expect": "pass", "port": 8080, "network": "host", "listen": "any", "publish_host_ip": null, "nft_input": {"match": "iifname", "accept": ["tailscale0", "lo"]}, "tailscale_acl_allows": ["own-device", "server"]}

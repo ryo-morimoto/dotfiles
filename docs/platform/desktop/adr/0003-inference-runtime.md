@@ -23,7 +23,10 @@ not_satisfied: []
 
 1. **ランタイム:** `llama-server` (llama.cpp) を、上流のイメージ `ghcr.io/ggml-org/llama.cpp:server-cuda13` で動かす。タグではなくダイジェストで固定し、更新は宣言の変更として行う。
 2. **実行:** podman の Quadlet (systemd のユニット) で動かす。GPU は nvidia-container-toolkit (extra) の CDI で渡す。ホストに要るのは NVIDIA ドライバ (`nvidia-open`、extra) だけで、CUDA の実行時ライブラリはイメージの中にある。
-3. **待ち受け:** Tailscale のアドレス (tailscale0) だけで待ち受ける。nftables で、tailscale0 以外からこのポートへの通信を落とす。
+3. **待ち受け:** Tailscale のアドレス (tailscale0) だけで待ち受ける。ポートは TCP 8080。
+   - コンテナは `Network=host` で動かし、`PublishPort` は使わない。D-V3 で分かったことによる。podman の port publish は netavark が PREROUTING で DNAT し、FORWARD で受け入れるので、ホストの input チェーンの規則を素通りする (netavark `src/firewall/nft.rs:197-213, 276-283`)。
+   - nftables では、このポートへの通信を受信インターフェース (`iifname`) で判定する。受け入れるのは `tailscale0` と `lo` からだけで、ほかは落とす。宛先アドレス (`daddr`) では判定しない。Linux は、別の NIC に付いたアドレス宛ての通信も受け取る (weak host model) ので、LAN から Tailscale のアドレス宛てに送られると届いてしまうためである。
+   - 待ち受けアドレス、ポート、nftables の規則は、`verify/d-v3/designs/design.json` を元に作る。D-V3 はこの宣言を検査する。
 4. **認証:** 次の2つを重ねる。
    - Tailscale ACL で、届いてよい相手を自分の端末と Server のノードのタグに限る。
    - `--api-key-file` で鍵を要求する。鍵は ADR-0005 の秘密情報として管理する。

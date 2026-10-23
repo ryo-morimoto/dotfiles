@@ -103,19 +103,80 @@ statechart の from-chart で、利用者から見た挙動を図にした。TLA
 
 **1コマンドで再実行:** `docs/platform/desktop/verify/run.sh` (TLA+ tools v1.7.4 を sha256 で固定して取得し、各 cfg の `expect:` と照合する)。
 
-## D-V2: 途中で見つけたこと (niri のソースを読んだ結果)
+## D-V2: niri 設定の層 (全列挙)
 
-niri の commit e19df12 (2026-10-21) の `niri-config/src/lib.rs` と `niri-config/src/output.rs` を読んだ。
+**性質:** `DmsUiWriteAlwaysWins` — `dms/*.kdl` が定めた項目は、ほかの層が同じ項目を定めていても、実際に効く値が `dms/*.kdl` のものになる。
 
-- **`output` 節は、include をまたいで後から足される。** ある出力の設定を引くとき、niri は `Outputs::find` で最初に一致したものを使う (`self.0.iter().find(...)`)。したがって、`local.kdl` などの前の層に同じ出力の `output` 節があると、DMS の設定画面が書く `dms/outputs.kdl` は効かない。2画面 144Hz の設定はここに入るので、INT-1 に直接かかる。
-- **`window-rule` も後から足される。** ただし、ウィンドウの規則は順に適用され、後のものが上書きする (`src/window/mod.rs` の `ResolvedWindowRules::compute`)。こちらは DMS が勝つ。
-- **`binds` は、同じキーを後のものが置き換える。** そのほかの多くの節は、項目ごとに後のものが上書きする。
+**モデル:** `d-v2/niri_layers.py`。niri の合成規則を、項目の種類ごとの「どの層が効くか」の表にした。根拠は niri の commit e19df12 (2026-10-21) のソースである。
 
-これを規則にして、全列挙で `DmsUiWriteAlwaysWins` を検査する。構成ファイルを作る段階5では、実際の KDL ファイルを入力にする。
+| 項目の種類 | 効くもの | 出典 |
+|---|---|---|
+| 多くの節 (layout、cursor、blur、recent-windows など) の各項目 | 後の層 | `niri-config/src/lib.rs:198-209, 250, 286` |
+| 合成しない小節 (struts など) | 後の層 (丸ごと置き換える) | docs `Configuration:-Include.md` |
+| binds のキー | 後の層 | `lib.rs:223-235` |
+| フラグ | 後の層 | `lib.rs:241` |
+| window-rule の各項目 | 後の層 (順に適用し、後が上書きする) | `lib.rs:218`、`src/window/mod.rs:203` |
+| **同じ画面の output 節** | **前の層** (最初に一致したもの) | `lib.rs:212-215`、`output.rs:150` |
 
-## D-V3: Server への確認事項
+読み込み順と、同じ項目をどの層が定めるかの組み合わせを、すべて調べた。
 
-Tailscale の ACL は tailnet 全体の設定で、Desktop だけでは決められない。D-V3 の検査は、Desktop 側の設定 (待ち受けアドレスと nftables) と、「ACL がこうなっていること」という前提に分けて書く。ACL の前提は台帳の「Server への確認事項」#1 に載せた。依頼の文面は `server-requests/0001-inference-acl.md` にある。
+**結果:** 規則を2つ置くと、性質が成り立つ。
+
+- R1: `output` 節は `dms/outputs.kdl` にだけ書く。
+- R2: `dms/*.kdl` の include を `config.kdl` の最後に置く。
+
+壊した版は期待どおりに失敗する。
+
+- R1 を外した版: 前の層の output が効き、DMS の画面設定が無視される。
+- R2 を外した版: dms の後に読んだ層が上書きする。
+- `lint` はこの2つの規則を実際の KDL ファイルについて検査する。fixture で確かめた (`fixtures/good`、`broken-output-in-local`、`broken-dms-not-last`)。段階5では、作った設定ファイルを入力にする。
+
+**範囲:**
+- 合成規則の表は、ソースを読んで書いた。実物の niri で効いた値を確かめるのは機能テストで行う。具体的には `niri validate` と、`niri msg outputs` で画面のモードを読むことである。
+- KDL の読み取りは最上位のノードだけである。対応しているのは、文字列、コメント、`/-`、入れ子。
+
+## D-V3: 推論 API の公開範囲 (全列挙)
+
+**性質:** `InferenceOnlyFromAllowedPeers` — 推論 API のポートへの接続が受け付けられるのは、自分の端末・Server のノード・Desktop 自身からだけ。許可した相手に届かない設定 (空虚に成り立つもの) も失敗にする。
+
+**モデル:** `d-v3/inference_exposure.py`。送り元の同値類 (自分の端末、Server、そのほかの tailnet の端末、LAN、インターネット、Desktop 自身) と、届くインターフェース、宛先アドレスを、すべて調べる。
+
+**結果:** 設計 (`designs/design.json`) では成り立つ。設計の中身は次のとおり。
+- `Network=host` で動かす。
+- Tailscale のアドレスで待ち受ける。
+- nftables は `iifname` で `tailscale0` と `lo` だけを受け入れる。
+- ACL は自分の端末と Server だけを許す。
+
+壊した版は期待どおりに失敗する。
+
+| 壊した版 | 届いてしまう相手 |
+|---|---|
+| ACL が全許可 | ほかの tailnet の端末 |
+| podman の `PublishPort=8080` | LAN とインターネット。netavark の DNAT が input チェーンを素通りする |
+| nftables を宛先アドレスで判定 | LAN から Tailscale のアドレス宛てに送ると届く (weak host model) |
+| 0.0.0.0 で待ち受け、nftables も無し | LAN とインターネット |
+| nftables が tailscale0 も止める | 誰にも届かない (失敗にする) |
+
+参考: 0.0.0.0 で待ち受けても、nftables があれば成り立つ。層が重なっていることの確認である。
+
+この結果を ADR-0003 の決定3に反映した (`Network=host`、`iifname` で判定)。ACL は Server 側の設定なので前提として扱い、`server-requests/0001-inference-acl.md` で依頼した。実機での確かめは段階4の `drive/inference-reachability` で行う。
+
+## D-V4: ディスクの消去 (静的検査)
+
+**性質:** `WipeTargetsOnlyDeclaredIds` — `install/` の下で、消去・初期化のコマンドを呼ぶのは `wipe.py` の `wipe_declared` の中だけ。そこに渡すデバイスは `resolve_declared(...)` の戻り値だけ。
+
+**検査:** `d-v4/wipe_static_check.py`。Python の `ast` で、subprocess の呼び出しを全部調べる。shell スクリプトでは消去コマンドを一切禁じる。コマンド名が静的に分からない呼び出しは、消去とみなす (fail-closed)。
+
+| 規則 | 内容 |
+|---|---|
+| W1 | 消去コマンドは `wipe_declared` の中だけで呼ぶ |
+| W2 | `/dev/...` のリテラルを渡さない。`resolve_declared` の戻り値以外を渡さない |
+| W3 | `shell=True` と `os.system` を使わない |
+| W4 | 解決する前に消さない |
+
+**結果:** `fixtures/good` では成り立つ。壊した版6つ (外で mkfs する、リテラルのデバイス、解決していない変数、`shell=True`、shell から wipefs、解決の前に blkdiscard) は、どれも失敗する。`fixtures/good/install/` は段階5の `install/` の雛形になる。
+
+**範囲:** `resolve_declared` の中身 (by-id の解決、シリアル番号と容量の照合、マウントの確認、入力での確認) は実行時の振る舞いなので、ここでは検査しない。機能テスト `drive/install-from-zero` で、VM の loop デバイスを使って確かめる (代用)。
 
 ## 道具の版
 
@@ -127,4 +188,4 @@ Tailscale の ACL は tailnet 全体の設定で、Desktop だけでは決めら
 | Java | 21 (OpenJDK) | — |
 | Mermaid の PNG 出力 | `npx @mermaid-js/mermaid-cli` (statechart が呼ぶ) | 版は D-V1 の確定時に固定する |
 
-1コマンドでの再実行は `verify/run.sh`。今は D-V1 を実行する。D-V2〜D-V4 は作るたびに足す。
+1コマンドでの再実行は `verify/run.sh` (D-V1〜D-V4、壊した版を含めて26件、約10秒)。D-V2〜D-V4 は Python 3.11 以上の標準ライブラリだけで動く。
