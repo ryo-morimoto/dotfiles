@@ -1,0 +1,3 @@
+# 壊した版 (代わりの環境でだけ使う): 規則が無い。待ち受けが Tailscale のアドレスでも、LAN 経由で届くはず
+table inet desktop_inference {
+}

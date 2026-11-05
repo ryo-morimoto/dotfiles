@@ -1,0 +1,1 @@
+{"_comment": "壊した版: nftables を宛先アドレス (Tailscale のアドレス) で受け入れる。LAN から Tailscale のアドレス宛てに送ると届く (weak host model)", "expect": "fail", "port": 8080, "network": "host", "listen": "ts-ip", "publish_host_ip": null, "nft_input": {"match": "daddr", "accept": ["ts-ip", "loopback"]}, "tailscale_acl_allows": ["own-device", "server"]}

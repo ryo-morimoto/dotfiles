@@ -1,0 +1,33 @@
+---
+title: "D-V1 current design, bug 1"
+config:
+  markdownAutoWrap: false
+  state:
+    useMaxWidth: false
+---
+stateDiagram-v2
+  %% labels in full
+  classDef works fill:#f4f6f7,stroke:#566573,color:#1b2631
+  classDef wrong fill:#fdedec,stroke:#c0392b,color:#7b241c
+  classDef fixed fill:#e9f7ef,stroke:#1e8449,color:#145a32
+  classDef worksPath fill:#f4f6f7,stroke:#1f3a93,stroke-width:4px,color:#1b2631
+  classDef wrongPath fill:#fdedec,stroke:#1f3a93,stroke-width:4px,color:#7b241c
+  classDef fixedPath fill:#e9f7ef,stroke:#1f3a93,stroke-width:4px,color:#145a32
+  state "Legend" as legend {
+    state "Works" as legendWorks
+    state "Breaks a rule" as legendWrong
+  }
+  class legendWorks works
+  class legendWrong wrong
+  state "Broken by update, good<br/>entry kept" as s0
+  state "Broken, no good entry in<br/>boot menu" as s1
+  state "Desktop works" as s2
+  state "Updated again while<br/>broken, good entry kept" as s3
+  [*] --> s2
+  s2 --> s0 : 1. update breaks the desktop
+  s0 --> s3 : 2. update again while broken
+  s3 --> s1 : 3. cleanup deletes the old<br/>snapshots
+  class s0 worksPath
+  class s1 wrongPath
+  class s2 worksPath
+  class s3 worksPath
